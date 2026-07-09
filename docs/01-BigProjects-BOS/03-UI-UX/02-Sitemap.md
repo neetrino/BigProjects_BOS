@@ -12,6 +12,7 @@ Deal Onboarding Checklist
 Reports
 ToonExpo Provisioning
 Settings
+Screens For Designer
 ```
 
 ## CRM / Deals

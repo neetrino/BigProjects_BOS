@@ -45,6 +45,7 @@ It contains only BOS documentation plus a small integration contract with ToonEx
 - [Sitemap](./01-BigProjects-BOS/03-UI-UX/02-Sitemap.md)
 - [Dashboard UX](./01-BigProjects-BOS/03-UI-UX/03-Dashboard-UX.md)
 - [Page / Card / Sheet Standard](./01-BigProjects-BOS/03-UI-UX/04-Page-Card-Sheet-Standard.md)
+- [Screens For Designer](./01-BigProjects-BOS/03-UI-UX/05-Screens-For-Designer.md)
 - [Dependency Graph](./architecture/DEPENDENCY_GRAPH.md)
 
 ## Development Start Pack
