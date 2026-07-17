@@ -7,7 +7,10 @@
 - configure lint/format/test baseline;
 - create app shell;
 - configure env schema;
-- create Prisma baseline.
+- scaffold the full NestJS `apps/api` with `/api/v1`, validation, errors, logging and OpenAPI;
+- create Prisma 7 baseline owned by NestJS;
+- add typed NestJS API client for Next.js;
+- add CI boundary check preventing Prisma/backend imports from `apps/web`.
 
 ## Sprint 1 - Auth And Shell
 
@@ -56,4 +59,3 @@
 - staff KPI summaries;
 - reports by cycle;
 - basic exports if needed.
-

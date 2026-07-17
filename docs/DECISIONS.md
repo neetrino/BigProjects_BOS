@@ -6,7 +6,11 @@
 - BOS is internal only.
 - Project size is C — large monorepo.
 - Use monorepo layout with `apps/*` and `packages/*`.
-- Backend API runs on Google Cloud Run.
+- BigProjects BOS is a full production product; no MVP/prototype delivery model.
+- `apps/web` is a Next.js 16.2.x frontend only.
+- `apps/api` is the complete NestJS 11.1.x backend and runs on Google Cloud Run.
+- Only NestJS may access Prisma/PostgreSQL or implement product APIs and mutations.
+- PostgreSQL 18.x on Neon and Prisma ORM 7.x are the data baseline.
 - Deal is cycle-specific; company is long-lived.
 - Deal onboarding checklist lives inside deal sheet.
 - Tasks & Processes owns event preparation work in v1.

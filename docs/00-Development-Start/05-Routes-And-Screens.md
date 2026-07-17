@@ -2,6 +2,8 @@
 
 ## Web Routes
 
+These are Next.js frontend routes only. Product API endpoints are separate NestJS routes under `/api/v1`; do not create matching Next.js route handlers.
+
 ```text
 /login
 /dashboard
@@ -44,4 +46,3 @@
 ## Navigation Rule
 
 Full pages are workspaces. Entity details open in sheets.
-

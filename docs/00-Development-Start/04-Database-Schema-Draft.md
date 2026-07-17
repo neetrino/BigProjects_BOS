@@ -1,5 +1,9 @@
 # BOS Database Schema Draft
 
+## Ownership
+
+PostgreSQL 18.x on Neon is accessed only by the NestJS `apps/api` runtime through Prisma ORM 7.x in `packages/db`. Next.js must not import Prisma, execute SQL or run migrations.
+
 ## Core Tables
 
 - users;
@@ -54,4 +58,3 @@ deals 0..n toonexpo_provisioning_requests
 - audit log granularity;
 - soft delete policy;
 - database timeout/pool settings.
-

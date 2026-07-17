@@ -32,7 +32,8 @@ Start here:
 - [Brief](./docs/BRIEF.md)
 - [Tech Card](./docs/TECH_CARD.md)
 - [Architecture](./docs/01-ARCHITECTURE.md)
-- [Development Start Pack](./docs/00-Development-Start/01-MVP-Scope-Freeze.md)
+- [Frontend / Backend Boundary](./docs/architecture/FRONTEND_BACKEND_BOUNDARY.md)
+- [Development Start Pack](./docs/00-Development-Start/01-Production-Scope.md)
 - [Documentation Hub](./docs/00-Documentation-Hub.md)
 - [BOS Overview](./docs/01-BigProjects-BOS/00-BOS-Overview.md)
 - [BOS / ToonExpo Boundary](./docs/03-Integration-With-ToonExpo/01-BOS-ToonExpo-Boundary.md)
@@ -42,6 +43,8 @@ Start here:
 Size C — large monorepo (`apps/*`, `packages/*`).
 
 Production code should start only after `docs/TECH_CARD.md` stack choices are confirmed.
+
+Runtime boundary: `apps/web` is a Next.js frontend; `apps/api` is the complete NestJS backend and the only runtime allowed to access Prisma/PostgreSQL.
 
 ## Rule
 
