@@ -11,7 +11,7 @@ It contains only BOS documentation plus a small integration contract with ToonEx
 - [Brief](./BRIEF.md)
 - [Tech Card](./TECH_CARD.md)
 - [Architecture](./01-ARCHITECTURE.md)
-- [Development Start Pack](./00-Development-Start/01-MVP-Scope-Freeze.md)
+- [Development Start Pack](./00-Development-Start/01-Production-Scope.md)
 - [Progress](./PROGRESS.md)
 - [Decisions](./DECISIONS.md)
 - [BOS Overview](./01-BigProjects-BOS/00-BOS-Overview.md)
@@ -47,10 +47,11 @@ It contains only BOS documentation plus a small integration contract with ToonEx
 - [Page / Card / Sheet Standard](./01-BigProjects-BOS/03-UI-UX/04-Page-Card-Sheet-Standard.md)
 - [Screens For Designer](./01-BigProjects-BOS/03-UI-UX/05-Screens-For-Designer.md)
 - [Dependency Graph](./architecture/DEPENDENCY_GRAPH.md)
+- [Frontend / Backend Boundary](./architecture/FRONTEND_BACKEND_BOUNDARY.md)
 
 ## Development Start Pack
 
-- [MVP Scope Freeze](./00-Development-Start/01-MVP-Scope-Freeze.md)
+- [Production Scope](./00-Development-Start/01-Production-Scope.md)
 - [Implementation Backlog](./00-Development-Start/02-Implementation-Backlog.md)
 - [Technical Architecture](./00-Development-Start/03-Technical-Architecture.md)
 - [Database Schema Draft](./00-Development-Start/04-Database-Schema-Draft.md)

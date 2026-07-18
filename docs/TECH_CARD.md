@@ -2,179 +2,143 @@
 
 ## Status
 
-Draft — stack choices need final confirmation before production code.
+Architecture baseline confirmed. Provider accounts, credentials and operational limits still require environment-specific confirmation.
 
 ## Project Size
 
-Size C — large, layout: monorepo (`apps/*`, `packages/*`).
+Size C - large, layout: monorepo (`apps/*`, `packages/*`).
 
 ## Date
 
-2026-07-08
+2026-07-17
 
-## Core Recommendation
+## Delivery Model
 
-| Area | Recommendation | Status | Notes |
+BigProjects BOS is a full production product. It is not a prototype or MVP. Release planning may split implementation into stages, but every included module must be designed for production operation, security, maintainability and complete acceptance criteria.
+
+## Version Policy
+
+- Use stable production releases only; no canary, beta or release candidate packages.
+- Pin exact dependency versions in `pnpm-lock.yaml` and container images.
+- Stay on the major/minor lines below and install the latest security patch available at implementation time.
+- Upgrade major versions only through an explicit architecture decision and migration plan.
+
+## Core Stack
+
+| Area | Decision | Status | Notes |
 |---|---|---:|---|
-| Package manager | pnpm | Proposed | Matches project rules. |
-| Monorepo tooling | Turborepo | Proposed | Size C default. |
-| Node.js | 24.x LTS | Proposed | From template baseline. |
-| TypeScript | strict | Proposed | Required by rules. |
-| Frontend | Next.js App Router | Proposed | Internal BOS web app. |
-| Backend | NestJS API | Proposed | Clear module boundaries and OpenAPI support. |
-| API style | REST + OpenAPI | Proposed | Good fit for internal CRUD/workflow modules. |
-| Database | PostgreSQL / Neon | Proposed | Matches rules and scale. |
-| ORM | Prisma | Proposed | Matches rules. |
-| Auth | Auth.js 5 | Needs confirmation | Internal users only; avoid hand-rolled JWT. |
-| File storage | Cloudflare R2 | Proposed | Attachments on entities. |
-| Email | Resend | Proposed | Provisioning/status emails if needed. |
-| Cache/queues | Upstash Redis only if needed | Needs confirmation | Avoid early overbuild. |
-| Error tracking | Sentry | Proposed | Useful for internal ops. |
-| Hosting | Vercel for web, Google Cloud Run for API | Confirmed | NestJS API deploys to Cloud Run. |
-| CI/CD | GitHub Actions + turbo affected tasks | Proposed | Size C default. |
-| Tests | Vitest, API integration tests, Playwright critical flows | Proposed | Focus on domain/API/workflow reliability. |
+| Package manager | pnpm 11.x | Confirmed | Workspace package manager. |
+| Monorepo tooling | Turborepo | Confirmed | Size C build/task orchestration. |
+| Node.js | 24.x LTS | Confirmed | Production LTS runtime. |
+| TypeScript | 6.0.x, strict | Confirmed | Stable ecosystem-compatible compiler baseline. |
+| Frontend | Next.js 16.2.x + React 19.2.x | Confirmed | `apps/web` presentation layer only. |
+| Frontend styles | Tailwind CSS 4.3.x | Confirmed | With shadcn/ui and custom BOS components. |
+| Backend | NestJS 11.1.x | Confirmed | `apps/api` owns the complete product backend. |
+| API | REST + OpenAPI | Confirmed | NestJS controllers are canonical. |
+| Database | PostgreSQL 18.x on Neon | Confirmed | Neon PostgreSQL 18 is production GA. |
+| ORM | Prisma ORM 7.x | Confirmed | Runtime database access from NestJS only. |
+| Authentication | NestJS Auth module + Passport | Proposed | Exact cookie/session strategy still needs confirmation. |
+| File storage | Cloudflare R2 | Proposed | Attachments remain linked to domain entities. |
+| Email | Resend | Proposed | Provisioning and account emails when required. |
+| Error tracking | Sentry | Proposed | Web and API error capture. |
+| Frontend hosting | Vercel | Confirmed | Deploys `apps/web`. |
+| Backend hosting | Google Cloud Run | Confirmed | Deploys containerized `apps/api`. |
+| CI/CD | GitHub Actions | Proposed | Lint, typecheck, tests, builds and migrations. |
 
-## 1. Foundation
+## Frontend - `apps/web`
 
-| Parameter | Decision | Status |
-|---|---|---:|
-| Project size | C - large | Confirmed |
-| Architecture | Monorepo modular monolith | Proposed |
-| Package manager | pnpm | Proposed |
-| Monorepo tool | Turborepo | Proposed |
-| TypeScript | strict | Proposed |
-| Git workflow | feature branches + PRs | Proposed |
-| Commits | Conventional Commits | Proposed |
+TypeScript 7.0 is current but is not selected at project start because 7.0 does not expose the programmatic compiler API required by parts of the lint/tooling ecosystem. Reassess at TypeScript 7.1 through an ADR.
 
-## 2. Frontend
+| Parameter | Decision |
+|---|---|
+| Responsibility | Internal BOS pages, workspaces, sheets, forms and browser interaction |
+| Rendering | Next.js App Router, Server Components by default, Client Components where interactive |
+| Data access | Typed HTTP client calling the NestJS API |
+| Forms | React Hook Form + Zod for frontend feedback; NestJS repeats authoritative validation |
+| Server state | API-driven; React Query only where client revalidation is needed |
+| Local state | React state; Zustand only for complex local workspace state |
+| Forbidden | Prisma, SQL, direct PostgreSQL, product route handlers, backend Server Actions, authoritative auth/business logic |
 
-| Parameter | Decision | Status |
-|---|---|---:|
-| Framework | Next.js App Router | Proposed |
-| Styling | Tailwind CSS | Proposed |
-| UI kit | shadcn/ui plus custom operational components | Proposed |
-| State | Server data first; Zustand only for local workspace state | Proposed |
-| Forms | React Hook Form + Zod | Proposed |
-| Data fetching | Server Components / API client where needed | Proposed |
-| i18n | Not required for first BOS sprint unless team confirms | Needs confirmation |
+Next.js Server Components may fetch the NestJS API. Server Actions must not implement product mutations; forms call NestJS endpoints.
 
-## 3. Backend
+## Backend - `apps/api`
 
-| Parameter | Decision | Status |
-|---|---|---:|
-| API app | NestJS | Proposed |
-| Validation | Zod or class-validator | Needs confirmation |
-| API style | REST | Proposed |
-| API docs | OpenAPI/Swagger | Proposed |
-| Uploads | API-signed upload to R2 or server-mediated upload | Needs confirmation |
+| Parameter | Decision |
+|---|---|
+| Framework | NestJS 11.1.x modular monolith |
+| Responsibility | All auth, RBAC, validation, business logic, persistence, audit and integrations |
+| HTTP | REST controllers with `/api/v1` version prefix |
+| Validation | Global `ValidationPipe`; class-validator DTOs unless an ADR approves another standard |
+| Documentation | Swagger/OpenAPI generated from NestJS controllers and DTOs |
+| Persistence | Repositories/services call Prisma through `packages/db` |
+| Errors | Global NestJS exception filter with stable problem codes and request IDs |
+| Logging | Pino structured logs with sensitive-field redaction |
+| Uploads | NestJS authorizes and signs R2 uploads or receives uploads when required |
 
-## 4. Database
+## Database - `packages/db`
 
-| Parameter | Decision | Status |
-|---|---|---:|
-| Database | PostgreSQL / Neon | Proposed |
-| ORM | Prisma | Proposed |
-| Seed data | Prisma seed for dev/test | Proposed |
-| Cache | None initially; Upstash Redis if needed | Needs confirmation |
-| Queues | Not in first sprint | Proposed |
+| Parameter | Decision |
+|---|---|
+| Database | PostgreSQL 18.x on Neon |
+| ORM | Prisma ORM 7.x using the Prisma 7 generator/output conventions |
+| Runtime owner | Only `apps/api` may import and execute the Prisma client |
+| Schema changes | Prisma migrations committed to the repository |
+| Migration execution | One dedicated CI/deploy job; never a web request or Next.js build |
+| Runtime credentials | Pooled DML-only application role |
+| Migration credentials | Direct owner connection available only to migration jobs |
+| Seed data | Explicit dev/test seed scripts |
+| Cache/queues | Not initially; introduce Redis only for a measured requirement |
 
-## 5. Authentication
-
-| Parameter | Decision | Status |
-|---|---|---:|
-| Solution | Auth.js 5 | Proposed |
-| Providers | Credentials/email for internal users | Needs confirmation |
-| Sessions | Database sessions or secure JWT via Auth.js | Needs confirmation |
-| RBAC | BOS Admin, BOS Staff, BOS Viewer | Confirmed |
-| Email verification | Not required for first internal sprint | Proposed |
-
-## 6. Storage And CDN
+## Authentication And Security
 
 | Parameter | Decision | Status |
 |---|---|---:|
-| File storage | Cloudflare R2 | Proposed |
-| CDN | Cloudflare/Vercel edge depending deployment | Needs confirmation |
-| Image optimization | next/image for web app assets | Proposed |
+| Auth owner | NestJS API | Confirmed |
+| Roles | BOS Admin, BOS Staff, BOS Viewer | Confirmed |
+| Credentials | Internal email/credentials | Needs confirmation |
+| Session transport | Backend-issued secure httpOnly cookies | Proposed |
+| Password hashing | argon2id | Confirmed when passwords are used |
+| Authorization | NestJS guards/policies on every protected operation | Confirmed |
+| CORS/CSRF | Explicit allowlist and CSRF protection for cookie mutations | Confirmed |
+| Rate limits | Auth and provisioning endpoints | Proposed |
+| Audit | Status, provisioning and checklist changes | Confirmed |
 
-## 7. External Services
+## Testing
 
-| Parameter | Decision | Status |
-|---|---|---:|
-| Email | Resend | Proposed |
-| Payments | Not needed in v1 | Confirmed |
-| Analytics | Internal DB reports first | Proposed |
-| Error tracking | Sentry | Proposed |
-| Search | PostgreSQL search first | Proposed |
-| AI services | Not needed in v1 | Confirmed |
+| Layer | Tool / expectation |
+|---|---|
+| Domain/application unit | Vitest, focused on business rules and services |
+| API integration | Nest testing utilities + Supertest against test database |
+| Contract | OpenAPI generation and frontend client compatibility check |
+| Frontend component | React Testing Library where behavior warrants it |
+| End to end | Playwright for critical internal workflows |
 
-## 8. DevOps And Hosting
-
-| Parameter | Decision | Status |
-|---|---|---:|
-| Frontend hosting | Vercel | Proposed |
-| API hosting | Google Cloud Run | Confirmed |
-| CI/CD | GitHub Actions | Proposed |
-| Environments | dev + staging + prod | Proposed |
-| Logging | Pino in API, structured logs | Proposed |
-
-## 9. Testing
-
-| Parameter | Decision | Status |
-|---|---|---:|
-| Unit tests | Vitest | Proposed |
-| API tests | supertest or Nest test utilities | Proposed |
-| E2E tests | Playwright for critical flows | Proposed |
-| Coverage target | Define after first sprint | Needs confirmation |
-
-## 10. Security
-
-| Parameter | Decision | Status |
-|---|---|---:|
-| Input validation | Required | Confirmed |
-| Password hashing | argon2id if credentials are used | Confirmed |
-| CORS/CSRF | Required before public/staging deploy | Confirmed |
-| Rate limiting | Auth/provisioning endpoints | Proposed |
-| Secrets | Env only, never committed | Confirmed |
-
-## 11. Documentation
-
-| Document | Status |
-|---|---:|
-| docs/BRIEF.md | Done |
-| docs/TECH_CARD.md | Draft |
-| docs/01-ARCHITECTURE.md | Done |
-| docs/PROGRESS.md | Done |
-| README.md | Done |
-| .env.example | Done |
-
-## Initial Monorepo Layout
+## Monorepo Layout
 
 ```text
 apps/
-  web/
-  api/
+  web/                  # Next.js frontend only
+  api/                  # NestJS complete product backend
 packages/
-  domain/
-  contracts/
-  db/
-  ui/
-  shared/
-  config/
+  domain/               # small shared kernel only; feature domains stay in API modules
+  contracts/            # framework-neutral API enums/schemas where shared
+  db/                   # Prisma schema/client/migrations; API runtime only
+  ui/                   # reusable React UI
+  shared/               # environment-neutral utilities
+  config/               # shared build/lint/type configuration
 ```
 
-## Security Baseline
+## Non-Negotiable Runtime Boundary
 
-- strict validation at API boundaries;
-- no secrets in code;
-- argon2 if passwords are implemented;
-- httpOnly secure sessions/cookies;
-- rate limits for auth and provisioning endpoints;
-- audit logs for important status/provisioning/checklist changes.
+- Request flow: browser -> Next.js UI -> NestJS REST API -> Prisma -> PostgreSQL.
+- `apps/web` never imports Prisma, queries PostgreSQL or implements product endpoints.
+- `apps/api` is the only product backend and runtime database owner.
+- Auth, authorization and business mutations are always enforced by NestJS.
+- Canonical rules: [Frontend / Backend Boundary](./architecture/FRONTEND_BACKEND_BOUNDARY.md).
 
-## Confirmation Needed Before Code
+## Confirmation Still Needed
 
-- final auth approach;
-- database provider/account;
-- file storage provider/account;
-- email provider/account;
-- staging/prod environments and domains.
+- exact backend cookie/session or access/refresh-token strategy;
+- Neon, R2, Resend, Vercel and Google Cloud accounts/credentials;
+- staging and production domains;
+- adaptive rate, timeout and pool values based on environments.

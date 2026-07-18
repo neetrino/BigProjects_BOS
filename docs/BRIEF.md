@@ -20,7 +20,9 @@ Do not implement ToonExpo public website, builder portal, Constructor CRM, readi
 
 Builders, partners, buyers and entrance staff do not access BOS.
 
-## MVP Scope
+## Production Scope
+
+BOS is a full production product, not an MVP or prototype. The list below defines the initial production release, not a reduced-quality implementation.
 
 - internal auth and role-based access;
 - event cycles;
@@ -41,5 +43,4 @@ Rationale: BOS has several internal modules, cross-module reporting, task/worksp
 
 - [Documentation Hub](./00-Documentation-Hub.md)
 - [Consistency Audit](./00-Consistency-Audit.md)
-- [Development Start Pack](./00-Development-Start/01-MVP-Scope-Freeze.md)
-
+- [Development Start Pack](./00-Development-Start/01-Production-Scope.md)

@@ -5,7 +5,7 @@ Internal business operating system for BigProjects. BOS manages event cycles, pa
 **Project size:** C - large  
 **Architecture style:** modular monolith in a monorepo  
 **Primary deployables:** `apps/web` and `apps/api`  
-**Last updated:** 2026-07-08
+**Last updated:** 2026-07-17
 
 ---
 
@@ -22,6 +22,16 @@ The correct architecture is a **modular monolith**:
 - strict module boundaries so CRM, cycles, onboarding, tasks, KPI and provisioning do not become one tangled codebase.
 
 This gives the team enough structure for a large product without the cost and confusion of microservices.
+
+BOS is a full production product, not an MVP or prototype. The implementation may be delivered incrementally, but the architecture, security, migrations, observability and acceptance criteria must be production-ready from the first release.
+
+### Authoritative runtime boundary
+
+```text
+Browser -> Next.js frontend -> NestJS REST API -> Prisma -> PostgreSQL
+```
+
+`apps/web` is never a second backend. It must not contain product API routes, product mutations in Server Actions, Prisma imports, direct database access or authoritative business rules. All backend behavior belongs to `apps/api`. See [Frontend / Backend Boundary](./architecture/FRONTEND_BACKEND_BOUNDARY.md).
 
 ---
 
@@ -64,7 +74,7 @@ BOS sends only the minimum required provisioning request to ToonExpo when a part
 |---|---|---|---|
 | Web app | `apps/web` | Internal dashboards, CRM boards, deal sheets, tasks, reports, settings | Vercel |
 | API app | `apps/api` | Business logic, RBAC, validation, persistence, provisioning integration | Google Cloud Run |
-| Domain package | `packages/domain` | Framework-independent business rules, entities, value objects | bundled |
+| Domain package | `packages/domain` | Small shared kernel for cross-module value objects only | bundled into API |
 | Contracts package | `packages/contracts` | DTOs, Zod schemas, enums, API contracts | bundled |
 | Database package | `packages/db` | Prisma schema, migrations, database client, persistence mapping | bundled |
 | UI package | `packages/ui` | Shared UI primitives: cards, sheets, tables, filters, forms | bundled |
@@ -83,19 +93,19 @@ bigprojects-bos/
         app/                  # Next.js App Router
         features/             # feature UI by module
         components/           # app-level components
-        lib/                  # API client, auth helpers, config
+        lib/                  # typed NestJS API client, UI auth state, config
       public/
     api/
       src/
-        modules/              # NestJS domain modules
+        modules/              # NestJS product modules
         common/               # guards, decorators, filters, interceptors
         integrations/         # ToonExpo provisioning client
         main.ts
       Dockerfile              # Cloud Run container target
   packages/
-    domain/                   # pure business logic
+    domain/                   # small shared kernel; feature domains stay in API modules
     contracts/                # schemas, DTOs, enums
-    db/                       # Prisma schema/client/migrations
+    db/                       # Prisma schema/client/migrations; API runtime only
     ui/                       # reusable UI primitives
     shared/                   # utility helpers
     config/                   # shared tooling config
@@ -130,7 +140,6 @@ flowchart TD
   Api --> DB
   Api --> Shared
   UI --> Shared
-  Contracts --> Domain
   DB --> Domain
   Web --> Config
   Api --> Config
@@ -138,11 +147,15 @@ flowchart TD
 
 Hard rules:
 
-- `packages/domain` must not import Next.js, NestJS, Prisma, React or browser APIs.
+- `packages/domain` is a small shared kernel, not a global home for all business logic; it must not import Next.js, NestJS, Prisma, React or browser APIs.
+- Feature-specific domain rules live in `apps/api/src/modules/<module>/domain`.
 - `packages/db` maps database records to domain concepts; it does not own business policy.
-- `packages/contracts` owns shared request/response shapes and status enums.
+- `packages/contracts` owns framework-neutral request/response shapes and status enums; canonical HTTP contracts are generated from NestJS OpenAPI.
 - `apps/web` never imports Prisma or server secrets.
-- `apps/api` is the only runtime that talks directly to the database and external services.
+- `apps/web` does not import `packages/domain`; it consumes API contracts and view models.
+- `apps/api` is the only runtime that talks directly to the database and backend external services.
+- Product endpoints must not be implemented in Next.js route handlers.
+- Product mutations must not be implemented as Next.js Server Actions.
 - Cross-module imports go through public module exports, not deep internal paths.
 
 ---
@@ -160,7 +173,7 @@ Hard rules:
 | Analytics / Reports | BOS | Cycle reports, sales numbers, onboarding progress, staff metrics and exports |
 | ToonExpo Account Provisioning | BOS -> ToonExpo | Creates builder/partner accounts in ToonExpo after participant approval |
 
-Coming-soon modules may exist in docs, but v1 development must not block on them.
+Coming-soon modules may exist in docs, but the initial production release must not block on them.
 
 ---
 
@@ -260,11 +273,19 @@ apps/web/src/features/
 
 Each feature should expose only its public UI and hooks. Shared primitives belong in `packages/ui`; business-specific screens stay in `apps/web/src/features`.
 
+Frontend data rules:
+
+- Server Components may fetch the NestJS API for initial rendering.
+- Client Components may use the same typed API client through query/mutation hooks.
+- Forms may validate locally for user feedback, but NestJS repeats authoritative validation.
+- Route protection in Next.js improves navigation only; NestJS guards enforce real authorization.
+- `app/api` and Server Actions are not product backend extension points.
+
 ---
 
 ## 9. Backend Architecture
 
-The API is a NestJS modular monolith. Each module owns its controllers, services, persistence adapters and permission checks.
+The API is the complete backend and runs as a NestJS modular monolith. Each module owns its controllers, application services, domain policies, persistence adapters and permission checks.
 
 ```text
 apps/api/src/modules/
@@ -286,10 +307,18 @@ Recommended internal module shape:
 
 ```text
 modules/deals/
-  deals.controller.ts
-  deals.service.ts
-  deals.repository.ts
-  deals.permissions.ts
+  presentation/
+    deals.controller.ts
+    dto/
+  application/
+    commands/
+    queries/
+    deals.service.ts
+  domain/
+    deal.policy.ts
+    deal.errors.ts
+  infrastructure/
+    prisma-deals.repository.ts
   deals.module.ts
 ```
 
@@ -301,6 +330,8 @@ API rules:
 - RBAC and ownership checks before business mutations.
 - Audit logs for important status, provisioning and checklist changes.
 - No business workflow hidden in React components.
+- No product controller, repository or integration orchestration in `apps/web`.
+- Cross-module writes go through the owning module's application service.
 
 ---
 
@@ -330,8 +361,10 @@ Core entities:
 
 Database implementation:
 
-- PostgreSQL / Neon;
-- Prisma migrations stored in `packages/db`;
+- PostgreSQL 18.x on Neon;
+- Prisma ORM 7.x schema, generated client and migrations stored in `packages/db`;
+- only `apps/api` imports the runtime Prisma client;
+- migrations run once from CI/deployment tooling, not from Next.js or an API request;
 - soft delete only where audit/history matters;
 - timestamps and actor IDs on important mutations;
 - indexes on cycle, deal stage, assignee, company, provisioning status and task status.
@@ -344,7 +377,7 @@ BOS is the source of truth for internal participant acquisition and event prepar
 
 ToonExpo is the source of truth for public platform accounts, projects, apartments, buyer QR, CRM leads and exhibition experience.
 
-Required v1 integration:
+Required initial production integration:
 
 ```text
 BOS approved deal
@@ -354,7 +387,7 @@ BOS approved deal
   -> BOS stores status on the deal/provisioning request
 ```
 
-Not part of v1:
+Not part of the current production scope:
 
 - syncing ToonExpo buyer data back to BOS;
 - syncing builder apartment inventory to BOS;
@@ -367,7 +400,7 @@ Not part of v1:
 
 Security baseline:
 
-- Auth.js 5 or confirmed auth provider for sessions;
+- NestJS-owned authentication using Passport and the confirmed cookie/session strategy;
 - httpOnly secure cookies;
 - role checks: BOS Admin, BOS Staff, BOS Viewer;
 - entity ownership/context checks for staff-level visibility if needed in v2;
@@ -426,7 +459,7 @@ Scale path:
 | Frontend | Next.js App Router | Strong for operational web UI |
 | Backend | NestJS | Modules, guards, validation and OpenAPI |
 | API style | REST + OpenAPI | Clear CRUD/workflow contract |
-| Database | PostgreSQL + Prisma | Relational workflows and reporting |
+| Database | PostgreSQL 18 + Prisma ORM 7 | Relational workflows and reporting |
 | API hosting | Google Cloud Run | Containerized NestJS runtime |
 | Web hosting | Vercel | Best fit for Next.js |
 | Integration | Minimal BOS -> ToonExpo provisioning | Avoids duplicate data ownership |
@@ -435,10 +468,11 @@ Scale path:
 
 ## 16. Implementation Guardrails
 
-- Do not create a separate Documents module in v1; attach files to entities.
-- Do not create broad ToonExpo sync in v1.
+- Do not create a separate Documents module in the current production scope; attach files to entities.
+- Do not create broad ToonExpo sync in the current production scope.
 - Do not make onboarding a separate product away from deals; the checklist lives in the deal flow.
-- Do not overbuild roles in v1; start with Admin, Staff and Viewer.
+- Do not overbuild roles in the initial production release; start with Admin, Staff and Viewer.
+- Do not place backend code, Prisma access or product API routes in Next.js.
 - Do not add queues or realtime until a concrete workflow needs them.
 - Every module must have docs, entity fields and acceptance criteria before deep implementation.
 
@@ -447,8 +481,9 @@ Scale path:
 ## 17. Related Documents
 
 - [Tech Card](./TECH_CARD.md)
-- [Development Start Pack](./00-Development-Start/01-MVP-Scope-Freeze.md)
+- [Production Scope](./00-Development-Start/01-Production-Scope.md)
 - [Dependency Graph](./architecture/DEPENDENCY_GRAPH.md)
+- [Frontend / Backend Boundary](./architecture/FRONTEND_BACKEND_BOUNDARY.md)
 - [BOS / ToonExpo Boundary](./03-Integration-With-ToonExpo/01-BOS-ToonExpo-Boundary.md)
 - [Integration Contracts](./03-Integration-With-ToonExpo/03-Integration-Contracts.md)
 - [Decisions](./DECISIONS.md)

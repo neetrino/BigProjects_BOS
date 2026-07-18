@@ -1,6 +1,8 @@
-# BOS MVP Scope Freeze
+# BOS Production Scope
 
-## Included In v1
+This is the approved full product scope for the initial production release. It is not a prototype or MVP; every included capability requires production-quality implementation and acceptance criteria.
+
+## Included In Initial Production Release
 
 - internal auth and roles;
 - event cycles;
@@ -26,7 +28,6 @@
 - payroll/HR system;
 - payments/accounting integration.
 
-## v1 Success Definition
+## Production Release Success Definition
 
 BigProjects can run one ToonExpo cycle internally from participant deal creation through approval, onboarding checklist progress, task coordination and ToonExpo account provisioning.
-
