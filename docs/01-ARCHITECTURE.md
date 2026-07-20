@@ -75,7 +75,8 @@ BOS sends only the minimum required provisioning request to ToonExpo when a part
 | Web app | `apps/web` | Internal cycle, CRM, partner, venue-map, provisioning and settings UI | Vercel |
 | API app | `apps/api` | Business logic, RBAC, validation, persistence, provisioning integration | Google Cloud Run |
 | Domain package | `packages/domain` | Small shared kernel for cross-module value objects only | bundled into API |
-| Contracts package | `packages/contracts` | DTOs, Zod schemas, enums, API contracts | bundled |
+| Contracts package | `packages/contracts` | Framework-neutral shared enums/constants only | bundled |
+| Generated API client | `packages/api-client` | Hey API fetch SDK, TypeScript models and Zod schemas generated from NestJS OpenAPI | bundled into web |
 | Database package | `packages/db` | Prisma schema, migrations, database client, persistence mapping | bundled |
 | UI package | `packages/ui` | Shared UI primitives: cards, sheets, tables, filters, forms | bundled |
 | Shared package | `packages/shared` | Utilities, constants, logger interfaces, formatting helpers | bundled |
@@ -93,7 +94,7 @@ bigprojects-bos/
         app/                  # Next.js App Router
         features/             # feature UI by module
         components/           # app-level components
-        lib/                  # typed NestJS API client, UI auth state, config
+        lib/                  # browser/server generated-client adapters, UI auth state, config
       public/
     api/
       src/
@@ -104,7 +105,8 @@ bigprojects-bos/
       Dockerfile              # Cloud Run container target
   packages/
     domain/                   # small shared kernel; feature domains stay in API modules
-    contracts/                # schemas, DTOs, enums
+    contracts/                # framework-neutral enums/constants only
+    api-client/               # openapi.json + generated src/generated; never hand-edited
     db/                       # Prisma schema/client/migrations; API runtime only
     ui/                       # reusable UI primitives
     shared/                   # utility helpers
@@ -127,6 +129,7 @@ flowchart TD
   Api["apps/api"]
   UI["packages/ui"]
   Contracts["packages/contracts"]
+  ApiClient["packages/api-client - generated"]
   Domain["packages/domain"]
   DB["packages/db"]
   Shared["packages/shared"]
@@ -134,6 +137,7 @@ flowchart TD
 
   Web --> UI
   Web --> Contracts
+  Web --> ApiClient
   Web --> Shared
   Api --> Contracts
   Api --> Domain
@@ -150,7 +154,9 @@ Hard rules:
 - `packages/domain` is a small shared kernel, not a global home for all business logic; it must not import Next.js, NestJS, Prisma, React or browser APIs.
 - Feature-specific domain rules live in `apps/api/src/modules/<module>/domain`.
 - `packages/db` maps database records to domain concepts; it does not own business policy.
-- `packages/contracts` owns framework-neutral request/response shapes and status enums; canonical HTTP contracts are generated from NestJS OpenAPI.
+- `packages/contracts` owns only framework-neutral shared enums/constants; it contains no HTTP validators or business rules.
+- NestJS class-validator DTOs are the sole manually authored HTTP contract. OpenAPI generated from them is the input to `@hey-api/openapi-ts`.
+- NestJS Swagger writes `packages/api-client/openapi.json`; Hey API consumes it into `packages/api-client/src/generated`. Both are committed generated artifacts, never hand-edited and imported by `apps/web` only; `apps/api` must not depend on the package. `apps/web/src/lib/api-client/` is the hand-written runtime boundary with separate browser mutation and server-only read adapters.
 - `apps/web` never imports Prisma or server secrets.
 - `apps/web` does not import `packages/domain`; it consumes API contracts and view models.
 - `apps/api` is the only runtime that talks directly to the database and backend external services.
@@ -343,7 +349,9 @@ API rules:
 
 - REST endpoints grouped by module.
 - OpenAPI/Swagger generated from controllers and DTOs.
-- Request validation at the boundary.
+- Global `ValidationPipe` validates class-validator DTOs at the boundary.
+- Hey API deterministically generates frontend fetch functions, TypeScript models and Zod schemas from OpenAPI. The OpenAPI artifact and generated package are committed; CI regenerates them and rejects drift/manual edits.
+- Generated Zod is a frontend UX aid only. Cross-field, authorization, database and business invariants stay in NestJS/PostgreSQL.
 - RBAC and ownership checks before business mutations.
 - Audit logs for important auth, status, allocation, attachment, provisioning and publication changes.
 - No business workflow hidden in React components.
@@ -383,6 +391,8 @@ Database implementation:
 
 - PostgreSQL 18.x on Neon;
 - Prisma ORM 7.x schema, generated client and migrations stored in `packages/db`;
+- runtime uses one container-scoped PrismaClient with `@prisma/adapter-pg` and the pooled DML-only `DATABASE_URL`;
+- Prisma CLI/migrations load the direct owner `DIRECT_URL` through `prisma.config.ts`; handlers do not call `$disconnect()`;
 - only `apps/api` imports the runtime Prisma client;
 - migrations run once from CI/deployment tooling, not from Next.js or an API request;
 - explicit archive/lifecycle fields for referenced business records; no generic soft-delete convention;
@@ -448,8 +458,8 @@ R2 file access uses signed upload/download flows. Uploads remain quarantined unt
 | Environment | Web | API | Database | Purpose |
 |---|---|---|---|---|
 | Development | `localhost:3000` | `localhost:4000` | PostgreSQL 18 container | Local development; MinIO/ClamAV/Mailpit/ToonExpo stubs |
-| Staging | Vercel preview/staging | Cloud Run staging service | Neon staging branch/db | Acceptance and QA |
-| Production | Vercel production domain | Cloud Run production service | Neon production db | Live BOS |
+| Staging | Vercel preview/staging | Cloud Run `europe-west3` staging service | Neon AWS `eu-central-1` staging branch/db | Acceptance and QA |
+| Production | Vercel production domain | Cloud Run `europe-west3` production service | Neon AWS `eu-central-1` production db | Live BOS |
 
 Infrastructure:
 
@@ -463,6 +473,8 @@ Infrastructure:
 - GitHub Actions runs lint, typecheck, tests and builds.
 
 Cloud Run receives a Docker image built from `apps/api/Dockerfile`. Runtime configuration comes from validated environment variables and Google Secret Manager.
+
+Cloud Run and Neon are both provisioned in Frankfurt to minimize the permanent API-to-database network hop. No RTT is promised in documentation: staging measures p50/p95 database latency before production promotion, and changing the pair requires recorded evidence and an architecture decision.
 
 ---
 
@@ -490,11 +502,12 @@ Scale path:
 | Frontend | Next.js App Router | Strong for operational web UI |
 | Backend | NestJS | Modules, guards, validation and OpenAPI |
 | API style | REST + OpenAPI | Clear CRUD/workflow contract |
+| API client | Hey API generated fetch SDK + Zod | One authored backend contract and deterministic frontend artifacts |
 | Database | PostgreSQL 18 + Prisma ORM 7 | Relational workflows and reporting |
 | API hosting | Google Cloud Run | Containerized NestJS runtime |
 | Web hosting | Vercel | Best fit for Next.js |
 | Integration | Provisioning plus versioned public map snapshots | Supports required workflows without shared databases or broad synchronization |
-| Map UI | Konva 10.x + react-konva | Interactive metric editor and reusable read-only rendering model |
+| Map UI | Konva 10.x + react-konva 19.2.x | Interactive metric editor and reusable read-only rendering model |
 
 ---
 

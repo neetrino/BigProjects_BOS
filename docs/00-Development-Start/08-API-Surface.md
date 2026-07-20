@@ -11,7 +11,8 @@ Accepted route baseline. NestJS controllers and generated OpenAPI are canonical 
 - Identifiers are UUIDs. Timestamps are UTC RFC 3339 strings.
 - List endpoints use cursor pagination with default `limit=50` and maximum `limit=100`.
 - Mutable aggregates expose an integer `version`; update commands include `expectedVersion` and return `409 conflict` on stale writes.
-- Resource-creation, transition, allocation, provisioning and publication POST commands require a client UUID `Idempotency-Key`. NestJS scopes it to user + command, retains the result for 24 hours and returns `409` if the same key is reused with a different request hash.
+- Resource-creation, transition, allocation, provisioning and publication POST commands plus venue cell-run PATCH require a client UUID `Idempotency-Key`. NestJS scopes it to user + command, retains the result for 24 hours and returns `409` if the same key is reused with a different request hash.
+- Parsed `application/json` request bodies are limited to 1 MiB. Files use signed R2 upload flows rather than JSON transport. An oversized body returns `413 PAYLOAD_TOO_LARGE` before controller execution; DTO field/array limits remain mandatory inside that envelope.
 - Validation errors use stable field paths. Domain failures use stable problem codes and never rely on English message matching.
 - Every response includes or echoes `X-Request-Id`.
 - Private responses use `Cache-Control: no-store`.
@@ -128,8 +129,8 @@ POST   /cycles/:cycleId/venue-plan/source-upload-intent
 POST   /cycles/:cycleId/venue-plan/source-finalize
 POST   /venue-plans/:planId/revisions/source-upload-intent
 POST   /venue-plans/:planId/revisions/source-finalize
-PATCH  /venue-plans/:planId/calibration
-PUT    /venue-plans/:planId/cells
+PATCH  /venue-plan-revisions/:revisionId/calibration
+PATCH  /venue-plan-revisions/:revisionId/cell-runs
 GET    /venue-plans/:planId/areas
 POST   /venue-plans/:planId/areas
 PATCH  /space-areas/:areaId
@@ -145,6 +146,31 @@ POST   /venue-map-publications/:publicationId/retry
 ```
 
 Area, cell, allocation and publication mutations are transactional and revalidated by NestJS. Map publish is Admin-only.
+
+Cell classification uses a partial range patch rather than a full-grid replacement:
+
+```json
+{
+  "expectedVersion": 12,
+  "runs": [
+    {
+      "row": 42,
+      "startColumn": 10,
+      "endColumn": 35,
+      "classification": "sellable"
+    }
+  ]
+}
+```
+
+- Only cells covered by supplied runs change; omitted rows and omitted cells stay unchanged.
+- Clearing a range is explicit with `classification: "unknown"`; an empty `runs` array is rejected.
+- Runs are sorted by row then start column, remain within revision bounds and cannot overlap within one request. No last-write-wins ordering exists.
+- One command accepts at most 5,000 runs and 100,000 unique expanded cells and remains within the global 1 MiB JSON limit.
+- `expectedVersion` is the owning `VenuePlan.version`. A stale value returns `409 MAP_VERSION_CONFLICT`.
+- The request must address the active revision. A superseded revision is read-only.
+- NestJS expands and validates the runs and applies them in one transaction. Success increments `VenuePlan.version`; public classification changes also increment `contentVersion` in that transaction.
+- Replaying the same user/command/body with the same `Idempotency-Key` returns the retained result; reusing the key with different content returns `409 IDEMPOTENCY_KEY_REUSED`.
 
 Allocation release rejects removal of the last active area from a `won` BuilderDeal unless the same command transaction creates its replacement or performs an allowed terminal deal transition.
 

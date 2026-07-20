@@ -9,6 +9,8 @@
 - A cell cannot change away from sellable while it belongs to an active area.
 - Free cells can be repartitioned while historical records remain preserved.
 - Source/calibration replacement creates a new revision and cannot orphan historical areas/publications or proceed with active allocations.
+- Cell classification PATCH changes only cells covered by sorted non-overlapping row runs; omitted cells remain unchanged and explicit `unknown` clears a range.
+- Cell-run commands reject stale VenuePlan versions, superseded revisions, overlaps, out-of-bounds runs and documented request limits without partial writes.
 
 ## Business Integration
 

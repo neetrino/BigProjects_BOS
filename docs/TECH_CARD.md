@@ -23,7 +23,7 @@ BigProjects BOS is a full production product. It is not a prototype or MVP. Rele
 - Stay on the major/minor lines below and install the latest security patch available at implementation time.
 - Upgrade major versions only through an explicit architecture decision and migration plan.
 
-Stable-line verification on 2026-07-20: [Node.js 24 LTS](https://nodejs.org/en/download/archive/v24), [Next.js 16.2](https://nextjs.org/blog/next-16-2), [React 19.2](https://react.dev/versions), [TypeScript 6.0](https://www.typescriptlang.org/docs/handbook/release-notes/typescript-6-0.html), [Tailwind CSS 4.3](https://tailwindcss.com/blog/tailwindcss-v4-3), [next-intl](https://next-intl.dev/), [NestJS 11](https://docs.nestjs.com/migration-guide), [Prisma ORM 7](https://www.prisma.io/blog/announcing-prisma-orm-7-0-0), [Prisma PostgreSQL 18 support](https://docs.prisma.io/docs/orm/reference/supported-databases), [Neon PostgreSQL 18](https://neon.com/docs/changelog/2026-02-27) and [Konva 10](https://github.com/konvajs/konva/releases).
+Stable-line verification on 2026-07-20: [Node.js 24 LTS](https://nodejs.org/en/download/archive/v24), [Next.js 16.2](https://nextjs.org/blog/next-16-2), [React 19.2](https://react.dev/versions), [TypeScript 5.9](https://www.typescriptlang.org/docs/handbook/release-notes/typescript-5-9.html), [Tailwind CSS 4.3](https://tailwindcss.com/blog/tailwindcss-v4-3), [next-intl](https://next-intl.dev/), [NestJS 11](https://docs.nestjs.com/migration-guide), [Prisma ORM 7](https://www.prisma.io/blog/announcing-prisma-orm-7-0-0), [Prisma PostgreSQL 18 support](https://docs.prisma.io/docs/orm/reference/supported-databases), [Neon PostgreSQL 18](https://neon.com/docs/changelog/2026-02-27), [Hey API](https://heyapi.dev/), [Konva 10](https://github.com/konvajs/konva/releases) and [react-konva 19.2](https://www.npmjs.com/package/react-konva).
 
 ## Core Stack
 
@@ -32,11 +32,11 @@ Stable-line verification on 2026-07-20: [Node.js 24 LTS](https://nodejs.org/en/d
 | Package manager | pnpm 11.x | Confirmed | Workspace package manager. |
 | Monorepo tooling | Turborepo | Confirmed | Size C build/task orchestration. |
 | Node.js | 24.x LTS | Confirmed | Production LTS runtime. |
-| TypeScript | 6.0.x, strict | Confirmed | Stable ecosystem-compatible compiler baseline. |
+| TypeScript | 5.9.x, strict | Confirmed | One version across the monorepo; matches the accepted NestJS 11 toolchain baseline. |
 | Frontend | Next.js 16.2.x + React 19.2.x latest patched release | Confirmed | `apps/web` presentation layer only; React 19.2.0 is forbidden by the [official RSC security advisory](https://react.dev/blog/2025/12/03/critical-security-vulnerability-in-react-server-components). |
 | Frontend styles | Tailwind CSS 4.3.x | Confirmed | With shadcn/ui and custom BOS components. |
 | Frontend localization | next-intl latest stable | Confirmed | App Router/Server Component support with preference-based, non-prefixed routes. |
-| Venue map rendering | Konva 10.x + compatible react-konva | Confirmed | Client-side 2D grid/area editor; domain state persists through NestJS, not Konva JSON. |
+| Venue map rendering | Konva 10.x + react-konva 19.2.x | Confirmed | Client-side 2D grid/area editor; domain state persists through NestJS, not Konva JSON. |
 | Backend | NestJS 11.1.x | Confirmed | `apps/api` owns the complete product backend. |
 | API | REST + OpenAPI | Confirmed | NestJS controllers are canonical. |
 | Database | PostgreSQL 18.x on Neon | Confirmed | Neon PostgreSQL 18 is production GA. |
@@ -51,14 +51,14 @@ Stable-line verification on 2026-07-20: [Node.js 24 LTS](https://nodejs.org/en/d
 
 ## Frontend - `apps/web`
 
-TypeScript 6.0 is the selected stable compiler baseline. Do not adopt the TypeScript 7 native compiler line until it is stable and the chosen NestJS/Next.js/lint/codegen toolchain passes an ADR-backed compatibility evaluation.
+TypeScript 5.9 is the selected production compiler baseline for every workspace package. TypeScript 6 adoption requires a separate compatibility PR proving NestJS decorators/CLI, Swagger, Prisma generation, Hey API generation, lint, unit/integration tests and both production builds; do not split compiler versions between web and API.
 
 | Parameter | Decision |
 |---|---|
 | Responsibility | Internal BOS pages, workspaces, sheets, forms and browser interaction |
 | Rendering | Next.js App Router, Server Components by default, Client Components where interactive |
-| Data access | Typed HTTP client calling the NestJS API |
-| Forms | React Hook Form + Zod for frontend feedback; NestJS repeats authoritative validation |
+| Data access | Generated `packages/api-client` fetch SDK calling the NestJS API |
+| Forms | React Hook Form + generated Zod schemas for UX feedback; NestJS remains authoritative |
 | Server state | API-driven; React Query only where client revalidation is needed |
 | Local state | React state; Zustand is allowed for the complex venue-map editor session only when needed |
 | Forbidden | Prisma, SQL, direct PostgreSQL, product route handlers, backend Server Actions, authoritative auth/business logic |
@@ -74,12 +74,18 @@ Next.js Server Components may fetch the NestJS API. Server Actions must not impl
 | Framework | NestJS 11.1.x modular monolith |
 | Responsibility | All auth, RBAC, validation, business logic, persistence, audit and integrations |
 | HTTP | REST controllers with `/api/v1` version prefix |
-| Validation | Global `ValidationPipe`; class-validator DTOs unless an ADR approves another standard |
+| Validation | Global `ValidationPipe`; class-validator DTOs are the sole manually authored HTTP validation contract |
 | Documentation | Swagger/OpenAPI generated from NestJS controllers and DTOs |
 | Persistence | Repositories/services call Prisma through `packages/db` |
 | Errors | Global NestJS exception filter with stable problem codes and request IDs |
 | Logging | Pino structured logs with sensitive-field redaction |
 | Uploads | NestJS authorizes and signs R2 uploads or receives uploads when required |
+
+## API Contract And Client Generation
+
+NestJS controllers and class-validator DTOs are the only manually authored HTTP contract. The Swagger generation command writes the committed artifact to `packages/api-client/openapi.json`; `@hey-api/openapi-ts` consumes it and writes the fetch SDK, TypeScript models and Zod request/response schemas to `packages/api-client/src/generated`. Consumers do not require a running API during install/build; CI regenerates both locations and fails on any diff. Files under `src/generated` are never edited manually. The hand-written `apps/web/src/lib/api-client/` boundary configures the generated client: `browser.ts` owns runtime base URL, `credentials: include`, session-bound CSRF headers on mutations and request IDs; `server.ts` is server-only/read-only and forwards the current request cookie for Server Component reads. Stable problem-response parsing is shared inside this boundary, and product mutations never use the server adapter.
+
+Generated Zod expresses only constraints present in OpenAPI. Frontend validation is an early UX aid: cross-field custom validators, authorization and business/database invariants remain NestJS/PostgreSQL responsibilities and must not be manually duplicated in browser schemas. `packages/contracts` contains only framework-neutral enums/constants that genuinely need compile-time sharing; it contains no second request/response validation implementation.
 
 ## Database - `packages/db`
 
@@ -87,6 +93,8 @@ Next.js Server Components may fetch the NestJS API. Server Actions must not impl
 |---|---|
 | Database | PostgreSQL 18.x on Neon |
 | ORM | Prisma ORM 7.x using the Prisma 7 generator/output conventions |
+| Runtime adapter | `@prisma/adapter-pg` using the pooled DML-only `DATABASE_URL` |
+| Prisma config | `prisma.config.ts` explicitly loads local env and uses direct `DIRECT_URL` for CLI/migrations |
 | Runtime owner | Only `apps/api` may import and execute the Prisma client |
 | Schema changes | Prisma migrations committed to the repository |
 | Migration execution | One dedicated CI/deploy job; never a web request or Next.js build |
@@ -94,6 +102,8 @@ Next.js Server Components may fetch the NestJS API. Server Actions must not impl
 | Migration credentials | Direct owner connection available only to migration jobs |
 | Seed data | Explicit dev/test seed scripts |
 | Cache/queues | No Redis initially; low-volume shared security throttles use PostgreSQL and Redis requires a measured/ADR-backed need |
+
+`apps/api` creates one `PrismaClient` per Cloud Run container and reuses it across requests; request handlers never call `$disconnect()`. Pool size and acquisition/idle timeouts are configured in the `pg` adapter rather than legacy Prisma URL parameters. The protected migration job is the only runtime given the direct owner URL.
 
 ## Authentication And Security
 
@@ -115,11 +125,11 @@ Next.js Server Components may fetch the NestJS API. Server Actions must not impl
 |---|---|
 | Domain/application unit | Vitest, focused on business rules and services |
 | API integration | Nest testing utilities + Supertest against test database |
-| Contract | OpenAPI generation and frontend client compatibility check |
+| Contract | OpenAPI generation plus deterministic Hey API client/Zod regeneration and drift check |
 | Frontend component | React Testing Library where behavior warrants it |
 | End to end | Playwright for critical internal workflows |
 
-Required pull-request gates are format check, lint, frontend/backend boundary check, typecheck, unit tests, API integration tests, OpenAPI drift check, Prisma validation/migration check, web build, API build and dependency/secret scanning. Critical Playwright flows gate promotion after the relevant workflow exists.
+Required pull-request gates are format check, lint, frontend/backend boundary check, typecheck, unit tests, API integration tests, OpenAPI + Hey API regeneration drift check, Prisma validation/migration check, web build, API build and dependency/secret scanning. Critical Playwright flows gate promotion after the relevant workflow exists.
 
 ## Monorepo Layout
 
@@ -129,7 +139,8 @@ apps/
   api/                  # NestJS complete product backend
 packages/
   domain/               # small shared kernel only; feature domains stay in API modules
-  contracts/            # framework-neutral API enums/schemas where shared
+  contracts/            # framework-neutral enums/constants only
+  api-client/           # committed openapi.json plus generated-only src/generated; web-facing
   db/                   # Prisma schema/client/migrations; API runtime only
   ui/                   # reusable React UI
   shared/               # environment-neutral utilities

@@ -2,7 +2,7 @@
 
 ## Frontend Technology
 
-Use stable `konva` 10.x with a compatible stable `react-konva` release inside a Next.js Client Component.
+Use stable `konva` 10.x with `react-konva` 19.2.x inside a Next.js Client Component. The exact compatible patch is pinned in `pnpm-lock.yaml` and verified by the venue-map build/component smoke test.
 
 Konva is a renderer and interaction layer only. It does not own persistence or business rules.
 
@@ -32,6 +32,8 @@ Browser -> Next.js map UI -> NestJS REST API -> Prisma -> PostgreSQL
 - PostgreSQL stores canonical map records.
 - Cloudflare R2 stores source/normalized plan assets.
 - Konva scene JSON is never the database source of truth.
+
+Cell classification mutations use compact sorted row runs. NestJS applies only the covered ranges and expands them transactionally into canonical VenuePlanCell rows; unmentioned cells are unchanged. This avoids sending up to 250,000 cell objects while retaining deterministic arbitrary shapes.
 
 ## Source Asset
 

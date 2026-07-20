@@ -16,6 +16,7 @@ flowchart TD
   Api["apps/api - NestJS backend"]
   UI["packages/ui"]
   Contracts["packages/contracts"]
+  ApiClient["packages/api-client - generated"]
   Domain["packages/domain"]
   DB["packages/db"]
   Shared["packages/shared"]
@@ -23,6 +24,7 @@ flowchart TD
 
   Web --> UI
   Web --> Contracts
+  Web --> ApiClient
   Web --> Shared
   Web --> Config
   Api --> Contracts
@@ -38,6 +40,7 @@ flowchart TD
 
 - `apps/web -> packages/db`
 - `apps/web -> packages/domain`
+- `apps/api -> packages/api-client`
 - `packages/ui -> packages/db`
 - `packages/* -> apps/*`
 - `packages/domain -> Next.js | React | NestJS | Prisma`
@@ -48,5 +51,5 @@ flowchart TD
 - Use workspace package `exports` and ESLint import-boundary rules.
 - Fail CI when `apps/web` imports Prisma, `packages/db` or backend internals.
 - Cross-module imports use public `index.ts`/application APIs only.
-- OpenAPI generation and frontend client compatibility run in CI.
+- OpenAPI generation and deterministic Hey API client/Zod regeneration run in CI; drift fails the build.
 - Keep `packages/domain` limited to shared value objects; feature domain rules stay module-local in NestJS.

@@ -24,7 +24,10 @@ Reviewed repository boundary/instructions, brief/decisions/progress/tech card, a
 - added integration authentication, endpoints, idempotency, timeout/retry and asset-copy rules;
 - removed deferred Dashboard/Tasks/Onboarding/KPI/Reports from Release 1 routes, screens and acceptance criteria;
 - added canonical API surface and documentation precedence/readiness gate;
-- added VenuePlanRevision/landmark/content-version fields so source replacement cannot corrupt historical areas or publications.
+- added VenuePlanRevision/landmark/content-version fields so source replacement cannot corrupt historical areas or publications;
+- fixed one authored API contract: NestJS class-validator DTOs generate OpenAPI, and Hey API generates the web fetch/type/Zod package;
+- selected one TypeScript 5.9 baseline and explicit Prisma 7 adapter/config/pool mechanics;
+- selected partial row-run cell mutation, the 1 MiB JSON envelope and the measurement-gated Frankfurt deployment pair.
 
 ## Canonical Release 1 Decisions
 
@@ -74,6 +77,7 @@ BOS Viewer
 - no unresolved Release 1 `Draft`, `Proposed`, `Needs confirmation`, pending-decision or ambiguous optional-v1 markers;
 - local Markdown links outside reference templates resolve;
 - canonical statuses, scope, runtime ownership and integration directions agree across the audited documents;
+- validation/codegen ownership, package dependencies, map mutation semantics and Prisma runtime/migration connections agree across the audited documents;
 - provider secrets/DNS and named deployment approvers remain external prerequisites only and are intentionally not stored in Git.
 
 ## Non-Blocking Future Constraints

@@ -27,6 +27,9 @@ Later-phase Dashboard, Tasks, Onboarding, KPI and Analytics documents are design
 | Product boundary | Internal BOS only; ToonExpo remains a separate system and source of truth for its product data. |
 | Delivery | Production Release 1, implemented incrementally in one Size C monorepo. |
 | Runtime | Browser -> Next.js -> NestJS -> Prisma -> PostgreSQL. |
+| Toolchain | One strict TypeScript 5.9.x line across all workspaces; TypeScript 6 requires a complete compatibility PR. |
+| Validation/client | NestJS class-validator DTO -> OpenAPI -> generated Hey API fetch/types/Zod; browser Zod is UX-only. |
+| Persistence runtime | Prisma 7 `@prisma/adapter-pg`, one client per container, pooled runtime URL and direct migration-only URL. |
 | Auth | Invite-only email/password, mandatory Admin TOTP, opaque PostgreSQL-backed sessions in secure cookies. |
 | Roles | Admin, Staff and Viewer with server-enforced assignment rules. |
 | Tenancy | Single BigProjects tenant; Organization is a CRM entity, not an auth tenant. |
@@ -38,11 +41,12 @@ Later-phase Dashboard, Tasks, Onboarding, KPI and Analytics documents are design
 | Provisioning trigger | Explicit action after `won`/`confirmed`; no automatic account creation. |
 | Access email | ToonExpo owns participant credential/setup delivery; BOS email is only for BOS auth. |
 | Files | Private R2 objects attached to supported entities; signed access; no document module. |
-| Map | One plan per cycle, original source retained, normalized render asset, deterministic cell-based geometry. |
+| Map | One plan per cycle, original source retained, normalized render asset, deterministic cell geometry and partial active-revision row-run mutation. |
 | Pricing | Optional commercial amounts; no accounting/payment processing. |
 | Integration transport | HTTPS JSON, bearer service credential, explicit idempotency key, bounded timeout/retry and no shared database. |
+| Inbound transport | JSON request bodies are capped at 1 MiB; files use signed R2 transfer. |
 | CI | Format, lint, boundary checks, typecheck, tests, OpenAPI/schema checks, builds, migration safety and security scans. |
-| Operations | Immutable artifact promotion, forward-only migrations, 99.5% objective, RPO 5 minutes and RTO 4 hours. |
+| Operations | Frankfurt Cloud Run/Neon pair with a staging-latency promotion gate, immutable artifact promotion, forward-only migrations, 99.5% objective, RPO 5 minutes and RTO 4 hours. |
 
 ## External Prerequisites
 

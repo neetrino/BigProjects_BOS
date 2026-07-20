@@ -9,8 +9,8 @@ Accepted Release 1 delivery baseline. Provider resource ids and secret values re
 | Environment | Purpose | Data rule |
 |---|---|---|
 | Development | Local web/API plus PostgreSQL 18, MinIO, ClamAV, Mailpit and ToonExpo contract stub containers | Synthetic/dev data only |
-| Staging | Acceptance, integration contract tests and migration rehearsal | Synthetic or explicitly sanitized data |
-| Production | Internal live BOS | Real operational data |
+| Staging | Acceptance, integration contract tests and migration rehearsal in Cloud Run `europe-west3` + Neon AWS `eu-central-1` | Synthetic or explicitly sanitized data |
+| Production | Internal live BOS in Cloud Run `europe-west3` + Neon AWS `eu-central-1` | Real operational data |
 
 No environment shares a database, R2 bucket/prefix, ToonExpo credential, Sentry environment or signing/encryption secret with another.
 
@@ -25,7 +25,7 @@ Every pull request must pass:
 - frontend/backend dependency-boundary check;
 - TypeScript strict typecheck;
 - unit and API integration tests;
-- generated OpenAPI drift and typed-client compatibility check;
+- generated OpenAPI plus deterministic Hey API fetch/type/Zod regeneration and drift check;
 - Prisma format/validate and migration-history check against an ephemeral database;
 - `apps/web` and `apps/api` production builds;
 - dependency vulnerability, license policy and secret scans.
@@ -37,6 +37,7 @@ Merge to the protected main branch builds immutable web/API artifacts once. Stag
 ## Database Migration Rule
 
 - Prisma migrations are committed and applied by one protected job using the direct owner connection.
+- Runtime uses pooled `DATABASE_URL`; the protected Prisma 7 `prisma.config.ts` migration job alone receives direct owner `DIRECT_URL`.
 - Runtime starts only after the migration job succeeds.
 - Migrations are forward-only in production. Application rollback cannot assume a destructive database rollback.
 - Breaking changes use expand -> deploy compatible code/backfill -> switch reads/writes -> contract in a later release.
@@ -45,11 +46,13 @@ Merge to the protected main branch builds immutable web/API artifacts once. Stag
 
 ## Deployment And Rollback
 
-- Vercel deploys `apps/web`; Google Cloud Run deploys the pinned `apps/api` image and ClamAV sidecar. Cloud Scheduler invokes a Cloud Run integration-dispatch Job using the same API image every minute.
+- Vercel deploys `apps/web`; Google Cloud Run `europe-west3` (Frankfurt) deploys the pinned `apps/api` image and ClamAV sidecar. Cloud Scheduler invokes a same-region Cloud Run integration-dispatch Job using the same API image every minute.
 - Readiness must pass before traffic reaches a new API revision.
 - Failed web/API rollout returns traffic to the last known-good artifact/revision.
 - If a forward migration prevents application rollback, ship a forward compatibility fix rather than manually reversing production data.
 - Integration failures do not roll back BOS domain transactions; they leave explicit retryable request/publication state.
+
+Neon staging/production projects use AWS `eu-central-1` (Frankfurt). This minimizes the persistent API-to-database hop without asserting an unmeasured RTT across providers. Staging records p50/p95 database latency under the representative API smoke/load test before production promotion; a region-pair change requires documented measurements and an architecture decision.
 
 ## Availability And Recovery Objectives
 

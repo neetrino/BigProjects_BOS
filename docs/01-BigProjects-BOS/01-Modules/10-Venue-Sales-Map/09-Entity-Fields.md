@@ -6,6 +6,7 @@
 - event_cycle_id unique;
 - title;
 - active_revision_id optional until source setup;
+- version for optimistic concurrency;
 - content_version;
 - last_published_content_version optional;
 - next_snapshot_version;
@@ -136,6 +137,8 @@ Snapshot version is allocated once and never reused. Retry changes attempt/resul
 
 ## Content Version Rule
 
-Every committed mutation that changes public geometry, classifications, landmarks, allocation identity/display or normalized asset increments `VenuePlan.content_version` in the same transaction. The UI is `Up to date` only when `content_version == last_published_content_version`; otherwise it shows unpublished changes.
+Every successful VenuePlan aggregate mutation increments `VenuePlan.version` for optimistic concurrency. Every committed mutation that changes public geometry, classifications, landmarks, allocation identity/display or normalized asset also increments `VenuePlan.content_version` in the same transaction. The UI is `Up to date` only when `content_version == last_published_content_version`; otherwise it shows unpublished changes.
+
+Cell classification commands use sorted non-overlapping row runs and change only explicitly covered cells. Clearing is an explicit run to `unknown`; omitted cells remain unchanged. Transport expansion does not change the canonical per-cell persistence model.
 
 Release 1 does not require PostGIS. Canonical sellable geometry is cell membership; landmark point/polygon coordinates are validated numeric JSON and all public render polygons are deterministic projections.

@@ -136,10 +136,12 @@ Audit metadata stores changed field names and safe scalar before/after values. P
 
 ## Database Runtime Defaults
 
-- Cloud Run API instance maximum Prisma pool size: 10 connections; concurrency starts at 40; production starts with maximum 5 instances and minimum 1.
-- Connection timeout: 5 seconds; statement timeout: 15 seconds; interactive transaction timeout: 10 seconds.
+- Runtime instantiates one container-scoped `PrismaClient` with `@prisma/adapter-pg` and reuses it across Cloud Run requests. Request handlers and scheduled commands never call `$disconnect()` after individual work.
+- The `pg` adapter uses the pooled DML-only Neon `DATABASE_URL` with `max: 10`, `connectionTimeoutMillis: 5000` and `idleTimeoutMillis: 30000`; Prisma 7 pool behavior is not configured through legacy Prisma URL pool parameters.
+- Cloud Run concurrency starts at 40; production starts with maximum 5 instances and minimum 1.
+- PostgreSQL statement timeout is 15 seconds; Prisma interactive transaction timeout is 10 seconds.
 - API request timeout: 30 seconds. External integration calls use shorter limits from the integration contract.
-- Runtime uses a pooled DML-only Neon URL. Migrations use a direct owner URL in a single protected deploy job.
+- `prisma.config.ts` explicitly imports `dotenv/config` for local tooling, points CLI/migrations to the direct owner `DIRECT_URL` and never exposes that credential to the API runtime. The generated client/output path follows Prisma 7 conventions.
 - Local development and CI use PostgreSQL 18 containers. Staging and production use separate Neon projects/branches and credentials. Values are environment configuration and validated at startup.
 - Deployment validation must keep `max instances * pool size` plus migration/operations headroom below the selected Neon plan connection limit before any scaling increase.
 
