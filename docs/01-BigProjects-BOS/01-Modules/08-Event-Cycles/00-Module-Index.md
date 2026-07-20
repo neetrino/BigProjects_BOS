@@ -9,8 +9,9 @@ BigProjects can run ToonExpo several times per year. Each cycle starts a new ope
 ## Core v1 Rules
 
 - Cycle is the main operational container for one ToonExpo iteration.
-- Company/contact history persists across cycles.
-- Deal represents a company's participation attempt for one cycle.
+- Organization/Contact history persists across cycles.
+- CycleEngagement represents one Organization's cycle context with a BuilderDeal or PartnerParticipation subtype.
+- Each Release 1 cycle has one VenuePlan.
 - Onboarding checklist progress belongs to the deal and therefore to the cycle.
 - Tasks can be linked to a cycle when they are event-specific.
 - Dashboard and reports must be filterable by active/current cycle.
@@ -28,9 +29,9 @@ BigProjects can run ToonExpo several times per year. Each cycle starts a new ope
 
 ## Related Modules
 
-- Internal CRM / Deals
-- Deal Onboarding Checklist
+- Builder Sales CRM
+- Partner Relations
+- Venue Sales Map
 - Tasks / Processes
 - Analytics / Reports
 - ToonExpo Account Provisioning
-

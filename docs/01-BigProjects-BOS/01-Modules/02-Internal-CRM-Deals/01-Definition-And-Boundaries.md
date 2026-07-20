@@ -2,12 +2,12 @@
 
 ## Definition
 
-Internal CRM / Deals manages BigProjects relationships with companies that may participate in ToonExpo.
+Builder Sales CRM manages BigProjects sales of exhibition space to builder organizations.
 
 The central question is:
 
 ```text
-Which company are we bringing into which ToonExpo cycle, and what is the current participation status?
+Which builder is buying which areas in which ToonExpo cycle, and what is the current sales stage?
 ```
 
 ## Primary Users
@@ -18,7 +18,7 @@ Which company are we bringing into which ToonExpo cycle, and what is the current
 
 ## In Scope
 
-- company records;
+- builder Organization records;
 - contact persons;
 - cycle-specific deals;
 - deal pipeline/stages;
@@ -29,6 +29,8 @@ Which company are we bringing into which ToonExpo cycle, and what is the current
 - tasks linked to deal/company if needed;
 - ToonExpo account provisioning request after approval;
 - cycle filters and reports.
+- one or several venue-space allocations;
+- map picker and map deep links;
 
 ## Out Of Scope
 
@@ -38,8 +40,14 @@ Which company are we bringing into which ToonExpo cycle, and what is the current
 - apartment inventory statuses;
 - builder public profile editing;
 - readiness scoring;
-- event venue map setup;
+- partner participation pipeline;
 - general file drive.
+
+## Boundary With Partner Relations
+
+PartnerParticipation is a separate entity, table, pipeline and workspace. It is not a BuilderDeal type and is never included in Builder Sales board totals or reports.
+
+Both modules may reuse Kanban UI and CycleEngagement infrastructure.
 
 ## Boundary With ToonExpo Constructor CRM
 
@@ -57,15 +65,14 @@ Which buyer is interested in which apartment/project from this builder?
 
 These are different pipelines and must not be merged.
 
-## Boundary With Onboarding Checklist
+## Boundary With Venue Sales Map
 
-Onboarding checklist is a block inside the deal sheet.
+Venue Sales Map owns geometry, cells, areas and allocations. Builder Sales owns sales stage and negotiated commercial data.
 
-It tracks required internal work for that participant deal, but it is not a separate CRM or task product in v1.
+The NestJS BuilderDeal transition service must reject `won` when no active allocation exists.
 
 ## Boundary With Event Cycles
 
 CRM deals are cycle-specific.
 
 The same company can have a new deal for each ToonExpo cycle while company/contact history remains shared.
-

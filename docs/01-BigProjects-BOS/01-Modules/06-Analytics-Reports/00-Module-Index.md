@@ -1,5 +1,9 @@
 # Analytics / Reports - Module Index
 
+## Delivery Status
+
+Later product phase. Release 1 implements only the operational queries and counters required by included workspaces.
+
 ## Purpose
 
 Analytics / Reports gives BigProjects visibility into internal BOS performance and ToonExpo preparation.
@@ -29,9 +33,8 @@ It summarizes deals, participants, event cycles, onboarding progress, tasks, sta
 
 - Dashboard
 - Event Cycles
-- Internal CRM / Deals
+- Builder Sales CRM
 - Deal Onboarding Checklist
 - Tasks / Processes
 - Staff / Team KPI
 - ToonExpo Account Provisioning
-

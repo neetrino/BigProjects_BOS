@@ -1,5 +1,9 @@
 # Cycle Onboarding Tasks And Reports
 
+## Delivery Status
+
+This file describes later-phase extensions. Release 1 cycle scope is Builder Sales, Partner Relations, Venue Sales Map and provisioning/publication only.
+
 ## Onboarding Relationship
 
 Deal onboarding checklist belongs to the deal.
@@ -93,4 +97,3 @@ Cycle comparison can answer:
 - which managers handled more deals.
 
 Advanced BI is not required in v1. Practical summary tables and charts are enough.
-

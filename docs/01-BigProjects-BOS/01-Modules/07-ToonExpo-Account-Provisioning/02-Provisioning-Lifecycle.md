@@ -5,7 +5,7 @@
 Provisioning usually starts when a BOS deal moves to:
 
 ```text
-approved_participant
+won BuilderDeal or confirmed PartnerParticipation
 ```
 
 It can be:
@@ -31,7 +31,7 @@ cancelled
 ## Flow
 
 ```text
-Deal approved
+Business record reaches its successful stage
   -> Create provisioning request
   -> Validate payload
   -> Send to ToonExpo
@@ -46,7 +46,7 @@ Deal approved
 If company already exists in ToonExpo:
 
 - do not duplicate;
-- link BOS company/deal to ToonExpo company id;
+- link BOS Organization/CycleEngagement to ToonExpo company id;
 - update access/modules only if needed;
 - store `linked_existing` or success with existing flag.
 
@@ -71,4 +71,3 @@ ToonExpo account created
 ```
 
 This can happen automatically after success or manually by manager. Either approach is acceptable in v1 if documented in implementation.
-

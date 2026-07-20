@@ -10,19 +10,62 @@ archived
 cancelled
 ```
 
-## Deal Status
+## Builder Deal Stage
 
 ```text
 new
 contacted
 negotiation
 contract_pending
-approved_participant
+won
 lost
 cancelled
 ```
 
+`won` requires at least one active SpaceAllocation.
+
+## Partner Participation Stage
+
+```text
+identified
+invited
+discussing
+confirmed
+declined
+cancelled
+```
+
+Partner `confirmed` does not require venue space.
+
+## Space Allocation Status
+
+```text
+active
+released
+archived
+```
+
+## Public Display Mode
+
+```text
+organization
+custom_label
+hidden
+```
+
+## Venue Map Publication Status
+
+```text
+draft
+publishing
+published
+publish_failed
+archived
+```
+
 ## Task Status
+
+Later phase, not Release 1:
 
 ```text
 todo
@@ -34,6 +77,8 @@ cancelled
 
 ## Work Space Status
 
+Later phase, not Release 1:
+
 ```text
 active
 archived
@@ -41,6 +86,8 @@ disabled
 ```
 
 ## Onboarding Step Status
+
+Later phase, not Release 1:
 
 ```text
 open
@@ -62,6 +109,8 @@ archived
 
 ## KPI Status
 
+Later phase, not Release 1:
+
 ```text
 on_track
 at_risk
@@ -77,6 +126,7 @@ pending
 success
 failed
 linked_existing
+needs_review
 cancelled
 ```
 

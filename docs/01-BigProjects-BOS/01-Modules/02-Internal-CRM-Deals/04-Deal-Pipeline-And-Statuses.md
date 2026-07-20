@@ -2,7 +2,7 @@
 
 ## Purpose
 
-Deal status shows where the company is in the BigProjects participation process for a specific ToonExpo cycle.
+BuilderDeal stage shows where a builder sale is in a specific ToonExpo cycle.
 
 ## Recommended Statuses
 
@@ -11,7 +11,7 @@ new
 contacted
 negotiation
 contract_pending
-approved_participant
+won
 lost
 cancelled
 ```
@@ -34,16 +34,15 @@ Participation terms, package, placement or details are being discussed.
 
 Company is close to approval. Contract/payment/confirmation is pending.
 
-### approved_participant
+### won
 
-Company has become a ToonExpo participant for this cycle.
+The builder sale is successful and the builder is confirmed for this cycle.
 
-This status is successful from sales point of view, but operational work may continue:
+Required invariant:
 
-- onboarding checklist;
-- account provisioning;
-- data/material collection;
-- handoff into ToonExpo.
+- at least one active SpaceAllocation exists for this BuilderDeal in the same EventCycle.
+
+After `won`, account provisioning and public map publication may continue.
 
 ## Terminal Statuses
 
@@ -90,18 +89,18 @@ Managers can move deals by drag/drop or status field.
 
 Important transitions can require lightweight confirmation:
 
-- move to approved_participant;
+- move to won;
 - move to lost;
 - move to cancelled.
 
 Do not duplicate the full deal form in transition modals. If required fields are missing, open/highlight them in the deal sheet.
 
-## Approval Effects
+## Won Effects
 
-Moving to approved_participant can:
+Moving to `won` can:
 
-- activate/continue onboarding checklist;
 - enable ToonExpo provisioning request;
-- update reports;
-- keep deal visible in active cycle work until onboarding/provisioning is complete.
+- make public organization display eligible for its assigned areas;
+- update sold-area and participant counters.
 
+Moving to `lost` or `cancelled` requires an explicit choice to release or keep active area allocations. The choice is audited.

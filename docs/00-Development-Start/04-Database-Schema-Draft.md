@@ -8,48 +8,51 @@ PostgreSQL 18.x on Neon is accessed only by the NestJS `apps/api` runtime throug
 
 - users;
 - staff_profiles;
-- companies;
+- organizations;
 - contacts;
 - event_cycles;
-- deals;
+- cycle_engagements;
+- builder_deals;
+- partner_participations;
 - deal_notes;
 - attachments;
-- onboarding_checklist_templates;
-- onboarding_checklist_template_items;
-- deal_onboarding_checklist_items;
-- workspaces;
-- tasks;
-- task_comments;
-- process_templates;
-- process_template_tasks;
-- process_instances;
-- kpi_snapshots;
+- venue_plans;
+- venue_plan_cells;
+- space_areas;
+- space_area_cells;
+- space_allocations;
+- venue_map_publications;
 - toonexpo_provisioning_requests;
 - audit_logs.
 
 ## Key Relationships
 
 ```text
-companies 1..n contacts
-companies 1..n deals
-event_cycles 1..n deals
-deals 1..n deal_onboarding_checklist_items
-deals 1..n tasks
-workspaces 1..n tasks
-process_templates 1..n process_template_tasks
-process_instances 1..n tasks
-users 1..n assigned tasks/deals/checklist items
-deals 0..n toonexpo_provisioning_requests
+organizations 1..n contacts
+event_cycles 1..n cycle_engagements
+organizations 1..n cycle_engagements
+cycle_engagements 0..1 builder_deals
+cycle_engagements 0..1 partner_participations
+event_cycles 1..1 venue_plans in Release 1
+venue_plans 1..n space_areas
+space_areas 1..n space_area_cells
+cycle_engagements 0..n space_allocations
+space_areas 0..n historical space_allocations and at most one active allocation
+cycle_engagements 0..n toonexpo_provisioning_requests
 ```
 
 ## Important Rules
 
-- company is long-lived;
-- deal is cycle-specific;
-- checklist item belongs to deal and cycle;
-- task can link to workspace and optional business context;
+- Organization and Contact are long-lived;
+- CycleEngagement, BuilderDeal and PartnerParticipation are cycle-specific;
+- every CycleEngagement has exactly one business subtype;
+- BuilderDeal and PartnerParticipation remain separate tables and rules;
+- BuilderDeal `won` requires an active SpaceAllocation;
+- PartnerParticipation `confirmed` does not require space;
+- active area cells cannot overlap;
 - attachments belong to real entities;
-- provisioning must be idempotent by request id / BOS company id / primary email.
+- map publication is idempotent by venue plan id and version;
+- provisioning must be idempotent by request id / BOS organization id / primary email.
 
 ## Needs Confirmation
 

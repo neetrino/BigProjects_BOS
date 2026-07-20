@@ -1,12 +1,11 @@
 # Entity Fields
 
-## Company
+## Organization
 
 Recommended fields:
 
 - id;
 - name;
-- type;
 - status;
 - source;
 - responsible_user_id;
@@ -29,29 +28,41 @@ Recommended fields:
 - created_at;
 - updated_at.
 
-## Deal
+## CycleEngagement
 
 Recommended fields:
 
 - id;
-- company_id;
+- organization_id;
 - event_cycle_id;
+- kind: builder_sale;
+- responsible_user_id;
+- primary_contact_id;
+- created_at;
+- updated_at.
+
+## BuilderDeal
+
+Recommended fields:
+
+- id;
+- cycle_engagement_id;
 - title;
-- status;
+- stage;
 - value;
 - contract_status;
 - payment_status;
 - responsible_user_id;
 - primary_contact_id;
 - expected_close_date;
-- approved_at;
+- won_at;
 - lost_reason;
 - cancelled_reason;
-- onboarding_template_id;
-- onboarding_template_version;
 - provisioning_status;
 - created_at;
 - updated_at.
+
+SpaceAllocation fields are owned by Venue Sales Map and linked through `cycle_engagement_id`.
 
 ## Note
 
@@ -92,4 +103,3 @@ Recommended fields:
 - summary;
 - metadata;
 - created_at.
-

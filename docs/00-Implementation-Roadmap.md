@@ -11,58 +11,56 @@
 ## Phase 1 - Core Internal Data
 
 - event cycles;
-- internal companies;
+- organizations;
 - contacts;
-- deals;
+- cycle engagements;
+- builder deals;
+- partner participations;
 - staff users;
-- tasks;
-- process templates;
 - notes and attachments on entity cards.
 
-## Phase 2 - Internal CRM / Deals
+## Phase 2 - Builder Sales And Partner Relations
 
 - cycle-specific deal board;
-- company cards;
+- organization cards;
 - deal pipeline;
 - deal detail sheet;
-- onboarding checklist inside deal;
 - contact persons;
 - internal notes;
 - attached documents;
-- handoff to ToonExpo account provisioning.
+- separate compact Partner Relations pipeline and sheet.
 
-## Phase 3 - Tasks & Processes
+## Phase 3 - Venue Sales Map
 
-- global tasks area;
-- configurable work spaces;
-- task lists;
-- process templates;
-- task statuses;
-- assignment;
-- deadlines;
-- blocked work tracking.
+- plan upload and metric calibration;
+- cell classifications;
+- sellable area editor;
+- allocations from map and business sheets;
+- BuilderDeal `won` enforcement;
+- allocation history and repartitioning.
 
-## Phase 4 - KPI / Dashboard / Reports
+## Phase 4 - ToonExpo Provisioning And Map Publication
 
-- dashboard widgets;
-- staff/team KPI;
-- process/task analytics;
-- participant onboarding progress;
-- reports/exports if needed.
+- idempotent company/user provisioning;
+- existing company/user link resolution;
+- `VenueMapSnapshotV1` generation;
+- manual publish, retry and status indicators;
+- ToonExpo activation response.
 
-## Phase 5 - ToonExpo Account Provisioning Integration
+## Later Product Phases
 
-- account/company creation request from BOS to ToonExpo;
-- account creation status response;
-- linked ToonExpo company id stored in BOS;
-- failed request/retry handling.
+- tasks and workspaces;
+- onboarding checklist;
+- KPI;
+- full dashboard and analytics/reports;
+- professional visitor routing support after venue-map validation.
 
 ## First Deep Module
 
 Start with:
 
 ```text
-Internal CRM / Deals
+Builder Sales CRM
 ```
 
-Reason: company/deal cards become the center for onboarding, tasks, documents, notes and reporting.
+Reason: BuilderDeal is the commercial center of Release 1 and must be designed together with venue-space allocation.

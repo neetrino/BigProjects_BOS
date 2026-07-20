@@ -4,7 +4,7 @@
 
 Deal sheet is the main detail surface for CRM work.
 
-Managers should be able to open a deal from board/list, update it, check onboarding progress and return to the same CRM context.
+Managers should be able to open a deal from board/list, update it, allocate venue space and return to the same CRM context.
 
 ## Opening Rule
 
@@ -24,9 +24,9 @@ Deal sheet should contain:
 4. responsible manager;
 5. deal details;
 6. contract/payment fields if used;
-7. onboarding checklist;
-8. ToonExpo provisioning status;
-9. tasks/linked work if any;
+7. assigned venue areas and map picker;
+8. pricing summary;
+9. ToonExpo provisioning status;
 10. notes;
 11. attachments;
 12. activity history.
@@ -41,17 +41,17 @@ Header should show:
 - responsible manager;
 - main actions.
 
-## Onboarding In Sheet
+## Venue Space In Sheet
 
-Show onboarding progress in the deal sheet, not as a separate main product.
+Show assigned areas and total square meters in the deal sheet.
 
 Example:
 
 ```text
-Onboarding: 18 / 30 done, 2 blocked
+Venue space: A-24 (25 m2), A-25 (10 m2) - 35 m2 total
 ```
 
-Clicking the onboarding section expands the checklist.
+The section opens an area picker over the current sheet. Selecting an area can open its map preview without leaving Builder Sales.
 
 ## Linked Entity Sheets
 
@@ -59,8 +59,7 @@ Inside deal sheet:
 
 - clicking company opens company sheet stacked above;
 - clicking contact opens contact sheet stacked above;
-- clicking linked task opens task sheet stacked above;
-- clicking onboarding checklist item can open item detail sheet if needed.
+- clicking assigned area opens the map/area sheet stacked above.
 
 Closing the child sheet returns to deal sheet.
 
@@ -72,7 +71,8 @@ Use quick dialogs for:
 - cancellation reason;
 - quick note;
 - upload attachment;
-- confirm approval;
+- confirm `won`;
+- choose release/keep areas for `lost` or `cancelled`;
 - create ToonExpo provisioning request.
 
 ## Save Behavior
@@ -83,4 +83,3 @@ Inline editing can use draft/save behavior:
 - Save/Cancel appears when dirty;
 - save sends one update;
 - lifecycle actions such as approve/lost/cancel are separate from normal field save.
-

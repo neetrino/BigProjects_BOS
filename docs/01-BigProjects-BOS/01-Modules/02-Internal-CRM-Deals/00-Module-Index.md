@@ -1,20 +1,22 @@
-# Internal CRM / Deals - Module Index
+# Builder Sales CRM - Module Index
 
 ## Purpose
 
-Internal CRM / Deals is the BOS workspace where BigProjects manages companies that may participate in ToonExpo.
+Builder Sales CRM is the BOS workspace where BigProjects sells exhibition space to builder organizations.
 
-It handles sales/participation deals, contacts, notes, attachments, cycle relation, onboarding progress and ToonExpo account provisioning handoff.
+It handles BuilderDeals, contacts, notes, attachments, cycle relation, venue-space allocation and ToonExpo account provisioning handoff.
 
 ## Core v1 Rules
 
-- BOS CRM is for BigProjects internal sales/operations.
+- This CRM contains builder sales only.
+- PartnerParticipation belongs to the separate Partner Relations module.
 - BOS CRM is not ToonExpo Constructor CRM.
-- One company can have many deals across event cycles.
-- One deal belongs to one event cycle.
-- Deal sheet contains onboarding checklist progress.
+- One Organization can have many BuilderDeals across event cycles.
+- One BuilderDeal belongs to one EventCycle through CycleEngagement.
+- One BuilderDeal can have several SpaceAllocations.
+- BuilderDeal cannot transition to `won` without an active allocation.
 - Files/documents are attached to company/deal/contact records; there is no separate Files/Documents module in v1.
-- Approved participant deal can trigger ToonExpo account provisioning.
+- Won BuilderDeal can trigger ToonExpo account provisioning.
 - BOS does not manage apartment buyer sales pipeline.
 
 ## Reading Order
@@ -33,9 +35,6 @@ It handles sales/participation deals, contacts, notes, attachments, cycle relati
 ## Related Modules
 
 - Event Cycles
-- Deal Onboarding Checklist
-- Tasks / Processes
-- Staff / Team / KPI
-- Analytics / Reports
+- Partner Relations
+- Venue Sales Map
 - ToonExpo Account Provisioning
-

@@ -1,87 +1,44 @@
-# Cycle Relationship To Deals And Companies
+# Cycle Relationship To Organizations And Engagements
 
-## Core Relationship
-
-Company is long-lived.
-
-Deal is cycle-specific.
+## Stable And Cycle-Specific Data
 
 ```text
-Company
-  -> Deal for ToonExpo 2026-1
-  -> Deal for ToonExpo 2026-2
-  -> Deal for ToonExpo 2027-1
+Organization (long-lived)
+  -> Contact (long-lived)
+  -> CycleEngagement for ToonExpo 2026-1
+       -> BuilderDeal or PartnerParticipation
+       -> SpaceAllocations
+       -> ProvisioningRequest
+  -> CycleEngagement for ToonExpo 2026-2
+       -> BuilderDeal or PartnerParticipation
 ```
 
-This allows BigProjects to keep one company history while still treating every ToonExpo participation as a separate sales/onboarding process.
+Organization identity and contacts are reused. Commercial/partner stages, responsible staff, allocations and cycle outcome are new for every cycle.
 
-## Company
+## Subtype Rule
 
-Company contains stable relationship data:
+Every CycleEngagement has exactly one business subtype:
 
-- company name;
-- contacts;
-- notes;
-- history;
-- source;
-- general status;
-- relationship owner if needed.
+- BuilderDeal for a builder space sale;
+- PartnerParticipation for the separate partner process.
 
-Company should not be duplicated for every cycle.
+The subtypes are not values in one generic Deal table.
 
-## Deal
+## Venue Plan Rule
 
-Deal contains cycle-specific participation data:
+Release 1 allows one VenuePlan per EventCycle. All SpaceAreas and SpaceAllocations for the cycle belong to that plan.
 
-- event_cycle_id;
-- company_id;
-- responsible manager;
-- deal status;
-- value/price if tracked;
-- contract/payment status if tracked;
-- onboarding checklist;
-- notes/attachments related to this participation;
-- ToonExpo provisioning status if approved.
+## Repeated Participation
 
-## Same Company In Multiple Cycles
+When an Organization returns in a later cycle:
 
-The same company can have multiple deals across cycles.
+- reuse Organization and Contact;
+- create a new CycleEngagement;
+- create the correct new business subtype;
+- create new allocations from the later cycle's VenuePlan;
+- reuse/link existing ToonExpo company access when appropriate.
 
-Rules:
+## Lifecycle Independence
 
-- avoid duplicate companies when possible;
-- create a new deal for a new participation cycle;
-- allow reports to show company participation history across cycles;
-- allow CRM board to show only deals for selected cycle;
-- do not mix onboarding checklist progress from different cycles.
-
-## New Deal Creation
-
-When creating a deal, user must select or accept default event cycle.
-
-Recommended default:
-
-- current active cycle;
-- if no active cycle exists, require user selection.
-
-The selected cycle should be visible in the deal sheet/card.
-
-## Deal Status Is Not Cycle Status
-
-Cycle status describes the event iteration.
-
-Deal status describes one company's participation process.
-
-Examples:
-
-- Cycle is active, deal is negotiation;
-- Cycle is active, deal is approved_participant;
-- Cycle is completed, deal remains approved_participant for historical reporting;
-- Cycle is cancelled, deal can be cancelled or archived with reason.
-
-## ToonExpo Provisioning Link
-
-Approved participant deal can trigger ToonExpo account/company provisioning.
-
-Provisioning should include cycle context for audit/reporting, but ToonExpo account itself is not temporary. The builder company account can continue to exist beyond one cycle.
+EventCycle status and business stage are independent. Completing a cycle does not rewrite historical BuilderDeal or PartnerParticipation stages.
 

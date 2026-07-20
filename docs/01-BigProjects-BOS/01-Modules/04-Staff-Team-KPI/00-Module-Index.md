@@ -1,5 +1,9 @@
 # Staff / Team KPI - Module Index
 
+## Delivery Status
+
+Later product phase. This module is documented but is not part of the current Release 1 boundary.
+
 ## Purpose
 
 Staff / Team KPI gives BigProjects management visibility into team workload, responsibility and performance.
@@ -26,9 +30,8 @@ It reads operational data from CRM, tasks, onboarding and provisioning.
 
 ## Related Modules
 
-- Internal CRM / Deals
+- Builder Sales CRM
 - Tasks / Processes
 - Deal Onboarding Checklist
 - Analytics / Reports
 - Dashboard
-

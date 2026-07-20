@@ -11,18 +11,22 @@ Network failures or repeated clicks must not create duplicate ToonExpo companies
 Recommended matching order:
 
 1. request id;
-2. BOS company id;
-3. primary contact email;
-4. existing ToonExpo company id if already linked.
+2. existing ToonExpo company id already linked to the BOS Organization;
+3. BOS Organization external id already registered in ToonExpo;
+4. exact company registration/tax identifier when available;
+5. normalized primary contact email for User matching only.
 
 ## Duplicate Prevention
 
 Before creating new ToonExpo company/account, ToonExpo should check whether:
 
 - request id was already processed;
-- BOS company id is already linked;
-- company with same primary email exists;
+- BOS Organization id is already linked;
+- exact registration/tax identifier is already linked;
+- User with the same normalized email exists;
 - admin selected an existing ToonExpo company to link.
+
+Company display name or primary contact email alone must not silently merge organizations. Ambiguous candidates return `needs_review` for explicit Admin resolution.
 
 ## Retry Rules
 
@@ -40,6 +44,7 @@ Recommended categories:
 
 - validation_error;
 - duplicate_detected;
+- needs_review;
 - toonexpo_unavailable;
 - permission_error;
 - unknown_error.
@@ -52,6 +57,7 @@ BOS Admin can:
 - retry;
 - cancel request;
 - link existing ToonExpo company manually if needed.
+- create a new ToonExpo company after rejecting all candidates.
 
 ## Audit
 
@@ -64,4 +70,4 @@ Log:
 - retry;
 - cancelled;
 - linked existing company.
-
+- candidate review and resolution.

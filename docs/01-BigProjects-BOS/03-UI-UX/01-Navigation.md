@@ -4,20 +4,18 @@
 
 Draft
 
-## Recommended Main Navigation
+## Release 1 Main Navigation
 
 ```text
-Dashboard
 Event Cycles
-CRM / Deals
-Tasks & Processes
-Staff / KPI
-Reports
+Builder Sales
+Partnerships
+Venue Map
 ToonExpo Provisioning
 Settings
 ```
 
-Deal Onboarding Checklist is not a separate main navigation product in v1. It appears inside Deal sheets, in reports, and in admin/settings for template management.
+Small operational counters may appear on the default workspace, but Dashboard, Tasks, KPI, Onboarding and Reports are later modules rather than Release 1 navigation items.
 
 ## UI Principle
 

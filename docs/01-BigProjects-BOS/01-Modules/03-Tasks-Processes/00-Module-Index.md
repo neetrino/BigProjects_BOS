@@ -1,5 +1,9 @@
 # Tasks & Processes - Module Index
 
+## Delivery Status
+
+Later product phase. This module is documented but is not part of the current Release 1 boundary.
+
 ## Purpose
 
 Tasks & Processes is the BOS execution layer for internal BigProjects work.
@@ -12,7 +16,7 @@ It supports daily tasks, event preparation, operational workspaces and repeatabl
 - Work Spaces are organizational/visual containers, not separate task databases.
 - A task can appear in global tasks and inside its workspace.
 - A task can optionally link to an event cycle, deal, company, onboarding item or process.
-- Event preparation is handled through tasks/workspaces in v1; no separate Expo Operations module is required.
+- When this later module is delivered, task/workspace coordination may cover non-map event preparation. Venue Sales Map remains a separate Release 1 module.
 - Attachments belong to tasks; no separate Files/Documents module in v1.
 - Processes are configurable; do not hard-code old screenshot process names.
 
@@ -32,8 +36,7 @@ It supports daily tasks, event preparation, operational workspaces and repeatabl
 ## Related Modules
 
 - Event Cycles
-- Internal CRM / Deals
+- Builder Sales CRM
 - Deal Onboarding Checklist
 - Staff / Team / KPI
 - Analytics / Reports
-

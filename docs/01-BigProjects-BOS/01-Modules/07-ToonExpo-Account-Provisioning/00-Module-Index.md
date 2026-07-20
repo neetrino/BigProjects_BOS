@@ -27,9 +27,8 @@ ToonExpo Account Provisioning is the BOS-side module for creating or linking par
 
 ## Related Modules
 
-- Internal CRM / Deals
-- Deal Onboarding Checklist
+- Builder Sales CRM
+- Partner Relations
 - Event Cycles
 - Integrations With ToonExpo
 - ToonExpo Account & Access
-

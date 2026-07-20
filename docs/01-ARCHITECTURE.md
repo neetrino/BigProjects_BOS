@@ -1,6 +1,6 @@
 # BigProjects BOS - Technical Architecture
 
-Internal business operating system for BigProjects. BOS manages event cycles, participant sales, onboarding, internal tasks, KPI, analytics and ToonExpo account provisioning.
+Internal business operating system for BigProjects. Release 1 manages event cycles, builder sales, partner relations, venue-space sales and ToonExpo provisioning/public-map publication.
 
 **Project size:** C - large  
 **Architecture style:** modular monolith in a monorepo  
@@ -19,7 +19,7 @@ The correct architecture is a **modular monolith**:
 - one Next.js operational web app;
 - one NestJS API deployed as a container to Google Cloud Run;
 - shared packages for domain logic, contracts, database, UI and tooling;
-- strict module boundaries so CRM, cycles, onboarding, tasks, KPI and provisioning do not become one tangled codebase.
+- strict module boundaries so Builder Sales, Partner Relations, Venue Sales Map and integrations do not become one tangled codebase.
 
 This gives the team enough structure for a large product without the cost and confusion of microservices.
 
@@ -164,16 +164,16 @@ Hard rules:
 
 | Module | Owner | Core responsibility |
 |---|---|---|
-| Dashboard | BOS | Operational overview for the current cycle, deals, onboarding, tasks and KPI |
-| Event Cycles | BOS | Creates cycle containers such as `ToonExpo 2026-Q1`; all deals belong to a cycle |
-| Internal CRM / Deals | BOS | Companies, contacts, participant deals, pipeline stages and deal sheets |
-| Deal Onboarding Checklist | BOS | Template-based checklist copied into each deal, with controlled updates for active deals |
-| Tasks & Processes | BOS | Global task area plus workspaces for marketing, event prep, sales, operations and other directions |
-| Staff / Team KPI | BOS | Staff activity, responsibility, performance indicators and manager visibility |
-| Analytics / Reports | BOS | Cycle reports, sales numbers, onboarding progress, staff metrics and exports |
-| ToonExpo Account Provisioning | BOS -> ToonExpo | Creates builder/partner accounts in ToonExpo after participant approval |
+| Event Cycles | BOS | Cycle containers such as `ToonExpo 2026-Q1` for every engagement and venue plan |
+| Organizations & Contacts | BOS | Stable identities reused across event cycles |
+| Builder Sales | BOS | BuilderDeal board/list/sheet, commercial stages and `won` policy |
+| Partner Relations | BOS | Separate PartnerParticipation board/list/sheet and shorter lifecycle |
+| Venue Sales Map | BOS | Metric plan, cells, areas, allocations and publication state |
+| ToonExpo Provisioning | BOS -> ToonExpo | Idempotent builder/partner company and user provisioning |
+| Public Map Publication | BOS -> ToonExpo | Versioned `VenueMapSnapshotV1` delivery |
+| Notes / Attachments / Audit | BOS | Cross-cutting records attached to included business entities |
 
-Coming-soon modules may exist in docs, but the initial production release must not block on them.
+Dashboard, onboarding checklist, tasks/workspaces, KPI and full analytics/reports remain documented later modules and are not Release 1 dependencies.
 
 ---
 
@@ -189,27 +189,31 @@ sequenceDiagram
 
   Admin->>BOS: Create event cycle
   BOS->>DB: Store cycle
-  Admin->>BOS: Create participant deals inside cycle
-  BOS->>DB: Store deals linked to cycle
-  Admin->>BOS: Review reports by cycle
-  BOS->>DB: Query cycle metrics
+  Admin->>BOS: Create engagements and venue plan inside cycle
+  BOS->>DB: Store builder/partner records and plan
+  Admin->>BOS: Review cycle workspaces
+  BOS->>DB: Query cycle engagements and areas
 ```
 
-### 7.2 Deal And Onboarding Flow
+### 7.2 Builder Sale And Space Flow
 
 ```mermaid
 sequenceDiagram
   participant Staff as Staff
-  participant CRM as CRM Deal Sheet
+  participant CRM as Builder Deal Sheet
+  participant Map as Venue Sales Map
   participant API as BOS API
   participant DB as PostgreSQL
 
-  Staff->>CRM: Create deal
-  CRM->>API: POST /deals
-  API->>DB: Create deal + copy active checklist template
-  Staff->>CRM: Mark checklist item done
-  CRM->>API: PATCH /deals/:id/checklist/:itemId
-  API->>DB: Save status + activity log
+  Staff->>CRM: Create BuilderDeal
+  CRM->>API: POST /builder-deals
+  API->>DB: Create CycleEngagement + BuilderDeal
+  Staff->>Map: Select and assign one or more areas
+  Map->>API: POST /space-allocations
+  API->>DB: Validate cells and save allocation
+  Staff->>CRM: Move BuilderDeal to won
+  CRM->>API: POST /builder-deals/:id/transitions/won
+  API->>DB: Verify active allocation and commit stage
 ```
 
 ### 7.3 ToonExpo Provisioning Flow
@@ -221,14 +225,31 @@ sequenceDiagram
   participant Toon as ToonExpo API
   participant Mail as Email
 
-  Manager->>BOS: Approve participant for ToonExpo
+  Manager->>BOS: Provision won builder or confirmed partner
   BOS->>Toon: Provision company and user access
   Toon-->>BOS: Provisioning result
   BOS->>Mail: Send access delivery email if configured
   BOS-->>Manager: Show status in deal sheet
 ```
 
-Provisioning must be idempotent. Retrying the same approved deal must not create duplicate ToonExpo companies or users.
+Provisioning must be idempotent. Retrying the same engagement must not create duplicate ToonExpo companies or users.
+
+### 7.4 Public Map Publication Flow
+
+```mermaid
+sequenceDiagram
+  participant Admin as BOS Admin
+  participant BOS as BOS NestJS API
+  participant Toon as ToonExpo NestJS API
+  participant DB as ToonExpo PostgreSQL
+
+  Admin->>BOS: Publish validated venue map draft
+  BOS->>BOS: Build VenueMapSnapshotV1 and checksum
+  BOS->>Toon: PUT immutable map version
+  Toon->>DB: Store snapshot and activate version
+  Toon-->>BOS: Return active version/result
+  BOS-->>Admin: Show Up to date or Publish failed
+```
 
 ---
 
@@ -246,27 +267,24 @@ short action    -> dialog or inline confirmation
 
 Full pages are reserved for true workspaces:
 
-- Dashboard;
 - Event Cycles;
-- CRM board/list;
-- Tasks & Processes;
-- Staff / KPI;
-- Reports;
+- Builder Sales board/list;
+- Partner Relations board/list;
+- Venue Sales Map editor;
+- ToonExpo Provisioning;
 - Settings.
 
-Entity details open in side sheets. A deal, company, contact, task or checklist item should not force the user to leave the current workspace unless it is a full workflow.
+Entity details open in side sheets. A builder deal, partner participation, organization, contact or map area should not force the user to leave the current workspace unless it is a full workflow.
 
 ### Frontend feature layout
 
 ```text
 apps/web/src/features/
-  dashboard/
   cycles/
-  crm/
-  onboarding-checklist/
-  tasks/
-  staff-kpi/
-  reports/
+  organizations/
+  builder-sales/
+  partner-relations/
+  venue-map/
   provisioning/
   settings/
 ```
@@ -292,13 +310,13 @@ apps/api/src/modules/
   auth/
   users/
   cycles/
-  companies/
+  organizations/
   contacts/
-  deals/
-  onboarding-checklists/
-  tasks/
-  kpi/
-  reports/
+  cycle-engagements/
+  builder-deals/
+  partner-participations/
+  venue-map/
+  map-publications/
   provisioning/
   audit-log/
 ```
@@ -344,17 +362,18 @@ Core entities:
 | Entity | Purpose |
 |---|---|
 | User | Internal BOS user |
-| StaffProfile | Staff metadata, KPI visibility and responsibility |
+| StaffProfile | Staff metadata and responsibility |
 | EventCycle | Operational container for each ToonExpo iteration |
-| Company | Long-lived company/person organization record |
-| Contact | Person connected to a company or deal |
-| Deal | Cycle-specific participant sales/onboarding record |
-| DealStage | CRM pipeline stage |
-| ChecklistTemplate | Admin-managed onboarding checklist template |
-| DealChecklistItem | Checklist copy attached to a deal |
-| TaskWorkspace | Visual/task grouping such as marketing or event prep |
-| Task | Work item linked to workspace, cycle, deal or staff |
-| KpiRecord | Staff/team metric record |
+| Organization | Long-lived neutral organization record |
+| Contact | Person connected to an Organization |
+| CycleEngagement | Shared per-cycle context with exactly one business subtype |
+| BuilderDeal | Builder-only space sales record and stages |
+| PartnerParticipation | Partner-only participation record and stages |
+| VenuePlan | Calibrated map and publication state for a cycle |
+| VenuePlanCell | Classified 1 m x 1 m logical cell |
+| SpaceArea | Named contiguous set of sellable cells |
+| SpaceAllocation | Active or historical link from area to CycleEngagement |
+| VenueMapPublication | Immutable publication attempt/version metadata |
 | ProvisioningRequest | BOS -> ToonExpo account creation request |
 | ActivityLog | Important timeline/audit event |
 | Attachment | File metadata attached to entities |
@@ -367,24 +386,34 @@ Database implementation:
 - migrations run once from CI/deployment tooling, not from Next.js or an API request;
 - soft delete only where audit/history matters;
 - timestamps and actor IDs on important mutations;
-- indexes on cycle, deal stage, assignee, company, provisioning status and task status.
+- indexes on cycle, engagement kind, business stage, assignee, Organization, area cells, active allocations, publication and provisioning status.
 
 ---
 
 ## 11. Integration Boundary With ToonExpo
 
-BOS is the source of truth for internal participant acquisition and event preparation.
+BOS is the source of truth for internal participant acquisition, venue-map authoring, allocations and publication decisions.
 
 ToonExpo is the source of truth for public platform accounts, projects, apartments, buyer QR, CRM leads and exhibition experience.
 
 Required initial production integration:
 
 ```text
-BOS approved deal
+Won BuilderDeal or confirmed PartnerParticipation
   -> provisioning request
   -> ToonExpo creates company/user/module access
   -> ToonExpo returns status and external IDs
   -> BOS stores status on the deal/provisioning request
+```
+
+Second required Release 1 integration:
+
+```text
+BOS VenuePlan draft
+  -> explicit Admin publish
+  -> VenueMapSnapshotV1
+  -> ToonExpo stores its own immutable public copy
+  -> ToonExpo activates the version only after successful validation
 ```
 
 Not part of the current production scope:
@@ -407,7 +436,7 @@ Security baseline:
 - input validation for every API mutation;
 - rate limits on auth and provisioning endpoints;
 - no secrets in frontend code;
-- audit log for status changes, provisioning attempts and checklist updates.
+- audit log for stages, area edits, allocations, publication and provisioning attempts.
 
 R2 file access must use signed upload/download flows or API-mediated file delivery. Files are not a separate product module in v1; they are attachments on domain entities.
 
@@ -462,7 +491,8 @@ Scale path:
 | Database | PostgreSQL 18 + Prisma ORM 7 | Relational workflows and reporting |
 | API hosting | Google Cloud Run | Containerized NestJS runtime |
 | Web hosting | Vercel | Best fit for Next.js |
-| Integration | Minimal BOS -> ToonExpo provisioning | Avoids duplicate data ownership |
+| Integration | Provisioning plus versioned public map snapshots | Supports required workflows without shared databases or broad synchronization |
+| Map UI | Konva 10.x + react-konva | Interactive metric editor and reusable read-only rendering model |
 
 ---
 
@@ -470,7 +500,9 @@ Scale path:
 
 - Do not create a separate Documents module in the current production scope; attach files to entities.
 - Do not create broad ToonExpo sync in the current production scope.
-- Do not make onboarding a separate product away from deals; the checklist lives in the deal flow.
+- Do not merge BuilderDeal and PartnerParticipation into one generic Deal table.
+- Do not persist Konva scene JSON as the business source of truth.
+- Do not expose private allocation identity in the public map snapshot.
 - Do not overbuild roles in the initial production release; start with Admin, Staff and Viewer.
 - Do not place backend code, Prisma access or product API routes in Next.js.
 - Do not add queues or realtime until a concrete workflow needs them.

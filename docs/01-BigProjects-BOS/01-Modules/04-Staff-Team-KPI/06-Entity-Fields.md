@@ -27,7 +27,7 @@ Recommended fields:
 - period_end;
 - status;
 - assigned_deals_count;
-- approved_participants_count;
+- won_builders_count;
 - open_tasks_count;
 - completed_tasks_count;
 - overdue_tasks_count;
@@ -54,4 +54,3 @@ Optional fields:
 KPI records can be calculated live in v1.
 
 Persisted KpiRecord is optional unless historical snapshots are needed.
-
