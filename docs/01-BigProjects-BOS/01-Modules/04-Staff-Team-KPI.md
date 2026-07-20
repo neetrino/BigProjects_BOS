@@ -2,7 +2,9 @@
 
 ## Status
 
-v1
+Later-phase concept — not in Release 1
+
+Any `v1` wording in linked legacy concept files means the first delivery of this future module, not the current BOS Release 1.
 
 ## Documentation
 

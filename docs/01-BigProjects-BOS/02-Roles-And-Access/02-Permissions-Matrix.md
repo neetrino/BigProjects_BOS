@@ -16,18 +16,17 @@ More detailed roles can be added in v2.
 
 | Area | BOS Admin | BOS Staff | BOS Viewer |
 |---|---:|---:|---:|
-| Dashboard | View | View | View |
-| Organizations | Full | Create/Edit allowed | View |
-| Contacts | Full | Create/Edit assigned | View |
-| Builder Deals | Full | Create/Edit assigned | View |
+| Organizations | Full | Create; edit assigned | View |
+| Contacts | Full | Create; edit through assigned Organization/engagement | View |
+| Builder Deals | Full | Create; edit assigned | View |
 | Builder Deal status | Full | Update assigned | View |
-| Partner Participations | Full | Create/Edit assigned | View |
+| Partner Participations | Full | Create; edit assigned | View |
 | Partner stage | Full | Update assigned | View |
 | Sellable areas | Full | Create/Edit free areas | View |
-| Space allocations | Full | Assign/release allowed | View |
+| Space allocations | Full | Assign/release for assigned engagement | View |
 | Map source/calibration | Full | View | View |
 | Publish map to ToonExpo | Full | No | View status |
-| ToonExpo provisioning | Full | Start/view allowed | View |
+| ToonExpo provisioning | Full including match resolution | Start/retry assigned; view all | View |
 | Settings | Full | No | No |
 
 ## v1 Rule
@@ -35,3 +34,5 @@ More detailed roles can be added in v2.
 Do not overbuild permission levels in v1.
 
 If one of these roles is not enough later, split it in v2.
+
+All three roles can view Release 1 operational records. Assignment restricts Staff mutations, not visibility. New engagements are assigned to their Staff creator; only Admin reassigns to another user. The full security rule is [Authentication And Security](../../00-Development-Start/07-Authentication-And-Security.md).

@@ -10,7 +10,7 @@ Dashboard is the main BOS overview screen.
 
 It shows current ToonExpo cycle progress, internal CRM status, onboarding readiness, task load, provisioning issues and KPI summaries.
 
-## Core v1 Rules
+## Future Module Rules
 
 - Dashboard is a summary surface, not a separate business module.
 - Dashboard defaults to current active event cycle.

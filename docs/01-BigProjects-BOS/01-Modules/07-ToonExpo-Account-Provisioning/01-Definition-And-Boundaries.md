@@ -17,8 +17,8 @@ This company is approved in BOS. Does it have ToonExpo access now?
 - create/link ToonExpo company/account;
 - store ToonExpo company id/user id/status in BOS;
 - retry failed provisioning;
-- show provisioning queue/status;
-- update onboarding checklist item if appropriate.
+- show provisioning worklist/status;
+- resolve ambiguous existing-company candidates through an Admin action.
 
 ## Out Of Scope
 

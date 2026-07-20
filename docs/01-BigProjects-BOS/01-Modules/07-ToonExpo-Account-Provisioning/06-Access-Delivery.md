@@ -4,9 +4,9 @@
 
 After provisioning succeeds, the participant needs access to ToonExpo.
 
-## Recommended v1 Flow
+## Release 1 Flow
 
-ToonExpo should send or trigger the access email because ToonExpo owns the account.
+ToonExpo sends or triggers the access email because ToonExpo owns the account.
 
 Email should include:
 
@@ -25,17 +25,16 @@ BOS can show:
 - ToonExpo primary user id/email;
 - provisioning success time.
 
-## Manual Fallback
+## Delivery Failure
 
-If automatic email is not implemented:
+If ToonExpo reports that delivery failed:
 
-- BOS marks account created;
-- admin copies/sends access details through agreed manual process;
-- checklist item can be manually marked done.
+- BOS keeps provisioning success and shows the delivery failure summary;
+- Admin opens ToonExpo to resend/reset access through the owning system;
+- BOS never generates, stores or sends ToonExpo credentials.
 
 ## Security
 
 - Do not store plain passwords in BOS.
-- Prefer password setup link over temporary password.
+- ToonExpo must use a single-use password setup/access flow rather than returning a password to BOS.
 - Do not include sensitive buyer/visitor data.
-

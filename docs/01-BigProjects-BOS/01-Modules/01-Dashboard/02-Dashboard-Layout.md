@@ -57,7 +57,7 @@ Quick links:
 - create deal;
 - open tasks;
 - open cycle reports;
-- open provisioning queue;
+- open provisioning worklist;
 - open checklist template settings.
 
 ## Mobile
@@ -65,4 +65,3 @@ Quick links:
 Dashboard should be readable on mobile.
 
 Cards can stack vertically. Tables/lists should become compact rows.
-

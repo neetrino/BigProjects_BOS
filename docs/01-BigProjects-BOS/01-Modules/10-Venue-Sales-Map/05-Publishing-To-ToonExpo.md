@@ -54,10 +54,12 @@ New allocations default to `organization`. Staff/Admin must explicitly select `c
 
 For `hidden`, BOS omits organization identity from the payload. For `custom_label`, only the approved label is sent.
 
+Public identity is eligible only when the linked BuilderDeal is `won` or PartnerParticipation is `confirmed`. Before that successful stage, snapshot generation forces the effective mode to `hidden` even if the stored preference is `organization` or `custom_label`. `custom_label` requires a non-empty plain-text label. `organization` sends the public Organization name and includes the ToonExpo company id only when already linked; BOS internal ids are never public.
+
 ## Reliability
 
-- request is idempotent by map id and version;
+- request is idempotent by request id plus map id/version/checksum;
 - ToonExpo rejects an older version replacing a newer active version;
 - retries reuse the same snapshot checksum;
-- BOS records pending, success and failed attempts;
+- BOS records publishing, published and publish_failed attempts;
 - failed publication leaves the prior ToonExpo version active.

@@ -26,7 +26,7 @@ The subtypes are not values in one generic Deal table.
 
 ## Venue Plan Rule
 
-Release 1 allows one VenuePlan per EventCycle. All SpaceAreas and SpaceAllocations for the cycle belong to that plan.
+Release 1 allows at most one VenuePlan per EventCycle. A newly created cycle may have none; all SpaceAreas and SpaceAllocations for the cycle belong to its plan.
 
 ## Repeated Participation
 
@@ -41,4 +41,3 @@ When an Organization returns in a later cycle:
 ## Lifecycle Independence
 
 EventCycle status and business stage are independent. Completing a cycle does not rewrite historical BuilderDeal or PartnerParticipation stages.
-

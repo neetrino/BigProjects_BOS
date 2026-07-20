@@ -8,7 +8,7 @@ It is part of Release 1 and is directly integrated with Builder Sales and option
 
 ## Canonical Rules
 
-- One Release 1 event cycle has one venue plan.
+- One Release 1 event cycle has at most one venue plan; allocation/publication requires it.
 - A source PDF or image is used as the visual background.
 - One logical grid cell represents 1 square meter.
 - Staff creates named sellable areas from contiguous cells.
@@ -29,4 +29,4 @@ It is part of Release 1 and is directly integrated with Builder Sales and option
 6. [Technology And Rendering](./06-Technology-And-Rendering.md)
 7. [Permissions And Audit](./07-Permissions-And-Audit.md)
 8. [Acceptance Criteria](./08-Acceptance-Criteria.md)
-
+9. [Entity Fields](./09-Entity-Fields.md)

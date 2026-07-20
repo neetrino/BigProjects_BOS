@@ -23,9 +23,10 @@ CycleEngagement
 - organization;
 - event cycle;
 - responsible BOS user;
-- notes, attachments and activity references;
 - venue space allocations;
 - ToonExpo provisioning references.
+
+Notes and attachments attach directly to PartnerParticipation (or another explicit owning entity), while activity is projected from audit events.
 
 ## Partner-Owned Rules
 
@@ -44,5 +45,4 @@ CycleEngagement
 - A partner does not enter Builder Sales board/list/search unless a user explicitly searches the global Organization directory.
 - Builder `won` validation does not apply to partners.
 - Partner `confirmed` does not require venue space.
-- A single Organization may participate through different engagement kinds in different cycles without duplicating its master identity.
-
+- A single Organization may participate through one builder and one partner engagement in the same or different cycles without duplicating its master identity.

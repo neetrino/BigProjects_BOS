@@ -2,7 +2,7 @@
 
 ## Venue Plan
 
-`VenuePlan` belongs to one EventCycle and stores:
+`VenuePlan` belongs to one EventCycle and owns content/publication version state. Its `VenuePlanRevision` stores:
 
 - normalized background asset;
 - source width and height;
@@ -11,7 +11,7 @@
 - logical row/column bounds;
 - draft and published version metadata.
 
-Release 1 supports one plan/hall per cycle. The model may allow additional plans later without changing area semantics.
+Release 1 supports one plan/hall per cycle and one active authoring revision. Replacing a source/calibration after areas exist creates a new revision; superseded revisions retain their cells, areas, allocations, assets and publication references.
 
 ## Cell Classification
 
@@ -27,9 +27,11 @@ unknown
 
 `unknown` is an authoring state and is forbidden in a published navigation-ready snapshot. Routing is not implemented in Release 1, but preserving these classifications prevents a future route engine from crossing walls or stands.
 
+A cell with active SpaceArea membership cannot change away from `sellable`. Admin/Staff must first archive/repartition the free area; allocated area membership must first be released according to allocation invariants.
+
 ## Sellable Area
 
-`SpaceArea` is a named contiguous set of sellable grid cells.
+`SpaceArea` is a named contiguous set of sellable grid cells inside one VenuePlanRevision.
 
 Required behavior:
 
@@ -45,4 +47,3 @@ The database keeps explicit cell coordinates or an equivalent lossless cell-run 
 ## Landmarks
 
 The plan may include public landmarks such as entrance, exit, WC, stairs, info desk and named zones. Landmarks help visitors orient themselves without route generation.
-

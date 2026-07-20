@@ -10,10 +10,10 @@ Staff / Team KPI gives BigProjects management visibility into team workload, res
 
 It reads operational data from CRM, tasks, onboarding and provisioning.
 
-## Core v1 Rules
+## Future Module Rules
 
 - KPI is for internal management visibility.
-- KPI is not payroll, HR or bonus calculation in v1.
+- KPI is not payroll, HR or bonus calculation when this module is delivered.
 - KPI should be understandable and based on real BOS activity.
 - KPI metrics link back to source records.
 - Staff roles stay simple in v1.

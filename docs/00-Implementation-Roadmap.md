@@ -6,7 +6,7 @@
 - configure environment structure;
 - add base layout;
 - add auth/account foundation for internal users;
-- confirm database and deployment setup.
+- validate local configuration; create provider resources before staging deployment.
 
 ## Phase 1 - Core Internal Data
 

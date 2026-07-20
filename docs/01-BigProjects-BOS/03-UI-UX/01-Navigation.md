@@ -2,7 +2,7 @@
 
 ## Status
 
-Draft
+Accepted for Release 1
 
 ## Release 1 Main Navigation
 

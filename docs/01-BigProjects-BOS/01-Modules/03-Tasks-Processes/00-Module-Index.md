@@ -10,7 +10,7 @@ Tasks & Processes is the BOS execution layer for internal BigProjects work.
 
 It supports daily tasks, event preparation, operational workspaces and repeatable process templates.
 
-## Core v1 Rules
+## Future Module Rules
 
 - There is one global task system.
 - Work Spaces are organizational/visual containers, not separate task databases.

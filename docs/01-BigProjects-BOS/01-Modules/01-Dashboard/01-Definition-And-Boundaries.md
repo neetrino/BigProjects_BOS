@@ -51,6 +51,6 @@ Dashboard cards should always link to the real workspace or filtered list where 
 Examples:
 
 - "12 blocked tasks" opens blocked task list;
-- "5 pending provisioning requests" opens provisioning queue;
+- "5 pending provisioning requests" opens the provisioning worklist;
 - "8 deals in contract pending" opens filtered CRM board/list;
 - "Onboarding 70%" opens onboarding report or filtered deals.

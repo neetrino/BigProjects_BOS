@@ -2,7 +2,7 @@
 
 ## Roles
 
-Recommended v1 roles:
+Release 1 roles:
 
 - BOS Admin;
 - BOS Staff;
@@ -12,31 +12,26 @@ Recommended v1 roles:
 
 | Action | BOS Admin | BOS Staff | BOS Viewer |
 |---|---:|---:|---:|
-| View companies/deals | Yes | Assigned/allowed | Yes |
+| View companies/deals | Yes | Yes | Yes |
 | Create company | Yes | Yes | No |
-| Edit company | Yes | Assigned/allowed | No |
+| Edit company | Yes | Assigned | No |
 | Create contact | Yes | Yes | No |
-| Edit contact | Yes | Assigned/allowed | No |
+| Edit contact | Yes | Through assigned Organization/engagement | No |
 | Create deal | Yes | Yes | No |
-| Edit deal | Yes | Assigned/allowed | No |
-| Change deal status | Yes | Assigned/allowed | No |
-| Move to won | Yes | Assigned/allowed when allocation exists | No |
-| Mark lost/cancelled | Yes | Assigned/allowed | No |
-| Add notes/attachments | Yes | Assigned/allowed | No |
-| Check onboarding item | Yes | Assigned/allowed | View |
-| Create provisioning request | Yes | Assigned/allowed | No |
-| Delete critical records | Yes | No | No |
+| Edit deal | Yes | Assigned | No |
+| Change deal status | Yes | Assigned | No |
+| Move to won | Yes | Assigned when allocation exists | No |
+| Mark lost/cancelled | Yes | Assigned | No |
+| Add notes/attachments | Yes | Assigned | No |
+| Create provisioning request | Yes | Assigned | No |
+| Archive referenced records | Yes | No | No |
 | Manage CRM settings/templates | Yes | No | No |
 
 ## Staff Access
 
 In v1, keep staff permissions simple.
 
-Assigned/allowed can mean:
-
-- user is responsible manager;
-- user belongs to allowed team;
-- admin grants broad staff access.
+Assigned means `CycleEngagement.responsible_user_id` is the current user. New Staff-created engagements are assigned to their creator. Only Admin reassigns an engagement to another user.
 
 Do not build complex department-level permissions unless required later.
 
@@ -53,7 +48,6 @@ Audit important changes:
 - deal status change;
 - won transition and allocation validation;
 - lost/cancelled reason;
-- onboarding checklist update;
 - attachment upload/delete/archive;
 - provisioning request creation;
 - manager reassignment.

@@ -6,6 +6,7 @@ These are Next.js frontend routes only. Product API endpoints are separate NestJ
 
 ```text
 /login
+/
 /cycles
 /builder-sales
 /organizations
@@ -16,6 +17,8 @@ These are Next.js frontend routes only. Product API endpoints are separate NestJ
 /provisioning
 /settings
 ```
+
+`/` redirects authenticated users to `/builder-sales` and unauthenticated users to `/login`. Release 1 has no full Dashboard route.
 
 ## Sheet Routes / Deep Links
 
@@ -38,8 +41,10 @@ These are Next.js frontend routes only. Product API endpoints are separate NestJ
 - event cycles list;
 - Partner Relations board/list and sheet;
 - Venue Sales Map editor and area sheet;
-- provisioning queue.
+- provisioning worklist.
 
 ## Navigation Rule
 
 Full pages are workspaces. Entity details open in sheets.
+
+Canonical NestJS routes are listed in [Release 1 API Surface](./08-API-Surface.md).

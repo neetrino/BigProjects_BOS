@@ -5,7 +5,7 @@ Internal business operating system for BigProjects. Release 1 manages event cycl
 **Project size:** C - large  
 **Architecture style:** modular monolith in a monorepo  
 **Primary deployables:** `apps/web` and `apps/api`  
-**Last updated:** 2026-07-17
+**Last updated:** 2026-07-20
 
 ---
 
@@ -72,7 +72,7 @@ BOS sends only the minimum required provisioning request to ToonExpo when a part
 
 | Component | Path | Responsibility | Deployment |
 |---|---|---|---|
-| Web app | `apps/web` | Internal dashboards, CRM boards, deal sheets, tasks, reports, settings | Vercel |
+| Web app | `apps/web` | Internal cycle, CRM, partner, venue-map, provisioning and settings UI | Vercel |
 | API app | `apps/api` | Business logic, RBAC, validation, persistence, provisioning integration | Google Cloud Run |
 | Domain package | `packages/domain` | Small shared kernel for cross-module value objects only | bundled into API |
 | Contracts package | `packages/contracts` | DTOs, Zod schemas, enums, API contracts | bundled |
@@ -220,15 +220,14 @@ sequenceDiagram
 
 ```mermaid
 sequenceDiagram
-  participant Manager as BOS Manager
+  participant Manager as BOS Admin/assigned Staff
   participant BOS as BOS API
   participant Toon as ToonExpo API
-  participant Mail as Email
 
   Manager->>BOS: Provision won builder or confirmed partner
   BOS->>Toon: Provision company and user access
   Toon-->>BOS: Provisioning result
-  BOS->>Mail: Send access delivery email if configured
+  Toon->>Toon: Send participant setup/access email
   BOS-->>Manager: Show status in deal sheet
 ```
 
@@ -346,7 +345,7 @@ API rules:
 - OpenAPI/Swagger generated from controllers and DTOs.
 - Request validation at the boundary.
 - RBAC and ownership checks before business mutations.
-- Audit logs for important status, provisioning and checklist changes.
+- Audit logs for important auth, status, allocation, attachment, provisioning and publication changes.
 - No business workflow hidden in React components.
 - No product controller, repository or integration orchestration in `apps/web`.
 - Cross-module writes go through the owning module's application service.
@@ -370,12 +369,14 @@ Core entities:
 | BuilderDeal | Builder-only space sales record and stages |
 | PartnerParticipation | Partner-only participation record and stages |
 | VenuePlan | Calibrated map and publication state for a cycle |
-| VenuePlanCell | Classified 1 m x 1 m logical cell |
+| VenuePlanRevision | Immutable source/calibration lineage; one active authoring revision |
+| VenuePlanCell | Classified 1 m x 1 m logical cell inside a revision |
+| VenueLandmark | Public/private point or named zone inside a revision |
 | SpaceArea | Named contiguous set of sellable cells |
 | SpaceAllocation | Active or historical link from area to CycleEngagement |
 | VenueMapPublication | Immutable publication attempt/version metadata |
 | ProvisioningRequest | BOS -> ToonExpo account creation request |
-| ActivityLog | Important timeline/audit event |
+| AuditLog | Immutable important event; projected into entity activity timelines |
 | Attachment | File metadata attached to entities |
 
 Database implementation:
@@ -384,7 +385,7 @@ Database implementation:
 - Prisma ORM 7.x schema, generated client and migrations stored in `packages/db`;
 - only `apps/api` imports the runtime Prisma client;
 - migrations run once from CI/deployment tooling, not from Next.js or an API request;
-- soft delete only where audit/history matters;
+- explicit archive/lifecycle fields for referenced business records; no generic soft-delete convention;
 - timestamps and actor IDs on important mutations;
 - indexes on cycle, engagement kind, business stage, assignee, Organization, area cells, active allocations, publication and provisioning status.
 
@@ -432,13 +433,13 @@ Security baseline:
 - NestJS-owned authentication using Passport and the confirmed cookie/session strategy;
 - httpOnly secure cookies;
 - role checks: BOS Admin, BOS Staff, BOS Viewer;
-- entity ownership/context checks for staff-level visibility if needed in v2;
+- assignment policies for Staff mutations; all Release 1 operational records remain visible to Staff;
 - input validation for every API mutation;
 - rate limits on auth and provisioning endpoints;
 - no secrets in frontend code;
 - audit log for stages, area edits, allocations, publication and provisioning attempts.
 
-R2 file access must use signed upload/download flows or API-mediated file delivery. Files are not a separate product module in v1; they are attachments on domain entities.
+R2 file access uses signed upload/download flows. Uploads remain quarantined until NestJS verifies size/type/checksum and a pinned ClamAV sidecar returns clean. Files are not a separate product module in v1; they are attachments on domain entities.
 
 ---
 
@@ -446,7 +447,7 @@ R2 file access must use signed upload/download flows or API-mediated file delive
 
 | Environment | Web | API | Database | Purpose |
 |---|---|---|---|---|
-| Development | `localhost:3000` | `localhost:4000` | Local or Neon dev branch | Local development |
+| Development | `localhost:3000` | `localhost:4000` | PostgreSQL 18 container | Local development; MinIO/ClamAV/Mailpit/ToonExpo stubs |
 | Staging | Vercel preview/staging | Cloud Run staging service | Neon staging branch/db | Acceptance and QA |
 | Production | Vercel production domain | Cloud Run production service | Neon production db | Live BOS |
 
@@ -454,13 +455,14 @@ Infrastructure:
 
 - Vercel hosts `apps/web`;
 - Google Cloud Run hosts `apps/api`;
+- Cloud Scheduler triggers the same-image Cloud Run integration-dispatch Job every minute;
 - Neon/PostgreSQL stores relational data;
 - Cloudflare R2 stores attachments;
-- Resend sends emails if enabled;
+- Resend sends BOS invitation/password-reset emails; ToonExpo sends participant access email;
 - Sentry tracks runtime errors;
 - GitHub Actions runs lint, typecheck, tests and builds.
 
-Cloud Run should receive a Docker image built from `apps/api/Dockerfile`. Runtime configuration comes from environment variables and Google Secret Manager or the chosen secret source.
+Cloud Run receives a Docker image built from `apps/api/Dockerfile`. Runtime configuration comes from validated environment variables and Google Secret Manager.
 
 ---
 
@@ -519,3 +521,8 @@ Scale path:
 - [BOS / ToonExpo Boundary](./03-Integration-With-ToonExpo/01-BOS-ToonExpo-Boundary.md)
 - [Integration Contracts](./03-Integration-With-ToonExpo/03-Integration-Contracts.md)
 - [Decisions](./DECISIONS.md)
+- [Authentication And Security](./00-Development-Start/07-Authentication-And-Security.md)
+- [API Surface](./00-Development-Start/08-API-Surface.md)
+- [Venue Map Entity Fields](./01-BigProjects-BOS/01-Modules/10-Venue-Sales-Map/09-Entity-Fields.md)
+- [Implementation Readiness](./00-Development-Start/09-Implementation-Readiness.md)
+- [Delivery And Operations](./00-Development-Start/10-Delivery-And-Operations.md)

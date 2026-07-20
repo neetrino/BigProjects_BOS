@@ -5,11 +5,11 @@
 - [ ] Won BuilderDeal or confirmed PartnerParticipation can create a ToonExpo provisioning request.
 - [ ] Request contains required company/contact/module data.
 - [ ] Request includes BOS Organization, CycleEngagement and EventCycle ids.
-- [ ] Request can be created from builder/partner sheet or provisioning queue.
+- [ ] Request can be created from builder/partner sheet or provisioning worklist.
 
 ## Lifecycle
 
-- [ ] Request supports not_started, pending, success, failed, linked_existing, needs_review and cancelled states.
+- [ ] Engagement summary supports `not_started`; a persisted request supports pending, success, failed, linked_existing, needs_review and cancelled states.
 - [ ] BOS stores ToonExpo company/user ids after success.
 - [ ] Existing ToonExpo company can be linked without duplication.
 - [ ] Failed request stores error details.
@@ -27,4 +27,4 @@
 
 - [ ] Provisioning does not sync full ToonExpo CRM/readiness/inventory data.
 - [ ] BOS does not store plain passwords.
-- [ ] Access delivery is handled by ToonExpo or a documented manual fallback.
+- [ ] ToonExpo handles participant access delivery; BOS never stores or sends ToonExpo credentials.

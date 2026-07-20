@@ -37,7 +37,7 @@ Tasks can be:
 - deal-specific tasks;
 - onboarding checklist item-linked tasks if later needed.
 
-For v1, deal onboarding checklist remains a simple checklist and should not become a full task system.
+When these future modules are delivered, deal onboarding remains a checklist and does not become a full task system.
 
 Tasks module can still reference cycle_id for event-specific work.
 

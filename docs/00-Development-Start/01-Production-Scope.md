@@ -5,6 +5,7 @@ This is the approved full product scope for the initial production release. It i
 ## Included In Release 1
 
 - internal auth and roles;
+- Armenian, Russian and English internal UI localization;
 - event cycles;
 - Organization and Contact records;
 - Builder Sales CRM with board, list, cards and sheets;

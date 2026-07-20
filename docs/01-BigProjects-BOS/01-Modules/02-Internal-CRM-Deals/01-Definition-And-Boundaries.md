@@ -23,12 +23,10 @@ Which builder is buying which areas in which ToonExpo cycle, and what is the cur
 - cycle-specific deals;
 - deal pipeline/stages;
 - responsible manager;
-- contract/payment status if tracked;
+- contract/payment status;
 - notes and attachments on company/deal/contact;
-- onboarding checklist inside deal sheet;
-- tasks linked to deal/company if needed;
 - ToonExpo account provisioning request after approval;
-- cycle filters and reports.
+- cycle filters and operational counters;
 - one or several venue-space allocations;
 - map picker and map deep links;
 

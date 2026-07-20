@@ -2,7 +2,29 @@
 
 ## Status
 
-Updated for the confirmed Release 1 boundary and venue-map architecture.
+Passed for the confirmed Release 1 boundary, security baseline and venue-map architecture on 2026-07-20.
+
+## Audit Coverage
+
+Reviewed repository boundary/instructions, brief/decisions/progress/tech card, architecture and dependency rules, the complete development-start pack, all Release 1 module specifications, role/data/UI documents and all BOS-ToonExpo integration documents. Later-phase module files were checked for Release 1 leakage and classified as non-authoritative future context.
+
+## Resolved Blocking Gaps
+
+- selected invite-only credentials, mandatory Admin TOTP and opaque server sessions;
+- confirmed R2, Resend, Sentry and GitHub Actions responsibilities;
+- separated ToonExpo participant email delivery from BOS auth email;
+- fixed Staff visibility/assignment authorization semantics;
+- fixed current-cycle overlap semantics and allowed lifecycle mutations;
+- fixed Organization/EventCycle engagement uniqueness to support separate builder and partner roles;
+- made contract/payment metadata and currency behavior explicit;
+- defined attachment targets, private storage, scanning and signed access;
+- defined archive, immutable audit and database runtime defaults;
+- separated derived `not_started` provisioning state from persisted requests;
+- made provisioning payloads immutable and correction/retry behavior deterministic;
+- added integration authentication, endpoints, idempotency, timeout/retry and asset-copy rules;
+- removed deferred Dashboard/Tasks/Onboarding/KPI/Reports from Release 1 routes, screens and acceptance criteria;
+- added canonical API surface and documentation precedence/readiness gate;
+- added VenuePlanRevision/landmark/content-version fields so source replacement cannot corrupt historical areas or publications.
 
 ## Canonical Release 1 Decisions
 
@@ -36,6 +58,8 @@ BOS Viewer
 - Public display: organization, custom_label, hidden.
 - Provisioning: not_started, pending, success, failed, linked_existing, needs_review, cancelled.
 
+`not_started` is derived before a provisioning request exists; persisted requests begin at `pending`.
+
 ## Naming Decisions
 
 - Organization is stable identity; it is not a pipeline record.
@@ -45,9 +69,15 @@ BOS Viewer
 - SpaceAllocation links a SpaceArea to a CycleEngagement.
 - VenueMapSnapshotV1 is an immutable public projection, not editable source data.
 
-## Remaining Watch Items
+## Validation Result
 
-- Final pricing policy may use base price per m2 plus a negotiated total without changing map ownership.
+- no unresolved Release 1 `Draft`, `Proposed`, `Needs confirmation`, pending-decision or ambiguous optional-v1 markers;
+- local Markdown links outside reference templates resolve;
+- canonical statuses, scope, runtime ownership and integration directions agree across the audited documents;
+- provider secrets/DNS and named deployment approvers remain external prerequisites only and are intentionally not stored in Git.
+
+## Non-Blocking Future Constraints
+
+- Release 1 stores optional base/list/negotiated amount metadata with required ISO currency and has no accounting behavior.
 - Professional routing should begin only after real venue plans and walkability classifications are validated.
 - Later modules must integrate through owning module APIs rather than adding fields directly to Release 1 tables.
-
