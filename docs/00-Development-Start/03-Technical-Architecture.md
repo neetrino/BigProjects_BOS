@@ -25,6 +25,7 @@ See [Frontend / Backend Boundary](../architecture/FRONTEND_BACKEND_BOUNDARY.md).
 - NestJS 11.1.x REST API and OpenAPI for `apps/api`;
 - PostgreSQL 18.x on Neon and Prisma ORM 7.x;
 - Vercel for web and Google Cloud Run for the API.
+- Konva 10.x with compatible react-konva for the client-side venue-map editor.
 
 ## Module Boundaries
 
@@ -48,6 +49,9 @@ Each BOS feature is implemented across explicit layers:
 
 ## Integration
 
-Provisioning is the only required initial production external integration.
+Release 1 has two required external integrations:
+
+- idempotent ToonExpo company/user provisioning;
+- idempotent immutable `VenueMapSnapshotV1` publication.
 
 See [Integration Contracts](../03-Integration-With-ToonExpo/03-Integration-Contracts.md).

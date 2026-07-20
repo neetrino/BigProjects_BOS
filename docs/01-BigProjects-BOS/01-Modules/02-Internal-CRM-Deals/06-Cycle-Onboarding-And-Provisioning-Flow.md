@@ -1,21 +1,22 @@
-# Cycle Onboarding And Provisioning Flow
+# Cycle, Space Allocation And Provisioning Flow
 
 ## Full Flow
 
 ```text
-Create/find company
+Create/find Organization
   -> add contact
-  -> create deal for event cycle
-  -> move through CRM statuses
-  -> approved_participant
-  -> onboarding checklist continues
+  -> create BuilderDeal for EventCycle
+  -> move through Builder Sales stages
+  -> attach one or several venue areas
+  -> won
   -> ToonExpo account provisioning
+  -> publish public venue map snapshot
   -> participant works inside ToonExpo
 ```
 
 ## Cycle Rule
 
-Every deal must belong to an event cycle.
+Every BuilderDeal must belong to an EventCycle through CycleEngagement.
 
 When creating a deal:
 
@@ -23,22 +24,22 @@ When creating a deal:
 - require cycle selection if no active cycle exists;
 - warn if user selects completed/archived/cancelled cycle.
 
-## Onboarding Rule
+## Venue Space Rule
 
-Every participant deal can receive checklist items from the active onboarding checklist template.
+Every BuilderDeal can receive several SpaceAllocations from the VenuePlan of the same EventCycle.
 
-Checklist progress stays inside deal sheet.
+`won` requires at least one active allocation. This is enforced by NestJS inside the transition transaction.
 
-The checklist belongs to the deal and is therefore cycle-specific.
+PartnerParticipation is a separate process and does not inherit this requirement.
 
 ## Provisioning Rule
 
-When deal becomes approved_participant, BOS can prepare or create a ToonExpo provisioning request.
+When BuilderDeal becomes `won`, BOS can prepare or create a ToonExpo provisioning request.
 
 The provisioning request should include only necessary account/company data:
 
-- BOS company id;
-- BOS deal id;
+- BOS Organization id;
+- BOS CycleEngagement and BuilderDeal ids;
 - event cycle id/code;
 - participant type;
 - company display name;
@@ -63,10 +64,8 @@ BigProjects Admin can log into ToonExpo directly when they need to manage or rev
 
 ## Repeated Participation
 
-If company participates again in a later cycle:
+If an Organization participates again in a later cycle:
 
-- reuse company/contact record;
-- create new deal for new cycle;
-- create new onboarding checklist for that deal;
+- reuse Organization/Contact records;
+- create a new CycleEngagement and BuilderDeal for the new cycle;
 - provisioning may reuse existing ToonExpo account/company if already exists.
-

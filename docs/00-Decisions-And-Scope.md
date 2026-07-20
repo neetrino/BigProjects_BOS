@@ -13,13 +13,14 @@ This repository is only for BigProjects BOS.
 
 ## In Scope
 
-- internal dashboard;
-- internal CRM / deals;
-- tasks and processes;
-- staff / team KPI;
-- participant onboarding;
-- analytics / reports;
-- ToonExpo account provisioning integration.
+- Builder Sales CRM for companies buying exhibition space;
+- separate Partner Relations pipeline;
+- event cycles;
+- interactive Venue Sales Map on a calibrated 1 m x 1 m grid;
+- deal/partner space allocation;
+- manual publication of a public map snapshot to ToonExpo;
+- ToonExpo company/account provisioning integration;
+- internal notes, attachments, activity and audit required by these workflows.
 
 ## Out Of Scope
 
@@ -30,17 +31,22 @@ This repository is only for BigProjects BOS.
 - builder readiness;
 - QR/check-in implementation.
 
-## v1 Decisions
+## Release 1 Decisions
 
-- No separate Files/Documents module in v1.
-- Files/documents are attachments to company, deal, task and process cards.
-- No separate Internal Communication module in v1.
+- BuilderDeal and PartnerParticipation are different business entities and pipelines.
+- Builder Sales contains only builder sales records.
+- BuilderDeal cannot transition to `won` without an active venue space allocation.
+- Partner venue space is optional.
+- BOS is the only venue map editor; ToonExpo stores a published public snapshot.
+- Professional visitor routing is deferred until the map is complete and validated.
+- No separate Files/Documents module in Release 1.
+- Files/documents are attachments to Organization, BuilderDeal, PartnerParticipation, map and provisioning records.
+- No separate Internal Communication module in Release 1.
 - Notes/comments live inside existing cards.
-- No separate Expo Operations module in v1.
-- Event preparation work is handled through Tasks & Processes.
+- Task Management, onboarding checklists, KPI, full dashboards and analytics remain documented future scope and are not Release 1 deliverables.
 
 ## Integration Decision
 
-BOS can send ToonExpo account/company creation requests.
+BOS sends idempotent ToonExpo account/company creation requests and versioned public venue-map snapshots.
 
-BOS should not directly manage ToonExpo public data, constructor CRM sales data, or readiness scoring.
+BOS should not directly manage any other ToonExpo public data, constructor CRM sales data, or readiness scoring.

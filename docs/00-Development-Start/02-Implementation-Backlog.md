@@ -21,7 +21,7 @@
 - side sheet shell;
 - audit-log foundation.
 
-## Sprint 2 - Event Cycles And CRM Core
+## Sprint 2 - Event Cycles And Builder Sales Core
 
 - event cycle CRUD;
 - company/contact CRUD;
@@ -29,23 +29,33 @@
 - deal board/list by cycle;
 - deal sheet.
 
-## Sprint 3 - Onboarding Checklist
+## Sprint 3 - Partner Relations
 
-- checklist template management;
-- deal checklist instance;
-- progress counters;
-- manual template update action;
-- checklist item notes/attachments.
+- `CycleEngagement` shared context;
+- separate `PartnerParticipation` model;
+- partner board/list;
+- partner card/sheet and short stages;
+- notes, attachments and activity.
 
-## Sprint 4 - Tasks And Workspaces
+## Sprint 4 - Venue Map Foundation
 
-- global tasks;
-- workspace CRUD;
-- workspace board/list;
-- task sheet;
-- links to cycle/company/deal/checklist item.
+- plan upload and normalization;
+- 1 m x 1 m grid calibration;
+- cell classification;
+- Konva editor foundation;
+- area create/edit/archive/repartition;
+- overlap and connectivity validation.
 
-## Sprint 5 - Provisioning
+## Sprint 5 - Space Sales Integration
+
+- assign several areas to BuilderDeal or PartnerParticipation;
+- map picker in sheets;
+- linked business sheet from map;
+- BuilderDeal `won` invariant;
+- allocation release/history rules;
+- public display modes.
+
+## Sprint 6 - Provisioning
 
 - provisioning request model;
 - provisioning queue;
@@ -53,9 +63,20 @@
 - retry/idempotency;
 - result/status display.
 
-## Sprint 6 - Dashboard Reports KPI
+## Sprint 7 - Public Map Publication
 
-- dashboard widgets;
-- staff KPI summaries;
-- reports by cycle;
-- basic exports if needed.
+- `VenueMapSnapshotV1` contract;
+- draft/published version state;
+- manual idempotent publish action;
+- ToonExpo snapshot response/status;
+- retry and audit;
+- end-to-end acceptance tests.
+
+## Deferred Product Work
+
+- onboarding checklist;
+- tasks and workspaces;
+- KPI;
+- full dashboard;
+- analytics/reports;
+- professional visitor routing.

@@ -33,8 +33,7 @@
 ## Boundaries
 
 - [ ] Event preparation work is handled through tasks/workspaces.
-- [ ] No separate Expo Operations module is required in v1.
+- [ ] This later module does not absorb Venue Sales Map ownership.
 - [ ] Deal onboarding checklist remains inside deal sheet.
 - [ ] Checklist items can link to tasks only when needed.
 - [ ] Attachments are task/entity attachments, not a separate files module.
-

@@ -9,49 +9,48 @@ It is not a final SQL schema yet.
 ## Core Entities
 
 ```text
-Company
+Organization
 Contact
 EventCycle
-Deal
-Task
-WorkSpace
-ProcessTemplate
-ProcessInstance
+CycleEngagement
+BuilderDeal
+PartnerParticipation
+VenuePlan
+VenuePlanCell
+SpaceArea
+SpaceAreaCell
+SpaceAllocation
+VenueMapPublication
 StaffUser
-KpiRecord
-OnboardingChecklistTemplate
-OnboardingChecklistTemplateItem
-DealOnboardingChecklistItem
 Note
 Attachment
-Report
 ToonExpoProvisioningRequest
 ```
 
 ## Relationships
 
 ```text
-Company 1..n Contacts
-EventCycle 1..n Deals
-Company 1..n Deals
-Company 1..n Tasks
-WorkSpace 1..n Tasks
-Deal 1..n Tasks
-Deal 1..n Notes
-Deal 1..n Attachments
-Deal 1..n DealOnboardingChecklistItems
-ProcessTemplate 1..n ProcessInstances
-ProcessInstance 1..n Tasks
-StaffUser 1..n AssignedTasks
-StaffUser 1..n KpiRecords
-OnboardingChecklistTemplate 1..n OnboardingChecklistTemplateItems
+Organization 1..n Contacts
+Organization 1..n CycleEngagements
+EventCycle 1..n CycleEngagements
+CycleEngagement 1..1 BuilderDeal or PartnerParticipation
+EventCycle 1..1 VenuePlan in Release 1
+VenuePlan 1..n VenuePlanCells
+VenuePlan 1..n SpaceAreas
+SpaceArea 1..n SpaceAreaCells
+CycleEngagement 0..n SpaceAllocations
+SpaceArea 0..n historical SpaceAllocations
+StaffUser 1..n AssignedCycleEngagements
+CycleEngagement 0..n Notes
+CycleEngagement 0..n Attachments
+VenuePlan 0..n VenueMapPublications
 ```
 
 ## Event Cycle Rule
 
-Company and Contact records can live across many cycles.
+Organization and Contact records can live across many cycles.
 
-Deal and DealOnboardingChecklistItem records belong to a specific EventCycle.
+CycleEngagement, BuilderDeal, PartnerParticipation, VenuePlan and SpaceAllocation belong to a specific EventCycle.
 
 ## Attachment Rule
 
@@ -59,15 +58,17 @@ Files/documents are not a separate module in v1.
 
 They are attached to:
 
-- company;
+- organization;
 - contact;
-- deal;
-- task;
-- process instance;
-- deal onboarding checklist item.
+- cycle engagement;
+- builder deal;
+- partner participation;
+- venue plan;
+- space area;
+- space allocation.
 
 ## Source Of Truth
 
-BOS owns internal companies, deals, tasks and KPI.
+BOS owns organizations, builder deals, partner participations, venue-map authoring, allocations and publication state.
 
 ToonExpo owns ToonExpo public/builder/CRM/readiness data.

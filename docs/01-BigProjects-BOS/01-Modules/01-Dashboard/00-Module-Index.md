@@ -1,5 +1,9 @@
 # Dashboard - Module Index
 
+## Delivery Status
+
+Later product phase. Release 1 includes only small counters embedded in Builder Sales and Venue Sales Map workspaces, not the full dashboard described below.
+
 ## Purpose
 
 Dashboard is the main BOS overview screen.
@@ -27,10 +31,9 @@ It shows current ToonExpo cycle progress, internal CRM status, onboarding readin
 ## Related Modules
 
 - Event Cycles
-- Internal CRM / Deals
+- Builder Sales CRM
 - Deal Onboarding Checklist
 - Tasks / Processes
 - Staff / Team KPI
 - Analytics / Reports
 - ToonExpo Account Provisioning
-

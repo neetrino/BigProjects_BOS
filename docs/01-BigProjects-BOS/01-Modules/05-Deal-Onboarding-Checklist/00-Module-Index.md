@@ -1,5 +1,9 @@
 # Deal Onboarding Checklist - Module Index
 
+## Delivery Status
+
+Later product phase. Builder Sales Release 1 does not create checklist templates or checklist instances.
+
 ## Purpose
 
 Deal Onboarding Checklist is the simple checklist inside each BOS participant deal.
@@ -30,9 +34,8 @@ It helps BigProjects managers track what must be done before and after a company
 
 ## Related Modules
 
-- Internal CRM / Deals
+- Builder Sales CRM
 - Event Cycles
 - Tasks / Processes
 - Staff / Team / KPI
 - ToonExpo Account Provisioning
-

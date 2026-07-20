@@ -3,30 +3,25 @@
 ## Main Navigation
 
 ```text
-Dashboard
 Event Cycles
-CRM / Deals
-Tasks & Processes
-Staff / KPI
-Deal Onboarding Checklist
-Reports
+Builder Sales
+Partnerships
+Venue Map
 ToonExpo Provisioning
 Settings
 Screens For Designer
 ```
 
-## CRM / Deals
+## Builder Sales
 
 ```text
-Deals List
-Deal Board by Cycle
-Company Detail
-Deal Detail
-Contact Detail
-Deal Tasks
+Builder Deals List
+Builder Deals Board by Cycle
+Organization Detail Sheet
+Builder Deal Sheet
+Contact Sheet
+Area Picker
 Deal Notes / Attachments
-Onboarding Checklist inside Deal Sheet
-Onboarding Template Settings
 ```
 
 ## Event Cycles
@@ -34,51 +29,33 @@ Onboarding Template Settings
 ```text
 Cycles List
 Cycle Detail
-Cycle Dashboard
-Cycle Reports
+Cycle Detail Summary
 ```
 
-## Tasks & Processes
+## Partnerships
 
 ```text
-Task List
-Task Board
-Task Detail
-Work Spaces List
-Work Space Detail
-Work Space Board
-Work Space List
-Process Templates
-Process Instance Detail
-Blocked Tasks View
+Partner Board by Cycle
+Partner List
+Partner Participation Sheet
+Organization / Contact Sheet
+Optional Area Picker
 ```
 
-## Staff / KPI
+## Venue Map
 
 ```text
-Team KPI List
-Staff Detail
-Assigned Work
-KPI Summary
+Map Editor
+Area Sheet
+Allocation Sheet
+Map Picker
+Publication Status / History
 ```
 
-## Deal Onboarding Checklist
+## ToonExpo Provisioning
 
 ```text
-Deal Sheet / Onboarding Section
-Checklist Item Detail Sheet if needed
-Checklist Template Settings
-Onboarding Reports
-```
-
-Do not create a standalone Onboarding Board in v1. Use CRM filters/reports for global onboarding visibility.
-
-## Reports
-
-```text
-Deal Reports
-Task Reports
-KPI Reports
-Onboarding Reports
-ToonExpo Provisioning Reports
+Provisioning Queue
+Provisioning Result Sheet
+Existing Company Link Review
 ```

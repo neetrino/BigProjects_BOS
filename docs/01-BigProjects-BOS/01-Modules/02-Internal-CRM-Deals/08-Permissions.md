@@ -20,7 +20,7 @@ Recommended v1 roles:
 | Create deal | Yes | Yes | No |
 | Edit deal | Yes | Assigned/allowed | No |
 | Change deal status | Yes | Assigned/allowed | No |
-| Move to approved_participant | Yes | Assigned/allowed | No |
+| Move to won | Yes | Assigned/allowed when allocation exists | No |
 | Mark lost/cancelled | Yes | Assigned/allowed | No |
 | Add notes/attachments | Yes | Assigned/allowed | No |
 | Check onboarding item | Yes | Assigned/allowed | View |
@@ -51,10 +51,9 @@ Viewer should not create notes, attachments or provisioning requests.
 Audit important changes:
 
 - deal status change;
-- approved_participant transition;
+- won transition and allocation validation;
 - lost/cancelled reason;
 - onboarding checklist update;
 - attachment upload/delete/archive;
 - provisioning request creation;
 - manager reassignment.
-

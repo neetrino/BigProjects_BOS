@@ -6,8 +6,10 @@ Recommended fields:
 
 - id;
 - request_id;
-- bos_company_id;
-- bos_deal_id;
+- bos_organization_id;
+- bos_cycle_engagement_id;
+- bos_builder_deal_id optional;
+- bos_partner_participation_id optional;
 - event_cycle_id;
 - participant_type;
 - company_display_name;
@@ -21,6 +23,7 @@ Recommended fields:
 - toonexpo_primary_user_id;
 - error_code;
 - error_message;
+- match_candidate_ids;
 - retry_count;
 - last_attempted_at;
 - created_by_user_id;
@@ -39,18 +42,17 @@ Recommended fields:
 - metadata;
 - created_at.
 
-## Deal Fields
+## CycleEngagement Fields
 
-Deal can store:
+CycleEngagement can store:
 
 - provisioning_status;
 - toonexpo_company_id;
 - latest_provisioning_request_id.
 
-## Company Fields
+## Organization Fields
 
-Company can store:
+Organization can store:
 
 - toonexpo_company_id;
 - toonexpo_linked_at;
-

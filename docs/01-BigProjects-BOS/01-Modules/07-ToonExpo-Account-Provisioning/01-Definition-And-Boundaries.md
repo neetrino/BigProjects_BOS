@@ -2,7 +2,7 @@
 
 ## Definition
 
-Provisioning is the process where BOS asks ToonExpo to create or link an account/company for an approved participant.
+Provisioning is the process where BOS asks ToonExpo to create or link company/user access for a won BuilderDeal or confirmed PartnerParticipation.
 
 It answers:
 
@@ -34,7 +34,7 @@ This company is approved in BOS. Does it have ToonExpo access now?
 
 BOS owns:
 
-- internal company/deal/cycle;
+- internal Organization/CycleEngagement/business subtype;
 - approval decision;
 - provisioning request;
 - provisioning status summary.
@@ -57,4 +57,3 @@ Provisioning can support:
 - bank.
 
 Each type can enable different ToonExpo modules.
-

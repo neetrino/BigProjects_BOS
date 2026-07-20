@@ -6,12 +6,10 @@ Coming soon / not separate v1 modules
 
 These modules can be planned for the future, but should not be built as separate modules in the first version.
 
-## Separate Expo Operations Module
+## Remaining Expo Operations
 
 This would be a dedicated module for managing the physical expo event:
 
-- hall/venue plan;
-- booth/stand placement;
 - booth assembling;
 - badges;
 - certificates;
@@ -19,11 +17,11 @@ This would be a dedicated module for managing the physical expo event:
 - technical questionnaires;
 - event checklists.
 
-v1 decision:
+Release 1 decision:
 
 ```text
-Do not build separate Expo Operations module.
-Cover this through Tasks & Processes.
+Venue-plan authoring and sellable-space allocation are owned by Venue Sales Map in Release 1.
+The remaining event operations listed above are deferred.
 ```
 
 ## Separate Internal Communication Module
@@ -36,7 +34,7 @@ This would be an internal chat/communication area:
 - support tickets;
 - team discussions.
 
-v1 decision:
+Release 1 decision:
 
 ```text
 Do not build separate communication module.
@@ -53,10 +51,9 @@ This would be a standalone document archive:
 - file permissions;
 - file versioning.
 
-v1 decision:
+Release 1 decision:
 
 ```text
 Do not build separate Files/Documents module.
 Attach files/documents to the relevant entity cards.
 ```
-

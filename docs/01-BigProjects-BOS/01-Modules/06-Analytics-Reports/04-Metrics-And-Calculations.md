@@ -4,7 +4,7 @@
 
 - `deals_total`: count deals in filter.
 - `deals_active`: count deals not lost/cancelled.
-- `approved_participants`: count deals with status approved_participant.
+- `won_builders`: count BuilderDeals with stage `won`.
 - `lost_deals`: count deals with status lost.
 - `cancelled_deals`: count deals with status cancelled.
 
@@ -58,4 +58,3 @@ Reports should support:
 - due date range for tasks.
 
 Event cycle filter is usually more important than raw date range for BOS.
-

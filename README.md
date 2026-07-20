@@ -8,13 +8,13 @@ This repository is for BOS only.
 
 In scope:
 
-- internal dashboard;
-- internal CRM / deals;
-- tasks and processes;
-- staff / team KPI;
-- participant onboarding;
-- analytics / reports;
-- ToonExpo account provisioning integration.
+- Event Cycles and Organizations/Contacts;
+- Builder Sales CRM;
+- separate Partner Relations pipeline;
+- interactive 1 m x 1 m Venue Sales Map;
+- deal/partner space allocations;
+- ToonExpo account provisioning;
+- public venue-map snapshot publication.
 
 Out of scope:
 
@@ -24,6 +24,7 @@ Out of scope:
 - constructor CRM sales module;
 - builder readiness scoring;
 - QR/event check-in implementation.
+- professional visitor routing in the current release.
 
 ## Documentation
 

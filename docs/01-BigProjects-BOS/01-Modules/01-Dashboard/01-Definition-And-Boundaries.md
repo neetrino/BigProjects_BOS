@@ -36,7 +36,7 @@ What is happening now, what needs attention, and where should I go next?
 Dashboard reads data from:
 
 - Event Cycles;
-- Internal CRM / Deals;
+- Builder Sales CRM;
 - Deal Onboarding Checklist;
 - Tasks / Processes;
 - Staff / KPI;
@@ -54,4 +54,3 @@ Examples:
 - "5 pending provisioning requests" opens provisioning queue;
 - "8 deals in contract pending" opens filtered CRM board/list;
 - "Onboarding 70%" opens onboarding report or filtered deals.
-

@@ -37,10 +37,10 @@ new
 contacted
 negotiation
 contract_pending
-approved_participant
+won
 ```
 
-`approved_participant` remains visible because work continues through onboarding and ToonExpo provisioning.
+`won` remains visible because provisioning and public-map publication may still be pending.
 
 ## Closed Scope
 
@@ -51,7 +51,7 @@ lost
 cancelled
 ```
 
-If later a separate completed/finished lifecycle is introduced, it can be added deliberately. In v1, approved participant is not hidden from operations because onboarding may still be active.
+If a separate archived lifecycle is introduced later, add it deliberately. In Release 1, `won` remains visible while its allocation, provisioning and publication context is operationally relevant.
 
 ## Deals List
 
@@ -112,4 +112,3 @@ Deal card should show:
 - risk/blocker marker if checklist has blocked items.
 
 Keep cards dense and scan-friendly.
-

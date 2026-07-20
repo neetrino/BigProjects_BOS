@@ -33,6 +33,7 @@ BigProjects BOS is a full production product. It is not a prototype or MVP. Rele
 | TypeScript | 6.0.x, strict | Confirmed | Stable ecosystem-compatible compiler baseline. |
 | Frontend | Next.js 16.2.x + React 19.2.x | Confirmed | `apps/web` presentation layer only. |
 | Frontend styles | Tailwind CSS 4.3.x | Confirmed | With shadcn/ui and custom BOS components. |
+| Venue map rendering | Konva 10.x + compatible react-konva | Confirmed | Client-side 2D grid/area editor; domain state persists through NestJS, not Konva JSON. |
 | Backend | NestJS 11.1.x | Confirmed | `apps/api` owns the complete product backend. |
 | API | REST + OpenAPI | Confirmed | NestJS controllers are canonical. |
 | Database | PostgreSQL 18.x on Neon | Confirmed | Neon PostgreSQL 18 is production GA. |
@@ -56,7 +57,7 @@ TypeScript 7.0 is current but is not selected at project start because 7.0 does 
 | Data access | Typed HTTP client calling the NestJS API |
 | Forms | React Hook Form + Zod for frontend feedback; NestJS repeats authoritative validation |
 | Server state | API-driven; React Query only where client revalidation is needed |
-| Local state | React state; Zustand only for complex local workspace state |
+| Local state | React state; Zustand is allowed for the complex venue-map editor session only when needed |
 | Forbidden | Prisma, SQL, direct PostgreSQL, product route handlers, backend Server Actions, authoritative auth/business logic |
 
 Next.js Server Components may fetch the NestJS API. Server Actions must not implement product mutations; forms call NestJS endpoints.
@@ -101,7 +102,7 @@ Next.js Server Components may fetch the NestJS API. Server Actions must not impl
 | Authorization | NestJS guards/policies on every protected operation | Confirmed |
 | CORS/CSRF | Explicit allowlist and CSRF protection for cookie mutations | Confirmed |
 | Rate limits | Auth and provisioning endpoints | Proposed |
-| Audit | Status, provisioning and checklist changes | Confirmed |
+| Audit | Stage, allocation, map publication and provisioning changes | Confirmed |
 
 ## Testing
 

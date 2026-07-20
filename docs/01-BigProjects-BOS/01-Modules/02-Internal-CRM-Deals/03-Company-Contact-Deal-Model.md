@@ -1,90 +1,77 @@
-# Company Contact Deal Model
+# Organization Contact BuilderDeal Model
 
 ## Core Model
 
 ```text
-Company
+Organization
   -> Contacts
-  -> Deals
+  -> CycleEngagements
+       -> BuilderDeal
        -> Event Cycle
-       -> Onboarding Checklist
+       -> Space Allocations
        -> Notes / Attachments
        -> ToonExpo Provisioning Request
 ```
 
-## Company
+## Organization
 
-Company is long-lived.
+Organization is long-lived and neutral.
 
-It represents the organization BigProjects communicates with:
+Builder Sales uses it only for builder organizations. Partner organizations use the separate PartnerParticipation process.
 
-- builder;
-- bank/partner;
-- service participant if needed;
-- other participant type if added later.
-
-Company can participate in multiple cycles.
+Organization can participate in multiple cycles and does not itself contain pipeline status.
 
 ## Contact
 
-Contact is a person connected to a company.
+Contact is a person connected to an Organization.
 
-A company can have multiple contacts.
+An Organization can have multiple contacts.
 
 One contact can be primary for communication.
 
-## Deal
+## BuilderDeal
 
-Deal is a cycle-specific participation attempt.
+BuilderDeal is a cycle-specific commercial attempt to sell exhibition space to a builder.
 
 Examples:
 
 - ABC Builder wants to participate in ToonExpo 2026-1;
 - same ABC Builder later joins ToonExpo 2026-2 as a separate deal.
 
-Deal contains the operational state for that cycle.
+BuilderDeal contains sales stage, commercial state and its required link to one or more venue areas.
 
-## Why Deal Is Separate From Company
+## Why BuilderDeal Is Separate From Organization
 
 If company and deal are mixed, cycle history becomes messy.
 
 Correct structure:
 
-- company stores stable relationship;
-- deal stores event participation process;
-- cycle groups deals by ToonExpo iteration.
+- Organization stores stable identity and contacts;
+- CycleEngagement stores shared per-cycle context;
+- BuilderDeal stores builder sales rules;
+- PartnerParticipation stores a separate partner process;
+- EventCycle groups both engagement kinds by ToonExpo iteration.
 
 ## Duplicate Prevention
 
-When creating company/deal:
+When creating Organization/BuilderDeal:
 
-- search existing company first;
-- warn if a company with same name/phone/email exists;
-- allow new deal on existing company;
-- prevent accidental duplicate deal for same company and same cycle unless admin confirms.
+- search existing Organization first;
+- warn if an Organization with the same registration identifier, normalized name, phone or email exists;
+- allow a new BuilderDeal on an existing Organization;
+- prevent accidental duplicate BuilderDeal for the same Organization and EventCycle unless Admin confirms.
 
-## Company Types
+## Engagement Kind
 
-Recommended first types:
-
-```text
-builder
-partner
-bank
-service_provider
-other
-```
-
-Not every company type must receive the same ToonExpo modules after provisioning.
+BuilderDeal and PartnerParticipation are separate subtype records under CycleEngagement. A `deal_type` flag must not be used to combine them into one table.
 
 ## Attachments
 
 Attachments can be related to:
 
-- company;
+- organization;
 - contact;
-- deal;
-- onboarding checklist item.
+- builder deal;
+- cycle engagement.
 
 Do not create a separate document management module in v1.
-

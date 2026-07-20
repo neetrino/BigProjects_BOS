@@ -2,66 +2,52 @@
 
 ## Status
 
-Updated after modular documentation pass.
+Updated for the confirmed Release 1 boundary and venue-map architecture.
 
-## Canonical v1 Decisions
+## Canonical Release 1 Decisions
 
-- BigProjects BOS is separate from ToonExpo Ecosystem.
-- BOS owns internal dashboard, event cycles, internal CRM/deals, tasks/processes, staff/team KPI, deal onboarding checklist, reports and ToonExpo account provisioning.
-- ToonExpo owns public website/app, builder portal, Constructor CRM, readiness, QR/check-in, project/apartment inventory and public content.
-- The main v1 integration is BOS -> ToonExpo account/company provisioning.
-- BOS does not sync full ToonExpo product, buyer, Constructor CRM, readiness, QR/check-in or public content data in v1.
-- No separate Files/Documents module in v1.
-- No separate Internal Communication module in v1.
-- No separate Expo Operations module in v1; event preparation work uses Tasks & Processes.
-- Deal Onboarding Checklist lives inside the deal sheet, not as a standalone onboarding board.
+- BOS is separate from ToonExpo Ecosystem.
+- Builder Sales CRM contains only BuilderDeal records.
+- Partner Relations owns separate PartnerParticipation records and a compact Kanban.
+- Both use a neutral Organization, EventCycle and technical CycleEngagement root.
+- Venue Sales Map owns the calibrated metric plan, cells, areas and allocations.
+- BuilderDeal `won` requires at least one active allocation.
+- Partner `confirmed` does not require an allocation.
+- Admin and Staff may author sellable areas; only Admin publishes.
+- BOS sends idempotent account provisioning requests and immutable public map snapshots.
+- ToonExpo stores and serves its own public map copy.
+- Check-in and professional routing are not BOS Release 1 features.
+- Tasks, onboarding checklist, KPI, full dashboard and analytics/reports are later phases.
 
 ## Canonical Roles
 
-v1 roles:
-
-- BOS Admin;
-- BOS Staff;
-- BOS Viewer.
-
-Detailed roles are later:
-
-- BigProjects Super Admin;
-- BigProjects Manager;
-- Staff Lead;
-- read-only/report-only variants.
+```text
+BOS Admin
+BOS Staff
+BOS Viewer
+```
 
 ## Canonical Status Groups
 
-- Event cycle: planning, active, completed, archived, cancelled.
-- Deal: new, contacted, negotiation, contract_pending, approved_participant, lost, cancelled.
-- Task: todo, in_progress, blocked, done, cancelled.
-- Work Space: active, archived, disabled.
-- Deal onboarding checklist item: open, done, blocked, not_applicable, archived.
-- ToonExpo provisioning: not_started, pending, success, failed, linked_existing, cancelled.
+- EventCycle: planning, active, completed, archived, cancelled.
+- BuilderDeal: new, contacted, negotiation, contract_pending, won, lost, cancelled.
+- PartnerParticipation: identified, invited, discussing, confirmed, declined, cancelled.
+- SpaceAllocation: active, released, archived.
+- Public display: organization, custom_label, hidden.
+- Provisioning: not_started, pending, success, failed, linked_existing, needs_review, cancelled.
 
 ## Naming Decisions
 
-- Company is long-lived.
-- Deal is cycle-specific participation attempt.
-- Event Cycle is the operational container for one ToonExpo iteration.
-- Work Space is a visual/organizational task container, not a separate task system.
-- DealOnboardingChecklistItem replaces the older ambiguous OnboardingStep naming.
-- Deal detail opens as a sheet from CRM board/list.
-
-## Checked Areas
-
-- roles and permissions;
-- status enums;
-- entity model names;
-- navigation and sitemap labels;
-- v1 vs coming soon boundaries;
-- ToonExpo integration contracts;
-- provisioning response statuses.
+- Organization is stable identity; it is not a pipeline record.
+- CycleEngagement is shared technical context, not a third user-facing module.
+- BuilderDeal and PartnerParticipation are distinct business subtypes.
+- SpaceArea is a named contiguous set of 1 m x 1 m cells.
+- SpaceAllocation links a SpaceArea to a CycleEngagement.
+- VenueMapSnapshotV1 is an immutable public projection, not editable source data.
 
 ## Remaining Watch Items
 
-- If BigProjects later wants event production as a larger module, promote it from Tasks & Processes deliberately.
-- If checklist items become complex work, link them to Tasks instead of turning checklist into a task system.
-- If BOS needs ToonExpo analytics, define a narrow report contract first instead of broad sync.
+- Final pricing policy may use base price per m2 plus a negotiated total without changing map ownership.
+- Professional routing should begin only after real venue plans and walkability classifications are validated.
+- Later modules must integrate through owning module APIs rather than adding fields directly to Release 1 tables.
 

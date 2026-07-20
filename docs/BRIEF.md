@@ -4,7 +4,7 @@
 
 BigProjects BOS is the internal business operating system for BigProjects.
 
-It manages internal ToonExpo participant sales, event cycles, onboarding checklist work, internal tasks/processes, staff KPI, reporting and ToonExpo account provisioning.
+Release 1 manages builder venue-space sales, a separate partner pipeline, event cycles, interactive venue-map authoring, allocations and ToonExpo provisioning/public-map publication.
 
 ## Repository Boundary
 
@@ -26,18 +26,19 @@ BOS is a full production product, not an MVP or prototype. The list below define
 
 - internal auth and role-based access;
 - event cycles;
-- internal company/contact/deal CRM;
-- deal onboarding checklist;
-- task workspaces and global tasks;
-- staff/team KPI summaries;
-- reports;
-- ToonExpo account provisioning request/status.
+- Organizations and Contacts;
+- Builder Sales CRM;
+- separate Partner Relations pipeline;
+- calibrated 1 m x 1 m Venue Sales Map;
+- space allocations and BuilderDeal `won` enforcement;
+- ToonExpo account provisioning;
+- versioned public venue-map publication.
 
 ## Project Size
 
 Size C — large, monorepo layout.
 
-Rationale: BOS has several internal modules, cross-module reporting, task/workspace flows, account provisioning integration and long-term growth across repeated ToonExpo cycles.
+Rationale: BOS has two business pipelines, a domain-specific graphical map editor, cross-system publication/provisioning contracts and long-term growth across repeated ToonExpo cycles.
 
 ## References
 

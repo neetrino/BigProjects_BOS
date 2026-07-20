@@ -63,7 +63,7 @@ Can update by default:
 - contacted;
 - negotiation;
 - contract_pending;
-- approved_participant;
+- won;
 - active onboarding deal statuses.
 
 Should not update by default:
@@ -85,4 +85,3 @@ Store:
 - added item count;
 - archived item count;
 - changed metadata count if any.
-

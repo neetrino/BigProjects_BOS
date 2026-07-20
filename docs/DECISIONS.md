@@ -11,12 +11,15 @@
 - `apps/api` is the complete NestJS 11.1.x backend and runs on Google Cloud Run.
 - Only NestJS may access Prisma/PostgreSQL or implement product APIs and mutations.
 - PostgreSQL 18.x on Neon and Prisma ORM 7.x are the data baseline.
-- Deal is cycle-specific; company is long-lived.
-- Deal onboarding checklist lives inside deal sheet.
-- Tasks & Processes owns event preparation work in v1.
-- No separate Files/Documents module in v1.
-- No broad ToonExpo data sync in v1.
-- Main integration is BOS -> ToonExpo account provisioning.
+- Organization is long-lived; CycleEngagement is cycle-specific.
+- BuilderDeal and PartnerParticipation are separate entities, tables and pipelines.
+- BuilderDeal `won` requires an active SpaceAllocation; partner space is optional.
+- BOS owns the calibrated 1 m x 1 m Venue Sales Map and map authoring.
+- Admin and Staff can author sellable areas; only Admin can publish.
+- ToonExpo stores and renders an immutable public `VenueMapSnapshotV1` from its own database.
+- No separate Files/Documents module in Release 1.
+- Tasks, onboarding checklist, KPI, full dashboard and analytics are later phases.
+- Release 1 integrations are account provisioning and public venue-map publication.
 
 ## Pending Decisions
 

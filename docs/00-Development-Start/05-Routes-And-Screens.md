@@ -6,18 +6,14 @@ These are Next.js frontend routes only. Product API endpoints are separate NestJ
 
 ```text
 /login
-/dashboard
 /cycles
-/crm/deals
-/crm/companies
-/crm/contacts
-/tasks
-/tasks/workspaces
-/tasks/workspaces/:workspaceId
-/onboarding/templates
+/builder-sales
+/organizations
+/contacts
+/partners
+/venue-map
+/venue-map/publications
 /provisioning
-/reports
-/staff
 /settings
 ```
 
@@ -25,9 +21,10 @@ These are Next.js frontend routes only. Product API endpoints are separate NestJ
 
 ```text
 ?deal=:dealId
-?company=:companyId
+?organization=:organizationId
 ?contact=:contactId
-?task=:taskId
+?partnerParticipation=:partnerParticipationId
+?spaceArea=:spaceAreaId
 ?cycle=:cycleId
 ?provisioning=:requestId
 ```
@@ -35,12 +32,12 @@ These are Next.js frontend routes only. Product API endpoints are separate NestJ
 ## First Screens
 
 - login;
-- dashboard;
-- CRM deal board/list;
-- deal sheet;
-- company sheet;
+- Builder Sales board/list;
+- BuilderDeal sheet;
+- Organization sheet;
 - event cycles list;
-- task board/list;
+- Partner Relations board/list and sheet;
+- Venue Sales Map editor and area sheet;
 - provisioning queue.
 
 ## Navigation Rule
