@@ -8,7 +8,7 @@ Network failures or repeated clicks must not create duplicate ToonExpo companies
 
 ## Idempotency Keys
 
-Recommended matching order:
+Canonical resolution order:
 
 1. request id;
 2. existing ToonExpo company id already linked to the BOS Organization;
@@ -40,7 +40,7 @@ Retry should:
 
 ## Error Categories
 
-Recommended categories:
+Canonical categories:
 
 - validation_error;
 - duplicate_detected;
@@ -53,10 +53,10 @@ Recommended categories:
 
 BOS Admin can:
 
-- edit/correct request data;
-- retry;
+- create a corrected replacement request with a new id and supersede the old request;
+- retry the same immutable request for transient failures;
 - cancel request;
-- link existing ToonExpo company manually if needed.
+- link an existing ToonExpo company after explicit candidate review;
 - create a new ToonExpo company after rejecting all candidates.
 
 ## Audit

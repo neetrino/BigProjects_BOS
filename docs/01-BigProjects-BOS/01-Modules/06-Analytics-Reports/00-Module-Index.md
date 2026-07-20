@@ -10,14 +10,14 @@ Analytics / Reports gives BigProjects visibility into internal BOS performance a
 
 It summarizes deals, participants, event cycles, onboarding progress, tasks, staff KPI and provisioning.
 
-## Core v1 Rules
+## Future Module Rules
 
 - Reports read data from source modules.
 - Reports do not become editing screens.
 - Event cycle filter is central.
 - Cycle comparison is important because ToonExpo repeats multiple times per year.
 - v1 can use practical tables/charts; no heavy BI warehouse is required.
-- ToonExpo public/product analytics are not part of BOS reports in v1 unless explicitly integrated later.
+- ToonExpo public/product analytics are not part of this BOS module unless a future integration contract explicitly adds summaries.
 
 ## Reading Order
 

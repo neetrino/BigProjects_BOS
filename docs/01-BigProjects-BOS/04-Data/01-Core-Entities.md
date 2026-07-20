@@ -2,7 +2,7 @@
 
 ## Status
 
-Draft
+Accepted Release 1 conceptual baseline
 
 ## Main Entities
 
@@ -13,7 +13,9 @@ Draft
 - builder deal;
 - partner participation;
 - venue plan;
+- venue plan revision;
 - venue plan cell;
+- venue landmark;
 - space area;
 - space area cell;
 - space allocation;
@@ -23,6 +25,8 @@ Draft
 - attachment;
 - audit log;
 - ToonExpo provisioning request.
+
+Auth also requires server-side session, invitation and password-reset token tables. The accepted logical table baseline is [Database Schema Baseline](../../00-Development-Start/04-Database-Schema-Draft.md).
 
 ## Attachment Rule
 

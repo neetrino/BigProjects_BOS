@@ -14,7 +14,7 @@ Deal card/row click -> Deal side sheet
 
 Do not navigate to a separate page just to inspect or edit a deal.
 
-## Recommended Sections
+## Release 1 Sections
 
 Deal sheet should contain:
 
@@ -23,7 +23,7 @@ Deal sheet should contain:
 3. event cycle;
 4. responsible manager;
 5. deal details;
-6. contract/payment fields if used;
+6. contract/payment fields;
 7. assigned venue areas and map picker;
 8. pricing summary;
 9. ToonExpo provisioning status;

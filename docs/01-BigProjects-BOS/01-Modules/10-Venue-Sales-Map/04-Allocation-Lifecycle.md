@@ -22,6 +22,8 @@ One CycleEngagement may have several active allocations. One SpaceArea may have 
 
 ## Release Rule
 
+Releasing the last active allocation of a `won` BuilderDeal is rejected. It is allowed only when another same-cycle allocation is created in the same transaction or the deal is moved to `lost`/`cancelled` with the explicit release decision.
+
 Moving a BuilderDeal to `lost` or `cancelled` opens a required choice:
 
 ```text
@@ -40,11 +42,10 @@ The selected outcome and actor are audited. No destructive release occurs silent
 
 ## Price Model
 
-The architecture supports:
+Release 1 stores:
 
 - optional base price per square meter;
 - derived area list price;
 - final negotiated amount on BuilderDeal or PartnerParticipation.
 
-Final pricing policy may be configured later without changing the map ownership model.
-
+Amounts are optional operational metadata. Whenever an amount is present, ISO 4217 currency is required. BOS does not calculate invoices, receive payments or implement accounting in Release 1.

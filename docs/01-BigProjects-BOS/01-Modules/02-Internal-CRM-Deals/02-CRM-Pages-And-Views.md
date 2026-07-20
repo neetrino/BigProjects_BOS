@@ -2,14 +2,12 @@
 
 ## Main CRM Workspaces
 
-Recommended v1 pages:
+Release 1 pages:
 
 - Deals Board;
 - Deals List;
 - Companies List;
-- Contacts List;
-- Reports/Analytics links;
-- Settings links for checklist template if admin.
+- Contacts List.
 
 Company, contact and deal details open in side sheets.
 
@@ -17,20 +15,20 @@ Company, contact and deal details open in side sheets.
 
 Deals Board is the main operational CRM view.
 
-Recommended controls:
+Controls:
 
 - event cycle selector;
 - scope filter: Active / Closed / All;
 - board/list switch;
 - responsible manager filter;
-- company type/status filter;
+- lifecycle/provisioning filter;
 - search.
 
 ## Active Board
 
 Active board shows working deal stages.
 
-Recommended columns:
+Columns:
 
 ```text
 new
@@ -65,7 +63,6 @@ List view should show:
 - primary contact;
 - contract status;
 - payment status;
-- onboarding progress;
 - provisioning status;
 - created date;
 - last activity.
@@ -75,8 +72,7 @@ List view should show:
 Companies list shows stable company records:
 
 - company name;
-- type;
-- status;
+- lifecycle status;
 - primary contact;
 - responsible manager;
 - active/open deals count;
@@ -107,8 +103,7 @@ Deal card should show:
 - status/stage;
 - responsible manager;
 - primary contact;
-- contract/payment marker if tracked;
-- onboarding progress;
-- risk/blocker marker if checklist has blocked items.
+- contract/payment marker;
+- allocation/provisioning attention marker.
 
 Keep cards dense and scan-friendly.

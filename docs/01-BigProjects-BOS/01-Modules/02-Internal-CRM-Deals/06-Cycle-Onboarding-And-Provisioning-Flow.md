@@ -22,7 +22,7 @@ When creating a deal:
 
 - use current active cycle by default;
 - require cycle selection if no active cycle exists;
-- warn if user selects completed/archived/cancelled cycle.
+- permit new deals only in planning/active cycles.
 
 ## Venue Space Rule
 

@@ -21,7 +21,7 @@
 - [ ] Deal metrics link to CRM.
 - [ ] Task metrics link to Tasks.
 - [ ] Onboarding metrics link to deal/onboarding views.
-- [ ] Provisioning metrics link to provisioning queue.
+- [ ] Provisioning metrics link to the provisioning worklist.
 
 ## Permissions
 
@@ -34,4 +34,3 @@
 - [ ] Reports do not edit operational data.
 - [ ] Reports do not require full ToonExpo public/buyer data sync.
 - [ ] V1 does not require heavy BI warehouse.
-

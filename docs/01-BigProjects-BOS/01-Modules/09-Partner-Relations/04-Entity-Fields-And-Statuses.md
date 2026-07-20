@@ -8,7 +8,7 @@
 - `partner_category`;
 - `conditions` optional;
 - `contribution_amount` optional;
-- `currency` optional;
+- `currency` required when contribution_amount exists;
 - `confirmed_at` optional;
 - `declined_at` optional;
 - timestamps.
@@ -28,7 +28,7 @@ These stages are independent from BuilderDeal stages.
 
 ## Partner Category
 
-Initial values:
+Release 1 values:
 
 ```text
 bank
@@ -41,5 +41,4 @@ technology
 other
 ```
 
-Categories may be extended without changing the pipeline model.
-
+New categories require a documented enum/API migration but do not change the pipeline model.

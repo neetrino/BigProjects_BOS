@@ -14,11 +14,11 @@ Full page -> only for real workspace or large dedicated screen
 
 ## Use Full Pages For
 
-- dashboard;
+- event cycles;
 - CRM / Deals board;
-- Tasks global board;
-- Work Space page;
-- reports;
+- Partner Relations board;
+- Venue Sales Map;
+- ToonExpo Provisioning;
 - settings.
 
 ## Use Side Sheets For
@@ -26,14 +26,14 @@ Full page -> only for real workspace or large dedicated screen
 - company detail;
 - contact detail;
 - deal detail;
-- task detail;
-- process detail;
-- onboarding checklist item;
-- note/attachment preview if needed.
+- partner participation detail;
+- venue area/allocation detail;
+- provisioning request detail;
+- note/attachment preview.
 
 ## Use Quick Dialogs For
 
-- quick create task;
+- create cycle/contact;
 - confirm status change;
 - add short note;
 - upload one attachment;
@@ -48,14 +48,13 @@ Example:
 ```text
 Deal sheet
 ↓
-Click linked task
+Click linked organization
 ↓
-Task sheet opens above deal sheet
+Organization sheet opens above deal sheet
 ↓
-Close task sheet
+Close organization sheet
 ↓
 Return to deal sheet
 ```
 
 Do not navigate away from the current board/list for inspect/edit flows.
-

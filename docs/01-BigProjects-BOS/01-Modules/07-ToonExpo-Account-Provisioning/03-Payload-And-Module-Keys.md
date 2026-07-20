@@ -4,11 +4,12 @@
 
 BOS should send only what ToonExpo needs to create/link account/company.
 
-Recommended fields:
+Canonical fields:
 
 - request id;
 - BOS company id;
-- BOS deal id;
+- BOS CycleEngagement id;
+- BOS BuilderDeal or PartnerParticipation id;
 - event cycle id/code;
 - participant type;
 - company display name;
@@ -17,11 +18,10 @@ Recommended fields:
 - primary contact phone optional;
 - preferred language optional;
 - modules to enable;
-- notes optional internal provisioning note.
 
 ## Participant Type
 
-Recommended values:
+Canonical values:
 
 ```text
 builder
@@ -42,7 +42,7 @@ bank_offers
 analytics
 ```
 
-## Typical Module Sets
+## Release 1 Default Module Sets
 
 ### Builder
 
@@ -71,9 +71,14 @@ analytics
 ## Payload Rules
 
 - Email is required for primary account.
+- Email is trimmed/lowercased for matching and validated without changing the original contact display value.
+- Phone, when present, is normalized to E.164.
+- Preferred language, when present, is `hy`, `ru` or `en`; otherwise ToonExpo applies its own default.
 - Company display name is required.
 - BOS company id is required for idempotency/linking.
 - Request id is required for retries.
 - Do not send buyer/visitor data.
 - Do not send full project/apartment inventory.
-
+- Default module sets are preselected from participant type. Admin/assigned Staff may remove or add only allowlisted keys before the first send.
+- The payload snapshot and module set become immutable after the first send. Corrections create a new request id; a retry reuses the unchanged request id/payload.
+- Internal notes are never sent to ToonExpo.

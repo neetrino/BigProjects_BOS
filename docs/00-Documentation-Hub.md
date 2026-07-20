@@ -58,7 +58,11 @@ It contains only BOS documentation plus a small integration contract with ToonEx
 - [Technical Architecture](./00-Development-Start/03-Technical-Architecture.md)
 - [Database Schema Draft](./00-Development-Start/04-Database-Schema-Draft.md)
 - [Routes And Screens](./00-Development-Start/05-Routes-And-Screens.md)
-- [First Sprint Plan](./00-Development-Start/06-First-Sprint-Plan.md)
+- [Sprint 0 Plan](./00-Development-Start/06-First-Sprint-Plan.md)
+- [Authentication And Security](./00-Development-Start/07-Authentication-And-Security.md)
+- [Release 1 API Surface](./00-Development-Start/08-API-Surface.md)
+- [Implementation Readiness](./00-Development-Start/09-Implementation-Readiness.md)
+- [Delivery And Operations](./00-Development-Start/10-Delivery-And-Operations.md)
 
 ## Rule
 

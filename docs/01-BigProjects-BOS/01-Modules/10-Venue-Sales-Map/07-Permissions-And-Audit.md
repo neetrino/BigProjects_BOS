@@ -9,6 +9,8 @@
 - publish/archive map versions;
 - retry failed publication.
 
+Admin can create a replacement revision only after all allocations on the active revision are released. Source/calibration edits in place stop after the first area exists.
+
 ## BOS Staff
 
 - view the plan;
@@ -33,4 +35,3 @@ Audit at minimum:
 - public display changed;
 - publication requested/succeeded/failed;
 - published version activated.
-

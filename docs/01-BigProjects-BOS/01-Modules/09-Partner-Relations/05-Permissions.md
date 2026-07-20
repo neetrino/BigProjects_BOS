@@ -12,9 +12,9 @@
 ## BOS Staff
 
 - create partner participation records;
-- edit records they are allowed to manage;
-- move cards through partner stages;
-- attach available venue areas;
+- edit records assigned to them;
+- move their assigned cards through partner stages;
+- attach available venue areas to their assigned engagement;
 - view provisioning results.
 
 ## BOS Viewer
@@ -22,4 +22,3 @@
 - read-only board, list, sheet and map links.
 
 Publishing the public venue map remains Admin-only even when Staff changed an allocation.
-

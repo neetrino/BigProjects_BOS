@@ -1,5 +1,23 @@
 # BOS Status Enums
 
+These are canonical Release 1 values unless a section is explicitly marked later phase.
+
+## User Status
+
+```text
+invited
+active
+suspended
+archived
+```
+
+## Organization / Contact Lifecycle Status
+
+```text
+active
+archived
+```
+
 ## Event Cycle Status
 
 ```text
@@ -23,6 +41,27 @@ cancelled
 ```
 
 `won` requires at least one active SpaceAllocation.
+
+## Builder Contract Status
+
+```text
+not_required
+not_started
+sent
+signed
+cancelled
+```
+
+## Builder Payment Status
+
+```text
+not_required
+pending
+partial
+paid
+overdue
+cancelled
+```
 
 ## Partner Participation Stage
 
@@ -101,6 +140,8 @@ Onboarding step status describes one checklist item inside a deal. It is not a s
 
 ## Onboarding Checklist Template Status
 
+Later phase, not Release 1:
+
 ```text
 draft
 active
@@ -130,10 +171,14 @@ needs_review
 cancelled
 ```
 
+`not_started` is a derived CycleEngagement summary before a request exists. Persisted requests begin at `pending`.
+
 ## Attachment Status
 
 ```text
+pending_upload
+pending_scan
 active
+rejected
 archived
-deleted
 ```

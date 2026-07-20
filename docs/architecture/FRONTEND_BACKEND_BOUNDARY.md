@@ -64,8 +64,9 @@ Every product mutation must pass through NestJS, including mutations initiated b
 
 - NestJS controllers and DTOs define the canonical API contract.
 - OpenAPI is generated from `apps/api`.
-- The frontend API client/types are generated from or checked against OpenAPI.
-- `packages/contracts` may contain framework-neutral enums and schemas, but it must not create a second business-logic implementation.
+- NestJS Swagger generates `packages/api-client/openapi.json`; `@hey-api/openapi-ts` consumes it into `packages/api-client/src/generated` fetch functions, types and Zod schemas. Only `apps/web` consumes that package. Those paths are committed, CI-regenerated and never hand-edited; `apps/web/src/lib/api-client/browser.ts` owns cookie/CSRF mutations, while server-only `server.ts` forwards request cookies for reads and cannot issue product mutations.
+- Generated frontend Zod is UX validation, not a second business-rule implementation. Cross-field, authorization and persistence invariants remain server-only.
+- `packages/contracts` contains framework-neutral enums/constants only and must not contain request/response validators or business logic.
 
 ## Allowed Exceptions
 
@@ -77,5 +78,6 @@ Next.js framework endpoints may be added only for frontend infrastructure that c
 - [ ] Authorization is enforced by NestJS guards/policies.
 - [ ] Database access originates only from `apps/api` through `packages/db`.
 - [ ] Next.js code uses the typed NestJS API client.
+- [ ] Generated API client/Zod output matches the current OpenAPI document and has no manual edits.
 - [ ] No product Server Action or Next route handler bypasses NestJS.
 - [ ] OpenAPI and frontend client remain synchronized.

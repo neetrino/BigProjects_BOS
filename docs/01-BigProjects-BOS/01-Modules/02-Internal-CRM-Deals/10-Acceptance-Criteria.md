@@ -13,7 +13,7 @@
 
 - [ ] Deal can move through defined statuses.
 - [ ] `won` stage is available.
-- [ ] Lost/cancelled require or allow reason.
+- [ ] Lost and cancelled transitions require a non-empty reason.
 - [ ] `won` is rejected without an active SpaceAllocation.
 - [ ] Lost/cancelled requires an explicit release/keep allocation decision.
 
@@ -35,6 +35,6 @@
 ## Permissions
 
 - [ ] BOS Viewer cannot edit CRM data.
-- [ ] BOS Staff can work assigned/allowed deals.
+- [ ] BOS Staff can work deals assigned to them.
 - [ ] BOS Admin can manage all CRM records and settings.
 - [ ] Important stage, allocation and provisioning changes are auditable.

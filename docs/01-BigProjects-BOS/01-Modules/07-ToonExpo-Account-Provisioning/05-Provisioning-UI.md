@@ -2,9 +2,9 @@
 
 ## Main Views
 
-Recommended v1 views:
+Release 1 views:
 
-- provisioning queue/list;
+- provisioning worklist/list;
 - pending requests;
 - failed requests;
 - successful/linked requests;
@@ -15,10 +15,8 @@ Recommended v1 views:
 Provisioning can be opened from:
 
 - deal sheet;
-- onboarding checklist item;
-- provisioning queue;
-- dashboard widget;
-- reports.
+- partner participation sheet;
+- provisioning worklist;
 
 ## Deal Sheet
 
@@ -30,9 +28,9 @@ Deal sheet should show:
 - retry/action button if failed;
 - create request button if not started and deal is approved.
 
-## Queue Columns
+## Worklist Columns
 
-Provisioning queue should show:
+Provisioning worklist should show:
 
 - company;
 - deal;
@@ -61,4 +59,3 @@ Request detail should show:
 - no pending requests: show calm empty state;
 - no failed requests: show success/clean state;
 - no approved deals needing provisioning: link back to CRM.
-

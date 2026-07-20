@@ -2,22 +2,17 @@
 
 ## Trigger
 
-Provisioning usually starts when a BOS deal moves to:
+Provisioning becomes available when a BOS record moves to:
 
 ```text
 won BuilderDeal or confirmed PartnerParticipation
 ```
 
-It can be:
-
-- manual action by BOS Admin/Staff;
-- automatic request creation after approval if implementation chooses.
-
-Manual confirmation is recommended in v1 to avoid accidental account creation.
+Release 1 always starts provisioning through an explicit action by Admin or the assigned Staff user. A stage transition never creates an external account automatically.
 
 ## Lifecycle Statuses
 
-Recommended statuses:
+CycleEngagement summary statuses:
 
 ```text
 not_started
@@ -25,8 +20,11 @@ pending
 success
 failed
 linked_existing
+needs_review
 cancelled
 ```
+
+`not_started` is a derived engagement summary before a request exists. A persisted request starts as `pending` and then becomes `success`, `linked_existing`, `needs_review`, `failed` or `cancelled`.
 
 ## Flow
 
@@ -38,7 +36,7 @@ Business record reaches its successful stage
   -> ToonExpo creates or links company/account
   -> ToonExpo returns result
   -> BOS stores status and ToonExpo ids
-  -> Access delivery email is sent by ToonExpo or requested flow
+  -> ToonExpo sends the participant setup/access email
 ```
 
 ## Existing ToonExpo Account
@@ -60,14 +58,8 @@ Failure should store:
 - retry count;
 - last attempted at.
 
-Failed request can be retried after correction.
+Transient failures retry the same immutable request. If company/contact/module data must change after the first send, BOS cancels/supersedes the failed request and creates a new request id/payload.
 
-## Checklist Relation
+## Completion Rule
 
-Provisioning can update/check the onboarding item:
-
-```text
-ToonExpo account created
-```
-
-This can happen automatically after success or manually by manager. Either approach is acceptable in v1 if documented in implementation.
+`success` or `linked_existing` is complete only after ToonExpo returns company/user ids. Email delivery state is an optional response summary and does not change provisioning success; delivery support remains owned by ToonExpo.

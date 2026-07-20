@@ -9,8 +9,8 @@ Organization
        -> BuilderDeal
        -> Event Cycle
        -> Space Allocations
-       -> Notes / Attachments
        -> ToonExpo Provisioning Request
+  -> BuilderDeal / Contact / Organization Notes And Attachments
 ```
 
 ## Organization
@@ -27,7 +27,7 @@ Contact is a person connected to an Organization.
 
 An Organization can have multiple contacts.
 
-One contact can be primary for communication.
+Organization stores one optional `primary_contact_id`; the primary marker shown on Contact UI is derived from that relation.
 
 ## BuilderDeal
 
@@ -59,7 +59,9 @@ When creating Organization/BuilderDeal:
 - search existing Organization first;
 - warn if an Organization with the same registration identifier, normalized name, phone or email exists;
 - allow a new BuilderDeal on an existing Organization;
-- prevent accidental duplicate BuilderDeal for the same Organization and EventCycle unless Admin confirms.
+- reject a duplicate BuilderDeal for the same Organization and EventCycle.
+
+The database allows at most one BuilderDeal engagement for an Organization/EventCycle. The same Organization may also have one separate PartnerParticipation engagement in that cycle.
 
 ## Engagement Kind
 
@@ -72,6 +74,6 @@ Attachments can be related to:
 - organization;
 - contact;
 - builder deal;
-- cycle engagement.
+- venue plan/area/allocation and provisioning request when owned by those modules.
 
 Do not create a separate document management module in v1.

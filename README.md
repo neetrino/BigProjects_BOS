@@ -23,7 +23,7 @@ Out of scope:
 - builder public portal;
 - constructor CRM sales module;
 - builder readiness scoring;
-- QR/event check-in implementation.
+- QR/event check-in implementation;
 - professional visitor routing in the current release.
 
 ## Documentation
@@ -43,9 +43,11 @@ Start here:
 
 Size C — large monorepo (`apps/*`, `packages/*`).
 
-Production code should start only after `docs/TECH_CARD.md` stack choices are confirmed.
+The Release 1 documentation gate is closed. Implementation starts from Sprint 0 in the accepted development-start pack.
 
 Runtime boundary: `apps/web` is a Next.js frontend; `apps/api` is the complete NestJS backend and the only runtime allowed to access Prisma/PostgreSQL.
+
+Readiness baseline: [Release 1 Implementation Readiness](./docs/00-Development-Start/09-Implementation-Readiness.md).
 
 ## Rule
 

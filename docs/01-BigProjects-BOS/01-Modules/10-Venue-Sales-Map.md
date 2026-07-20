@@ -11,4 +11,4 @@ Canonical module documentation:
 - [Technology And Rendering](./10-Venue-Sales-Map/06-Technology-And-Rendering.md)
 - [Permissions And Audit](./10-Venue-Sales-Map/07-Permissions-And-Audit.md)
 - [Acceptance Criteria](./10-Venue-Sales-Map/08-Acceptance-Criteria.md)
-
+- [Entity Fields](./10-Venue-Sales-Map/09-Entity-Fields.md)

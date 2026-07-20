@@ -10,9 +10,7 @@ Notes can be attached to:
 
 - company;
 - contact;
-- deal;
-- onboarding checklist item;
-- task if linked.
+- deal.
 
 Note fields:
 
@@ -20,9 +18,9 @@ Note fields:
 - body;
 - created at;
 - edited at optional;
-- visibility/internal flag if needed.
+- archived at/actor when archived.
 
-All BOS notes are internal by default.
+All BOS notes are internal. Release 1 has no public/external visibility flag.
 
 ## Attachments
 
@@ -30,16 +28,14 @@ Attachments can be attached to:
 
 - company;
 - contact;
-- deal;
-- onboarding checklist item.
+- deal.
 
 Examples:
 
 - signed agreement;
 - payment proof;
 - company documents;
-- presentation/material received from participant;
-- checklist evidence file.
+- presentation/material received from participant.
 
 ## Attachment Rule
 
@@ -54,7 +50,6 @@ Deal sheet can show activity:
 - status changes;
 - note added;
 - attachment uploaded;
-- checklist item completed;
 - provisioning request created;
 - responsible manager changed.
 
@@ -66,3 +61,4 @@ Internal chat/messenger is out of scope in v1.
 
 If communication notes are needed, use notes on the deal/company.
 
+Attachments use private R2 object keys and short-lived signed URLs. Type/size/signature validation and malware scanning must pass before download is enabled.

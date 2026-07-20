@@ -32,7 +32,7 @@ It should not duplicate full ToonExpo analytics or operational data in v1.
 - primary user/account status;
 - failed provisioning requests;
 - retry action if needed.
-- idempotent provisioning by request id / BOS company id / primary contact email.
+- immutable request id for retry idempotency, BOS company id for company linking and normalized email for User matching only.
 
 ## Out Of Scope
 

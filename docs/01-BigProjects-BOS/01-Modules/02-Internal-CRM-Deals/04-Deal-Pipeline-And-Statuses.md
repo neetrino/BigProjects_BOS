@@ -4,7 +4,7 @@
 
 BuilderDeal stage shows where a builder sale is in a specific ToonExpo cycle.
 
-## Recommended Statuses
+## Canonical Statuses
 
 ```text
 new
@@ -60,7 +60,7 @@ Store cancellation reason.
 
 ## Contract Status
 
-Optional v1:
+Included Release 1 values:
 
 ```text
 not_required
@@ -72,7 +72,7 @@ cancelled
 
 ## Payment Status
 
-Optional v1:
+Included Release 1 values:
 
 ```text
 not_required
@@ -86,6 +86,8 @@ cancelled
 ## Stage Movement
 
 Managers can move deals by drag/drop or status field.
+
+Contract and payment statuses are lightweight operational metadata, not accounting integration. A commercial amount is optional; when present, ISO 4217 currency is required.
 
 Important transitions can require lightweight confirmation:
 

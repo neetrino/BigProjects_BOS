@@ -2,7 +2,7 @@
 
 ## Status
 
-Draft
+Accepted for Release 1
 
 ## Main Roles
 
@@ -10,7 +10,7 @@ Draft
 - BOS Staff;
 - BOS Viewer.
 
-## Later Detailed Roles
+## Deferred Role Expansion
 
 Add only if operationally needed:
 
@@ -24,9 +24,9 @@ Add only if operationally needed:
 
 - BOS is internal to BigProjects.
 - Builders and buyers should not access BOS.
-- BOS users can see internal deals, tasks, onboarding and KPI based on role.
+- BOS users can see Release 1 internal operational data based on role. Deferred modules do not add Release 1 permissions.
 - ToonExpo summaries can be visible in BOS, but ToonExpo product data ownership remains in ToonExpo.
 
 ## v1 Rule
 
-Do not overbuild internal role levels in v1. Use ownership/assignment checks with the three main roles.
+Do not overbuild internal role levels in v1. Admin manages all records, Staff sees all operational data but mutates assigned/created records, and Viewer is read-only. Module-specific elevated actions remain Admin-only.

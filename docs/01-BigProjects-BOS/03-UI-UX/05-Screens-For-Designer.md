@@ -1,532 +1,179 @@
-# BigProjects BOS Screens
+# Release 1 Screens For Designer
 
-## UI/UX Designer Brief
+## Status And Scope
 
-**Product:** BigProjects BOS  
-**Audience:** UI/UX designer  
-**Scope:** internal operational frontend  
-**Not included:** ToonExpo public website, buyer app screens, builder portal design  
-**Main direction:** desktop-first operational system
+Accepted Release 1 designer brief. Dashboard, Tasks, Onboarding, KPI and Analytics/Reports are intentionally excluded. This brief covers BOS internal UI only and does not define ToonExpo public or participant screens.
 
----
+## Experience Principles
 
-## 1. What This Document Is
+- dense, operational and fast to scan;
+- desktop-first, usable from 1280 px upward; core list/sheet actions remain usable on tablet;
+- full pages for workspaces, side sheets for entity detail, stacked sheets for linked entities;
+- consistent status colors, keyboard focus, error states and destructive confirmations;
+- no marketing hero layouts or decorative charts;
+- permissions are visible in disabled/hidden actions but always enforced by the API.
+- all system UI/copy supports Armenian, Russian and English; user-entered content is not auto-translated.
 
-This document lists the main BOS screens that need design.
-
-It is intentionally written in a PDF-friendly format:
-
-- no wide Markdown tables;
-- one screen per block;
-- short descriptions;
-- clear must-have content;
-- easy to read after PDF conversion.
-
-BOS is not a public marketing site. It should feel like a dense, fast and professional internal operations tool.
-
----
-
-## 2. Design Priorities
-
-1. Fast internal work, not decorative presentation.
-2. Clear event-cycle context everywhere.
-3. CRM board/list with strong side-sheet details.
-4. Deal onboarding checklist visible inside the deal workflow.
-5. Task workspaces for different departments and directions.
-6. Reports and KPI easy to scan.
-7. ToonExpo provisioning visible from the deal flow.
-8. Compact, professional, NBOS-style operational UI.
-
----
-
-## 3. Core User Flows
-
-### Flow A - New Participant Deal
-
-```text
-Dashboard
--> CRM Board
--> Create Deal
--> Deal Sheet
--> Checklist starts automatically
-```
-
-### Flow B - Onboarding Work
-
-```text
-CRM Board
--> Deal Sheet
--> Onboarding Checklist
--> Mark item done
--> Progress updates
-```
-
-### Flow C - Task Workspace
-
-```text
-Tasks
--> Workspaces
--> Marketing / Event Prep Workspace
--> Task Sheet
--> Linked deal/cycle
-```
-
-### Flow D - ToonExpo Provisioning
-
-```text
-Deal reaches approved stage
--> Deal Sheet Provisioning Block
--> Create ToonExpo account
--> Status shown in BOS
-```
-
-### Flow E - Cycle Reporting
+## Primary Navigation
 
 ```text
 Event Cycles
--> Cycle Detail
--> Reports
--> Sales / Onboarding / KPI report
+Builder Sales
+Partnerships
+Venue Map
+ToonExpo Provisioning
+Settings
 ```
 
----
-
-## 4. Priority 1 Screens
-
-### Screen 01 - Login
-
-**Purpose:** Internal staff entry.
-
-**Must include:**
-
-- clean login form;
-- company/product identity;
-- error state;
-- forgot/reset state if needed.
-
-**Designer focus:** Internal and professional, not marketing-heavy.
-
----
-
-### Screen 02 - Dashboard
-
-**Purpose:** Main operational overview.
-
-**Must include:**
-
-- current cycle selector;
-- key metrics;
-- deal pipeline summary;
-- onboarding progress;
-- urgent tasks;
-- provisioning alerts.
-
-**Designer focus:** Dashboard should be dense, scannable and action-oriented.
-
----
-
-### Screen 03 - Event Cycles List
-
-**Purpose:** Manage ToonExpo cycles.
-
-**Must include:**
-
-- cycle cards or table;
-- cycle status;
-- dates;
-- participant count;
-- revenue/progress summary;
-- create/open cycle action.
-
----
-
-### Screen 04 - Event Cycle Detail
-
-**Purpose:** One cycle workspace.
-
-**Must include:**
-
-- cycle header;
-- key metrics;
-- linked deals;
-- onboarding progress;
-- tasks;
-- reports shortcut;
-- cycle status.
-
-**Designer focus:** Every cycle should feel like its own operational container.
-
----
-
-### Screen 05 - CRM / Deals Board
-
-**Purpose:** Main sales/onboarding workspace.
-
-**Must include:**
-
-- kanban columns by deal stage;
-- cycle filter;
-- deal cards;
-- assignee;
-- company;
-- value;
-- onboarding progress;
-- quick filters.
-
-**Designer focus:** This is one of the most important BOS screens.
-
----
-
-### Screen 06 - CRM / Deals List
-
-**Purpose:** Table alternative to board.
-
-**Must include:**
-
-- searchable/filterable table;
-- stage;
-- assignee;
-- cycle;
-- company;
-- value;
-- checklist progress;
-- provisioning status.
-
-**Designer focus:** Table density matters. It should not feel oversized.
-
----
-
-### Screen 07 - Deal Sheet
-
-**Purpose:** Main detail sheet for one deal.
-
-**Must include:**
-
-- company/contact information;
-- deal stage;
-- deal value;
-- notes;
-- attachments;
-- onboarding checklist;
-- related tasks;
-- activity timeline;
-- ToonExpo provisioning block.
-
-**Designer focus:** Deal Sheet is the central work surface. It should open from board/list without leaving the page.
-
----
-
-### Screen 08 - Company Sheet
-
-**Purpose:** Company detail without leaving CRM.
-
-**Must include:**
-
-- company data;
-- contacts;
-- related deals by cycle;
-- notes;
-- attachments;
-- history.
-
----
-
-### Screen 09 - Contact Sheet
-
-**Purpose:** Contact/person detail.
-
-**Must include:**
-
-- name;
-- role;
-- phone/email;
-- company link;
-- related deals;
-- notes/activity.
-
----
-
-### Screen 10 - Deal Onboarding Checklist Section
-
-**Purpose:** Checklist inside the deal sheet.
-
-**Must include:**
-
-- progress bar;
-- checklist items;
-- done/pending status;
-- owner;
-- due date;
-- required/optional marker;
-- update action.
-
-**Designer focus:** This is not a separate product page in v1. It lives inside the deal workflow.
-
----
-
-## 5. Priority 2 Screens
-
-### Screen 11 - Onboarding Template Settings
-
-**Purpose:** Admin-managed checklist template.
-
-**Must include:**
-
-- checklist template list;
-- add/edit/reorder item;
-- active version;
-- manual update active deals action.
-
----
-
-### Screen 12 - Tasks Global Board
-
-**Purpose:** All operational tasks.
-
-**Must include:**
-
-- kanban/list switch;
-- task cards;
-- workspace label;
-- assignee;
-- priority;
-- due date;
-- linked cycle/deal.
-
----
-
-### Screen 13 - Task Workspaces List
-
-**Purpose:** Direction/department shells.
-
-**Must include:**
-
-- workspace cards;
-- examples: marketing, sales, event prep, operations;
-- task counts;
-- status summaries.
-
----
-
-### Screen 14 - Task Workspace Detail
-
-**Purpose:** Focused task area by direction.
-
-**Must include:**
-
-- workspace header;
-- task board/list;
-- filters;
-- linked deals/cycles;
-- quick create task.
-
----
-
-### Screen 15 - Task Sheet
-
-**Purpose:** Task details.
-
-**Must include:**
-
-- title;
-- status;
-- assignee;
-- priority;
-- due date;
-- linked deal/cycle/company;
-- comments/notes;
-- activity.
-
----
-
-### Screen 16 - Staff / Team KPI
-
-**Purpose:** Staff performance overview.
-
-**Must include:**
-
-- staff list/cards;
-- KPI summary;
-- assigned deals/tasks;
-- completion rates;
-- filters by cycle/date.
-
----
-
-### Screen 17 - Staff Detail Sheet
-
-**Purpose:** One staff member detail.
-
-**Must include:**
-
-- assigned work;
-- KPI breakdown;
-- deals;
-- tasks;
-- recent activity.
-
----
-
-### Screen 18 - Reports Overview
-
-**Purpose:** Report entry point.
-
-**Must include:**
-
-- report cards;
-- filters by cycle/date/staff;
-- quick export action.
-
----
-
-### Screen 19 - Deal / Sales Reports
-
-**Purpose:** Sales pipeline reporting.
-
-**Must include:**
-
-- totals;
-- stage conversion;
-- revenue/value;
-- cycle comparison;
-- table and charts.
-
----
-
-### Screen 20 - Onboarding Reports
-
-**Purpose:** Checklist and readiness of deals.
-
-**Must include:**
-
-- progress by deal;
-- blocked items;
-- missing requirements;
-- status filters.
-
----
-
-### Screen 21 - Provisioning Workspace
-
-**Purpose:** ToonExpo account provisioning control.
-
-**Must include:**
-
-- pending statuses;
-- created statuses;
-- failed statuses;
-- retry action;
-- linked deal/company;
-- error details.
-
----
-
-## 6. Priority 3 Screens
-
-### Screen 22 - Settings
-
-**Purpose:** Basic internal configuration.
-
-**Must include:**
-
-- users;
-- roles;
-- stages;
-- checklist templates;
-- workspace categories;
-- integration settings.
-
----
-
-### Screen 23 - Empty / Loading / Error States
-
-**Purpose:** Product consistency.
-
-**Must include:**
-
-- empty board;
-- no tasks;
-- no deals;
-- failed provisioning;
-- loading skeletons.
-
----
-
-## 7. Responsive States
-
-BOS is desktop-first, but should still be usable on laptop and tablet.
-
-Designer should prepare at least:
-
-- desktop around 1440px width;
-- laptop around 1280px width;
-- tablet only where layout changes strongly, especially boards and side sheets.
-
-Mobile is not primary for BOS v1. Do not optimize the whole BOS workflow for phone unless a specific screen later requires it.
-
----
-
-## 8. Shared Components To Design
-
-- app shell/sidebar;
-- top bar with cycle selector;
-- filter/search bar;
-- kanban board column;
-- deal card;
-- task card;
-- KPI/stat card;
-- compact table row;
-- side sheet;
-- stacked side sheet;
-- quick create dialog;
-- status badge;
-- checklist progress bar;
-- activity timeline;
-- attachment/note block;
-- empty state;
-- failed provisioning/error state.
-
----
-
-## 9. Side Sheet Standard
-
-Most entity details should open in side sheets:
-
-- deal;
-- company;
-- contact;
-- task;
-- staff member;
-- checklist item;
-- provisioning request.
-
-Full pages should be reserved for true workspaces:
-
-- dashboard;
-- CRM board/list;
-- task workspace;
-- reports;
-- settings;
-- cycle detail.
-
----
-
-## 10. Not In Designer Scope Now
-
-- ToonExpo public website screens;
-- buyer/mobile app screens;
-- builder portal design;
-- public project/apartment pages;
-- deep admin CRUD for every tiny dictionary;
-- complex BI dashboard variations;
-- future paid/ticket/event-commerce flows.
-
----
-
-## 11. Final Notes For Designer
-
-- BOS should feel close to NBOS-style operational UI: compact, clean, fast and sheet-based.
-- Do not make huge marketing-style hero sections.
-- Tables and kanban cards should be readable and information-dense.
-- Every important screen should show current cycle context.
-- Design should be professional enough to reuse later for internal admin screens.
+The shell includes current-cycle selection, global organization/contact search, signed-in user menu and environment label outside production. There is no Release 1 Dashboard route; `/` redirects to Builder Sales.
+
+## Core Flows
+
+### Builder Sale
+
+```text
+Builder Sales -> create/find Organization -> add Contact -> create BuilderDeal
+-> progress stage -> select Venue Map areas -> move to won
+-> explicitly create ToonExpo provisioning request
+```
+
+### Partner Participation
+
+```text
+Partnerships -> create/find Organization -> create PartnerParticipation
+-> progress stage -> optional area allocation -> confirm
+-> explicitly create ToonExpo provisioning request
+```
+
+### Venue Map Publication
+
+```text
+Venue Map -> upload/normalize source -> calibrate 1 m grid
+-> classify cells -> create/repartition areas -> allocate
+-> review public labels/privacy -> Admin publishes immutable version
+```
+
+## Screen 01 - Login And MFA
+
+- email/password form;
+- error/cooldown state;
+- forgot-password entry;
+- TOTP challenge when required;
+- no public registration.
+
+## Screen 02 - Event Cycles
+
+- searchable/filterable list with name/code, date range, status and current marker;
+- operational counts for builder/partner engagements, allocated area, provisioning and map publication;
+- Admin create dialog and status transition actions;
+- cycle detail in a side sheet;
+- explicit `Make current` action for an active cycle.
+
+## Screen 03 - Builder Sales Board/List
+
+- cycle selector and board/list toggle;
+- stage, manager, provisioning and search filters;
+- canonical stage columns;
+- compact cards with Organization, contact, manager, area and commercial/provisioning state;
+- terminal records in a Closed scope;
+- clear empty/loading/error states.
+
+## Screen 04 - BuilderDeal Sheet
+
+- Organization/Contact links;
+- cycle, stage, responsible user;
+- amount/currency, contract and payment status;
+- assigned areas and total square meters;
+- map picker/deep link;
+- notes, private attachments and activity;
+- provisioning summary/action;
+- required reason and allocation release/keep confirmation for lost/cancelled;
+- highlighted invariant error when `won` has no active allocation.
+
+## Screen 05 - Organizations And Contacts
+
+- Organization and Contact list pages;
+- organization/contact side sheets;
+- duplicate warnings without silent merge;
+- long-lived history across cycles;
+- archive action for Admin, never hard-delete UI;
+- stacked navigation back to the originating board/sheet.
+
+## Screen 06 - Partner Relations Board/List
+
+- separate pipeline, queries and totals from Builder Sales;
+- cycle, stage, category, manager, area and provisioning filters;
+- partner-specific cards and stage columns;
+- partner sheet with conditions/contribution, optional allocations, notes/attachments/activity and provisioning.
+
+## Screen 07 - Venue Sales Map Editor
+
+- source/calibration toolbar for Admin;
+- pan/zoom, rectangle select, paint/erase/classify tools;
+- background, metric grid, classifications, areas, labels and selection layers;
+- area/allocation side sheet;
+- visible square meters, availability, linked engagement and internal/public label states;
+- persistent `Up to date`, `Unpublished changes`, `Publishing` or `Publish failed` indicator;
+- version/history and Admin publish action.
+
+## Screen 08 - Area Picker
+
+- opens from assigned BuilderDeal/PartnerParticipation sheet;
+- displays only available same-cycle areas;
+- multi-select with total square meters;
+- validates stale/conflicting allocation on save;
+- returns to the originating sheet without losing context.
+
+## Screen 09 - Provisioning Worklist
+
+- tabs/filters for pending, needs review, failed and successful/linked requests;
+- Organization, engagement kind, cycle, email, status, retry count and error summary;
+- request side sheet with immutable payload/module snapshot and audit history;
+- retry/cancel actions by permission;
+- Admin-only candidate link/create resolution;
+- ToonExpo access-delivery status when returned.
+
+## Screen 10 - Publication History
+
+- venue plan, version, checksum, publisher, timestamp and status;
+- validation/rejection detail;
+- retry failed publication with the same immutable version/checksum;
+- link back to Venue Map;
+- no edit action for historical payloads.
+
+## Screen 11 - Settings And Users
+
+- Admin-only user invitations, role/status and session revoke actions;
+- MFA state/reset with strong confirmation;
+- integration/provider health summaries without secret display;
+- allowed module-key/default mapping display;
+- Viewer/Staff cannot enter privileged settings.
+
+## Shared Components And States
+
+- app shell/navigation/current-cycle selector;
+- board, data table, filters and cursor pagination;
+- side sheet/stacked sheet/dialog;
+- status badge, actor/time audit row and operational counter;
+- notes and private attachment block with upload/scan/rejected states;
+- confirmation with required reason;
+- optimistic-concurrency conflict state with reload/reapply guidance;
+- skeleton, empty, validation, unauthorized, forbidden, not-found and retryable-error states.
+
+## Accessibility And Responsive Acceptance
+
+- WCAG 2.2 AA target for contrast, focus, labels and keyboard interaction;
+- board actions have a non-drag keyboard/menu alternative;
+- color never carries status alone;
+- sheets trap/restore focus and close predictably;
+- map toolbar and selected-area operations are keyboard reachable, while pointer editing remains desktop-first;
+- no horizontal clipping of critical actions at supported desktop/tablet widths.
+
+## Explicitly Not Designed For Release 1
+
+- full Dashboard;
+- Tasks/Work Spaces;
+- Deal Onboarding Checklist;
+- Staff/Team KPI;
+- Analytics/Report catalog;
+- ToonExpo public map rendering, builder portal, Constructor CRM, readiness, buyer or QR/check-in screens.

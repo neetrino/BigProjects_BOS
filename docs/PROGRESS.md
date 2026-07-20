@@ -2,7 +2,7 @@
 
 ## Current Status
 
-Documentation/start phase.
+Documentation baseline closed; implementation-ready.
 
 Production code has not started yet.
 
@@ -12,22 +12,31 @@ Production code has not started yet.
 - Consistency audit completed.
 - Project size set to Size C.
 - Development start pack created.
-- Technical architecture draft created.
-- TECH_CARD draft created.
+- Technical architecture accepted.
+- TECH_CARD accepted.
 - Frontend/backend runtime boundary confirmed.
 - Production scope replaces MVP terminology.
+- Auth/session/security baseline accepted.
+- Release 1 API surface accepted.
+- Database, retention, attachment and audit decisions closed.
+- Integration ownership, transport and retry rules closed.
+- API validation/codegen ownership and generated client package closed.
+- TypeScript 5.9, Prisma 7 adapter/config and Frankfurt deployment pair closed.
+- Incremental venue-cell row-run contract and 1 MiB API body limit closed.
+- Implementation readiness gate completed.
 
 ## Next
 
-1. Confirm the remaining auth/session strategy.
-2. Scaffold the confirmed monorepo layout.
-3. Scaffold Next.js `apps/web` and the full NestJS `apps/api` together.
-4. Create Prisma schema draft from development start database schema.
-5. Implement auth and core layout.
+1. Start Sprint 0 and scaffold the confirmed monorepo layout.
+2. Scaffold Next.js `apps/web` and the full NestJS `apps/api` together.
+3. Create the Prisma schema/adapter from the accepted database baseline.
+4. Generate `packages/api-client` and add CI/OpenAPI/codegen/boundary checks.
+5. Start Sprint 1 auth and core shell after Sprint 0 Definition of Done passes.
 
-## Blockers / Needs Confirmation
+## External Prerequisites Before Staging
 
-- final auth approach;
-- database/provider credentials;
-- file storage and email provider credentials;
-- exact first sprint owner/order.
+- provider accounts/credentials and DNS;
+- ToonExpo staging contract-test endpoint;
+- named deployment approvers.
+
+There are no unresolved documentation blockers for starting local implementation.

@@ -55,7 +55,6 @@ If user needs to act, report links to source module.
 Examples:
 
 - blocked checklist item -> deal sheet;
-- pending provisioning -> provisioning queue;
+- pending provisioning -> provisioning worklist;
 - overdue task -> task sheet;
 - deal count by status -> filtered CRM board/list.
-

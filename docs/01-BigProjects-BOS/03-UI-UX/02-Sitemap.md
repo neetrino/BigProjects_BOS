@@ -9,7 +9,6 @@ Partnerships
 Venue Map
 ToonExpo Provisioning
 Settings
-Screens For Designer
 ```
 
 ## Builder Sales
@@ -39,7 +38,7 @@ Partner Board by Cycle
 Partner List
 Partner Participation Sheet
 Organization / Contact Sheet
-Optional Area Picker
+Area Picker
 ```
 
 ## Venue Map
@@ -55,7 +54,7 @@ Publication Status / History
 ## ToonExpo Provisioning
 
 ```text
-Provisioning Queue
+Provisioning Worklist
 Provisioning Result Sheet
 Existing Company Link Review
 ```

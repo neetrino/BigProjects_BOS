@@ -2,7 +2,7 @@
 
 ## Status
 
-Draft
+Accepted for Release 1
 
 ## Main Integration Principle
 
@@ -23,8 +23,6 @@ versioned public venue-map snapshot
 ToonExpo -> BOS
 account creation and map publication result/status
 
-ToonExpo internal
-CRM apartment status -> public apartment status
 ```
 
 ## v1 External Sync Payloads
@@ -71,8 +69,6 @@ Do not sync venue-map drafts or every editor movement. Only explicit immutable p
 
 ## Important Rules
 
-- CRM apartment status syncs to public ToonExpo immediately.
-- BigProjects CRM access is view/analytics only by default.
-- BOS should not directly modify constructor CRM sales data.
+- BOS does not modify Constructor CRM sales data.
 - Files/documents are attached to their owning entities.
 - BigProjects admins can log into ToonExpo directly for ToonExpo operational data.

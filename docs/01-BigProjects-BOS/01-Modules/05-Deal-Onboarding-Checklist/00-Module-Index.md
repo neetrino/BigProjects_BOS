@@ -10,7 +10,7 @@ Deal Onboarding Checklist is the simple checklist inside each BOS participant de
 
 It helps BigProjects managers track what must be done before and after a company becomes a ToonExpo participant.
 
-## Core v1 Rules
+## Future Module Rules
 
 - Checklist belongs to a deal.
 - Deal belongs to an event cycle.

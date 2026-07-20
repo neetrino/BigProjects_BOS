@@ -1,5 +1,9 @@
 # BOS Dashboard UX
 
+## Status
+
+Later-phase concept. Release 1 has no Dashboard route or navigation item; only small counters inside owning workspaces may reuse these ideas.
+
 ## Purpose
 
 The dashboard should give BigProjects managers fast operational visibility.
