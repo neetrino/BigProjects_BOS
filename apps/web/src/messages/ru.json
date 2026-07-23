@@ -1,0 +1,532 @@
+{
+  "common": {
+    "loading": "Загрузка…",
+    "save": "Сохранить",
+    "saving": "Сохранение…",
+    "cancel": "Отмена",
+    "confirm": "Подтвердить",
+    "edit": "Изменить",
+    "delete": "Удалить",
+    "logout": "Выйти",
+    "unexpectedError": "Что-то пошло не так. Попробуйте ещё раз."
+  },
+  "languageSwitcher": {
+    "label": "Язык"
+  },
+  "health": {
+    "checking": "API…",
+    "ok": "API в порядке",
+    "dbDown": "API: база недоступна",
+    "unreachable": "API недоступен"
+  },
+  "nav": {
+    "label": "Основная навигация",
+    "product": "Внутренний",
+    "brand": "BigProjects BOS",
+    "builderSales": "Продажи застройщикам",
+    "partners": "Партнёры",
+    "venueMap": "Карта площадки",
+    "cycles": "Циклы событий",
+    "organizations": "Организации",
+    "settings": "Настройки",
+    "soon": "скоро"
+  },
+  "login": {
+    "eyebrow": "BigProjects BOS",
+    "title": "Вход",
+    "description": "Войдите со своей учётной записью сотрудника.",
+    "email": "Эл. почта",
+    "password": "Пароль",
+    "submit": "Войти",
+    "submitting": "Вход…",
+    "invalidCredentials": "Неверный email или пароль.",
+    "tooManyAttempts": "Слишком много попыток. Подождите и попробуйте снова.",
+    "genericError": "Не удалось войти. Попробуйте ещё раз."
+  },
+  "cycles": {
+    "title": "Циклы событий",
+    "subtitle": "Управление циклами ToonExpo и их статусами.",
+    "create": "Новый цикл",
+    "createTitle": "Создать цикл",
+    "editTitle": "Редактировать цикл",
+    "empty": "Циклов пока нет.",
+    "columns": {
+      "name": "Название",
+      "code": "Код",
+      "status": "Статус",
+      "dates": "Даты",
+      "actions": "Действия"
+    },
+    "fields": {
+      "name": "Название",
+      "code": "Код",
+      "startsAt": "Начало",
+      "endsAt": "Конец"
+    },
+    "status": {
+      "DRAFT": "Черновик",
+      "ACTIVE": "Активный",
+      "CLOSED": "Закрыт"
+    },
+    "actions": {
+      "activate": "Активировать",
+      "close": "Закрыть"
+    },
+    "confirm": {
+      "activateTitle": "Активировать цикл",
+      "activateDescription": "Активировать «{name}»? Другие активные циклы могут быть закрыты по правилам API.",
+      "closeTitle": "Закрыть цикл",
+      "closeDescription": "Закрыть «{name}»? Это действие нельзя отменить в интерфейсе."
+    }
+  },
+  "organizations": {
+    "title": "Организации",
+    "subtitle": "Компании и контакты для всех циклов.",
+    "create": "Новая организация",
+    "createTitle": "Создать организацию",
+    "detailTitle": "Организация",
+    "detailsSection": "Данные",
+    "searchPlaceholder": "Поиск по названию",
+    "typeFilter": "Тип",
+    "allTypes": "Все типы",
+    "empty": "Организации не найдены.",
+    "notFound": "Организация не найдена.",
+    "columns": {
+      "name": "Название",
+      "type": "Тип",
+      "contacts": "Контакты",
+      "phone": "Телефон",
+      "email": "Эл. почта"
+    },
+    "fields": {
+      "name": "Название",
+      "type": "Тип",
+      "phone": "Телефон",
+      "email": "Эл. почта",
+      "website": "Сайт",
+      "registrationId": "Рег. номер"
+    },
+    "types": {
+      "BUILDER": "Застройщик",
+      "BANK": "Банк",
+      "PARTNER": "Партнёр",
+      "OTHER": "Другое"
+    },
+    "contacts": {
+      "title": "Контакты",
+      "add": "Добавить контакт",
+      "saveNew": "Добавить",
+      "empty": "Контактов пока нет.",
+      "primary": "Основной",
+      "makePrimary": "Основной",
+      "deleteTitle": "Удалить контакт",
+      "deleteDescription": "Удалить «{name}»?",
+      "fields": {
+        "name": "Имя",
+        "phone": "Телефон",
+        "email": "Эл. почта",
+        "position": "Должность",
+        "isPrimary": "Основной контакт"
+      }
+    }
+  },
+  "settings": {
+    "title": "Настройки",
+    "subtitle": "Профиль и учётные записи сотрудников.",
+    "profile": {
+      "title": "Профиль",
+      "name": "Имя",
+      "email": "Эл. почта",
+      "role": "Роль",
+      "language": "Язык"
+    },
+    "staff": {
+      "title": "Учётные записи",
+      "subtitle": "Создание и отключение внутренних пользователей.",
+      "create": "Новый пользователь",
+      "createTitle": "Создать пользователя",
+      "empty": "Пользователи не найдены.",
+      "disable": "Отключить",
+      "reactivate": "Восстановить",
+      "confirmDisableTitle": "Отключить пользователя",
+      "confirmDisableDescription": "Отключить «{name}»? Вход будет недоступен.",
+      "confirmReactivateTitle": "Восстановить пользователя",
+      "confirmReactivateDescription": "Восстановить «{name}»?",
+      "columns": {
+        "name": "Имя",
+        "email": "Эл. почта",
+        "role": "Роль",
+        "status": "Статус",
+        "actions": "Действия"
+      },
+      "fields": {
+        "name": "Имя",
+        "email": "Эл. почта",
+        "password": "Пароль",
+        "role": "Роль"
+      },
+      "roles": {
+        "ADMIN": "Админ",
+        "STAFF": "Сотрудник"
+      },
+      "status": {
+        "ACTIVE": "Активен",
+        "DISABLED": "Отключён"
+      }
+    }
+  },
+  "builderSales": {
+    "title": "Продажи застройщикам",
+    "subtitle": "Сделки на выставочные площади для выбранного цикла.",
+    "create": "Новая сделка",
+    "createTitle": "Создать сделку",
+    "detailTitle": "Сделка",
+    "empty": "В этом цикле пока нет сделок.",
+    "emptyNoCycles": "Сначала создайте цикл события.",
+    "stages": {
+      "NEW": "Новая",
+      "CONTACTED": "Контакт",
+      "NEGOTIATION": "Переговоры",
+      "WON": "Выиграна",
+      "LOST": "Проиграна"
+    },
+    "toolbar": {
+      "cycle": "Цикл события",
+      "noCycles": "Нет циклов",
+      "active": "активный",
+      "view": "Вид",
+      "kanban": "Канбан",
+      "list": "Список",
+      "searchPlaceholder": "Поиск по организации",
+      "staffFilter": "Ответственный",
+      "allStaff": "Все сотрудники"
+    },
+    "card": {
+      "noContact": "Нет контакта",
+      "expectedSqm": "{value} м² ожидаемо",
+      "amount": "{value}",
+      "assignedAreas": "{sqm} м² · {labels}"
+    },
+    "list": {
+      "organization": "Организация",
+      "contact": "Контакт",
+      "stage": "Этап",
+      "expectedSqm": "Ожид. м²",
+      "amount": "Сумма",
+      "staff": "Сотрудник",
+      "updated": "Обновлено"
+    },
+    "sheet": {
+      "details": "Детали",
+      "stage": "Этап",
+      "areas": "Площади"
+    },
+    "fields": {
+      "organization": "Организация",
+      "organizationSelect": "Выберите организацию",
+      "contact": "Основной контакт",
+      "staff": "Ответственный",
+      "expectedSqm": "Ожидаемые м²",
+      "agreedAmount": "Согласованная сумма",
+      "description": "Описание"
+    },
+    "createForm": {
+      "orgSearchPlaceholder": "Поиск организаций",
+      "pickOrganization": "Выберите организацию",
+      "noContact": "Без контакта",
+      "unassigned": "Не назначен",
+      "organizationRequired": "Организация обязательна."
+    },
+    "stage": {
+      "current": "Текущий",
+      "markLostTitle": "Отметить как проигранную",
+      "markLostDescription": "Перевести сделку в «Проиграна»?",
+      "markLostWithAreasDescription": "У сделки есть назначенные площади. Выберите, освобождать ли их при переводе в «Проиграна».",
+      "releaseAreasLabel": "Освободить назначенные площади",
+      "actions": {
+        "NEW": "В «Новая»",
+        "CONTACTED": "Отметить контакт",
+        "NEGOTIATION": "Начать переговоры",
+        "WON": "Отметить выигранной",
+        "LOST": "Отметить проигранной"
+      }
+    },
+    "areas": {
+      "empty": "Площади назначаются на карте площадки.",
+      "summary": "{count} зон · {sqm} м² · {labels}"
+    }
+  },
+  "entityAreas": {
+    "title": "Площади",
+    "empty": "Площади ещё не назначены.",
+    "assign": "Назначить площадь",
+    "assignTitle": "Назначить свободную площадь",
+    "release": "Освободить",
+    "releaseTitle": "Освободить площадь",
+    "releaseDescription": "Освободить эту площадь от текущего назначения?",
+    "search": "Поиск",
+    "searchPlaceholder": "Поиск по имени или коду",
+    "noFreeAreas": "На плане этого цикла нет свободных площадей.",
+    "pick": "Назначить"
+  },
+  "venueMap": {
+    "title": "Карта площадки",
+    "subtitle": "Создавайте продаваемые площади и назначайте их застройщикам или партнёрам.",
+    "emptyNoCycles": "Создайте цикл события, прежде чем открывать карту площадки.",
+    "selectCycle": "Выберите цикл события, чтобы продолжить.",
+    "noPlanStaff": "Для этого цикла ещё нет плана. Попросите администратора создать его.",
+    "noImageStaff": "У плана ещё нет фонового изображения. Попросите администратора загрузить его.",
+    "uncalibratedHint": "Откалибруйте план (администратор), прежде чем создавать площади.",
+    "selectHint": "Перетащите по свободным ячейкам, чтобы создать прямоугольную площадь. Удерживайте пробел для панорамирования. Колесо — масштаб.",
+    "toolbar": {
+      "cycle": "Цикл события",
+      "active": "активный",
+      "select": "Выделение",
+      "pan": "Панорама",
+      "calibrate": "Калибровка",
+      "fit": "Вписать"
+    },
+    "createPlan": {
+      "title": "Создать план площадки",
+      "description": "Начните карту продаж для этого цикла.",
+      "name": "Название",
+      "titleRequired": "Название обязательно.",
+      "confirm": "Создать план"
+    },
+    "upload": {
+      "title": "Загрузить изображение плана",
+      "hint": "PNG, JPEG или WebP до 25 МБ.",
+      "choose": "Выбрать изображение",
+      "replace": "Заменить изображение",
+      "uploading": "Загрузка…",
+      "success": "Изображение загружено.",
+      "failed": "Не удалось загрузить изображение.",
+      "tooLarge": "Файл больше 25 МБ.",
+      "invalidType": "Используйте PNG, JPEG или WebP."
+    },
+    "calibration": {
+      "hint": "Кликните две точки на плане ({count}/2), затем введите реальное расстояние.",
+      "distance": "Расстояние (м)",
+      "applyPoints": "Применить масштаб",
+      "clearPoints": "Сбросить точки",
+      "ppm": "px / м",
+      "originX": "Начало X",
+      "originY": "Начало Y",
+      "saveManual": "Сохранить калибровку",
+      "saved": "Калибровка сохранена.",
+      "needTwoPoints": "Сначала кликните две точки на изображении.",
+      "invalidDistance": "Введите положительное расстояние в метрах.",
+      "invalidPpm": "Введите положительное значение пикселей на метр.",
+      "invalidOrigin": "Значения начала координат должны быть числами."
+    },
+    "createArea": {
+      "title": "Создать площадь",
+      "description": "Выбранные ячейки: {sqm} м²",
+      "name": "Название",
+      "code": "Код (необязательно)",
+      "nameRequired": "Название обязательно.",
+      "confirm": "Создать площадь"
+    },
+    "assign": {
+      "title": "Назначить площадь",
+      "builders": "Сделки застройщиков",
+      "partners": "Партнёры",
+      "search": "Поиск",
+      "searchPlaceholder": "Поиск по организации",
+      "emptyBuilders": "В этом цикле нет активных сделок застройщиков.",
+      "emptyPartners": "В этом цикле нет партнёров.",
+      "pick": "Назначить"
+    },
+    "panel": {
+      "title": "Площади",
+      "detail": "Площадь",
+      "back": "Список",
+      "selectHint": "Выберите площадь на карте или в списке.",
+      "noAreas": "Площадей пока нет. Выделите свободные ячейки.",
+      "name": "Название",
+      "code": "Код",
+      "squareMeters": "{sqm} м²",
+      "displayMode": "Публичное отображение",
+      "customLabel": "Своя подпись",
+      "customLabelRequired": "Для этого режима нужна своя подпись.",
+      "allocation": "Назначение",
+      "assign": "Назначить",
+      "dealAmount": "Сумма: {value}",
+      "primaryContact": "Контакт: {name}",
+      "release": "Освободить",
+      "releaseTitle": "Освободить площадь",
+      "releaseDescription": "Освободить эту площадь от назначения?",
+      "delete": "Удалить площадь",
+      "deleteTitle": "Удалить площадь",
+      "deleteDescription": "Удалить эту свободную площадь?"
+    },
+    "displayMode": {
+      "ORGANIZATION": "Организация",
+      "CUSTOM_LABEL": "Своя подпись",
+      "HIDDEN": "Скрыто"
+    },
+    "allocationKind": {
+      "BUILDER": "Застройщик",
+      "PARTNER": "Партнёр"
+    }
+  },
+  "content": {
+    "notes": {
+      "title": "Заметки",
+      "placeholder": "Добавить заметку…",
+      "add": "Добавить",
+      "empty": "Заметок пока нет.",
+      "deleteTitle": "Удалить заметку",
+      "deleteDescription": "Удалить эту заметку?"
+    },
+    "attachments": {
+      "title": "Вложения",
+      "upload": "Загрузить файл",
+      "uploading": "Загрузка…",
+      "download": "Скачать",
+      "empty": "Вложений пока нет.",
+      "tooLarge": "Файл больше 25 МБ.",
+      "uploadSuccess": "Файл загружен.",
+      "uploadFailed": "Не удалось загрузить файл.",
+      "deleteTitle": "Удалить вложение",
+      "deleteDescription": "Удалить «{name}»?"
+    }
+  },
+  "partners": {
+    "title": "Партнёры",
+    "subtitle": "Банки и другие участники (не застройщики) для выбранного цикла.",
+    "create": "Новый партнёр",
+    "createTitle": "Создать партнёра",
+    "detailTitle": "Партнёр",
+    "empty": "В этом цикле пока нет партнёров.",
+    "emptyNoCycles": "Сначала создайте цикл события.",
+    "stages": {
+      "NEW": "Новый",
+      "CONTACTED": "Контакт",
+      "CONFIRMED": "Подтверждён",
+      "DECLINED": "Отказ"
+    },
+    "toolbar": {
+      "cycle": "Цикл события",
+      "noCycles": "Нет циклов",
+      "active": "активный",
+      "view": "Вид",
+      "kanban": "Канбан",
+      "list": "Список",
+      "searchPlaceholder": "Поиск по организации",
+      "partnerTypeFilter": "Тип партнёра",
+      "allPartnerTypes": "Все типы",
+      "staffFilter": "Ответственный",
+      "allStaff": "Все сотрудники"
+    },
+    "card": {
+      "noContact": "Нет контакта",
+      "assignedAreas": "{labels}"
+    },
+    "list": {
+      "organization": "Организация",
+      "partnerType": "Тип",
+      "contact": "Контакт",
+      "stage": "Этап",
+      "staff": "Сотрудник",
+      "updated": "Обновлено"
+    },
+    "sheet": {
+      "details": "Детали",
+      "stage": "Этап",
+      "areas": "Площади"
+    },
+    "fields": {
+      "organization": "Организация",
+      "organizationSelect": "Выберите организацию",
+      "contact": "Основной контакт",
+      "staff": "Ответственный",
+      "partnerType": "Тип партнёра",
+      "description": "Описание"
+    },
+    "createForm": {
+      "orgSearchPlaceholder": "Поиск организаций",
+      "pickOrganization": "Выберите организацию",
+      "noContact": "Без контакта",
+      "unassigned": "Не назначен",
+      "partnerTypePlaceholder": "напр. Банк, Медиа",
+      "organizationRequired": "Организация обязательна."
+    },
+    "stage": {
+      "current": "Текущий",
+      "markDeclinedTitle": "Отметить отказ",
+      "markDeclinedDescription": "Перевести партнёра в «Отказ»?",
+      "actions": {
+        "NEW": "В «Новый»",
+        "CONTACTED": "Отметить контакт",
+        "CONFIRMED": "Подтвердить",
+        "DECLINED": "Отказ"
+      }
+    },
+    "areas": {
+      "empty": "Площади назначаются на карте площадки и для партнёров необязательны.",
+      "summary": "{count} зон · {sqm} м² · {labels}"
+    }
+  },
+  "toonexpo": {
+    "account": {
+      "title": "Аккаунт ToonExpo",
+      "linked": "Связан",
+      "companyId": "ID компании: {id}",
+      "requestButton": "Запросить аккаунт ToonExpo",
+      "requestDialogTitle": "Запрос аккаунта ToonExpo",
+      "requestDialogDescription": "Создать компанию ToonExpo для этой организации в выбранном цикле.",
+      "requestSubmit": "Отправить запрос",
+      "modulesLabel": "Модули",
+      "modulesRequired": "Выберите хотя бы один модуль.",
+      "retry": "Повторить",
+      "pendingHint": "Создание аккаунта выполняется.",
+      "requestStatus": {
+        "PENDING": "В ожидании",
+        "SUCCESS": "Создан",
+        "LINKED_EXISTING": "Связан существующий",
+        "FAILED": "Ошибка"
+      }
+    },
+    "companyType": {
+      "BUILDER": "Тип компании: Застройщик",
+      "PARTNER": "Тип компании: Партнёр"
+    },
+    "modules": {
+      "builder_portal": "Портал застройщика",
+      "constructor_crm": "CRM застройщика",
+      "readiness": "Готовность",
+      "partner_profile": "Профиль партнёра",
+      "bank_offers": "Банковские предложения",
+      "analytics": "Аналитика"
+    },
+    "publication": {
+      "title": "Публикация в ToonExpo",
+      "publishButton": "Опубликовать в ToonExpo",
+      "confirmTitle": "Публикация карты площадки",
+      "confirmDescription": "Публичные данные по режимам отображения зон будут отправлены в ToonExpo.",
+      "publishedAt": "Опубликовано {date}",
+      "historyTitle": "История публикаций",
+      "historyEmpty": "Публикаций пока нет.",
+      "version": "v{version}",
+      "planStatus": {
+        "UNPUBLISHED": "Не опубликовано",
+        "PUBLISHED": "Опубликовано"
+      },
+      "status": {
+        "PENDING": "В ожидании",
+        "PUBLISHED": "Опубликовано",
+        "ALREADY_PUBLISHED": "Уже опубликовано",
+        "REJECTED": "Отклонено",
+        "FAILED": "Ошибка"
+      },
+      "toastPublished": "Карта площадки опубликована в ToonExpo.",
+      "toastAlreadyPublished": "Карта уже была опубликована (без изменений).",
+      "toastRejected": "Публикация отклонена ToonExpo.",
+      "toastRejectedWithError": "Публикация отклонена: {error}",
+      "toastFailed": "Не удалось опубликовать.",
+      "toastFailedWithError": "Ошибка публикации: {error}",
+      "toastPending": "Запрос на публикацию отправлен."
+    }
+  }
+}

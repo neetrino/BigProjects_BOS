@@ -1,0 +1,532 @@
+{
+  "common": {
+    "loading": "Loading…",
+    "save": "Save",
+    "saving": "Saving…",
+    "cancel": "Cancel",
+    "confirm": "Confirm",
+    "edit": "Edit",
+    "delete": "Delete",
+    "logout": "Log out",
+    "unexpectedError": "Something went wrong. Please try again."
+  },
+  "languageSwitcher": {
+    "label": "Language"
+  },
+  "health": {
+    "checking": "API…",
+    "ok": "API ok",
+    "dbDown": "API: database down",
+    "unreachable": "API unreachable"
+  },
+  "nav": {
+    "label": "Main navigation",
+    "product": "Internal",
+    "brand": "BigProjects BOS",
+    "builderSales": "Builder Sales",
+    "partners": "Partners",
+    "venueMap": "Venue Map",
+    "cycles": "Event Cycles",
+    "organizations": "Organizations",
+    "settings": "Settings",
+    "soon": "soon"
+  },
+  "login": {
+    "eyebrow": "BigProjects BOS",
+    "title": "Sign in",
+    "description": "Use your staff account to continue.",
+    "email": "Email",
+    "password": "Password",
+    "submit": "Sign in",
+    "submitting": "Signing in…",
+    "invalidCredentials": "Invalid email or password.",
+    "tooManyAttempts": "Too many attempts. Please wait and try again.",
+    "genericError": "Could not sign in. Please try again."
+  },
+  "cycles": {
+    "title": "Event Cycles",
+    "subtitle": "Manage ToonExpo cycles and their status.",
+    "create": "New cycle",
+    "createTitle": "Create cycle",
+    "editTitle": "Edit cycle",
+    "empty": "No event cycles yet.",
+    "columns": {
+      "name": "Name",
+      "code": "Code",
+      "status": "Status",
+      "dates": "Dates",
+      "actions": "Actions"
+    },
+    "fields": {
+      "name": "Name",
+      "code": "Code",
+      "startsAt": "Starts",
+      "endsAt": "Ends"
+    },
+    "status": {
+      "DRAFT": "Draft",
+      "ACTIVE": "Active",
+      "CLOSED": "Closed"
+    },
+    "actions": {
+      "activate": "Activate",
+      "close": "Close"
+    },
+    "confirm": {
+      "activateTitle": "Activate cycle",
+      "activateDescription": "Activate “{name}”? Other active cycles may be closed by the API rules.",
+      "closeTitle": "Close cycle",
+      "closeDescription": "Close “{name}”? This cannot be undone from the UI."
+    }
+  },
+  "organizations": {
+    "title": "Organizations",
+    "subtitle": "Companies and contacts used across cycles.",
+    "create": "New organization",
+    "createTitle": "Create organization",
+    "detailTitle": "Organization",
+    "detailsSection": "Details",
+    "searchPlaceholder": "Search by name",
+    "typeFilter": "Type",
+    "allTypes": "All types",
+    "empty": "No organizations found.",
+    "notFound": "Organization not found.",
+    "columns": {
+      "name": "Name",
+      "type": "Type",
+      "contacts": "Contacts",
+      "phone": "Phone",
+      "email": "Email"
+    },
+    "fields": {
+      "name": "Name",
+      "type": "Type",
+      "phone": "Phone",
+      "email": "Email",
+      "website": "Website",
+      "registrationId": "Registration ID"
+    },
+    "types": {
+      "BUILDER": "Builder",
+      "BANK": "Bank",
+      "PARTNER": "Partner",
+      "OTHER": "Other"
+    },
+    "contacts": {
+      "title": "Contacts",
+      "add": "Add contact",
+      "saveNew": "Add",
+      "empty": "No contacts yet.",
+      "primary": "Primary",
+      "makePrimary": "Primary",
+      "deleteTitle": "Delete contact",
+      "deleteDescription": "Delete “{name}”?",
+      "fields": {
+        "name": "Name",
+        "phone": "Phone",
+        "email": "Email",
+        "position": "Position",
+        "isPrimary": "Primary contact"
+      }
+    }
+  },
+  "settings": {
+    "title": "Settings",
+    "subtitle": "Profile and staff accounts.",
+    "profile": {
+      "title": "Profile",
+      "name": "Name",
+      "email": "Email",
+      "role": "Role",
+      "language": "Language"
+    },
+    "staff": {
+      "title": "Staff accounts",
+      "subtitle": "Create and disable internal users.",
+      "create": "New user",
+      "createTitle": "Create user",
+      "empty": "No users found.",
+      "disable": "Disable",
+      "reactivate": "Reactivate",
+      "confirmDisableTitle": "Disable user",
+      "confirmDisableDescription": "Disable “{name}”? They will not be able to sign in.",
+      "confirmReactivateTitle": "Reactivate user",
+      "confirmReactivateDescription": "Reactivate “{name}”?",
+      "columns": {
+        "name": "Name",
+        "email": "Email",
+        "role": "Role",
+        "status": "Status",
+        "actions": "Actions"
+      },
+      "fields": {
+        "name": "Name",
+        "email": "Email",
+        "password": "Password",
+        "role": "Role"
+      },
+      "roles": {
+        "ADMIN": "Admin",
+        "STAFF": "Staff"
+      },
+      "status": {
+        "ACTIVE": "Active",
+        "DISABLED": "Disabled"
+      }
+    }
+  },
+  "builderSales": {
+    "title": "Builder Sales",
+    "subtitle": "Manage exhibition space deals for the selected cycle.",
+    "create": "New deal",
+    "createTitle": "Create deal",
+    "detailTitle": "Deal",
+    "empty": "No deals in this cycle yet.",
+    "emptyNoCycles": "Create an event cycle before adding deals.",
+    "stages": {
+      "NEW": "New",
+      "CONTACTED": "Contacted",
+      "NEGOTIATION": "Negotiation",
+      "WON": "Won",
+      "LOST": "Lost"
+    },
+    "toolbar": {
+      "cycle": "Event cycle",
+      "noCycles": "No cycles",
+      "active": "active",
+      "view": "View",
+      "kanban": "Kanban",
+      "list": "List",
+      "searchPlaceholder": "Search by organization",
+      "staffFilter": "Assigned staff",
+      "allStaff": "All staff"
+    },
+    "card": {
+      "noContact": "No contact",
+      "expectedSqm": "{value} m² expected",
+      "amount": "{value}",
+      "assignedAreas": "{sqm} m² · {labels}"
+    },
+    "list": {
+      "organization": "Organization",
+      "contact": "Contact",
+      "stage": "Stage",
+      "expectedSqm": "Expected m²",
+      "amount": "Amount",
+      "staff": "Staff",
+      "updated": "Updated"
+    },
+    "sheet": {
+      "details": "Details",
+      "stage": "Stage",
+      "areas": "Areas"
+    },
+    "fields": {
+      "organization": "Organization",
+      "organizationSelect": "Select organization",
+      "contact": "Primary contact",
+      "staff": "Assigned staff",
+      "expectedSqm": "Expected m²",
+      "agreedAmount": "Agreed amount",
+      "description": "Description"
+    },
+    "createForm": {
+      "orgSearchPlaceholder": "Search organizations",
+      "pickOrganization": "Choose an organization",
+      "noContact": "No contact",
+      "unassigned": "Unassigned",
+      "organizationRequired": "Organization is required."
+    },
+    "stage": {
+      "current": "Current",
+      "markLostTitle": "Mark as lost",
+      "markLostDescription": "Move this deal to Lost?",
+      "markLostWithAreasDescription": "This deal has assigned areas. Choose whether to release them when marking lost.",
+      "releaseAreasLabel": "Release assigned areas",
+      "actions": {
+        "NEW": "Move to New",
+        "CONTACTED": "Mark contacted",
+        "NEGOTIATION": "Start negotiation",
+        "WON": "Mark won",
+        "LOST": "Mark lost"
+      }
+    },
+    "areas": {
+      "empty": "Areas are assigned from the Venue Map.",
+      "summary": "{count} areas · {sqm} m² · {labels}"
+    }
+  },
+  "entityAreas": {
+    "title": "Areas",
+    "empty": "No areas assigned yet.",
+    "assign": "Assign area",
+    "assignTitle": "Assign free area",
+    "release": "Release",
+    "releaseTitle": "Release area",
+    "releaseDescription": "Release this area from the current assignment?",
+    "search": "Search",
+    "searchPlaceholder": "Search by name or code",
+    "noFreeAreas": "No free areas on this cycle’s plan.",
+    "pick": "Assign"
+  },
+  "venueMap": {
+    "title": "Venue Map",
+    "subtitle": "Create sellable areas and assign them to builders or partners.",
+    "emptyNoCycles": "Create an event cycle before opening the venue map.",
+    "selectCycle": "Select an event cycle to continue.",
+    "noPlanStaff": "No venue plan for this cycle yet. Ask an admin to create one.",
+    "noImageStaff": "The plan has no background image yet. Ask an admin to upload one.",
+    "uncalibratedHint": "Calibrate the plan (admin) before creating areas.",
+    "selectHint": "Drag over free cells to create a rectangular area. Hold Space to pan. Scroll to zoom.",
+    "toolbar": {
+      "cycle": "Event cycle",
+      "active": "active",
+      "select": "Select",
+      "pan": "Pan",
+      "calibrate": "Calibrate",
+      "fit": "Fit"
+    },
+    "createPlan": {
+      "title": "Create venue plan",
+      "description": "Start a sales map for this cycle.",
+      "name": "Title",
+      "titleRequired": "Title is required.",
+      "confirm": "Create plan"
+    },
+    "upload": {
+      "title": "Upload plan image",
+      "hint": "PNG, JPEG or WebP up to 25 MB.",
+      "choose": "Choose image",
+      "replace": "Replace image",
+      "uploading": "Uploading…",
+      "success": "Image uploaded.",
+      "failed": "Could not upload the image.",
+      "tooLarge": "File is larger than 25 MB.",
+      "invalidType": "Use PNG, JPEG or WebP."
+    },
+    "calibration": {
+      "hint": "Click two points on the plan ({count}/2), then enter the real distance.",
+      "distance": "Distance (m)",
+      "applyPoints": "Apply scale",
+      "clearPoints": "Clear points",
+      "ppm": "px / m",
+      "originX": "Origin X",
+      "originY": "Origin Y",
+      "saveManual": "Save calibration",
+      "saved": "Calibration saved.",
+      "needTwoPoints": "Click two points on the image first.",
+      "invalidDistance": "Enter a positive distance in meters.",
+      "invalidPpm": "Enter a positive pixels-per-meter value.",
+      "invalidOrigin": "Origin values must be numbers."
+    },
+    "createArea": {
+      "title": "Create area",
+      "description": "Selected cells: {sqm} m²",
+      "name": "Name",
+      "code": "Code (optional)",
+      "nameRequired": "Name is required.",
+      "confirm": "Create area"
+    },
+    "assign": {
+      "title": "Assign area",
+      "builders": "Builder deals",
+      "partners": "Partners",
+      "search": "Search",
+      "searchPlaceholder": "Search by organization",
+      "emptyBuilders": "No active builder deals in this cycle.",
+      "emptyPartners": "No partners in this cycle.",
+      "pick": "Assign"
+    },
+    "panel": {
+      "title": "Areas",
+      "detail": "Area",
+      "back": "List",
+      "selectHint": "Select an area on the map or from the list.",
+      "noAreas": "No areas yet. Drag to select free cells.",
+      "name": "Name",
+      "code": "Code",
+      "squareMeters": "{sqm} m²",
+      "displayMode": "Public display",
+      "customLabel": "Custom label",
+      "customLabelRequired": "Custom label is required for this display mode.",
+      "allocation": "Allocation",
+      "assign": "Assign",
+      "dealAmount": "Amount: {value}",
+      "primaryContact": "Contact: {name}",
+      "release": "Release",
+      "releaseTitle": "Release area",
+      "releaseDescription": "Release this area from its assignment?",
+      "delete": "Delete area",
+      "deleteTitle": "Delete area",
+      "deleteDescription": "Delete this free area?"
+    },
+    "displayMode": {
+      "ORGANIZATION": "Organization",
+      "CUSTOM_LABEL": "Custom label",
+      "HIDDEN": "Hidden"
+    },
+    "allocationKind": {
+      "BUILDER": "Builder",
+      "PARTNER": "Partner"
+    }
+  },
+  "content": {
+    "notes": {
+      "title": "Notes",
+      "placeholder": "Add a note…",
+      "add": "Add note",
+      "empty": "No notes yet.",
+      "deleteTitle": "Delete note",
+      "deleteDescription": "Delete this note?"
+    },
+    "attachments": {
+      "title": "Attachments",
+      "upload": "Upload file",
+      "uploading": "Uploading…",
+      "download": "Download",
+      "empty": "No attachments yet.",
+      "tooLarge": "File is larger than 25 MB.",
+      "uploadSuccess": "File uploaded.",
+      "uploadFailed": "Could not upload the file.",
+      "deleteTitle": "Delete attachment",
+      "deleteDescription": "Delete “{name}”?"
+    }
+  },
+  "partners": {
+    "title": "Partner Relations",
+    "subtitle": "Manage banks and other non-builder participants for the selected cycle.",
+    "create": "New partner",
+    "createTitle": "Create partner",
+    "detailTitle": "Partner",
+    "empty": "No partners in this cycle yet.",
+    "emptyNoCycles": "Create an event cycle before adding partners.",
+    "stages": {
+      "NEW": "New",
+      "CONTACTED": "Contacted",
+      "CONFIRMED": "Confirmed",
+      "DECLINED": "Declined"
+    },
+    "toolbar": {
+      "cycle": "Event cycle",
+      "noCycles": "No cycles",
+      "active": "active",
+      "view": "View",
+      "kanban": "Kanban",
+      "list": "List",
+      "searchPlaceholder": "Search by organization",
+      "partnerTypeFilter": "Partner type",
+      "allPartnerTypes": "All types",
+      "staffFilter": "Assigned staff",
+      "allStaff": "All staff"
+    },
+    "card": {
+      "noContact": "No contact",
+      "assignedAreas": "{labels}"
+    },
+    "list": {
+      "organization": "Organization",
+      "partnerType": "Partner type",
+      "contact": "Contact",
+      "stage": "Stage",
+      "staff": "Staff",
+      "updated": "Updated"
+    },
+    "sheet": {
+      "details": "Details",
+      "stage": "Stage",
+      "areas": "Areas"
+    },
+    "fields": {
+      "organization": "Organization",
+      "organizationSelect": "Select organization",
+      "contact": "Primary contact",
+      "staff": "Assigned staff",
+      "partnerType": "Partner type",
+      "description": "Description"
+    },
+    "createForm": {
+      "orgSearchPlaceholder": "Search organizations",
+      "pickOrganization": "Choose an organization",
+      "noContact": "No contact",
+      "unassigned": "Unassigned",
+      "partnerTypePlaceholder": "e.g. Bank, Media",
+      "organizationRequired": "Organization is required."
+    },
+    "stage": {
+      "current": "Current",
+      "markDeclinedTitle": "Mark as declined",
+      "markDeclinedDescription": "Move this partner to Declined?",
+      "actions": {
+        "NEW": "Move to New",
+        "CONTACTED": "Mark contacted",
+        "CONFIRMED": "Confirm",
+        "DECLINED": "Decline"
+      }
+    },
+    "areas": {
+      "empty": "Areas are assigned from the Venue Map and are optional for partners.",
+      "summary": "{count} areas · {sqm} m² · {labels}"
+    }
+  },
+  "toonexpo": {
+    "account": {
+      "title": "ToonExpo account",
+      "linked": "Linked",
+      "companyId": "Company ID: {id}",
+      "requestButton": "Request ToonExpo account",
+      "requestDialogTitle": "Request ToonExpo account",
+      "requestDialogDescription": "Create a ToonExpo company for this organization in the selected cycle.",
+      "requestSubmit": "Submit request",
+      "modulesLabel": "Modules",
+      "modulesRequired": "Select at least one module.",
+      "retry": "Retry",
+      "pendingHint": "Provisioning is in progress.",
+      "requestStatus": {
+        "PENDING": "Pending",
+        "SUCCESS": "Provisioned",
+        "LINKED_EXISTING": "Linked existing",
+        "FAILED": "Failed"
+      }
+    },
+    "companyType": {
+      "BUILDER": "Company type: Builder",
+      "PARTNER": "Company type: Partner"
+    },
+    "modules": {
+      "builder_portal": "Builder portal",
+      "constructor_crm": "Constructor CRM",
+      "readiness": "Readiness",
+      "partner_profile": "Partner profile",
+      "bank_offers": "Bank offers",
+      "analytics": "Analytics"
+    },
+    "publication": {
+      "title": "ToonExpo publication",
+      "publishButton": "Publish to ToonExpo",
+      "confirmTitle": "Publish venue map",
+      "confirmDescription": "Public data per area display modes will be sent to ToonExpo.",
+      "publishedAt": "Published {date}",
+      "historyTitle": "Publication history",
+      "historyEmpty": "No publications yet.",
+      "version": "v{version}",
+      "planStatus": {
+        "UNPUBLISHED": "Unpublished",
+        "PUBLISHED": "Published"
+      },
+      "status": {
+        "PENDING": "Pending",
+        "PUBLISHED": "Published",
+        "ALREADY_PUBLISHED": "Already published",
+        "REJECTED": "Rejected",
+        "FAILED": "Failed"
+      },
+      "toastPublished": "Venue map published to ToonExpo.",
+      "toastAlreadyPublished": "Venue map was already published (unchanged).",
+      "toastRejected": "Publication was rejected by ToonExpo.",
+      "toastRejectedWithError": "Publication rejected: {error}",
+      "toastFailed": "Publication failed.",
+      "toastFailedWithError": "Publication failed: {error}",
+      "toastPending": "Publication submitted."
+    }
+  }
+}

@@ -1,0 +1,39 @@
+{
+  "name": "@bos/web",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "dev": "next dev --port 3000",
+    "build": "next build",
+    "start": "next start --port 3000",
+    "lint": "eslint .",
+    "typecheck": "tsc --noEmit -p tsconfig.json",
+    "test": "node --test src/lib/api/health.test.mjs",
+    "test:e2e": "playwright test"
+  },
+  "dependencies": {
+    "@dnd-kit/core": "^6.3.1",
+    "@dnd-kit/sortable": "^10.0.0",
+    "@dnd-kit/utilities": "^3.2.2",
+    "clsx": "^2.1.1",
+    "konva": "^10.3.0",
+    "lucide-react": "^1.25.0",
+    "next": "^16.0.0",
+    "next-intl": "^4.13.3",
+    "react": "^19.1.1",
+    "react-dom": "^19.1.1",
+    "react-konva": "^19.2.5"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.61.1",
+    "@tailwindcss/postcss": "^4.1.13",
+    "@types/node": "^22.18.1",
+    "@types/react": "^19.1.12",
+    "@types/react-dom": "^19.1.9",
+    "dotenv": "^16.6.1",
+    "eslint": "^9.35.0",
+    "eslint-config-next": "^16.0.0",
+    "tailwindcss": "^4.1.13",
+    "typescript": "^5.9.2"
+  }
+}

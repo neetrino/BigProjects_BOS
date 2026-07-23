@@ -1,0 +1,32 @@
+{
+  "name": "bigprojects-bos",
+  "private": true,
+  "packageManager": "pnpm@11.14.0",
+  "scripts": {
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "lint": "pnpm -r --if-present lint",
+    "typecheck": "pnpm -r --if-present typecheck",
+    "test": "pnpm -r --if-present test",
+    "test:e2e": "pnpm --filter @bos/web test:e2e",
+    "build": "pnpm -r --if-present build",
+    "dev": "pnpm -r --parallel --if-present dev",
+    "toonexpo:stub": "node scripts/toonexpo-stub.mjs",
+    "db:generate": "prisma generate",
+    "db:seed": "prisma db seed",
+    "postinstall": "prisma generate"
+  },
+  "devDependencies": {
+    "dotenv": "^16.6.1",
+    "prettier": "^3.6.2",
+    "prisma": "^7.0.0",
+    "tsx": "^4.20.5",
+    "typescript": "^5.9.2"
+  },
+  "dependencies": {
+    "@prisma/adapter-pg": "^7.0.0",
+    "@prisma/client": "^7.0.0",
+    "argon2": "^0.44.0",
+    "pg": "^8.16.3"
+  }
+}

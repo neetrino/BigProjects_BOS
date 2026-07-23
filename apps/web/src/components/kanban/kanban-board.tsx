@@ -1,0 +1,251 @@
+'use client';
+
+import {
+  DndContext,
+  DragOverlay,
+  PointerSensor,
+  closestCorners,
+  useDraggable,
+  useDroppable,
+  useSensor,
+  useSensors,
+  type DragEndEvent,
+  type DragStartEvent,
+} from '@dnd-kit/core';
+import { clsx } from 'clsx';
+import { useMemo, useRef, useState, type ReactNode } from 'react';
+import type { KanbanColumnDef, KanbanColumnTone } from '@/components/kanban/types';
+
+const CLICK_MAX_DISTANCE_PX = 6;
+
+const TONE_HEADER_CLASS: Record<KanbanColumnTone, string> = {
+  default: '',
+  positive: 'text-emerald-900',
+  negative: 'text-rose-900',
+};
+
+type KanbanBoardProps<TItem extends { id: string }, TStage extends string> = {
+  items: TItem[];
+  getStage: (item: TItem) => TStage;
+  activeColumns: readonly KanbanColumnDef<TStage>[];
+  terminalColumns: readonly KanbanColumnDef<TStage>[];
+  onOpen: (id: string) => void;
+  onStageChange: (id: string, stage: TStage) => void | Promise<void>;
+  renderCard: (item: TItem, options: { isDragging: boolean }) => ReactNode;
+};
+
+export function KanbanBoard<TItem extends { id: string }, TStage extends string>({
+  items,
+  getStage,
+  activeColumns,
+  terminalColumns,
+  onOpen,
+  onStageChange,
+  renderCard,
+}: KanbanBoardProps<TItem, TStage>) {
+  const [activeId, setActiveId] = useState<string | null>(null);
+  const sensors = useSensors(
+    useSensor(PointerSensor, {
+      activationConstraint: { distance: CLICK_MAX_DISTANCE_PX },
+    }),
+  );
+
+  const stageIds = useMemo(() => {
+    const ids = new Set<string>();
+    for (const column of activeColumns) {
+      ids.add(column.id);
+    }
+    for (const column of terminalColumns) {
+      ids.add(column.id);
+    }
+    return ids;
+  }, [activeColumns, terminalColumns]);
+
+  const grouped = useMemo(() => {
+    const map = new Map<TStage, TItem[]>();
+    for (const column of [...activeColumns, ...terminalColumns]) {
+      map.set(column.id, []);
+    }
+    for (const item of items) {
+      const stage = getStage(item);
+      const bucket = map.get(stage);
+      if (bucket) {
+        bucket.push(item);
+      }
+    }
+    return map;
+  }, [activeColumns, getStage, items, terminalColumns]);
+
+  const activeItem = activeId ? (items.find((item) => item.id === activeId) ?? null) : null;
+
+  function handleDragStart(event: DragStartEvent) {
+    setActiveId(String(event.active.id));
+  }
+
+  async function handleDragEnd(event: DragEndEvent) {
+    setActiveId(null);
+    const itemId = String(event.active.id);
+    const overId = event.over?.id;
+    if (!overId) {
+      return;
+    }
+
+    const targetStage = String(overId) as TStage;
+    if (!stageIds.has(targetStage)) {
+      return;
+    }
+
+    const item = items.find((entry) => entry.id === itemId);
+    if (!item || getStage(item) === targetStage) {
+      return;
+    }
+
+    await onStageChange(itemId, targetStage);
+  }
+
+  return (
+    <DndContext
+      sensors={sensors}
+      collisionDetection={closestCorners}
+      onDragStart={handleDragStart}
+      onDragEnd={(event) => {
+        void handleDragEnd(event);
+      }}
+      onDragCancel={() => setActiveId(null)}
+    >
+      <div className="flex min-h-0 flex-1 gap-3 overflow-x-auto pb-1">
+        <div className="flex min-h-0 min-w-max gap-3">
+          {activeColumns.map((column) => (
+            <KanbanColumn
+              key={column.id}
+              column={column}
+              items={grouped.get(column.id) ?? []}
+              terminal={false}
+              onOpen={onOpen}
+              renderCard={renderCard}
+            />
+          ))}
+        </div>
+
+        <div aria-hidden className="mx-1 w-px shrink-0 self-stretch bg-[var(--color-border)]" />
+
+        <div className="flex min-h-0 min-w-max gap-3 rounded-xl bg-[var(--color-bg)]/80 p-2">
+          {terminalColumns.map((column) => (
+            <KanbanColumn
+              key={column.id}
+              column={column}
+              items={grouped.get(column.id) ?? []}
+              terminal
+              onOpen={onOpen}
+              renderCard={renderCard}
+            />
+          ))}
+        </div>
+      </div>
+
+      <DragOverlay>{activeItem ? renderCard(activeItem, { isDragging: true }) : null}</DragOverlay>
+    </DndContext>
+  );
+}
+
+type KanbanColumnProps<TItem extends { id: string }, TStage extends string> = {
+  column: KanbanColumnDef<TStage>;
+  items: TItem[];
+  terminal: boolean;
+  onOpen: (id: string) => void;
+  renderCard: (item: TItem, options: { isDragging: boolean }) => ReactNode;
+};
+
+function KanbanColumn<TItem extends { id: string }, TStage extends string>({
+  column,
+  items,
+  terminal,
+  onOpen,
+  renderCard,
+}: KanbanColumnProps<TItem, TStage>) {
+  const { setNodeRef, isOver } = useDroppable({ id: column.id });
+  const tone = column.tone ?? 'default';
+
+  return (
+    <section
+      ref={setNodeRef}
+      className={clsx(
+        'flex w-72 shrink-0 flex-col rounded-xl border',
+        terminal
+          ? 'border-dashed border-[var(--color-border)] bg-[var(--color-surface)]/70'
+          : 'border-[var(--color-border)] bg-[var(--color-bg)]/40',
+        isOver && 'ring-2 ring-[var(--color-accent)]/40',
+      )}
+    >
+      <header
+        className={clsx(
+          'flex items-center justify-between gap-2 border-b px-3 py-2',
+          terminal
+            ? 'border-[var(--color-border)]/70 bg-[var(--color-bg)]'
+            : 'border-[var(--color-border)]',
+          TONE_HEADER_CLASS[tone],
+        )}
+      >
+        <h3 className="text-xs font-semibold uppercase tracking-wide text-[var(--color-muted)]">
+          {column.title}
+        </h3>
+        <span className="rounded-full bg-[var(--color-surface)] px-2 py-0.5 text-[11px] text-[var(--color-muted)]">
+          {items.length}
+        </span>
+      </header>
+      <div className="flex min-h-0 flex-1 flex-col gap-2 overflow-y-auto p-2">
+        {items.map((item) => (
+          <DraggableKanbanCard key={item.id} item={item} onOpen={onOpen} renderCard={renderCard} />
+        ))}
+      </div>
+    </section>
+  );
+}
+
+type DraggableKanbanCardProps<TItem extends { id: string }> = {
+  item: TItem;
+  onOpen: (id: string) => void;
+  renderCard: (item: TItem, options: { isDragging: boolean }) => ReactNode;
+};
+
+function DraggableKanbanCard<TItem extends { id: string }>({
+  item,
+  onOpen,
+  renderCard,
+}: DraggableKanbanCardProps<TItem>) {
+  const pointerStart = useRef<{ x: number; y: number } | null>(null);
+  const { attributes, listeners, setNodeRef, isDragging } = useDraggable({
+    id: item.id,
+  });
+
+  return (
+    <div
+      ref={setNodeRef}
+      className={clsx('cursor-grab active:cursor-grabbing', isDragging && 'opacity-40')}
+      {...listeners}
+      {...attributes}
+      onPointerDown={(event) => {
+        pointerStart.current = { x: event.clientX, y: event.clientY };
+        listeners?.onPointerDown?.(event);
+      }}
+      onClick={(event) => {
+        const start = pointerStart.current;
+        if (
+          start &&
+          Math.hypot(event.clientX - start.x, event.clientY - start.y) > CLICK_MAX_DISTANCE_PX
+        ) {
+          return;
+        }
+        onOpen(item.id);
+      }}
+      onKeyDown={(event) => {
+        if (event.key === 'Enter' || event.key === ' ') {
+          event.preventDefault();
+          onOpen(item.id);
+        }
+      }}
+    >
+      {renderCard(item, { isDragging })}
+    </div>
+  );
+}

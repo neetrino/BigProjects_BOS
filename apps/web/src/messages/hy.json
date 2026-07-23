@@ -1,0 +1,532 @@
+{
+  "common": {
+    "loading": "Բեռնվում է…",
+    "save": "Պահպանել",
+    "saving": "Պահպանվում է…",
+    "cancel": "Չեղարկել",
+    "confirm": "Հաստատել",
+    "edit": "Խմբագրել",
+    "delete": "Ջնջել",
+    "logout": "Ելք",
+    "unexpectedError": "Ինչ-որ սխալ տեղի ունեցավ։ Փորձեք կրկին։"
+  },
+  "languageSwitcher": {
+    "label": "Լեզու"
+  },
+  "health": {
+    "checking": "API…",
+    "ok": "API-ն աշխատում է",
+    "dbDown": "API՝ տվյալների բազան անհասանելի է",
+    "unreachable": "API-ն անհասանելի է"
+  },
+  "nav": {
+    "label": "Հիմնական նավիգացիա",
+    "product": "Ներքին",
+    "brand": "BigProjects BOS",
+    "builderSales": "Կառուցապատողների վաճառք",
+    "partners": "Գործընկերներ",
+    "venueMap": "Տարածքի քարտեզ",
+    "cycles": "Միջոցառման ցիկլեր",
+    "organizations": "Կազմակերպություններ",
+    "settings": "Կարգավորումներ",
+    "soon": "շուտով"
+  },
+  "login": {
+    "eyebrow": "BigProjects BOS",
+    "title": "Մուտք",
+    "description": "Շարունակելու համար մուտք գործեք աշխատակցի հաշվով։",
+    "email": "Էլ․ փոստ",
+    "password": "Գաղտնաբառ",
+    "submit": "Մուտք",
+    "submitting": "Մուտք…",
+    "invalidCredentials": "Սխալ էլ․ փոստ կամ գաղտնաբառ։",
+    "tooManyAttempts": "Չափից շատ փորձեր։ Սպասեք և փորձեք կրկին։",
+    "genericError": "Մուտքը չհաջողվեց։ Փորձեք կրկին։"
+  },
+  "cycles": {
+    "title": "Միջոցառման ցիկլեր",
+    "subtitle": "Կառավարեք ToonExpo ցիկլերը և դրանց կարգավիճակը։",
+    "create": "Նոր ցիկլ",
+    "createTitle": "Ստեղծել ցիկլ",
+    "editTitle": "Խմբագրել ցիկլը",
+    "empty": "Ցիկլեր դեռ չկան։",
+    "columns": {
+      "name": "Անվանում",
+      "code": "Կոդ",
+      "status": "Կարգավիճակ",
+      "dates": "Ամսաթվեր",
+      "actions": "Գործողություններ"
+    },
+    "fields": {
+      "name": "Անվանում",
+      "code": "Կոդ",
+      "startsAt": "Սկիզբ",
+      "endsAt": "Ավարտ"
+    },
+    "status": {
+      "DRAFT": "Սևագիր",
+      "ACTIVE": "Ակտիվ",
+      "CLOSED": "Փակված"
+    },
+    "actions": {
+      "activate": "Ակտիվացնել",
+      "close": "Փակել"
+    },
+    "confirm": {
+      "activateTitle": "Ակտիվացնել ցիկլը",
+      "activateDescription": "Ակտիվացնե՞լ «{name}»-ը։ Այլ ակտիվ ցիկլերը կարող են փակվել API-ի կանոններով։",
+      "closeTitle": "Փակել ցիկլը",
+      "closeDescription": "Փակե՞լ «{name}»-ը։ Այս գործողությունը ինտերֆեյսից չեղարկել հնարավոր չէ։"
+    }
+  },
+  "organizations": {
+    "title": "Կազմակերպություններ",
+    "subtitle": "Ընկերություններ և կոնտակտներ բոլոր ցիկլերի համար։",
+    "create": "Նոր կազմակերպություն",
+    "createTitle": "Ստեղծել կազմակերպություն",
+    "detailTitle": "Կազմակերպություն",
+    "detailsSection": "Տվյալներ",
+    "searchPlaceholder": "Որոնել ըստ անվան",
+    "typeFilter": "Տեսակ",
+    "allTypes": "Բոլոր տեսակները",
+    "empty": "Կազմակերպություններ չեն գտնվել։",
+    "notFound": "Կազմակերպությունը չի գտնվել։",
+    "columns": {
+      "name": "Անվանում",
+      "type": "Տեսակ",
+      "contacts": "Կոնտակտներ",
+      "phone": "Հեռախոս",
+      "email": "Էլ․ փոստ"
+    },
+    "fields": {
+      "name": "Անվանում",
+      "type": "Տեսակ",
+      "phone": "Հեռախոս",
+      "email": "Էլ․ փոստ",
+      "website": "Կայք",
+      "registrationId": "Գրանցման համար"
+    },
+    "types": {
+      "BUILDER": "Կառուցապատող",
+      "BANK": "Բանկ",
+      "PARTNER": "Գործընկեր",
+      "OTHER": "Այլ"
+    },
+    "contacts": {
+      "title": "Կոնտակտներ",
+      "add": "Ավելացնել կոնտակտ",
+      "saveNew": "Ավելացնել",
+      "empty": "Կոնտակտներ դեռ չկան։",
+      "primary": "Հիմնական",
+      "makePrimary": "Հիմնական",
+      "deleteTitle": "Ջնջել կոնտակտը",
+      "deleteDescription": "Ջնջե՞լ «{name}»-ը։",
+      "fields": {
+        "name": "Անուն",
+        "phone": "Հեռախոս",
+        "email": "Էլ․ փոստ",
+        "position": "Պաշտոն",
+        "isPrimary": "Հիմնական կոնտակտ"
+      }
+    }
+  },
+  "settings": {
+    "title": "Կարգավորումներ",
+    "subtitle": "Պրոֆիլ և աշխատակիցների հաշիվներ։",
+    "profile": {
+      "title": "Պրոֆիլ",
+      "name": "Անուն",
+      "email": "Էլ․ փոստ",
+      "role": "Դեր",
+      "language": "Լեզու"
+    },
+    "staff": {
+      "title": "Աշխատակիցների հաշիվներ",
+      "subtitle": "Ստեղծեք և անջատեք ներքին օգտատերերին։",
+      "create": "Նոր օգտատեր",
+      "createTitle": "Ստեղծել օգտատեր",
+      "empty": "Օգտատերեր չեն գտնվել։",
+      "disable": "Անջատել",
+      "reactivate": "Վերականգնել",
+      "confirmDisableTitle": "Անջատել օգտատիրոջը",
+      "confirmDisableDescription": "Անջատե՞լ «{name}»-ին։ Մուտքը կարգելվի։",
+      "confirmReactivateTitle": "Վերականգնել օգտատիրոջը",
+      "confirmReactivateDescription": "Վերականգնե՞լ «{name}»-ին։",
+      "columns": {
+        "name": "Անուն",
+        "email": "Էլ․ փոստ",
+        "role": "Դեր",
+        "status": "Կարգավիճակ",
+        "actions": "Գործողություններ"
+      },
+      "fields": {
+        "name": "Անուն",
+        "email": "Էլ․ փոստ",
+        "password": "Գաղտնաբառ",
+        "role": "Դեր"
+      },
+      "roles": {
+        "ADMIN": "Ադմին",
+        "STAFF": "Աշխատակից"
+      },
+      "status": {
+        "ACTIVE": "Ակտիվ",
+        "DISABLED": "Անջատված"
+      }
+    }
+  },
+  "builderSales": {
+    "title": "Կառուցապատողների վաճառք",
+    "subtitle": "Ցուցահանդեսային տարածքի գործարքներ ընտրված ցիկլի համար։",
+    "create": "Նոր գործարք",
+    "createTitle": "Ստեղծել գործարք",
+    "detailTitle": "Գործարք",
+    "empty": "Այս ցիկլում դեռ գործարքներ չկան։",
+    "emptyNoCycles": "Նախ ստեղծեք միջոցառման ցիկլ։",
+    "stages": {
+      "NEW": "Նոր",
+      "CONTACTED": "Կապ",
+      "NEGOTIATION": "Բանակցություն",
+      "WON": "Հաղթած",
+      "LOST": "Կորած"
+    },
+    "toolbar": {
+      "cycle": "Միջոցառման ցիկլ",
+      "noCycles": "Ցիկլեր չկան",
+      "active": "ակտիվ",
+      "view": "Տեսք",
+      "kanban": "Կանբան",
+      "list": "Ցանկ",
+      "searchPlaceholder": "Որոնել կազմակերպությամբ",
+      "staffFilter": "Պատասխանատու",
+      "allStaff": "Բոլոր աշխատակիցները"
+    },
+    "card": {
+      "noContact": "Կոնտակտ չկա",
+      "expectedSqm": "{value} մ² սպասվող",
+      "amount": "{value}",
+      "assignedAreas": "{sqm} մ² · {labels}"
+    },
+    "list": {
+      "organization": "Կազմակերպություն",
+      "contact": "Կոնտակտ",
+      "stage": "Փուլ",
+      "expectedSqm": "Սպասվող մ²",
+      "amount": "Գումար",
+      "staff": "Աշխատակից",
+      "updated": "Թարմացված"
+    },
+    "sheet": {
+      "details": "Մանրամասներ",
+      "stage": "Փուլ",
+      "areas": "Տարածքներ"
+    },
+    "fields": {
+      "organization": "Կազմակերպություն",
+      "organizationSelect": "Ընտրել կազմակերպություն",
+      "contact": "Հիմնական կոնտակտ",
+      "staff": "Պատասխանատու",
+      "expectedSqm": "Սպասվող մ²",
+      "agreedAmount": "Համաձայնեցված գումար",
+      "description": "Նկարագրություն"
+    },
+    "createForm": {
+      "orgSearchPlaceholder": "Որոնել կազմակերպություններ",
+      "pickOrganization": "Ընտրեք կազմակերպություն",
+      "noContact": "Առանց կոնտակտի",
+      "unassigned": "Չնշանակված",
+      "organizationRequired": "Կազմակերպությունը պարտադիր է։"
+    },
+    "stage": {
+      "current": "Ընթացիկ",
+      "markLostTitle": "Նշել որպես կորած",
+      "markLostDescription": "Տեղափոխե՞լ գործարքը «Կորած»։",
+      "markLostWithAreasDescription": "Գործարքն ունի նշանակված տարածքներ։ Ընտրեք՝ ազատե՞լ դրանք «Կորած» տեղափոխելիս։",
+      "releaseAreasLabel": "Ազատել նշանակված տարածքները",
+      "actions": {
+        "NEW": "Տեղափոխել Նոր",
+        "CONTACTED": "Նշել կապ",
+        "NEGOTIATION": "Սկսել բանակցություն",
+        "WON": "Նշել հաղթած",
+        "LOST": "Նշել կորած"
+      }
+    },
+    "areas": {
+      "empty": "Տարածքները նշանակվում են տարածքի քարտեզից։",
+      "summary": "{count} տարածք · {sqm} մ² · {labels}"
+    }
+  },
+  "entityAreas": {
+    "title": "Տարածքներ",
+    "empty": "Տարածքներ դեռ նշանակված չեն։",
+    "assign": "Նշանակել տարածք",
+    "assignTitle": "Նշանակել ազատ տարածք",
+    "release": "Ազատել",
+    "releaseTitle": "Ազատել տարածքը",
+    "releaseDescription": "Ազատե՞լ այս տարածքը ընթացիկ նշանակումից։",
+    "search": "Որոնում",
+    "searchPlaceholder": "Որոնել անունով կամ կոդով",
+    "noFreeAreas": "Այս ցիկլի պլանում ազատ տարածքներ չկան։",
+    "pick": "Նշանակել"
+  },
+  "venueMap": {
+    "title": "Տարածքի քարտեզ",
+    "subtitle": "Ստեղծեք վաճառվող տարածքներ և նշանակեք շինարարներին կամ գործընկերներին։",
+    "emptyNoCycles": "Ստեղծեք իրադարձության ցիկլ՝ տարածքի քարտեզը բացելուց առաջ։",
+    "selectCycle": "Շարունակելու համար ընտրեք իրադարձության ցիկլ։",
+    "noPlanStaff": "Այս ցիկլի համար պլան դեռ չկա։ Խնդրեք ադմինիստրատորին ստեղծել։",
+    "noImageStaff": "Պլանը դեռ ֆոնային պատկեր չունի։ Խնդրեք ադմինիստրատորին վերբեռնել։",
+    "uncalibratedHint": "Տարածքներ ստեղծելուց առաջ չափագրեք պլանը (ադմին)։",
+    "selectHint": "Քաշեք ազատ վանդակների վրայով՝ ուղղանկյուն տարածք ստեղծելու համար։ Space՝ տեղափոխում։ Անիվ՝ մասշտաբ։",
+    "toolbar": {
+      "cycle": "Իրադարձության ցիկլ",
+      "active": "ակտիվ",
+      "select": "Ընտրել",
+      "pan": "Տեղափոխել",
+      "calibrate": "Չափագրում",
+      "fit": "Հարմարեցնել"
+    },
+    "createPlan": {
+      "title": "Ստեղծել տարածքի պլան",
+      "description": "Սկսեք վաճառքի քարտեզ այս ցիկլի համար։",
+      "name": "Վերնագիր",
+      "titleRequired": "Վերնագիրը պարտադիր է։",
+      "confirm": "Ստեղծել պլան"
+    },
+    "upload": {
+      "title": "Վերբեռնել պլանի պատկեր",
+      "hint": "PNG, JPEG կամ WebP՝ մինչև 25 ՄԲ։",
+      "choose": "Ընտրել պատկեր",
+      "replace": "Փոխարինել պատկերը",
+      "uploading": "Վերբեռնվում է…",
+      "success": "Պատկերը վերբեռնված է։",
+      "failed": "Չհաջողվեց վերբեռնել պատկերը։",
+      "tooLarge": "Ֆայլը մեծ է 25 ՄԲ-ից։",
+      "invalidType": "Օգտագործեք PNG, JPEG կամ WebP։"
+    },
+    "calibration": {
+      "hint": "Սեղմեք երկու կետ պլանի վրա ({count}/2), ապա մուտքագրեք իրական հեռավորությունը։",
+      "distance": "Հեռավորություն (մ)",
+      "applyPoints": "Կիրառել մասշտաբը",
+      "clearPoints": "Մաքրել կետերը",
+      "ppm": "px / մ",
+      "originX": "Սկիզբ X",
+      "originY": "Սկիզբ Y",
+      "saveManual": "Պահել չափագրումը",
+      "saved": "Չափագրումը պահված է։",
+      "needTwoPoints": "Նախ սեղմեք երկու կետ պատկերի վրա։",
+      "invalidDistance": "Մուտքագրեք դրական հեռավորություն մետրերով։",
+      "invalidPpm": "Մուտքագրեք դրական պիքսել/մետր արժեք։",
+      "invalidOrigin": "Սկզբնակետի արժեքները պետք է լինեն թվեր։"
+    },
+    "createArea": {
+      "title": "Ստեղծել տարածք",
+      "description": "Ընտրված վանդակներ՝ {sqm} մ²",
+      "name": "Անուն",
+      "code": "Կոդ (ըստ ցանկության)",
+      "nameRequired": "Անունը պարտադիր է։",
+      "confirm": "Ստեղծել տարածք"
+    },
+    "assign": {
+      "title": "Նշանակել տարածք",
+      "builders": "Շինարարի գործարքներ",
+      "partners": "Գործընկերներ",
+      "search": "Որոնում",
+      "searchPlaceholder": "Որոնել կազմակերպությամբ",
+      "emptyBuilders": "Այս ցիկլում ակտիվ շինարարի գործարքներ չկան։",
+      "emptyPartners": "Այս ցիկլում գործընկերներ չկան։",
+      "pick": "Նշանակել"
+    },
+    "panel": {
+      "title": "Տարածքներ",
+      "detail": "Տարածք",
+      "back": "Ցանկ",
+      "selectHint": "Ընտրեք տարածք քարտեզից կամ ցանկից։",
+      "noAreas": "Տարածքներ դեռ չկան։ Քաշեք ազատ վանդակների վրայով։",
+      "name": "Անուն",
+      "code": "Կոդ",
+      "squareMeters": "{sqm} մ²",
+      "displayMode": "Հանրային ցուցադրում",
+      "customLabel": "Հատուկ պիտակ",
+      "customLabelRequired": "Այս ռեժիմի համար հատուկ պիտակը պարտադիր է։",
+      "allocation": "Նշանակում",
+      "assign": "Նշանակել",
+      "dealAmount": "Գումար՝ {value}",
+      "primaryContact": "Կոնտակտ՝ {name}",
+      "release": "Ազատել",
+      "releaseTitle": "Ազատել տարածքը",
+      "releaseDescription": "Ազատե՞լ այս տարածքը նշանակումից։",
+      "delete": "Ջնջել տարածքը",
+      "deleteTitle": "Ջնջել տարածքը",
+      "deleteDescription": "Ջնջե՞լ այս ազատ տարածքը։"
+    },
+    "displayMode": {
+      "ORGANIZATION": "Կազմակերպություն",
+      "CUSTOM_LABEL": "Հատուկ պիտակ",
+      "HIDDEN": "Թաքնված"
+    },
+    "allocationKind": {
+      "BUILDER": "Շինարար",
+      "PARTNER": "Գործընկեր"
+    }
+  },
+  "content": {
+    "notes": {
+      "title": "Նշումներ",
+      "placeholder": "Ավելացնել նշում…",
+      "add": "Ավելացնել",
+      "empty": "Նշումներ դեռ չկան։",
+      "deleteTitle": "Ջնջել նշումը",
+      "deleteDescription": "Ջնջե՞լ այս նշումը։"
+    },
+    "attachments": {
+      "title": "Կցորդներ",
+      "upload": "Վերբեռնել ֆայլ",
+      "uploading": "Վերբեռնվում է…",
+      "download": "Ներբեռնել",
+      "empty": "Կցորդներ դեռ չկան։",
+      "tooLarge": "Ֆայլը մեծ է 25 ՄԲ-ից։",
+      "uploadSuccess": "Ֆայլը վերբեռնվեց։",
+      "uploadFailed": "Չհաջողվեց վերբեռնել ֆայլը։",
+      "deleteTitle": "Ջնջել կցորդը",
+      "deleteDescription": "Ջնջե՞լ «{name}»-ը։"
+    }
+  },
+  "partners": {
+    "title": "Գործընկերներ",
+    "subtitle": "Բանկեր և այլ ոչ կառուցապատող մասնակիցներ ընտրված ցիկլի համար։",
+    "create": "Նոր գործընկեր",
+    "createTitle": "Ստեղծել գործընկեր",
+    "detailTitle": "Գործընկեր",
+    "empty": "Այս ցիկլում դեռ գործընկերներ չկան։",
+    "emptyNoCycles": "Նախ ստեղծեք միջոցառման ցիկլ։",
+    "stages": {
+      "NEW": "Նոր",
+      "CONTACTED": "Կապ",
+      "CONFIRMED": "Հաստատված",
+      "DECLINED": "Մերժված"
+    },
+    "toolbar": {
+      "cycle": "Միջոցառման ցիկլ",
+      "noCycles": "Ցիկլեր չկան",
+      "active": "ակտիվ",
+      "view": "Տեսք",
+      "kanban": "Կանբան",
+      "list": "Ցանկ",
+      "searchPlaceholder": "Որոնել կազմակերպությամբ",
+      "partnerTypeFilter": "Գործընկերոջ տեսակ",
+      "allPartnerTypes": "Բոլոր տեսակները",
+      "staffFilter": "Պատասխանատու",
+      "allStaff": "Բոլոր աշխատակիցները"
+    },
+    "card": {
+      "noContact": "Կոնտակտ չկա",
+      "assignedAreas": "{labels}"
+    },
+    "list": {
+      "organization": "Կազմակերպություն",
+      "partnerType": "Տեսակ",
+      "contact": "Կոնտակտ",
+      "stage": "Փուլ",
+      "staff": "Աշխատակից",
+      "updated": "Թարմացված"
+    },
+    "sheet": {
+      "details": "Մանրամասներ",
+      "stage": "Փուլ",
+      "areas": "Տարածքներ"
+    },
+    "fields": {
+      "organization": "Կազմակերպություն",
+      "organizationSelect": "Ընտրել կազմակերպություն",
+      "contact": "Հիմնական կոնտակտ",
+      "staff": "Պատասխանատու",
+      "partnerType": "Գործընկերոջ տեսակ",
+      "description": "Նկարագրություն"
+    },
+    "createForm": {
+      "orgSearchPlaceholder": "Որոնել կազմակերպություններ",
+      "pickOrganization": "Ընտրեք կազմակերպություն",
+      "noContact": "Առանց կոնտակտի",
+      "unassigned": "Չնշանակված",
+      "partnerTypePlaceholder": "օր. Բանկ, Մեդիա",
+      "organizationRequired": "Կազմակերպությունը պարտադիր է։"
+    },
+    "stage": {
+      "current": "Ընթացիկ",
+      "markDeclinedTitle": "Նշել որպես մերժված",
+      "markDeclinedDescription": "Տեղափոխե՞լ գործընկերոջը «Մերժված»։",
+      "actions": {
+        "NEW": "Տեղափոխել Նոր",
+        "CONTACTED": "Նշել կապ",
+        "CONFIRMED": "Հաստատել",
+        "DECLINED": "Մերժել"
+      }
+    },
+    "areas": {
+      "empty": "Տարածքները նշանակվում են տարածքի քարտեզից և գործընկերների համար պարտադիր չեն։",
+      "summary": "{count} տարածք · {sqm} մ² · {labels}"
+    }
+  },
+  "toonexpo": {
+    "account": {
+      "title": "ToonExpo հաշիվ",
+      "linked": "Կապված",
+      "companyId": "Ընկերության ID՝ {id}",
+      "requestButton": "Պահանջել ToonExpo հաշիվ",
+      "requestDialogTitle": "ToonExpo հաշվի պահանջ",
+      "requestDialogDescription": "Ստեղծել ToonExpo ընկերություն այս կազմակերպության համար ընտրված ցիկլում։",
+      "requestSubmit": "Ուղարկել պահանջը",
+      "modulesLabel": "Մոդուլներ",
+      "modulesRequired": "Ընտրեք առնվազն մեկ մոդուլ։",
+      "retry": "Կրկնել",
+      "pendingHint": "Հաշվի ստեղծումը ընթացքում է։",
+      "requestStatus": {
+        "PENDING": "Սպասման մեջ",
+        "SUCCESS": "Ստեղծված",
+        "LINKED_EXISTING": "Կապված գոյություն ունեցող",
+        "FAILED": "Ձախողված"
+      }
+    },
+    "companyType": {
+      "BUILDER": "Ընկերության տեսակ՝ Կառուցապատող",
+      "PARTNER": "Ընկերության տեսակ՝ Գործընկեր"
+    },
+    "modules": {
+      "builder_portal": "Կառուցապատողի պորտալ",
+      "constructor_crm": "Կառուցապատողի CRM",
+      "readiness": "Պատրաստվածություն",
+      "partner_profile": "Գործընկերոջ պրոֆիլ",
+      "bank_offers": "Բանկային առաջարկներ",
+      "analytics": "Վերլուծություն"
+    },
+    "publication": {
+      "title": "ToonExpo հրապարակում",
+      "publishButton": "Հրապարակել ToonExpo-ում",
+      "confirmTitle": "Տարածքի քարտեզի հրապարակում",
+      "confirmDescription": "Տարածքների ցուցադրման ռեժիմների հրապարակային տվյալները կուղարկվեն ToonExpo։",
+      "publishedAt": "Հրապարակված {date}",
+      "historyTitle": "Հրապարակումների պատմություն",
+      "historyEmpty": "Դեռ հրապարակումներ չկան։",
+      "version": "v{version}",
+      "planStatus": {
+        "UNPUBLISHED": "Չհրապարակված",
+        "PUBLISHED": "Հրապարակված"
+      },
+      "status": {
+        "PENDING": "Սպասման մեջ",
+        "PUBLISHED": "Հրապարակված",
+        "ALREADY_PUBLISHED": "Արդեն հրապարակված",
+        "REJECTED": "Մերժված",
+        "FAILED": "Ձախողված"
+      },
+      "toastPublished": "Տարածքի քարտեզը հրապարակվել է ToonExpo-ում։",
+      "toastAlreadyPublished": "Քարտեզը արդեն հրապարակված էր (առանց փոփոխության)։",
+      "toastRejected": "Հրապարակումը մերժվել է ToonExpo-ի կողմից։",
+      "toastRejectedWithError": "Հրապարակումը մերժվել է՝ {error}",
+      "toastFailed": "Հրապարակումը ձախողվեց։",
+      "toastFailedWithError": "Հրապարակման սխալ՝ {error}",
+      "toastPending": "Հրապարակման հարցումը ուղարկվել է։"
+    }
+  }
+}

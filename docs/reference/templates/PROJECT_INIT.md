@@ -33,12 +33,12 @@
 
 ## 📦 SCOPE (Աշխատանքների ծավալ)
 
-### Մտնում է առաջին production տարբերակում
+### Մտնում է MVP-ում
 - [ ] [Ֆիչ 1]
 - [ ] [Ֆիչ 2]
 - [ ] [Ֆիչ 3]
 
-### Չի մտնում ընթացիկ production scope-ում
+### Չի մտնում MVP-ում (v1.0-ից հետո)
 - [ ] [Ֆիչ X]
 - [ ] [Ֆիչ Y]
 
@@ -56,22 +56,22 @@
 ### Frontend
 | Տեխնոլոգիա | Տարբերակ | Նշանակություն |
 |-------------|-----------|----------------|
-| Next.js | 16.2.x | Frontend framework |
-| React | 19.2.x | UI |
-| TypeScript | 6.0.x | Տիպացում |
-| Tailwind CSS | 4.3.x | Ոճեր |
+| Next.js | 16.x | Framework |
+| React | 19.x | UI |
+| TypeScript | 5.9 | Տիպացում |
+| Tailwind CSS | 4.x | Ոճեր |
 
 ### Backend
 | Տեխնոլոգիա | Տարբերակ | Նշանակություն |
 |-------------|-----------|----------------|
-| NestJS | 11.1.x | Complete backend API |
+| [NestJS / Next.js API] | X.x | API |
 | Prisma | 7.x | ORM |
-| PostgreSQL | 18.x | ԲԴ |
+| PostgreSQL | 17.x | ԲԴ |
 
 ### Ինֆրակառուցվածք
 | Տեխնոլոգիա | Նշանակություն |
 |-------------|----------------|
-| Vercel + Google Cloud Run | Frontend + NestJS backend hosting |
+| [Vercel / VPS] | Հոսթինգ |
 | GitHub Actions | CI/CD |
 | [Redis] | Cache (եթե պետք է) |
 
