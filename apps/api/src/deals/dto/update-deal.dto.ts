@@ -2,6 +2,7 @@ import { ApiPropertyOptional } from '@nestjs/swagger';
 import { DealStage } from '@prisma/client';
 import { Type } from 'class-transformer';
 import {
+  IsBoolean,
   IsEnum,
   IsInt,
   IsNumber,
@@ -69,4 +70,12 @@ export class UpdateDealDto {
   @ValidateIf((_, value) => value !== null)
   @IsString()
   description?: string | null;
+
+  @ApiPropertyOptional({
+    description:
+      'When stage is set to LOST, also release all of this deal\'s active area allocations.',
+  })
+  @IsOptional()
+  @IsBoolean()
+  releaseAreas?: boolean;
 }

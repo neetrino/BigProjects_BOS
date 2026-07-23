@@ -82,3 +82,25 @@ export class PartnerResponseDto {
   @ApiProperty()
   updatedAt!: Date;
 }
+
+export class PartnerAreaItemResponseDto {
+  @ApiProperty()
+  allocationId!: string;
+
+  @ApiProperty()
+  areaId!: string;
+
+  @ApiProperty()
+  name!: string;
+
+  @ApiPropertyOptional({ nullable: true, type: String })
+  code!: string | null;
+
+  @ApiProperty()
+  squareMeters!: number;
+}
+
+export class PartnerDetailResponseDto extends PartnerResponseDto {
+  @ApiProperty({ type: [PartnerAreaItemResponseDto] })
+  areas!: PartnerAreaItemResponseDto[];
+}

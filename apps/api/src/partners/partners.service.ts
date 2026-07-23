@@ -10,9 +10,14 @@ import {
   UserStatus,
 } from '@prisma/client';
 import { PrismaService } from '../prisma/prisma.service';
+import { AreasSummary, SpaceAllocationsQueryService } from '../venue-map/space-allocations-query.service';
 import { CreatePartnerDto } from './dto/create-partner.dto';
 import { ListPartnersQueryDto } from './dto/list-partners-query.dto';
-import { PartnerAreasSummaryResponseDto, PartnerResponseDto } from './dto/partner-response.dto';
+import {
+  PartnerAreasSummaryResponseDto,
+  PartnerDetailResponseDto,
+  PartnerResponseDto,
+} from './dto/partner-response.dto';
 import { UpdatePartnerDto } from './dto/update-partner.dto';
 
 const PARTNER_NOT_FOUND_MESSAGE = 'Partner participation not found.';
@@ -23,6 +28,7 @@ const ORGANIZATION_NOT_FOUND_MESSAGE = 'Organization not found.';
 const CONTACT_NOT_IN_ORG_MESSAGE = 'Primary contact must belong to the selected organization.';
 const ASSIGNED_STAFF_INVALID_MESSAGE = 'Assigned staff must be an existing active user.';
 const INVALID_STAGE_TRANSITION_MESSAGE = 'Invalid partner stage transition.';
+const ALLOCATION_KIND_PARTNER = 'PARTNER';
 
 const ACTIVE_STAGES: ReadonlySet<PartnerStage> = new Set([
   PartnerStage.NEW,
@@ -49,7 +55,10 @@ type PartnerWithRelations = PartnerParticipation & {
 
 @Injectable()
 export class PartnersService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly spaceAllocationsQuery: SpaceAllocationsQueryService,
+  ) {}
 
   async list(query: ListPartnersQueryDto): Promise<PartnerResponseDto[]> {
     const partners = await this.prisma.partnerParticipation.findMany({
@@ -58,10 +67,19 @@ export class PartnersService {
       orderBy: { updatedAt: 'desc' },
     });
 
-    return partners.map((partner) => this.toResponse(partner));
+    const allocations = await this.spaceAllocationsQuery.listActiveAllocationsForTargets(
+      ALLOCATION_KIND_PARTNER,
+      partners.map((partner) => partner.id),
+    );
+    const summaries = this.spaceAllocationsQuery.buildAreasSummaryMap(
+      ALLOCATION_KIND_PARTNER,
+      allocations,
+    );
+
+    return partners.map((partner) => this.toResponse(partner, summaries.get(partner.id)));
   }
 
-  async findOne(id: string): Promise<PartnerResponseDto> {
+  async findOne(id: string): Promise<PartnerDetailResponseDto> {
     const partner = await this.prisma.partnerParticipation.findUnique({
       where: { id },
       include: PARTNER_INCLUDE,
@@ -71,7 +89,12 @@ export class PartnersService {
       throw new NotFoundException(PARTNER_NOT_FOUND_MESSAGE);
     }
 
-    return this.toResponse(partner);
+    const [summary, areas] = await Promise.all([
+      this.spaceAllocationsQuery.getAreasSummary(ALLOCATION_KIND_PARTNER, id),
+      this.spaceAllocationsQuery.getActiveAreaItems(ALLOCATION_KIND_PARTNER, id),
+    ]);
+
+    return { ...this.toResponse(partner, summary), areas };
   }
 
   async create(dto: CreatePartnerDto): Promise<PartnerResponseDto> {
@@ -258,7 +281,10 @@ export class PartnersService {
     }
   }
 
-  private toResponse(partner: PartnerWithRelations): PartnerResponseDto {
+  private toResponse(
+    partner: PartnerWithRelations,
+    areasSummary?: AreasSummary,
+  ): PartnerResponseDto {
     return {
       id: partner.id,
       eventCycleId: partner.eventCycleId,
@@ -285,14 +311,9 @@ export class PartnersService {
       stage: partner.stage,
       partnerType: partner.partnerType,
       description: partner.description,
-      areasSummary: this.buildAreasSummary(),
+      areasSummary: areasSummary ?? EMPTY_AREAS_SUMMARY,
       createdAt: partner.createdAt,
       updatedAt: partner.updatedAt,
     };
-  }
-
-  /** Stable Phase 3 shape; Phase 4 fills from SpaceAllocation. */
-  private buildAreasSummary(): PartnerAreasSummaryResponseDto {
-    return { ...EMPTY_AREAS_SUMMARY, labels: [] };
   }
 }

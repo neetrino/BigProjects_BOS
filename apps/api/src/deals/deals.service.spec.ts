@@ -2,6 +2,7 @@ import { BadRequestException } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import { DealStage, EventCycleStatus, OrganizationType, UserStatus } from '@prisma/client';
 import { PrismaService } from '../prisma/prisma.service';
+import { SpaceAllocationsQueryService } from '../venue-map/space-allocations-query.service';
 import { DealsService } from './deals.service';
 
 const cycleId = 'cycle-1';
@@ -52,6 +53,15 @@ describe('DealsService', () => {
     organization: { findUnique: jest.Mock };
     contact: { findUnique: jest.Mock };
     user: { findUnique: jest.Mock };
+    $transaction: jest.Mock;
+  };
+  let spaceAllocationsQuery: {
+    listActiveAllocationsForTargets: jest.Mock;
+    buildAreasSummaryMap: jest.Mock;
+    getAreasSummary: jest.Mock;
+    getActiveAreaItems: jest.Mock;
+    dealHasActiveAllocation: jest.Mock;
+    releaseAllActiveAllocationsForDeal: jest.Mock;
   };
 
   beforeEach(async () => {
@@ -68,10 +78,24 @@ describe('DealsService', () => {
       organization: { findUnique: jest.fn() },
       contact: { findUnique: jest.fn() },
       user: { findUnique: jest.fn() },
+      $transaction: jest.fn(),
+    };
+
+    spaceAllocationsQuery = {
+      listActiveAllocationsForTargets: jest.fn().mockResolvedValue([]),
+      buildAreasSummaryMap: jest.fn().mockReturnValue(new Map()),
+      getAreasSummary: jest.fn().mockResolvedValue({ count: 0, totalSqm: 0, labels: [] }),
+      getActiveAreaItems: jest.fn().mockResolvedValue([]),
+      dealHasActiveAllocation: jest.fn().mockResolvedValue(false),
+      releaseAllActiveAllocationsForDeal: jest.fn(),
     };
 
     const module: TestingModule = await Test.createTestingModule({
-      providers: [DealsService, { provide: PrismaService, useValue: prisma }],
+      providers: [
+        DealsService,
+        { provide: PrismaService, useValue: prisma },
+        { provide: SpaceAllocationsQueryService, useValue: spaceAllocationsQuery },
+      ],
     }).compile();
 
     service = module.get(DealsService);
@@ -119,6 +143,15 @@ describe('DealsService', () => {
       await expect(
         service.assertValidStageTransition(DealStage.CONTACTED, DealStage.WON, dealId),
       ).rejects.toThrow(BadRequestException);
+    });
+
+    it('allows WON when the deal has an active venue-space allocation', async () => {
+      spaceAllocationsQuery.dealHasActiveAllocation.mockResolvedValue(true);
+
+      await expect(
+        service.assertValidStageTransition(DealStage.NEGOTIATION, DealStage.WON, dealId),
+      ).resolves.toBeUndefined();
+      expect(spaceAllocationsQuery.dealHasActiveAllocation).toHaveBeenCalledWith(dealId);
     });
   });
 
@@ -323,6 +356,72 @@ describe('DealsService', () => {
         BadRequestException,
       );
       expect(prisma.builderDeal.update).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('releaseAreas on LOST', () => {
+    it('releases all active allocations in the same transaction as a LOST update', async () => {
+      prisma.builderDeal.findUnique.mockResolvedValue({
+        ...baseDeal,
+        stage: DealStage.NEGOTIATION,
+      });
+      const updatedDeal = { ...baseDeal, stage: DealStage.LOST };
+      prisma.$transaction.mockImplementation(async (fn: (tx: unknown) => Promise<unknown>) => {
+        prisma.builderDeal.update.mockResolvedValue(updatedDeal);
+        return fn(prisma);
+      });
+
+      const result = await service.update(dealId, {
+        stage: DealStage.LOST,
+        releaseAreas: true,
+      });
+
+      expect(prisma.$transaction).toHaveBeenCalled();
+      expect(spaceAllocationsQuery.releaseAllActiveAllocationsForDeal).toHaveBeenCalledWith(
+        dealId,
+        prisma,
+      );
+      expect(result.areasSummary).toEqual({ count: 0, totalSqm: 0, labels: [] });
+    });
+
+    it('does not release areas when releaseAreas is false', async () => {
+      prisma.builderDeal.findUnique.mockResolvedValue({
+        ...baseDeal,
+        stage: DealStage.NEGOTIATION,
+      });
+      prisma.builderDeal.update.mockResolvedValue({ ...baseDeal, stage: DealStage.LOST });
+
+      await service.update(dealId, { stage: DealStage.LOST, releaseAreas: false });
+
+      expect(prisma.$transaction).not.toHaveBeenCalled();
+      expect(spaceAllocationsQuery.releaseAllActiveAllocationsForDeal).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('areas summary and detail areas', () => {
+    it('fills areasSummary per deal from a batched allocation query', async () => {
+      prisma.builderDeal.findMany.mockResolvedValue([baseDeal]);
+      spaceAllocationsQuery.listActiveAllocationsForTargets.mockResolvedValue([{ id: 'alloc-1' }]);
+      spaceAllocationsQuery.buildAreasSummaryMap.mockReturnValue(
+        new Map([[dealId, { count: 1, totalSqm: 25, labels: ['A1'] }]]),
+      );
+
+      const [result] = await service.list({ cycleId });
+
+      expect(result.areasSummary).toEqual({ count: 1, totalSqm: 25, labels: ['A1'] });
+    });
+
+    it('includes active area detail on findOne', async () => {
+      prisma.builderDeal.findUnique.mockResolvedValue(baseDeal);
+      spaceAllocationsQuery.getActiveAreaItems.mockResolvedValue([
+        { allocationId: 'alloc-1', areaId: 'area-1', name: 'A1', code: null, squareMeters: 25 },
+      ]);
+
+      const result = await service.findOne(dealId);
+
+      expect(result.areas).toEqual([
+        { allocationId: 'alloc-1', areaId: 'area-1', name: 'A1', code: null, squareMeters: 25 },
+      ]);
     });
   });
 });

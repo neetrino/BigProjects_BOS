@@ -2,6 +2,7 @@ import { BadRequestException } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import { EventCycleStatus, OrganizationType, PartnerStage, UserStatus } from '@prisma/client';
 import { PrismaService } from '../prisma/prisma.service';
+import { SpaceAllocationsQueryService } from '../venue-map/space-allocations-query.service';
 import { PartnersService } from './partners.service';
 
 const cycleId = 'cycle-1';
@@ -52,6 +53,12 @@ describe('PartnersService', () => {
     contact: { findUnique: jest.Mock };
     user: { findUnique: jest.Mock };
   };
+  let spaceAllocationsQuery: {
+    listActiveAllocationsForTargets: jest.Mock;
+    buildAreasSummaryMap: jest.Mock;
+    getAreasSummary: jest.Mock;
+    getActiveAreaItems: jest.Mock;
+  };
 
   beforeEach(async () => {
     jest.clearAllMocks();
@@ -69,8 +76,19 @@ describe('PartnersService', () => {
       user: { findUnique: jest.fn() },
     };
 
+    spaceAllocationsQuery = {
+      listActiveAllocationsForTargets: jest.fn().mockResolvedValue([]),
+      buildAreasSummaryMap: jest.fn().mockReturnValue(new Map()),
+      getAreasSummary: jest.fn().mockResolvedValue({ count: 0, totalSqm: 0, labels: [] }),
+      getActiveAreaItems: jest.fn().mockResolvedValue([]),
+    };
+
     const module: TestingModule = await Test.createTestingModule({
-      providers: [PartnersService, { provide: PrismaService, useValue: prisma }],
+      providers: [
+        PartnersService,
+        { provide: PrismaService, useValue: prisma },
+        { provide: SpaceAllocationsQueryService, useValue: spaceAllocationsQuery },
+      ],
     }).compile();
 
     service = module.get(PartnersService);
@@ -329,6 +347,32 @@ describe('PartnersService', () => {
         BadRequestException,
       );
       expect(prisma.partnerParticipation.update).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('areas summary and detail areas', () => {
+    it('fills areasSummary per partner from a batched allocation query', async () => {
+      prisma.partnerParticipation.findMany.mockResolvedValue([basePartner]);
+      spaceAllocationsQuery.buildAreasSummaryMap.mockReturnValue(
+        new Map([[partnerId, { count: 1, totalSqm: 10, labels: ['P1'] }]]),
+      );
+
+      const [result] = await service.list({ cycleId });
+
+      expect(result.areasSummary).toEqual({ count: 1, totalSqm: 10, labels: ['P1'] });
+    });
+
+    it('includes active area detail on findOne', async () => {
+      prisma.partnerParticipation.findUnique.mockResolvedValue(basePartner);
+      spaceAllocationsQuery.getActiveAreaItems.mockResolvedValue([
+        { allocationId: 'alloc-1', areaId: 'area-1', name: 'P1', code: null, squareMeters: 10 },
+      ]);
+
+      const result = await service.findOne(partnerId);
+
+      expect(result.areas).toEqual([
+        { allocationId: 'alloc-1', areaId: 'area-1', name: 'P1', code: null, squareMeters: 10 },
+      ]);
     });
   });
 });

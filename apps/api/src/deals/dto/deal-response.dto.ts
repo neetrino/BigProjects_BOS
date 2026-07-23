@@ -85,3 +85,25 @@ export class DealResponseDto {
   @ApiProperty()
   updatedAt!: Date;
 }
+
+export class DealAreaItemResponseDto {
+  @ApiProperty()
+  allocationId!: string;
+
+  @ApiProperty()
+  areaId!: string;
+
+  @ApiProperty()
+  name!: string;
+
+  @ApiPropertyOptional({ nullable: true, type: String })
+  code!: string | null;
+
+  @ApiProperty()
+  squareMeters!: number;
+}
+
+export class DealDetailResponseDto extends DealResponseDto {
+  @ApiProperty({ type: [DealAreaItemResponseDto] })
+  areas!: DealAreaItemResponseDto[];
+}

@@ -19,6 +19,7 @@ import { OrganizationsModule } from './organizations/organizations.module';
 import { PartnersModule } from './partners/partners.module';
 import { PrismaModule } from './prisma/prisma.module';
 import { UsersModule } from './users/users.module';
+import { VenueMapModule } from './venue-map/venue-map.module';
 
 @Module({
   imports: [
@@ -36,6 +37,7 @@ import { UsersModule } from './users/users.module';
     PartnersModule,
     NotesModule,
     AttachmentsModule,
+    VenueMapModule,
   ],
   providers: [
     // Order matters: rate limit, then CSRF origin check, then session auth, then role check.

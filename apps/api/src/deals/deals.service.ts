@@ -10,8 +10,9 @@ import {
   UserStatus,
 } from '@prisma/client';
 import { PrismaService } from '../prisma/prisma.service';
+import { AreasSummary, SpaceAllocationsQueryService } from '../venue-map/space-allocations-query.service';
 import { CreateDealDto } from './dto/create-deal.dto';
-import { DealAreasSummaryResponseDto, DealResponseDto } from './dto/deal-response.dto';
+import { DealAreasSummaryResponseDto, DealDetailResponseDto, DealResponseDto } from './dto/deal-response.dto';
 import { ListDealsQueryDto } from './dto/list-deals-query.dto';
 import { UpdateDealDto } from './dto/update-deal.dto';
 
@@ -25,6 +26,7 @@ const WON_WITHOUT_ALLOCATION_MESSAGE =
   'The deal cannot be won without an active venue-space allocation.';
 const WON_STAGE_LOCKED_MESSAGE = 'A won deal cannot be moved to another stage.';
 const INVALID_STAGE_TRANSITION_MESSAGE = 'Invalid deal stage transition.';
+const ALLOCATION_KIND_BUILDER = 'BUILDER';
 
 const ACTIVE_STAGES: ReadonlySet<DealStage> = new Set([
   DealStage.NEW,
@@ -52,7 +54,10 @@ type DealWithRelations = BuilderDeal & {
 
 @Injectable()
 export class DealsService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly spaceAllocationsQuery: SpaceAllocationsQueryService,
+  ) {}
 
   async list(query: ListDealsQueryDto): Promise<DealResponseDto[]> {
     const deals = await this.prisma.builderDeal.findMany({
@@ -61,10 +66,19 @@ export class DealsService {
       orderBy: { updatedAt: 'desc' },
     });
 
-    return deals.map((deal) => this.toResponse(deal));
+    const allocations = await this.spaceAllocationsQuery.listActiveAllocationsForTargets(
+      ALLOCATION_KIND_BUILDER,
+      deals.map((deal) => deal.id),
+    );
+    const summaries = this.spaceAllocationsQuery.buildAreasSummaryMap(
+      ALLOCATION_KIND_BUILDER,
+      allocations,
+    );
+
+    return deals.map((deal) => this.toResponse(deal, summaries.get(deal.id)));
   }
 
-  async findOne(id: string): Promise<DealResponseDto> {
+  async findOne(id: string): Promise<DealDetailResponseDto> {
     const deal = await this.prisma.builderDeal.findUnique({
       where: { id },
       include: DEAL_INCLUDE,
@@ -74,7 +88,12 @@ export class DealsService {
       throw new NotFoundException(DEAL_NOT_FOUND_MESSAGE);
     }
 
-    return this.toResponse(deal);
+    const [summary, areas] = await Promise.all([
+      this.spaceAllocationsQuery.getAreasSummary(ALLOCATION_KIND_BUILDER, id),
+      this.spaceAllocationsQuery.getActiveAreaItems(ALLOCATION_KIND_BUILDER, id),
+    ]);
+
+    return { ...this.toResponse(deal, summary), areas };
   }
 
   async create(dto: CreateDealDto): Promise<DealResponseDto> {
@@ -157,13 +176,21 @@ export class DealsService {
       ...(dto.description !== undefined && { description: dto.description }),
     };
 
-    const deal = await this.prisma.builderDeal.update({
-      where: { id },
-      data,
-      include: DEAL_INCLUDE,
-    });
+    const shouldReleaseAreas = dto.stage === DealStage.LOST && dto.releaseAreas === true;
 
-    return this.toResponse(deal);
+    const deal = shouldReleaseAreas
+      ? await this.prisma.$transaction(async (tx) => {
+          const updated = await tx.builderDeal.update({ where: { id }, data, include: DEAL_INCLUDE });
+          await this.spaceAllocationsQuery.releaseAllActiveAllocationsForDeal(id, tx);
+          return updated;
+        })
+      : await this.prisma.builderDeal.update({ where: { id }, data, include: DEAL_INCLUDE });
+
+    const summary = shouldReleaseAreas
+      ? EMPTY_AREAS_SUMMARY
+      : await this.spaceAllocationsQuery.getAreasSummary(ALLOCATION_KIND_BUILDER, id);
+
+    return this.toResponse(deal, summary);
   }
 
   async assertValidStageTransition(
@@ -184,7 +211,7 @@ export class DealsService {
         throw new BadRequestException(INVALID_STAGE_TRANSITION_MESSAGE);
       }
 
-      const hasAllocation = await this.dealHasActiveAllocation(dealId);
+      const hasAllocation = await this.spaceAllocationsQuery.dealHasActiveAllocation(dealId);
       if (!hasAllocation) {
         throw new BadRequestException(WON_WITHOUT_ALLOCATION_MESSAGE);
       }
@@ -204,14 +231,6 @@ export class DealsService {
     }
 
     throw new BadRequestException(INVALID_STAGE_TRANSITION_MESSAGE);
-  }
-
-  /**
-   * Phase 4 replaces this stub with a real SpaceAllocation query.
-   * Until venue map exists, deals cannot satisfy the WON allocation gate.
-   */
-  private async dealHasActiveAllocation(_dealId: string): Promise<boolean> {
-    return false;
   }
 
   private buildListWhere(query: ListDealsQueryDto): Prisma.BuilderDealWhereInput {
@@ -280,7 +299,7 @@ export class DealsService {
     }
   }
 
-  private toResponse(deal: DealWithRelations): DealResponseDto {
+  private toResponse(deal: DealWithRelations, areasSummary?: AreasSummary): DealResponseDto {
     return {
       id: deal.id,
       eventCycleId: deal.eventCycleId,
@@ -308,14 +327,9 @@ export class DealsService {
       expectedSqm: deal.expectedSqm,
       agreedAmount: deal.agreedAmount === null ? null : Number(deal.agreedAmount),
       description: deal.description,
-      areasSummary: this.buildAreasSummary(),
+      areasSummary: areasSummary ?? EMPTY_AREAS_SUMMARY,
       createdAt: deal.createdAt,
       updatedAt: deal.updatedAt,
     };
-  }
-
-  /** Stable Phase 2 shape; Phase 4 fills from SpaceAllocation. */
-  private buildAreasSummary(): DealAreasSummaryResponseDto {
-    return { ...EMPTY_AREAS_SUMMARY, labels: [] };
   }
 }

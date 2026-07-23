@@ -2,7 +2,7 @@ import { Body, Controller, Get, Param, Patch, Post, Query } from '@nestjs/common
 import { ApiCookieAuth, ApiTags } from '@nestjs/swagger';
 import { CreatePartnerDto } from './dto/create-partner.dto';
 import { ListPartnersQueryDto } from './dto/list-partners-query.dto';
-import { PartnerResponseDto } from './dto/partner-response.dto';
+import { PartnerDetailResponseDto, PartnerResponseDto } from './dto/partner-response.dto';
 import { UpdatePartnerDto } from './dto/update-partner.dto';
 import { PartnersService } from './partners.service';
 
@@ -18,7 +18,7 @@ export class PartnersController {
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string): Promise<PartnerResponseDto> {
+  findOne(@Param('id') id: string): Promise<PartnerDetailResponseDto> {
     return this.partnersService.findOne(id);
   }
 

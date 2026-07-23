@@ -1,7 +1,7 @@
 import { Body, Controller, Get, Param, Patch, Post, Query } from '@nestjs/common';
 import { ApiCookieAuth, ApiTags } from '@nestjs/swagger';
 import { CreateDealDto } from './dto/create-deal.dto';
-import { DealResponseDto } from './dto/deal-response.dto';
+import { DealDetailResponseDto, DealResponseDto } from './dto/deal-response.dto';
 import { ListDealsQueryDto } from './dto/list-deals-query.dto';
 import { UpdateDealDto } from './dto/update-deal.dto';
 import { DealsService } from './deals.service';
@@ -18,7 +18,7 @@ export class DealsController {
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string): Promise<DealResponseDto> {
+  findOne(@Param('id') id: string): Promise<DealDetailResponseDto> {
     return this.dealsService.findOne(id);
   }
 
