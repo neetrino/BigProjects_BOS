@@ -351,6 +351,8 @@
       "customLabelRequired": "Այս ռեժիմի համար հատուկ պիտակը պարտադիր է։",
       "allocation": "Նշանակում",
       "assign": "Նշանակել",
+      "dealAmount": "Գումար՝ {value}",
+      "primaryContact": "Կոնտակտ՝ {name}",
       "release": "Ազատել",
       "releaseTitle": "Ազատել տարածքը",
       "releaseDescription": "Ազատե՞լ այս տարածքը նշանակումից։",

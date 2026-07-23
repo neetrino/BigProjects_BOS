@@ -11,6 +11,7 @@ import { SpaceAreaResponseDto } from './dto/space-area-response.dto';
 import { UpdateSpaceAreaDto } from './dto/update-space-area.dto';
 import { mapSpaceAreaToResponse } from './mappers/space-area.mapper';
 import { assertCellsFormFilledRectangle } from './validation/rectangle-cells.validation';
+import { ALLOCATION_TARGET_INCLUDE } from './venue-map.constants';
 
 const PLAN_NOT_FOUND_MESSAGE = 'Venue plan not found.';
 const PLAN_NOT_CALIBRATED_MESSAGE =
@@ -27,10 +28,7 @@ const AREA_INCLUDE = {
   cells: { select: { x: true, y: true } },
   allocations: {
     where: { active: true },
-    include: {
-      builderDeal: { include: { organization: true } },
-      partnerParticipation: { include: { organization: true } },
-    },
+    include: ALLOCATION_TARGET_INCLUDE,
   },
 } satisfies Prisma.SpaceAreaInclude;
 

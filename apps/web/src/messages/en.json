@@ -351,6 +351,8 @@
       "customLabelRequired": "Custom label is required for this display mode.",
       "allocation": "Allocation",
       "assign": "Assign",
+      "dealAmount": "Amount: {value}",
+      "primaryContact": "Contact: {name}",
       "release": "Release",
       "releaseTitle": "Release area",
       "releaseDescription": "Release this area from its assignment?",

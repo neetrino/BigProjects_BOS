@@ -351,6 +351,8 @@
       "customLabelRequired": "Для этого режима нужна своя подпись.",
       "allocation": "Назначение",
       "assign": "Назначить",
+      "dealAmount": "Сумма: {value}",
+      "primaryContact": "Контакт: {name}",
       "release": "Освободить",
       "releaseTitle": "Освободить площадь",
       "releaseDescription": "Освободить эту площадь от назначения?",

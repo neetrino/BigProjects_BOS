@@ -10,9 +10,12 @@ import {
   type PublicDisplayMode,
   type VenueSpaceArea,
 } from '@/lib/api/venue-map';
+import { formatAmount, formatSqm } from '@/lib/format';
+import { dealStageTone, partnerStageTone } from '@/lib/stage-colors';
 import { Button } from '@/components/ui/button';
 import { Dialog } from '@/components/ui/dialog';
 import { Field, SelectInput, TextInput } from '@/components/ui/field';
+import { StatusBadge } from '@/components/ui/status-badge';
 import { showToast } from '@/components/ui/toast';
 import { AssignAreaDialog } from './assign-area-dialog';
 
@@ -102,6 +105,8 @@ type AreaDetailFormProps = {
 
 function AreaDetailForm({ area, cycleId, onChanged }: AreaDetailFormProps) {
   const t = useTranslations('venueMap');
+  const tBuilder = useTranslations('builderSales');
+  const tPartners = useTranslations('partners');
   const tCommon = useTranslations('common');
   const [name, setName] = useState(area.name);
   const [code, setCode] = useState(area.code ?? '');
@@ -211,10 +216,47 @@ function AreaDetailForm({ area, cycleId, onChanged }: AreaDetailFormProps) {
         </h3>
         {area.allocation ? (
           <>
-            <p className="text-sm text-[var(--color-fg)]">{area.allocation.organizationName}</p>
+            <p className="text-sm font-medium text-[var(--color-fg)]">
+              {area.allocation.organizationName}
+            </p>
             <p className="text-xs text-[var(--color-muted)]">
               {t(`allocationKind.${area.allocation.kind}`)}
             </p>
+            {area.allocation.kind === 'BUILDER' && area.allocation.deal ? (
+              <div className="flex flex-col gap-1.5">
+                <StatusBadge
+                  label={tBuilder(`stages.${area.allocation.deal.stage}`)}
+                  tone={dealStageTone(area.allocation.deal.stage)}
+                />
+                {area.allocation.deal.amount != null ? (
+                  <p className="text-xs text-[var(--color-muted)]">
+                    {t('panel.dealAmount', {
+                      value: formatAmount(area.allocation.deal.amount),
+                    })}
+                  </p>
+                ) : null}
+                {formatSqm(area.allocation.deal.expectedSqm) ? (
+                  <p className="text-xs text-[var(--color-muted)]">
+                    {tBuilder('card.expectedSqm', {
+                      value: formatSqm(area.allocation.deal.expectedSqm),
+                    })}
+                  </p>
+                ) : null}
+                {area.allocation.deal.primaryContactName ? (
+                  <p className="text-xs text-[var(--color-muted)]">
+                    {t('panel.primaryContact', {
+                      name: area.allocation.deal.primaryContactName,
+                    })}
+                  </p>
+                ) : null}
+              </div>
+            ) : null}
+            {area.allocation.kind === 'PARTNER' && area.allocation.partner ? (
+              <StatusBadge
+                label={tPartners(`stages.${area.allocation.partner.stage}`)}
+                tone={partnerStageTone(area.allocation.partner.stage)}
+              />
+            ) : null}
             <Button variant="secondary" disabled={busy} onClick={() => setConfirmRelease(true)}>
               {t('panel.release')}
             </Button>

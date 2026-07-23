@@ -3,12 +3,15 @@
 import { Group, Line, Rect, Text } from 'react-konva';
 import type { VenueSpaceArea } from '@/lib/api/venue-map';
 import {
-  AREA_FILL,
-  AREA_STROKE,
+  dealStageMapColors,
+  FREE_AREA_MAP_COLORS,
+  partnerStageMapColors,
+  SELECTED_AREA_MAP_COLORS,
+} from '@/lib/stage-colors';
+import {
   LABEL_BASE_FONT_SIZE,
   LABEL_MAX_SCREEN_SIZE,
   LABEL_MIN_SCREEN_SIZE,
-  type AreaVisualState,
 } from '../constants';
 import { cellsBoundingRect } from '../domain/cell-selection';
 import type { CalibrationGeometry } from '../domain/grid-transform';
@@ -21,17 +24,37 @@ type AreasLayerProps = {
   onSelectArea: (areaId: string) => void;
 };
 
-function resolveVisualState(area: VenueSpaceArea, selected: boolean): AreaVisualState {
+function resolveAreaColors(
+  area: VenueSpaceArea,
+  selected: boolean,
+): { fill: string; stroke: string } {
   if (selected) {
-    return 'selected';
+    return {
+      fill: SELECTED_AREA_MAP_COLORS.fillRgba,
+      stroke: SELECTED_AREA_MAP_COLORS.strokeRgba,
+    };
   }
-  if (area.allocation?.kind === 'BUILDER') {
-    return 'builder';
+
+  const allocation = area.allocation;
+  if (!allocation) {
+    return {
+      fill: FREE_AREA_MAP_COLORS.fillRgba,
+      stroke: FREE_AREA_MAP_COLORS.strokeRgba,
+    };
   }
-  if (area.allocation?.kind === 'PARTNER') {
-    return 'partner';
+
+  if (allocation.kind === 'BUILDER' && allocation.deal) {
+    return dealStageMapColors(allocation.deal.stage);
   }
-  return 'free';
+
+  if (allocation.kind === 'PARTNER' && allocation.partner) {
+    return partnerStageMapColors(allocation.partner.stage);
+  }
+
+  return {
+    fill: FREE_AREA_MAP_COLORS.fillRgba,
+    stroke: FREE_AREA_MAP_COLORS.strokeRgba,
+  };
 }
 
 function labelFontSize(scale: number): number {
@@ -63,7 +86,7 @@ export function AreasLayer({
           return null;
         }
         const selected = area.id === selectedAreaId;
-        const visual = resolveVisualState(area, selected);
+        const colors = resolveAreaColors(area, selected);
         const org = area.allocation?.organizationName;
         const label = org
           ? `${area.name} · ${area.squareMeters} m² · ${org}`
@@ -80,8 +103,8 @@ export function AreasLayer({
               y={rect.y}
               width={rect.width}
               height={rect.height}
-              fill={AREA_FILL[visual]}
-              stroke={AREA_STROKE[visual]}
+              fill={colors.fill}
+              stroke={colors.stroke}
               strokeWidth={selected ? 2.5 / scale : 1.5 / scale}
             />
             <Text

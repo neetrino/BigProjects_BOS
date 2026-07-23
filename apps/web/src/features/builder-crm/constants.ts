@@ -1,6 +1,6 @@
 import type { DealStage } from '@/lib/api/types';
-import type { StatusTone } from '@/components/ui/status-badge';
 import type { BoardViewMode } from '@/components/kanban';
+import { dealStageTone } from '@/lib/stage-colors';
 
 export type { BoardViewMode };
 
@@ -10,20 +10,7 @@ export const ACTIVE_STAGES: DealStage[] = ['NEW', 'CONTACTED', 'NEGOTIATION'];
 export const TERMINAL_STAGES: DealStage[] = ['WON', 'LOST'];
 export const ALL_STAGES: DealStage[] = [...ACTIVE_STAGES, ...TERMINAL_STAGES];
 
-export function stageTone(stage: DealStage): StatusTone {
-  switch (stage) {
-    case 'NEW':
-      return 'draft';
-    case 'CONTACTED':
-      return 'contacted';
-    case 'NEGOTIATION':
-      return 'negotiation';
-    case 'WON':
-      return 'won';
-    case 'LOST':
-      return 'lost';
-  }
-}
+export { dealStageTone as stageTone };
 
 /** Stages a deal can move to from the current stage (UI affordances). */
 export function allowedNextStages(stage: DealStage): DealStage[] {

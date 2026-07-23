@@ -1,5 +1,6 @@
 import { apiFetch } from './client';
 import { putPresignedFile } from './attachments';
+import type { DealStage, PartnerStage } from './types';
 
 export type PublicDisplayMode = 'ORGANIZATION' | 'CUSTOM_LABEL' | 'HIDDEN';
 
@@ -10,11 +11,26 @@ export type VenueCell = {
   y: number;
 };
 
+export type BuilderDealAllocationSummary = {
+  id: string;
+  stage: DealStage;
+  amount: number | null;
+  expectedSqm: number | null;
+  primaryContactName: string | null;
+};
+
+export type PartnerAllocationSummary = {
+  id: string;
+  stage: PartnerStage;
+};
+
 export type VenueAreaAllocation = {
   id: string;
   kind: AllocationKind;
   targetId: string;
   organizationName: string;
+  deal?: BuilderDealAllocationSummary;
+  partner?: PartnerAllocationSummary;
 };
 
 export type VenueSpaceArea = {

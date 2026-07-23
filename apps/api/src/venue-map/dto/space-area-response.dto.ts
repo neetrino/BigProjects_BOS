@@ -1,5 +1,5 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { PublicDisplayMode } from '@prisma/client';
+import { DealStage, PartnerStage, PublicDisplayMode } from '@prisma/client';
 import { ALLOCATION_KIND_VALUES, AllocationKind } from '../types/allocation-kind.type';
 
 export class SpaceAreaCellResponseDto {
@@ -8,6 +8,31 @@ export class SpaceAreaCellResponseDto {
 
   @ApiProperty()
   y!: number;
+}
+
+export class BuilderDealAllocationSummaryDto {
+  @ApiProperty()
+  id!: string;
+
+  @ApiProperty({ enum: DealStage })
+  stage!: DealStage;
+
+  @ApiPropertyOptional({ nullable: true, type: Number })
+  amount!: number | null;
+
+  @ApiPropertyOptional({ nullable: true, type: Number })
+  expectedSqm!: number | null;
+
+  @ApiPropertyOptional({ nullable: true, type: String })
+  primaryContactName!: string | null;
+}
+
+export class PartnerAllocationSummaryDto {
+  @ApiProperty()
+  id!: string;
+
+  @ApiProperty({ enum: PartnerStage })
+  stage!: PartnerStage;
 }
 
 export class SpaceAreaAllocationResponseDto {
@@ -22,6 +47,12 @@ export class SpaceAreaAllocationResponseDto {
 
   @ApiProperty()
   organizationName!: string;
+
+  @ApiPropertyOptional({ type: BuilderDealAllocationSummaryDto })
+  deal?: BuilderDealAllocationSummaryDto;
+
+  @ApiPropertyOptional({ type: PartnerAllocationSummaryDto })
+  partner?: PartnerAllocationSummaryDto;
 }
 
 export class SpaceAreaResponseDto {

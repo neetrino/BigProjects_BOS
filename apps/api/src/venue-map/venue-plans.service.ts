@@ -17,6 +17,7 @@ import { UpdateVenuePlanDto } from './dto/update-venue-plan.dto';
 import { VenuePlanEnvelopeResponseDto, VenuePlanResponseDto } from './dto/venue-plan-response.dto';
 import { mapSpaceAreaToResponse } from './mappers/space-area.mapper';
 import {
+  ALLOCATION_TARGET_INCLUDE,
   MAX_PLAN_IMAGE_SIZE_BYTES,
   MAX_SANITIZED_PLAN_FILENAME_LENGTH,
 } from './venue-map.constants';
@@ -35,10 +36,7 @@ const PLAN_AREAS_INCLUDE = {
       cells: { select: { x: true, y: true } },
       allocations: {
         where: { active: true },
-        include: {
-          builderDeal: { include: { organization: true } },
-          partnerParticipation: { include: { organization: true } },
-        },
+        include: ALLOCATION_TARGET_INCLUDE,
       },
     },
   },

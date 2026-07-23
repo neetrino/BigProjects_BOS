@@ -1,12 +1,22 @@
-import { BuilderDeal, Organization, PartnerParticipation, SpaceAllocation } from '@prisma/client';
 import {
+  BuilderDeal,
+  Contact,
+  Organization,
+  PartnerParticipation,
+  SpaceAllocation,
+} from '@prisma/client';
+import {
+  BuilderDealAllocationSummaryDto,
+  PartnerAllocationSummaryDto,
   SpaceAreaAllocationResponseDto,
   SpaceAreaResponseDto,
 } from '../dto/space-area-response.dto';
 import { AllocationKind } from '../types/allocation-kind.type';
 
 export type AllocationWithTargetOrganization = SpaceAllocation & {
-  builderDeal: (BuilderDeal & { organization: Organization }) | null;
+  builderDeal:
+    | (BuilderDeal & { organization: Organization; primaryContact: Pick<Contact, 'name'> | null })
+    | null;
   partnerParticipation: (PartnerParticipation & { organization: Organization }) | null;
 };
 
@@ -29,6 +39,25 @@ export function resolveAllocationKind(
   return allocation.builderDealId ? 'BUILDER' : 'PARTNER';
 }
 
+function mapBuilderDealSummary(
+  deal: BuilderDeal & { primaryContact: Pick<Contact, 'name'> | null },
+): BuilderDealAllocationSummaryDto {
+  return {
+    id: deal.id,
+    stage: deal.stage,
+    amount: deal.agreedAmount === null ? null : Number(deal.agreedAmount),
+    expectedSqm: deal.expectedSqm,
+    primaryContactName: deal.primaryContact?.name ?? null,
+  };
+}
+
+function mapPartnerSummary(partner: PartnerParticipation): PartnerAllocationSummaryDto {
+  return {
+    id: partner.id,
+    stage: partner.stage,
+  };
+}
+
 function mapActiveAllocation(
   allocations: AllocationWithTargetOrganization[],
 ): SpaceAreaAllocationResponseDto | null {
@@ -44,12 +73,22 @@ function mapActiveAllocation(
       ? active.builderDeal?.organization.name
       : active.partnerParticipation?.organization.name;
 
-  return {
+  const base: SpaceAreaAllocationResponseDto = {
     id: active.id,
     kind,
     targetId: targetId as string,
     organizationName: organizationName as string,
   };
+
+  if (kind === 'BUILDER' && active.builderDeal) {
+    return { ...base, deal: mapBuilderDealSummary(active.builderDeal) };
+  }
+
+  if (kind === 'PARTNER' && active.partnerParticipation) {
+    return { ...base, partner: mapPartnerSummary(active.partnerParticipation) };
+  }
+
+  return base;
 }
 
 /** Maps a `SpaceArea` (with cells and its active allocation, if any) to its API response shape. */
