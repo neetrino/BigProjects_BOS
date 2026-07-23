@@ -37,6 +37,13 @@ enum DealStage {
   LOST
 }
 
+enum PartnerStage {
+  NEW
+  CONTACTED
+  CONFIRMED
+  DECLINED
+}
+
 enum ContentOwnerType {
   ORGANIZATION
   BUILDER_DEAL
@@ -53,10 +60,11 @@ model User {
   locale       String     @default("hy")
   createdAt             DateTime       @default(now())
   updatedAt             DateTime       @updatedAt
-  sessions              Session[]
-  assignedBuilderDeals  BuilderDeal[]  @relation("AssignedStaff")
-  authoredNotes         Note[]
-  uploadedAttachments   Attachment[]
+  sessions                     Session[]
+  assignedBuilderDeals         BuilderDeal[]            @relation("AssignedStaff")
+  assignedPartnerParticipations PartnerParticipation[]  @relation("AssignedPartnerStaff")
+  authoredNotes                Note[]
+  uploadedAttachments          Attachment[]
 }
 
 model Session {
@@ -78,9 +86,10 @@ model EventCycle {
   status    EventCycleStatus @default(DRAFT)
   startsAt  DateTime?
   endsAt    DateTime?
-  createdAt    DateTime      @default(now())
-  updatedAt    DateTime      @updatedAt
-  builderDeals BuilderDeal[]
+  createdAt              DateTime               @default(now())
+  updatedAt              DateTime               @updatedAt
+  builderDeals           BuilderDeal[]
+  partnerParticipations  PartnerParticipation[]
 }
 
 model Organization {
@@ -94,8 +103,9 @@ model Organization {
   toonexpoCompanyId String?
   createdAt         DateTime         @default(now())
   updatedAt         DateTime         @updatedAt
-  contacts          Contact[]
-  builderDeals      BuilderDeal[]
+  contacts              Contact[]
+  builderDeals          BuilderDeal[]
+  partnerParticipations PartnerParticipation[]
 }
 
 model Contact {
@@ -108,8 +118,9 @@ model Contact {
   isPrimary      Boolean      @default(false)
   createdAt      DateTime     @default(now())
   updatedAt      DateTime     @updatedAt
-  organization   Organization  @relation(fields: [organizationId], references: [id], onDelete: Cascade)
-  builderDeals   BuilderDeal[]
+  organization          Organization           @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  builderDeals          BuilderDeal[]
+  partnerParticipations PartnerParticipation[]
 
   @@index([organizationId])
 }
@@ -131,6 +142,28 @@ model BuilderDeal {
   organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Restrict)
   primaryContact Contact?     @relation(fields: [primaryContactId], references: [id], onDelete: SetNull)
   assignedStaff  User?        @relation("AssignedStaff", fields: [assignedStaffId], references: [id], onDelete: SetNull)
+
+  @@index([eventCycleId])
+  @@index([organizationId])
+  @@index([assignedStaffId])
+}
+
+model PartnerParticipation {
+  id               String       @id @default(cuid())
+  eventCycleId     String
+  organizationId   String
+  primaryContactId String?
+  assignedStaffId  String?
+  stage            PartnerStage @default(NEW)
+  partnerType      String?
+  description      String?
+  createdAt        DateTime     @default(now())
+  updatedAt        DateTime     @updatedAt
+
+  eventCycle     EventCycle   @relation(fields: [eventCycleId], references: [id], onDelete: Restrict)
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Restrict)
+  primaryContact Contact?     @relation(fields: [primaryContactId], references: [id], onDelete: SetNull)
+  assignedStaff  User?        @relation("AssignedPartnerStaff", fields: [assignedStaffId], references: [id], onDelete: SetNull)
 
   @@index([eventCycleId])
   @@index([organizationId])

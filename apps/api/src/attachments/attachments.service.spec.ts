@@ -9,6 +9,7 @@ describe('AttachmentsService', () => {
   let service: AttachmentsService;
   let prisma: {
     builderDeal: { findUnique: jest.Mock };
+    partnerParticipation: { findUnique: jest.Mock };
     organization: { findUnique: jest.Mock };
     attachment: {
       findMany: jest.Mock;
@@ -28,6 +29,7 @@ describe('AttachmentsService', () => {
 
     prisma = {
       builderDeal: { findUnique: jest.fn() },
+      partnerParticipation: { findUnique: jest.fn() },
       organization: { findUnique: jest.fn() },
       attachment: {
         findMany: jest.fn(),
@@ -67,26 +69,20 @@ describe('AttachmentsService', () => {
   });
 
   describe('owner validation on presign', () => {
-    it('rejects PARTNER_PARTICIPATION owners as not available yet', async () => {
-      await expect(
-        service.presign({
-          ownerType: ContentOwnerType.PARTNER_PARTICIPATION,
-          ownerId: 'partner-1',
-          filename: 'brief.pdf',
-          contentType: 'application/pdf',
-          size: 1024,
-        }),
-      ).rejects.toThrow(BadRequestException);
+    it('presigns when the partner participation owner exists', async () => {
+      prisma.partnerParticipation.findUnique.mockResolvedValue({ id: 'partner-1' });
+      storageService.createPresignedPutUrl.mockResolvedValue('https://upload.example/put');
 
-      await expect(
-        service.presign({
-          ownerType: ContentOwnerType.PARTNER_PARTICIPATION,
-          ownerId: 'partner-1',
-          filename: 'brief.pdf',
-          contentType: 'application/pdf',
-          size: 1024,
-        }),
-      ).rejects.toThrow('not available yet');
+      const result = await service.presign({
+        ownerType: ContentOwnerType.PARTNER_PARTICIPATION,
+        ownerId: 'partner-1',
+        filename: 'brief.pdf',
+        contentType: 'application/pdf',
+        size: 1024,
+      });
+
+      expect(result.uploadUrl).toBe('https://upload.example/put');
+      expect(result.objectKey).toMatch(/^PARTNER_PARTICIPATION\/partner-1\//);
     });
 
     it('rejects oversized files before owner lookup', async () => {

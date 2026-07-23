@@ -16,6 +16,7 @@ import { DealsModule } from './deals/deals.module';
 import { HealthModule } from './health/health.module';
 import { NotesModule } from './notes/notes.module';
 import { OrganizationsModule } from './organizations/organizations.module';
+import { PartnersModule } from './partners/partners.module';
 import { PrismaModule } from './prisma/prisma.module';
 import { UsersModule } from './users/users.module';
 
@@ -32,6 +33,7 @@ import { UsersModule } from './users/users.module';
     OrganizationsModule,
     ContactsModule,
     DealsModule,
+    PartnersModule,
     NotesModule,
     AttachmentsModule,
   ],
