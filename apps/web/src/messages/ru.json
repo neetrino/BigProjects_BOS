@@ -467,5 +467,66 @@
       "empty": "Площади назначаются на карте площадки и для партнёров необязательны.",
       "summary": "{count} зон · {sqm} м² · {labels}"
     }
+  },
+  "toonexpo": {
+    "account": {
+      "title": "Аккаунт ToonExpo",
+      "linked": "Связан",
+      "companyId": "ID компании: {id}",
+      "requestButton": "Запросить аккаунт ToonExpo",
+      "requestDialogTitle": "Запрос аккаунта ToonExpo",
+      "requestDialogDescription": "Создать компанию ToonExpo для этой организации в выбранном цикле.",
+      "requestSubmit": "Отправить запрос",
+      "modulesLabel": "Модули",
+      "modulesRequired": "Выберите хотя бы один модуль.",
+      "retry": "Повторить",
+      "pendingHint": "Создание аккаунта выполняется.",
+      "requestStatus": {
+        "PENDING": "В ожидании",
+        "SUCCESS": "Создан",
+        "LINKED_EXISTING": "Связан существующий",
+        "FAILED": "Ошибка"
+      }
+    },
+    "companyType": {
+      "BUILDER": "Тип компании: Застройщик",
+      "PARTNER": "Тип компании: Партнёр"
+    },
+    "modules": {
+      "builder_portal": "Портал застройщика",
+      "constructor_crm": "CRM застройщика",
+      "readiness": "Готовность",
+      "partner_profile": "Профиль партнёра",
+      "bank_offers": "Банковские предложения",
+      "analytics": "Аналитика"
+    },
+    "publication": {
+      "title": "Публикация в ToonExpo",
+      "publishButton": "Опубликовать в ToonExpo",
+      "confirmTitle": "Публикация карты площадки",
+      "confirmDescription": "Публичные данные по режимам отображения зон будут отправлены в ToonExpo.",
+      "publishedAt": "Опубликовано {date}",
+      "historyTitle": "История публикаций",
+      "historyEmpty": "Публикаций пока нет.",
+      "version": "v{version}",
+      "planStatus": {
+        "UNPUBLISHED": "Не опубликовано",
+        "PUBLISHED": "Опубликовано"
+      },
+      "status": {
+        "PENDING": "В ожидании",
+        "PUBLISHED": "Опубликовано",
+        "ALREADY_PUBLISHED": "Уже опубликовано",
+        "REJECTED": "Отклонено",
+        "FAILED": "Ошибка"
+      },
+      "toastPublished": "Карта площадки опубликована в ToonExpo.",
+      "toastAlreadyPublished": "Карта уже была опубликована (без изменений).",
+      "toastRejected": "Публикация отклонена ToonExpo.",
+      "toastRejectedWithError": "Публикация отклонена: {error}",
+      "toastFailed": "Не удалось опубликовать.",
+      "toastFailedWithError": "Ошибка публикации: {error}",
+      "toastPending": "Запрос на публикацию отправлен."
+    }
   }
 }

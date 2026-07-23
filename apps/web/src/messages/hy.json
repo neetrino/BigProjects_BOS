@@ -467,5 +467,66 @@
       "empty": "Տարածքները նշանակվում են տարածքի քարտեզից և գործընկերների համար պարտադիր չեն։",
       "summary": "{count} տարածք · {sqm} մ² · {labels}"
     }
+  },
+  "toonexpo": {
+    "account": {
+      "title": "ToonExpo հաշիվ",
+      "linked": "Կապված",
+      "companyId": "Ընկերության ID՝ {id}",
+      "requestButton": "Պահանջել ToonExpo հաշիվ",
+      "requestDialogTitle": "ToonExpo հաշվի պահանջ",
+      "requestDialogDescription": "Ստեղծել ToonExpo ընկերություն այս կազմակերպության համար ընտրված ցիկլում։",
+      "requestSubmit": "Ուղարկել պահանջը",
+      "modulesLabel": "Մոդուլներ",
+      "modulesRequired": "Ընտրեք առնվազն մեկ մոդուլ։",
+      "retry": "Կրկնել",
+      "pendingHint": "Հաշվի ստեղծումը ընթացքում է։",
+      "requestStatus": {
+        "PENDING": "Սպասման մեջ",
+        "SUCCESS": "Ստեղծված",
+        "LINKED_EXISTING": "Կապված գոյություն ունեցող",
+        "FAILED": "Ձախողված"
+      }
+    },
+    "companyType": {
+      "BUILDER": "Ընկերության տեսակ՝ Կառուցապատող",
+      "PARTNER": "Ընկերության տեսակ՝ Գործընկեր"
+    },
+    "modules": {
+      "builder_portal": "Կառուցապատողի պորտալ",
+      "constructor_crm": "Կառուցապատողի CRM",
+      "readiness": "Պատրաստվածություն",
+      "partner_profile": "Գործընկerոջ պրոֆիլ",
+      "bank_offers": "Բանկային առաջարկներ",
+      "analytics": "Վերլուծություն"
+    },
+    "publication": {
+      "title": "ToonExpo հրապարակում",
+      "publishButton": "Հրապարակել ToonExpo-ում",
+      "confirmTitle": "Տարածքի քարտեզի հրապարակում",
+      "confirmDescription": "Տարածքների ցուցադրման ռեժիմների հրապարակային տվյալները կուղարկվեն ToonExpo։",
+      "publishedAt": "Հրապարակված {date}",
+      "historyTitle": "Հրապարակումների պատմություն",
+      "historyEmpty": "Դեռ հրապարակումներ չկան։",
+      "version": "v{version}",
+      "planStatus": {
+        "UNPUBLISHED": "Չհրապարակված",
+        "PUBLISHED": "Հրապարակված"
+      },
+      "status": {
+        "PENDING": "Սպասման մեջ",
+        "PUBLISHED": "Հրապարակված",
+        "ALREADY_PUBLISHED": "Արդեն հրապարակված",
+        "REJECTED": "Մերժված",
+        "FAILED": "Ձախողված"
+      },
+      "toastPublished": "Տարածքի քարտեզը հրապարակվել է ToonExpo-ում։",
+      "toastAlreadyPublished": "Քարտեզը արդեն հրապարակված էր (առանց փոփոխության)։",
+      "toastRejected": "Հրապարակումը մերժվել է ToonExpo-ի կողմից։",
+      "toastRejectedWithError": "Հրապարակումը մերժվել է՝ {error}",
+      "toastFailed": "Հրապարակումը ձախողվեց։",
+      "toastFailedWithError": "Հրապարակման սխալ՝ {error}",
+      "toastPending": "Հրապարակման հարցումը ուղարկվել է։"
+    }
   }
 }

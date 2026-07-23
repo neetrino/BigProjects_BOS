@@ -18,6 +18,7 @@ import { showToast } from '@/components/ui/toast';
 import { EntityAttachmentsSection } from '@/features/content/entity-attachments-section';
 import { EntityNotesSection } from '@/features/content/entity-notes-section';
 import { PARTNER_OWNER } from '@/features/partners/constants';
+import { ToonExpoAccountSection } from '@/features/toonexpo/toonexpo-account-section';
 import { EntityAreasSection } from '@/features/venue-map/entity-areas-section';
 import {
   PartnerDetailsSection,
@@ -41,7 +42,12 @@ type PartnerSheetProps = {
 type LoadState =
   | { status: 'loading' }
   | { status: 'error'; message: string }
-  | { status: 'ready'; partner: PartnerListItem; contacts: OrganizationContact[] };
+  | {
+      status: 'ready';
+      partner: PartnerListItem;
+      contacts: OrganizationContact[];
+      toonexpoCompanyId: string | null;
+    };
 
 function toDraft(partner: PartnerListItem): PartnerDetailsDraft {
   return {
@@ -134,7 +140,12 @@ function PartnerSheetInner({
       .then(async (partner) => {
         const detail = await getOrganization(partner.organizationId);
         if (!cancelled) {
-          setLoadState({ status: 'ready', partner, contacts: detail.contacts });
+          setLoadState({
+            status: 'ready',
+            partner,
+            contacts: detail.contacts,
+            toonexpoCompanyId: detail.toonexpoCompanyId,
+          });
           setDraft(toDraft(partner));
         }
       })
@@ -166,7 +177,14 @@ function PartnerSheetInner({
 
   function setPartner(partner: PartnerListItem, syncDraft: boolean) {
     setLoadState((prev) =>
-      prev.status === 'ready' ? { status: 'ready', partner, contacts: prev.contacts } : prev,
+      prev.status === 'ready'
+        ? {
+            status: 'ready',
+            partner,
+            contacts: prev.contacts,
+            toonexpoCompanyId: prev.toonexpoCompanyId,
+          }
+        : prev,
     );
     if (syncDraft) {
       setDraft(toDraft(partner));
@@ -229,7 +247,12 @@ function PartnerSheetInner({
     try {
       const partner = await getPartner(partnerId);
       const detail = await getOrganization(partner.organizationId);
-      setLoadState({ status: 'ready', partner, contacts: detail.contacts });
+      setLoadState({
+        status: 'ready',
+        partner,
+        contacts: detail.contacts,
+        toonexpoCompanyId: detail.toonexpoCompanyId,
+      });
       if (!isDirty) {
         setDraft(toDraft(partner));
       }
@@ -282,6 +305,12 @@ function PartnerSheetInner({
             areas={loadState.partner.areas ?? []}
             target={{ kind: 'PARTNER', partnerId }}
             onChanged={() => void reloadPartner()}
+          />
+          <ToonExpoAccountSection
+            organizationId={loadState.partner.organizationId}
+            eventCycleId={loadState.partner.eventCycleId}
+            companyType="PARTNER"
+            toonexpoCompanyId={loadState.toonexpoCompanyId}
           />
           <EntityNotesSection ownerType={PARTNER_OWNER} ownerId={partnerId} />
           <EntityAttachmentsSection ownerType={PARTNER_OWNER} ownerId={partnerId} />

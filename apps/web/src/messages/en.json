@@ -467,5 +467,66 @@
       "empty": "Areas are assigned from the Venue Map and are optional for partners.",
       "summary": "{count} areas · {sqm} m² · {labels}"
     }
+  },
+  "toonexpo": {
+    "account": {
+      "title": "ToonExpo account",
+      "linked": "Linked",
+      "companyId": "Company ID: {id}",
+      "requestButton": "Request ToonExpo account",
+      "requestDialogTitle": "Request ToonExpo account",
+      "requestDialogDescription": "Create a ToonExpo company for this organization in the selected cycle.",
+      "requestSubmit": "Submit request",
+      "modulesLabel": "Modules",
+      "modulesRequired": "Select at least one module.",
+      "retry": "Retry",
+      "pendingHint": "Provisioning is in progress.",
+      "requestStatus": {
+        "PENDING": "Pending",
+        "SUCCESS": "Provisioned",
+        "LINKED_EXISTING": "Linked existing",
+        "FAILED": "Failed"
+      }
+    },
+    "companyType": {
+      "BUILDER": "Company type: Builder",
+      "PARTNER": "Company type: Partner"
+    },
+    "modules": {
+      "builder_portal": "Builder portal",
+      "constructor_crm": "Constructor CRM",
+      "readiness": "Readiness",
+      "partner_profile": "Partner profile",
+      "bank_offers": "Bank offers",
+      "analytics": "Analytics"
+    },
+    "publication": {
+      "title": "ToonExpo publication",
+      "publishButton": "Publish to ToonExpo",
+      "confirmTitle": "Publish venue map",
+      "confirmDescription": "Public data per area display modes will be sent to ToonExpo.",
+      "publishedAt": "Published {date}",
+      "historyTitle": "Publication history",
+      "historyEmpty": "No publications yet.",
+      "version": "v{version}",
+      "planStatus": {
+        "UNPUBLISHED": "Unpublished",
+        "PUBLISHED": "Published"
+      },
+      "status": {
+        "PENDING": "Pending",
+        "PUBLISHED": "Published",
+        "ALREADY_PUBLISHED": "Already published",
+        "REJECTED": "Rejected",
+        "FAILED": "Failed"
+      },
+      "toastPublished": "Venue map published to ToonExpo.",
+      "toastAlreadyPublished": "Venue map was already published (unchanged).",
+      "toastRejected": "Publication was rejected by ToonExpo.",
+      "toastRejectedWithError": "Publication rejected: {error}",
+      "toastFailed": "Publication failed.",
+      "toastFailedWithError": "Publication failed: {error}",
+      "toastPending": "Publication submitted."
+    }
   }
 }

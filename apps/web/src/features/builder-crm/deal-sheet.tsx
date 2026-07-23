@@ -23,6 +23,7 @@ import { DealStageSection } from '@/features/builder-crm/deal-stage-section';
 import { EntityAttachmentsSection } from '@/features/content/entity-attachments-section';
 import { EntityNotesSection } from '@/features/content/entity-notes-section';
 import { BUILDER_DEAL_OWNER } from '@/features/builder-crm/constants';
+import { ToonExpoAccountSection } from '@/features/toonexpo/toonexpo-account-section';
 import { EntityAreasSection } from '@/features/venue-map/entity-areas-section';
 
 type StaffOption = {
@@ -41,7 +42,12 @@ type DealSheetProps = {
 type LoadState =
   | { status: 'loading' }
   | { status: 'error'; message: string }
-  | { status: 'ready'; deal: DealListItem; contacts: OrganizationContact[] };
+  | {
+      status: 'ready';
+      deal: DealListItem;
+      contacts: OrganizationContact[];
+      toonexpoCompanyId: string | null;
+    };
 
 function toDraft(deal: DealListItem): DealDetailsDraft {
   return {
@@ -127,7 +133,12 @@ function DealSheetInner({ dealId, staffOptions, onClose, onUpdated }: DealSheetI
       .then(async (deal) => {
         const detail = await getOrganization(deal.organizationId);
         if (!cancelled) {
-          setLoadState({ status: 'ready', deal, contacts: detail.contacts });
+          setLoadState({
+            status: 'ready',
+            deal,
+            contacts: detail.contacts,
+            toonexpoCompanyId: detail.toonexpoCompanyId,
+          });
           setDraft(toDraft(deal));
         }
       })
@@ -160,7 +171,9 @@ function DealSheetInner({ dealId, staffOptions, onClose, onUpdated }: DealSheetI
 
   function setDeal(deal: DealListItem, syncDraft: boolean) {
     setLoadState((prev) =>
-      prev.status === 'ready' ? { status: 'ready', deal, contacts: prev.contacts } : prev,
+      prev.status === 'ready'
+        ? { status: 'ready', deal, contacts: prev.contacts, toonexpoCompanyId: prev.toonexpoCompanyId }
+        : prev,
     );
     if (syncDraft) {
       setDraft(toDraft(deal));
@@ -228,7 +241,12 @@ function DealSheetInner({ dealId, staffOptions, onClose, onUpdated }: DealSheetI
     try {
       const deal = await getDeal(dealId);
       const detail = await getOrganization(deal.organizationId);
-      setLoadState({ status: 'ready', deal, contacts: detail.contacts });
+      setLoadState({
+        status: 'ready',
+        deal,
+        contacts: detail.contacts,
+        toonexpoCompanyId: detail.toonexpoCompanyId,
+      });
       if (!isDirty) {
         setDraft(toDraft(deal));
       }
@@ -281,6 +299,12 @@ function DealSheetInner({ dealId, staffOptions, onClose, onUpdated }: DealSheetI
             areas={loadState.deal.areas ?? []}
             target={{ kind: 'BUILDER', dealId: dealId }}
             onChanged={() => void reloadDeal()}
+          />
+          <ToonExpoAccountSection
+            organizationId={loadState.deal.organizationId}
+            eventCycleId={loadState.deal.eventCycleId}
+            companyType="BUILDER"
+            toonexpoCompanyId={loadState.toonexpoCompanyId}
           />
           <EntityNotesSection ownerType={BUILDER_DEAL_OWNER} ownerId={dealId} />
           <EntityAttachmentsSection ownerType={BUILDER_DEAL_OWNER} ownerId={dealId} />

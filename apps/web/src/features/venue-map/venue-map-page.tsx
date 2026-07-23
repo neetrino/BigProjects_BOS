@@ -17,6 +17,7 @@ import { CreatePlanForm } from './create-plan-form';
 import type { GridCell, ImagePoint } from './domain/grid-transform';
 import { UploadPlanImage } from './upload-plan-image';
 import type { EditorInteractionMode } from './venue-map-stage';
+import { VenueMapPublicationSection } from '@/features/toonexpo/venue-map-publication-section';
 import { VenueMapPanel } from './venue-map-panel';
 import { VenueMapStageClient } from './venue-map-stage-client';
 
@@ -242,6 +243,13 @@ export function VenueMapPage() {
 
       {cycleId && plan && hasImage ? (
         <>
+          {isAdmin ? (
+            <VenueMapPublicationSection
+              planId={plan.id}
+              publishStatus={plan.publishStatus}
+              onPublished={refreshPlan}
+            />
+          ) : null}
           {isAdmin && interactionMode === 'calibrate' ? (
             <CalibrationControls
               plan={plan}
