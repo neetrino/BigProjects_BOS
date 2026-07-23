@@ -10,6 +10,7 @@
     "test": "pnpm -r --if-present test",
     "build": "pnpm -r --if-present build",
     "dev": "pnpm -r --parallel --if-present dev",
+    "toonexpo:stub": "node scripts/toonexpo-stub.mjs",
     "db:generate": "prisma generate",
     "db:seed": "prisma db seed",
     "postinstall": "prisma generate"

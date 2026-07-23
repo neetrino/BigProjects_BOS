@@ -18,6 +18,7 @@ import { NotesModule } from './notes/notes.module';
 import { OrganizationsModule } from './organizations/organizations.module';
 import { PartnersModule } from './partners/partners.module';
 import { PrismaModule } from './prisma/prisma.module';
+import { ToonExpoModule } from './toonexpo/toonexpo.module';
 import { UsersModule } from './users/users.module';
 import { VenueMapModule } from './venue-map/venue-map.module';
 
@@ -38,6 +39,7 @@ import { VenueMapModule } from './venue-map/venue-map.module';
     NotesModule,
     AttachmentsModule,
     VenueMapModule,
+    ToonExpoModule,
   ],
   providers: [
     // Order matters: rate limit, then CSRF origin check, then session auth, then role check.

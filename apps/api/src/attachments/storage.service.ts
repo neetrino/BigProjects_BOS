@@ -47,13 +47,16 @@ export class StorageService implements OnModuleInit {
     return getSignedUrl(this.client, command, { expiresIn: PRESIGN_EXPIRY_SECONDS });
   }
 
-  async createPresignedGetUrl(objectKey: string): Promise<string> {
+  async createPresignedGetUrl(
+    objectKey: string,
+    expiresInSeconds: number = PRESIGN_EXPIRY_SECONDS,
+  ): Promise<string> {
     const command = new GetObjectCommand({
       Bucket: this.bucket,
       Key: objectKey,
     });
 
-    return getSignedUrl(this.client, command, { expiresIn: PRESIGN_EXPIRY_SECONDS });
+    return getSignedUrl(this.client, command, { expiresIn: expiresInSeconds });
   }
 
   async deleteObject(objectKey: string): Promise<void> {
