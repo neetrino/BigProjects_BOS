@@ -38,3 +38,43 @@ Canonical documents:
 `Size: B - medium, layout: simple feature-based monorepo.`
 
 The previous enterprise-style implementation is preserved in the `sipan` branch. It is reference material only and must not define the architecture of this branch.
+
+## Local Development
+
+### Prerequisites
+
+- Node.js 22+ and pnpm
+- Docker (for local PostgreSQL)
+
+### Setup
+
+```bash
+cp .env.example .env
+docker compose up -d
+pnpm install
+pnpm dev
+```
+
+`docker compose up -d` starts PostgreSQL 18 on port `5432` with database `bos`.
+
+Run apps individually if needed:
+
+```bash
+pnpm --filter @bos/api dev
+pnpm --filter @bos/web dev
+```
+
+### URLs
+
+- Web: http://localhost:3000
+- API health: http://localhost:4000/api/v1/health
+
+### Quality commands
+
+```bash
+pnpm format
+pnpm lint
+pnpm typecheck
+pnpm test
+pnpm build
+```

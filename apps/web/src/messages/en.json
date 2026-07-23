@@ -1,0 +1,17 @@
+{
+  "home": {
+    "eyebrow": "Internal tool",
+    "title": "BigProjects BOS",
+    "description": "Phase 0 foundation check: the Next.js frontend calls the NestJS health endpoint.",
+    "health": {
+      "sectionLabel": "API health",
+      "status": "Status",
+      "database": "Database",
+      "timestamp": "Timestamp",
+      "unreachable": "API unreachable. Start `apps/api` and ensure `NEXT_PUBLIC_API_URL` points to it."
+    }
+  },
+  "languageSwitcher": {
+    "label": "Language"
+  }
+}

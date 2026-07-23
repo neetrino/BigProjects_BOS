@@ -1,0 +1,17 @@
+{
+  "home": {
+    "eyebrow": "Внутренний инструмент",
+    "title": "BigProjects BOS",
+    "description": "Проверка основы фазы 0: фронтенд Next.js вызывает эндпоинт NestJS health.",
+    "health": {
+      "sectionLabel": "Состояние API",
+      "status": "Статус",
+      "database": "База данных",
+      "timestamp": "Время",
+      "unreachable": "API недоступен. Запустите `apps/api` и убедитесь, что `NEXT_PUBLIC_API_URL` указывает на него."
+    }
+  },
+  "languageSwitcher": {
+    "label": "Язык"
+  }
+}

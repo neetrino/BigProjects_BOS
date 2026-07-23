@@ -1,0 +1,17 @@
+{
+  "home": {
+    "eyebrow": "Ներքին գործիք",
+    "title": "BigProjects BOS",
+    "description": "Փուլ 0-ի հիմնական ստուգում. Next.js ֆրոնտենդը կանչում է NestJS health endpoint-ը:",
+    "health": {
+      "sectionLabel": "API-ի վիճակ",
+      "status": "Կարգավիճակ",
+      "database": "Տվյալների բազա",
+      "timestamp": "Ժամանակ",
+      "unreachable": "API-ն հասանելի չէ: Գործարկեք `apps/api`-ն և համոզված եղեք, որ `NEXT_PUBLIC_API_URL`-ը ուղղված է դեպի այն:"
+    }
+  },
+  "languageSwitcher": {
+    "label": "Լեզու"
+  }
+}
