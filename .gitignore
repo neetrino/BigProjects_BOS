@@ -21,6 +21,12 @@ coverage/
 # keep this in case a custom output path is introduced later)
 prisma/generated/
 
+# Playwright
+playwright-report/
+test-results/
+blob-report/
+apps/web/e2e/.auth/
+
 # Logs and temp
 *.log
 npm-debug.log*

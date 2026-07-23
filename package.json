@@ -8,6 +8,7 @@
     "lint": "pnpm -r --if-present lint",
     "typecheck": "pnpm -r --if-present typecheck",
     "test": "pnpm -r --if-present test",
+    "test:e2e": "pnpm --filter @bos/web test:e2e",
     "build": "pnpm -r --if-present build",
     "dev": "pnpm -r --parallel --if-present dev",
     "toonexpo:stub": "node scripts/toonexpo-stub.mjs",
