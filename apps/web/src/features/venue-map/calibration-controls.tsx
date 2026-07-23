@@ -25,9 +25,7 @@ export function CalibrationControls({
   const t = useTranslations('venueMap');
   const tCommon = useTranslations('common');
   const [distanceMeters, setDistanceMeters] = useState('');
-  const [ppm, setPpm] = useState(
-    plan.pixelsPerMeter != null ? String(plan.pixelsPerMeter) : '',
-  );
+  const [ppm, setPpm] = useState(plan.pixelsPerMeter != null ? String(plan.pixelsPerMeter) : '');
   const [originX, setOriginX] = useState(String(plan.gridOriginX));
   const [originY, setOriginY] = useState(String(plan.gridOriginY));
   const [busy, setBusy] = useState(false);

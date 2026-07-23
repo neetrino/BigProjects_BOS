@@ -77,20 +77,20 @@ describe('SpaceAreasService', () => {
     it('rejects when the plan does not exist', async () => {
       prisma.venuePlan.findUnique.mockResolvedValue(null);
 
-      await expect(
-        service.create(planId, { name: 'A1', cells: rectangleCells }),
-      ).rejects.toThrow(NotFoundException);
+      await expect(service.create(planId, { name: 'A1', cells: rectangleCells })).rejects.toThrow(
+        NotFoundException,
+      );
     });
 
     it('rejects when the plan is not calibrated', async () => {
       prisma.venuePlan.findUnique.mockResolvedValue({ ...calibratedPlan, pixelsPerMeter: null });
 
-      await expect(
-        service.create(planId, { name: 'A1', cells: rectangleCells }),
-      ).rejects.toThrow(BadRequestException);
-      await expect(
-        service.create(planId, { name: 'A1', cells: rectangleCells }),
-      ).rejects.toThrow('calibrated');
+      await expect(service.create(planId, { name: 'A1', cells: rectangleCells })).rejects.toThrow(
+        BadRequestException,
+      );
+      await expect(service.create(planId, { name: 'A1', cells: rectangleCells })).rejects.toThrow(
+        'calibrated',
+      );
     });
 
     it('rejects non-rectangular cell shapes', async () => {
@@ -111,9 +111,9 @@ describe('SpaceAreasService', () => {
       prisma.venuePlan.findUnique.mockResolvedValue(calibratedPlan);
       prisma.spaceAreaCell.findFirst.mockResolvedValue({ x: 0, y: 0 });
 
-      await expect(
-        service.create(planId, { name: 'A1', cells: rectangleCells }),
-      ).rejects.toThrow(ConflictException);
+      await expect(service.create(planId, { name: 'A1', cells: rectangleCells })).rejects.toThrow(
+        ConflictException,
+      );
     });
 
     it('creates the area and its cells in a transaction, with squareMeters = cell count', async () => {
@@ -165,9 +165,7 @@ describe('SpaceAreasService', () => {
     it('rejects when the area does not exist', async () => {
       prisma.spaceArea.findUnique.mockResolvedValue(null);
 
-      await expect(service.update(areaId, { name: 'New name' })).rejects.toThrow(
-        NotFoundException,
-      );
+      await expect(service.update(areaId, { name: 'New name' })).rejects.toThrow(NotFoundException);
     });
   });
 

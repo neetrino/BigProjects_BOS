@@ -1,5 +1,8 @@
 import { BuilderDeal, Organization, PartnerParticipation, SpaceAllocation } from '@prisma/client';
-import { SpaceAreaAllocationResponseDto, SpaceAreaResponseDto } from '../dto/space-area-response.dto';
+import {
+  SpaceAreaAllocationResponseDto,
+  SpaceAreaResponseDto,
+} from '../dto/space-area-response.dto';
 import { AllocationKind } from '../types/allocation-kind.type';
 
 export type AllocationWithTargetOrganization = SpaceAllocation & {
@@ -37,7 +40,9 @@ function mapActiveAllocation(
   const kind = resolveAllocationKind(active);
   const targetId = kind === 'BUILDER' ? active.builderDealId : active.partnerParticipationId;
   const organizationName =
-    kind === 'BUILDER' ? active.builderDeal?.organization.name : active.partnerParticipation?.organization.name;
+    kind === 'BUILDER'
+      ? active.builderDeal?.organization.name
+      : active.partnerParticipation?.organization.name;
 
   return {
     id: active.id,

@@ -130,7 +130,12 @@ function AssignAreaDialogInner({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-      <button type="button" aria-label="Close" className="absolute inset-0 bg-black/35" onClick={onClose} />
+      <button
+        type="button"
+        aria-label="Close"
+        className="absolute inset-0 bg-black/35"
+        onClick={onClose}
+      />
       <div
         role="dialog"
         aria-modal="true"
@@ -164,7 +169,9 @@ function AssignAreaDialogInner({
           </div>
         </div>
         <div className="flex-1 overflow-y-auto px-4 py-2">
-          {loading ? <p className="py-4 text-sm text-[var(--color-muted)]">{tCommon('loading')}</p> : null}
+          {loading ? (
+            <p className="py-4 text-sm text-[var(--color-muted)]">{tCommon('loading')}</p>
+          ) : null}
           {!loading && tab === 'builders' ? (
             filteredDeals.length === 0 ? (
               <p className="py-4 text-sm text-[var(--color-muted)]">{t('assign.emptyBuilders')}</p>

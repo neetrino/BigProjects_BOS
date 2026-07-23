@@ -14,12 +14,7 @@ type GridLayerProps = {
   stageHeight: number;
 };
 
-export function GridLayer({
-  calibration,
-  viewport,
-  stageWidth,
-  stageHeight,
-}: GridLayerProps) {
+export function GridLayer({ calibration, viewport, stageWidth, stageHeight }: GridLayerProps) {
   const range = visibleGridRange(stageWidth, stageHeight, viewport, calibration);
 
   return (

@@ -138,9 +138,9 @@ describe('SpaceAllocationsService', () => {
         eventCycleId: 'other-cycle',
       });
 
-      await expect(
-        service.assign(areaId, { partnerParticipationId: partnerId }),
-      ).rejects.toThrow(BadRequestException);
+      await expect(service.assign(areaId, { partnerParticipationId: partnerId })).rejects.toThrow(
+        BadRequestException,
+      );
     });
 
     it('assigns a free area to a valid partner participation', async () => {

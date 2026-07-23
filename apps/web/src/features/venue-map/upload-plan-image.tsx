@@ -42,7 +42,9 @@ export function UploadPlanImage({ planId, onUploaded, compact = false }: UploadP
     if (!file) {
       return;
     }
-    if (!ACCEPTED_PLAN_IMAGE_TYPES.includes(file.type as (typeof ACCEPTED_PLAN_IMAGE_TYPES)[number])) {
+    if (
+      !ACCEPTED_PLAN_IMAGE_TYPES.includes(file.type as (typeof ACCEPTED_PLAN_IMAGE_TYPES)[number])
+    ) {
       showToast(t('upload.invalidType'), 'error');
       return;
     }
@@ -87,11 +89,7 @@ export function UploadPlanImage({ planId, onUploaded, compact = false }: UploadP
         className="hidden"
         onChange={(event) => void handleFile(event.target.files?.[0])}
       />
-      <Button
-        variant="primary"
-        disabled={busy}
-        onClick={() => inputRef.current?.click()}
-      >
+      <Button variant="primary" disabled={busy} onClick={() => inputRef.current?.click()}>
         {busy ? t('upload.uploading') : compact ? t('upload.replace') : t('upload.choose')}
       </Button>
       {busy ? <p className="text-xs text-[var(--color-muted)]">{tCommon('loading')}</p> : null}

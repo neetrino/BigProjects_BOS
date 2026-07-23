@@ -44,7 +44,9 @@ export class SpaceAllocationsQueryService {
     }
 
     const targetFilter =
-      kind === 'BUILDER' ? { builderDealId: { in: targetIds } } : { partnerParticipationId: { in: targetIds } };
+      kind === 'BUILDER'
+        ? { builderDealId: { in: targetIds } }
+        : { partnerParticipationId: { in: targetIds } };
 
     return this.prisma.spaceAllocation.findMany({
       where: { active: true, ...targetFilter },
@@ -110,7 +112,8 @@ export class SpaceAllocationsQueryService {
   }
 
   private resolveTargetId(kind: AllocationKind, allocation: SpaceAllocation): string {
-    const targetId = kind === 'BUILDER' ? allocation.builderDealId : allocation.partnerParticipationId;
+    const targetId =
+      kind === 'BUILDER' ? allocation.builderDealId : allocation.partnerParticipationId;
     return targetId as string;
   }
 }

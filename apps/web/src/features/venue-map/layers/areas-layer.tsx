@@ -70,7 +70,11 @@ export function AreasLayer({
           : `${area.name} · ${area.squareMeters} m²`;
 
         return (
-          <Group key={area.id} onClick={() => onSelectArea(area.id)} onTap={() => onSelectArea(area.id)}>
+          <Group
+            key={area.id}
+            onClick={() => onSelectArea(area.id)}
+            onTap={() => onSelectArea(area.id)}
+          >
             <Rect
               x={rect.x}
               y={rect.y}

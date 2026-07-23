@@ -10,9 +10,16 @@ import {
   UserStatus,
 } from '@prisma/client';
 import { PrismaService } from '../prisma/prisma.service';
-import { AreasSummary, SpaceAllocationsQueryService } from '../venue-map/space-allocations-query.service';
+import {
+  AreasSummary,
+  SpaceAllocationsQueryService,
+} from '../venue-map/space-allocations-query.service';
 import { CreateDealDto } from './dto/create-deal.dto';
-import { DealAreasSummaryResponseDto, DealDetailResponseDto, DealResponseDto } from './dto/deal-response.dto';
+import {
+  DealAreasSummaryResponseDto,
+  DealDetailResponseDto,
+  DealResponseDto,
+} from './dto/deal-response.dto';
 import { ListDealsQueryDto } from './dto/list-deals-query.dto';
 import { UpdateDealDto } from './dto/update-deal.dto';
 
@@ -180,7 +187,11 @@ export class DealsService {
 
     const deal = shouldReleaseAreas
       ? await this.prisma.$transaction(async (tx) => {
-          const updated = await tx.builderDeal.update({ where: { id }, data, include: DEAL_INCLUDE });
+          const updated = await tx.builderDeal.update({
+            where: { id },
+            data,
+            include: DEAL_INCLUDE,
+          });
           await this.spaceAllocationsQuery.releaseAllActiveAllocationsForDeal(id, tx);
           return updated;
         })

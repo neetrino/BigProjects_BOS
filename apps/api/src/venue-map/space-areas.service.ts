@@ -1,4 +1,9 @@
-import { BadRequestException, ConflictException, Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  ConflictException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { Prisma, PublicDisplayMode } from '@prisma/client';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateSpaceAreaDto } from './dto/create-space-area.dto';

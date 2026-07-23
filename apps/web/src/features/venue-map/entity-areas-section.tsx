@@ -23,12 +23,7 @@ type EntityAreasSectionProps = {
   onChanged: () => void;
 };
 
-export function EntityAreasSection({
-  cycleId,
-  areas,
-  target,
-  onChanged,
-}: EntityAreasSectionProps) {
+export function EntityAreasSection({ cycleId, areas, target, onChanged }: EntityAreasSectionProps) {
   const t = useTranslations('entityAreas');
   const tCommon = useTranslations('common');
   const [assignOpen, setAssignOpen] = useState(false);
@@ -187,8 +182,7 @@ function AssignFreeAreaDialogInner({
       return freeAreas;
     }
     return freeAreas.filter(
-      (area) =>
-        area.name.toLowerCase().includes(q) || (area.code ?? '').toLowerCase().includes(q),
+      (area) => area.name.toLowerCase().includes(q) || (area.code ?? '').toLowerCase().includes(q),
     );
   }, [freeAreas, search]);
 
@@ -210,7 +204,12 @@ function AssignFreeAreaDialogInner({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-      <button type="button" aria-label="Close" className="absolute inset-0 bg-black/35" onClick={onClose} />
+      <button
+        type="button"
+        aria-label="Close"
+        className="absolute inset-0 bg-black/35"
+        onClick={onClose}
+      />
       <div
         role="dialog"
         aria-modal="true"
@@ -230,7 +229,9 @@ function AssignFreeAreaDialogInner({
           </div>
         </div>
         <div className="flex-1 overflow-y-auto px-4 py-2">
-          {loading ? <p className="py-4 text-sm text-[var(--color-muted)]">{tCommon('loading')}</p> : null}
+          {loading ? (
+            <p className="py-4 text-sm text-[var(--color-muted)]">{tCommon('loading')}</p>
+          ) : null}
           {!loading && filtered.length === 0 ? (
             <p className="py-4 text-sm text-[var(--color-muted)]">{t('noFreeAreas')}</p>
           ) : null}
@@ -242,7 +243,9 @@ function AssignFreeAreaDialogInner({
                   className="flex items-center justify-between gap-2 rounded px-2 py-2 hover:bg-[var(--color-bg)]"
                 >
                   <div className="min-w-0">
-                    <p className="truncate text-sm font-medium text-[var(--color-fg)]">{area.name}</p>
+                    <p className="truncate text-sm font-medium text-[var(--color-fg)]">
+                      {area.name}
+                    </p>
                     <p className="text-xs text-[var(--color-muted)]">{area.squareMeters} m²</p>
                   </div>
                   <Button

@@ -1,10 +1,6 @@
 export const MAX_PLAN_IMAGE_BYTES = 25 * 1024 * 1024;
 
-export const ACCEPTED_PLAN_IMAGE_TYPES = [
-  'image/png',
-  'image/jpeg',
-  'image/webp',
-] as const;
+export const ACCEPTED_PLAN_IMAGE_TYPES = ['image/png', 'image/jpeg', 'image/webp'] as const;
 
 export type AreaVisualState = 'free' | 'builder' | 'partner' | 'selected';
 

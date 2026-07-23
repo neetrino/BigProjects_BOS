@@ -36,10 +36,7 @@ export class VenuePlansController {
 
   @Roles(UserRole.ADMIN)
   @Patch(':id')
-  update(
-    @Param('id') id: string,
-    @Body() dto: UpdateVenuePlanDto,
-  ): Promise<VenuePlanResponseDto> {
+  update(@Param('id') id: string, @Body() dto: UpdateVenuePlanDto): Promise<VenuePlanResponseDto> {
     return this.venuePlansService.update(id, dto);
   }
 

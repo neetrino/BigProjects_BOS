@@ -209,7 +209,9 @@ export function VenueMapPage() {
               <Button variant="secondary" onClick={() => setFitRequestId((id) => id + 1)}>
                 {t('toolbar.fit')}
               </Button>
-              {isAdmin && plan ? <UploadPlanImage planId={plan.id} onUploaded={refreshPlan} compact /> : null}
+              {isAdmin && plan ? (
+                <UploadPlanImage planId={plan.id} onUploaded={refreshPlan} compact />
+              ) : null}
             </>
           ) : null}
         </div>
@@ -217,7 +219,9 @@ export function VenueMapPage() {
 
       {!cycleId ? <EmptyState message={t('selectCycle')} /> : null}
 
-      {cycleId && planLoad.status === 'loading' ? <LoadingState message={tCommon('loading')} /> : null}
+      {cycleId && planLoad.status === 'loading' ? (
+        <LoadingState message={tCommon('loading')} />
+      ) : null}
       {cycleId && planLoad.status === 'error' ? <ErrorState message={planLoad.message} /> : null}
 
       {cycleId && planLoad.status === 'ready' && !plan ? (

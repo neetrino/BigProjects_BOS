@@ -10,7 +10,10 @@ import {
   UserStatus,
 } from '@prisma/client';
 import { PrismaService } from '../prisma/prisma.service';
-import { AreasSummary, SpaceAllocationsQueryService } from '../venue-map/space-allocations-query.service';
+import {
+  AreasSummary,
+  SpaceAllocationsQueryService,
+} from '../venue-map/space-allocations-query.service';
 import { CreatePartnerDto } from './dto/create-partner.dto';
 import { ListPartnersQueryDto } from './dto/list-partners-query.dto';
 import {

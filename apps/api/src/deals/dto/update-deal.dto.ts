@@ -73,7 +73,7 @@ export class UpdateDealDto {
 
   @ApiPropertyOptional({
     description:
-      'When stage is set to LOST, also release all of this deal\'s active area allocations.',
+      "When stage is set to LOST, also release all of this deal's active area allocations.",
   })
   @IsOptional()
   @IsBoolean()

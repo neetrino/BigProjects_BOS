@@ -17,10 +17,7 @@ export class SpaceAreasController {
   ) {}
 
   @Patch(':id')
-  update(
-    @Param('id') id: string,
-    @Body() dto: UpdateSpaceAreaDto,
-  ): Promise<SpaceAreaResponseDto> {
+  update(@Param('id') id: string, @Body() dto: UpdateSpaceAreaDto): Promise<SpaceAreaResponseDto> {
     return this.spaceAreasService.update(id, dto);
   }
 

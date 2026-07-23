@@ -1,5 +1,11 @@
 import { randomUUID } from 'node:crypto';
-import { BadRequestException, ConflictException, Injectable, Logger, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  ConflictException,
+  Injectable,
+  Logger,
+  NotFoundException,
+} from '@nestjs/common';
 import { EventCycleStatus, Prisma, VenuePlan } from '@prisma/client';
 import { StorageService } from '../attachments/storage.service';
 import { PrismaService } from '../prisma/prisma.service';
@@ -10,7 +16,10 @@ import { SetVenuePlanImageDto } from './dto/set-venue-plan-image.dto';
 import { UpdateVenuePlanDto } from './dto/update-venue-plan.dto';
 import { VenuePlanEnvelopeResponseDto, VenuePlanResponseDto } from './dto/venue-plan-response.dto';
 import { mapSpaceAreaToResponse } from './mappers/space-area.mapper';
-import { MAX_PLAN_IMAGE_SIZE_BYTES, MAX_SANITIZED_PLAN_FILENAME_LENGTH } from './venue-map.constants';
+import {
+  MAX_PLAN_IMAGE_SIZE_BYTES,
+  MAX_SANITIZED_PLAN_FILENAME_LENGTH,
+} from './venue-map.constants';
 
 const CYCLE_NOT_FOUND_MESSAGE = 'Event cycle not found.';
 const CYCLE_CLOSED_MESSAGE = 'Cannot create a venue plan for a closed event cycle.';

@@ -57,11 +57,7 @@ export function fitViewportToImage(
   }
   const availableW = Math.max(stageWidth - padding * 2, 1);
   const availableH = Math.max(stageHeight - padding * 2, 1);
-  const scale = Math.min(
-    availableW / imageWidth,
-    availableH / imageHeight,
-    MAX_VIEWPORT_SCALE,
-  );
+  const scale = Math.min(availableW / imageWidth, availableH / imageHeight, MAX_VIEWPORT_SCALE);
   const clamped = Math.max(scale, MIN_VIEWPORT_SCALE);
   return {
     scale: clamped,
