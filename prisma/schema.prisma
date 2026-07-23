@@ -5,3 +5,91 @@ generator client {
 datasource db {
   provider = "postgresql"
 }
+
+enum UserRole {
+  ADMIN
+  STAFF
+}
+
+enum UserStatus {
+  ACTIVE
+  DISABLED
+}
+
+enum EventCycleStatus {
+  DRAFT
+  ACTIVE
+  CLOSED
+}
+
+enum OrganizationType {
+  BUILDER
+  BANK
+  PARTNER
+  OTHER
+}
+
+model User {
+  id           String     @id @default(cuid())
+  name         String
+  email        String     @unique
+  passwordHash String
+  role         UserRole
+  status       UserStatus
+  locale       String     @default("hy")
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
+  sessions     Session[]
+}
+
+model Session {
+  id        String   @id @default(cuid())
+  userId    String
+  tokenHash String   @unique
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+}
+
+model EventCycle {
+  id        String           @id @default(cuid())
+  name      String
+  code      String           @unique
+  status    EventCycleStatus @default(DRAFT)
+  startsAt  DateTime?
+  endsAt    DateTime?
+  createdAt DateTime         @default(now())
+  updatedAt DateTime         @updatedAt
+}
+
+model Organization {
+  id                String           @id @default(cuid())
+  name              String
+  type              OrganizationType
+  registrationId    String?
+  phone             String?
+  email             String?
+  website           String?
+  toonexpoCompanyId String?
+  createdAt         DateTime         @default(now())
+  updatedAt         DateTime         @updatedAt
+  contacts          Contact[]
+}
+
+model Contact {
+  id             String       @id @default(cuid())
+  organizationId String
+  name           String
+  phone          String?
+  email          String?
+  position       String?
+  isPrimary      Boolean      @default(false)
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+
+  @@index([organizationId])
+}

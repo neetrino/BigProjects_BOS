@@ -11,15 +11,20 @@
     "build": "pnpm -r --if-present build",
     "dev": "pnpm -r --parallel --if-present dev",
     "db:generate": "prisma generate",
+    "db:seed": "prisma db seed",
     "postinstall": "prisma generate"
   },
   "devDependencies": {
     "dotenv": "^16.6.1",
     "prettier": "^3.6.2",
     "prisma": "^7.0.0",
+    "tsx": "^4.20.5",
     "typescript": "^5.9.2"
   },
   "dependencies": {
-    "@prisma/client": "^7.0.0"
+    "@prisma/adapter-pg": "^7.0.0",
+    "@prisma/client": "^7.0.0",
+    "argon2": "^0.44.0",
+    "pg": "^8.16.3"
   }
 }
