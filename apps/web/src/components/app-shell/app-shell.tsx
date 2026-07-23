@@ -14,20 +14,23 @@ type AppShellProps = {
 
 export function AppShell({ currentLocale, children }: AppShellProps) {
   const pathname = usePathname();
-  const isBoardPage = pathname.startsWith('/builder-sales');
+  const isFullHeightPage =
+    pathname.startsWith('/builder-sales') ||
+    pathname.startsWith('/partners') ||
+    pathname.startsWith('/venue-map');
 
   return (
     <div
       className={clsx(
         'flex bg-[var(--color-bg)]',
-        isBoardPage ? 'h-screen overflow-hidden' : 'min-h-screen',
+        isFullHeightPage ? 'h-screen overflow-hidden' : 'min-h-screen',
       )}
     >
       <AppSidebar pathname={pathname} currentLocale={currentLocale} />
       <main
         className={clsx(
           'min-w-0 flex-1 px-6 py-5',
-          isBoardPage ? 'flex min-h-0 flex-col overflow-hidden' : 'overflow-auto',
+          isFullHeightPage ? 'flex min-h-0 flex-col overflow-hidden' : 'overflow-auto',
         )}
       >
         {children}

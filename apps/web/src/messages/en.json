@@ -241,6 +241,8 @@
       "current": "Current",
       "markLostTitle": "Mark as lost",
       "markLostDescription": "Move this deal to Lost?",
+      "markLostWithAreasDescription": "This deal has assigned areas. Choose whether to release them when marking lost.",
+      "releaseAreasLabel": "Release assigned areas",
       "actions": {
         "NEW": "Move to New",
         "CONTACTED": "Mark contacted",
@@ -252,6 +254,118 @@
     "areas": {
       "empty": "Areas are assigned from the Venue Map.",
       "summary": "{count} areas · {sqm} m² · {labels}"
+    }
+  },
+  "entityAreas": {
+    "title": "Areas",
+    "empty": "No areas assigned yet.",
+    "assign": "Assign area",
+    "assignTitle": "Assign free area",
+    "release": "Release",
+    "releaseTitle": "Release area",
+    "releaseDescription": "Release this area from the current assignment?",
+    "search": "Search",
+    "searchPlaceholder": "Search by name or code",
+    "noFreeAreas": "No free areas on this cycle’s plan.",
+    "pick": "Assign"
+  },
+  "venueMap": {
+    "title": "Venue Map",
+    "subtitle": "Create sellable areas and assign them to builders or partners.",
+    "emptyNoCycles": "Create an event cycle before opening the venue map.",
+    "selectCycle": "Select an event cycle to continue.",
+    "noPlanStaff": "No venue plan for this cycle yet. Ask an admin to create one.",
+    "noImageStaff": "The plan has no background image yet. Ask an admin to upload one.",
+    "uncalibratedHint": "Calibrate the plan (admin) before creating areas.",
+    "selectHint": "Drag over free cells to create a rectangular area. Hold Space to pan. Scroll to zoom.",
+    "toolbar": {
+      "cycle": "Event cycle",
+      "active": "active",
+      "select": "Select",
+      "pan": "Pan",
+      "calibrate": "Calibrate",
+      "fit": "Fit"
+    },
+    "createPlan": {
+      "title": "Create venue plan",
+      "description": "Start a sales map for this cycle.",
+      "name": "Title",
+      "titleRequired": "Title is required.",
+      "confirm": "Create plan"
+    },
+    "upload": {
+      "title": "Upload plan image",
+      "hint": "PNG, JPEG or WebP up to 25 MB.",
+      "choose": "Choose image",
+      "replace": "Replace image",
+      "uploading": "Uploading…",
+      "success": "Image uploaded.",
+      "failed": "Could not upload the image.",
+      "tooLarge": "File is larger than 25 MB.",
+      "invalidType": "Use PNG, JPEG or WebP."
+    },
+    "calibration": {
+      "hint": "Click two points on the plan ({count}/2), then enter the real distance.",
+      "distance": "Distance (m)",
+      "applyPoints": "Apply scale",
+      "clearPoints": "Clear points",
+      "ppm": "px / m",
+      "originX": "Origin X",
+      "originY": "Origin Y",
+      "saveManual": "Save calibration",
+      "saved": "Calibration saved.",
+      "needTwoPoints": "Click two points on the image first.",
+      "invalidDistance": "Enter a positive distance in meters.",
+      "invalidPpm": "Enter a positive pixels-per-meter value.",
+      "invalidOrigin": "Origin values must be numbers."
+    },
+    "createArea": {
+      "title": "Create area",
+      "description": "Selected cells: {sqm} m²",
+      "name": "Name",
+      "code": "Code (optional)",
+      "nameRequired": "Name is required.",
+      "confirm": "Create area"
+    },
+    "assign": {
+      "title": "Assign area",
+      "builders": "Builder deals",
+      "partners": "Partners",
+      "search": "Search",
+      "searchPlaceholder": "Search by organization",
+      "emptyBuilders": "No active builder deals in this cycle.",
+      "emptyPartners": "No partners in this cycle.",
+      "pick": "Assign"
+    },
+    "panel": {
+      "title": "Areas",
+      "detail": "Area",
+      "back": "List",
+      "selectHint": "Select an area on the map or from the list.",
+      "noAreas": "No areas yet. Drag to select free cells.",
+      "name": "Name",
+      "code": "Code",
+      "squareMeters": "{sqm} m²",
+      "displayMode": "Public display",
+      "customLabel": "Custom label",
+      "customLabelRequired": "Custom label is required for this display mode.",
+      "allocation": "Allocation",
+      "assign": "Assign",
+      "release": "Release",
+      "releaseTitle": "Release area",
+      "releaseDescription": "Release this area from its assignment?",
+      "delete": "Delete area",
+      "deleteTitle": "Delete area",
+      "deleteDescription": "Delete this free area?"
+    },
+    "displayMode": {
+      "ORGANIZATION": "Organization",
+      "CUSTOM_LABEL": "Custom label",
+      "HIDDEN": "Hidden"
+    },
+    "allocationKind": {
+      "BUILDER": "Builder",
+      "PARTNER": "Partner"
     }
   },
   "content": {

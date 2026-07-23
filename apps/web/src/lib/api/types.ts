@@ -159,6 +159,14 @@ export type DealAreasSummary = {
   labels: string[];
 };
 
+export type EntityAreaRef = {
+  allocationId: string;
+  areaId: string;
+  name: string;
+  code: string | null;
+  squareMeters: number;
+};
+
 export type DealListItem = {
   id: string;
   eventCycleId: string;
@@ -175,6 +183,7 @@ export type DealListItem = {
   agreedAmount: string | number | null;
   description: string | null;
   areasSummary: DealAreasSummary;
+  areas?: EntityAreaRef[];
   createdAt: string;
   updatedAt: string;
 };
@@ -203,6 +212,7 @@ export type UpdateDealInput = {
   expectedSqm?: number | null;
   agreedAmount?: string | null;
   description?: string | null;
+  releaseAreas?: boolean;
 };
 
 export type PartnerStage = 'NEW' | 'CONTACTED' | 'CONFIRMED' | 'DECLINED';
@@ -222,6 +232,7 @@ export type PartnerListItem = {
   partnerType: string | null;
   description: string | null;
   areasSummary: DealAreasSummary;
+  areas?: EntityAreaRef[];
   createdAt: string;
   updatedAt: string;
 };

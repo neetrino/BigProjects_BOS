@@ -18,6 +18,7 @@ import { showToast } from '@/components/ui/toast';
 import { EntityAttachmentsSection } from '@/features/content/entity-attachments-section';
 import { EntityNotesSection } from '@/features/content/entity-notes-section';
 import { PARTNER_OWNER } from '@/features/partners/constants';
+import { EntityAreasSection } from '@/features/venue-map/entity-areas-section';
 import {
   PartnerDetailsSection,
   type PartnerDetailsDraft,
@@ -224,6 +225,20 @@ function PartnerSheetInner({
     }
   }
 
+  async function reloadPartner() {
+    try {
+      const partner = await getPartner(partnerId);
+      const detail = await getOrganization(partner.organizationId);
+      setLoadState({ status: 'ready', partner, contacts: detail.contacts });
+      if (!isDirty) {
+        setDraft(toDraft(partner));
+      }
+      onUpdated(partner);
+    } catch (err) {
+      showToast(err instanceof ApiError ? err.message : tCommon('unexpectedError'), 'error');
+    }
+  }
+
   return (
     <Sheet
       open
@@ -262,20 +277,12 @@ function PartnerSheetInner({
             busy={stageBusy}
             onStageChange={handleStageChange}
           />
-          <section className="flex flex-col gap-2">
-            <h3 className="text-sm font-semibold text-[var(--color-fg)]">{t('sheet.areas')}</h3>
-            {loadState.partner.areasSummary.count === 0 ? (
-              <p className="text-sm text-[var(--color-muted)]">{t('areas.empty')}</p>
-            ) : (
-              <p className="text-sm text-[var(--color-muted)]">
-                {t('areas.summary', {
-                  count: loadState.partner.areasSummary.count,
-                  sqm: loadState.partner.areasSummary.totalSqm,
-                  labels: loadState.partner.areasSummary.labels.join(', '),
-                })}
-              </p>
-            )}
-          </section>
+          <EntityAreasSection
+            cycleId={loadState.partner.eventCycleId}
+            areas={loadState.partner.areas ?? []}
+            target={{ kind: 'PARTNER', partnerId }}
+            onChanged={() => void reloadPartner()}
+          />
           <EntityNotesSection ownerType={PARTNER_OWNER} ownerId={partnerId} />
           <EntityAttachmentsSection ownerType={PARTNER_OWNER} ownerId={partnerId} />
         </div>

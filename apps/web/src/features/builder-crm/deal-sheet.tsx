@@ -23,6 +23,7 @@ import { DealStageSection } from '@/features/builder-crm/deal-stage-section';
 import { EntityAttachmentsSection } from '@/features/content/entity-attachments-section';
 import { EntityNotesSection } from '@/features/content/entity-notes-section';
 import { BUILDER_DEAL_OWNER } from '@/features/builder-crm/constants';
+import { EntityAreasSection } from '@/features/venue-map/entity-areas-section';
 
 type StaffOption = {
   id: string;
@@ -195,7 +196,7 @@ function DealSheetInner({ dealId, staffOptions, onClose, onUpdated }: DealSheetI
     }
   }
 
-  async function handleStageChange(stage: DealStage) {
+  async function handleStageChange(stage: DealStage, options?: { releaseAreas?: boolean }) {
     if (loadState.status !== 'ready') {
       return;
     }
@@ -208,13 +209,32 @@ function DealSheetInner({ dealId, staffOptions, onClose, onUpdated }: DealSheetI
     setDeal({ ...previous, stage }, !keepDraft);
     setStageBusy(true);
     try {
-      const updated = await updateDeal(dealId, { stage });
+      const updated = await updateDeal(dealId, {
+        stage,
+        ...(stage === 'LOST' && options?.releaseAreas !== undefined
+          ? { releaseAreas: options.releaseAreas }
+          : {}),
+      });
       setDeal(updated, !keepDraft);
     } catch (err) {
       setDeal(previous, !keepDraft);
       showToast(err instanceof ApiError ? err.message : tCommon('unexpectedError'), 'error');
     } finally {
       setStageBusy(false);
+    }
+  }
+
+  async function reloadDeal() {
+    try {
+      const deal = await getDeal(dealId);
+      const detail = await getOrganization(deal.organizationId);
+      setLoadState({ status: 'ready', deal, contacts: detail.contacts });
+      if (!isDirty) {
+        setDraft(toDraft(deal));
+      }
+      onUpdated(deal);
+    } catch (err) {
+      showToast(err instanceof ApiError ? err.message : tCommon('unexpectedError'), 'error');
     }
   }
 
@@ -256,20 +276,12 @@ function DealSheetInner({ dealId, staffOptions, onClose, onUpdated }: DealSheetI
             busy={stageBusy}
             onStageChange={handleStageChange}
           />
-          <section className="flex flex-col gap-2">
-            <h3 className="text-sm font-semibold text-[var(--color-fg)]">{t('sheet.areas')}</h3>
-            {loadState.deal.areasSummary.count === 0 ? (
-              <p className="text-sm text-[var(--color-muted)]">{t('areas.empty')}</p>
-            ) : (
-              <p className="text-sm text-[var(--color-muted)]">
-                {t('areas.summary', {
-                  count: loadState.deal.areasSummary.count,
-                  sqm: loadState.deal.areasSummary.totalSqm,
-                  labels: loadState.deal.areasSummary.labels.join(', '),
-                })}
-              </p>
-            )}
-          </section>
+          <EntityAreasSection
+            cycleId={loadState.deal.eventCycleId}
+            areas={loadState.deal.areas ?? []}
+            target={{ kind: 'BUILDER', dealId: dealId }}
+            onChanged={() => void reloadDeal()}
+          />
           <EntityNotesSection ownerType={BUILDER_DEAL_OWNER} ownerId={dealId} />
           <EntityAttachmentsSection ownerType={BUILDER_DEAL_OWNER} ownerId={dealId} />
         </div>
