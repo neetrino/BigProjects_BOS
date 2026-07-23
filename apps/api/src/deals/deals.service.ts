@@ -80,8 +80,11 @@ export class DealsService {
   async create(dto: CreateDealDto): Promise<DealResponseDto> {
     await this.assertCycleAcceptsDeals(dto.eventCycleId);
     await this.assertOrganizationExists(dto.organizationId);
-    await this.assertPrimaryContactBelongsToOrganization(dto.primaryContactId, dto.organizationId);
-    await this.assertAssignedStaffActive(dto.assignedStaffId);
+    await this.assertPrimaryContactBelongsToOrganization(
+      dto.primaryContactId ?? undefined,
+      dto.organizationId,
+    );
+    await this.assertAssignedStaffActive(dto.assignedStaffId ?? undefined);
 
     const deal = await this.prisma.builderDeal.create({
       data: {
@@ -107,7 +110,8 @@ export class DealsService {
 
     const nextEventCycleId = dto.eventCycleId ?? existing.eventCycleId;
     const nextOrganizationId = dto.organizationId ?? existing.organizationId;
-    const nextPrimaryContactId = dto.primaryContactId ?? existing.primaryContactId;
+    const nextPrimaryContactId =
+      dto.primaryContactId !== undefined ? dto.primaryContactId : existing.primaryContactId;
 
     if (dto.eventCycleId !== undefined) {
       await this.assertCycleAcceptsDeals(nextEventCycleId);
@@ -125,7 +129,7 @@ export class DealsService {
     }
 
     if (dto.assignedStaffId !== undefined) {
-      await this.assertAssignedStaffActive(dto.assignedStaffId);
+      await this.assertAssignedStaffActive(dto.assignedStaffId ?? undefined);
     }
 
     if (dto.stage !== undefined) {
@@ -139,12 +143,14 @@ export class DealsService {
       ...(dto.organizationId !== undefined && {
         organization: { connect: { id: dto.organizationId } },
       }),
-      ...(dto.primaryContactId !== undefined && {
-        primaryContact: { connect: { id: dto.primaryContactId } },
-      }),
-      ...(dto.assignedStaffId !== undefined && {
-        assignedStaff: { connect: { id: dto.assignedStaffId } },
-      }),
+      ...(dto.primaryContactId !== undefined &&
+        (dto.primaryContactId === null
+          ? { primaryContact: { disconnect: true } }
+          : { primaryContact: { connect: { id: dto.primaryContactId } } })),
+      ...(dto.assignedStaffId !== undefined &&
+        (dto.assignedStaffId === null
+          ? { assignedStaff: { disconnect: true } }
+          : { assignedStaff: { connect: { id: dto.assignedStaffId } } })),
       ...(dto.stage !== undefined && { stage: dto.stage }),
       ...(dto.expectedSqm !== undefined && { expectedSqm: dto.expectedSqm }),
       ...(dto.agreedAmount !== undefined && { agreedAmount: dto.agreedAmount }),

@@ -1,7 +1,16 @@
 import { ApiPropertyOptional } from '@nestjs/swagger';
 import { DealStage } from '@prisma/client';
 import { Type } from 'class-transformer';
-import { IsEnum, IsInt, IsNumber, IsOptional, IsString, Min, MinLength } from 'class-validator';
+import {
+  IsEnum,
+  IsInt,
+  IsNumber,
+  IsOptional,
+  IsString,
+  Min,
+  MinLength,
+  ValidateIf,
+} from 'class-validator';
 
 const MIN_ID_LENGTH = 1;
 const MIN_SQM = 0;
@@ -20,39 +29,44 @@ export class UpdateDealDto {
   @MinLength(MIN_ID_LENGTH)
   organizationId?: string;
 
-  @ApiPropertyOptional()
+  @ApiPropertyOptional({ nullable: true })
   @IsOptional()
+  @ValidateIf((_, value) => value !== null)
   @IsString()
   @MinLength(MIN_ID_LENGTH)
-  primaryContactId?: string;
+  primaryContactId?: string | null;
 
-  @ApiPropertyOptional()
+  @ApiPropertyOptional({ nullable: true })
   @IsOptional()
+  @ValidateIf((_, value) => value !== null)
   @IsString()
   @MinLength(MIN_ID_LENGTH)
-  assignedStaffId?: string;
+  assignedStaffId?: string | null;
 
   @ApiPropertyOptional({ enum: DealStage })
   @IsOptional()
   @IsEnum(DealStage)
   stage?: DealStage;
 
-  @ApiPropertyOptional()
+  @ApiPropertyOptional({ nullable: true })
   @IsOptional()
+  @ValidateIf((_, value) => value !== null)
   @Type(() => Number)
   @IsInt()
   @Min(MIN_SQM)
-  expectedSqm?: number;
+  expectedSqm?: number | null;
 
-  @ApiPropertyOptional()
+  @ApiPropertyOptional({ nullable: true })
   @IsOptional()
+  @ValidateIf((_, value) => value !== null)
   @Type(() => Number)
   @IsNumber()
   @Min(MIN_AMOUNT)
-  agreedAmount?: number;
+  agreedAmount?: number | null;
 
-  @ApiPropertyOptional()
+  @ApiPropertyOptional({ nullable: true })
   @IsOptional()
+  @ValidateIf((_, value) => value !== null)
   @IsString()
-  description?: string;
+  description?: string | null;
 }

@@ -208,4 +208,121 @@ describe('DealsService', () => {
       ).rejects.toThrow(BadRequestException);
     });
   });
+
+  describe('update nullable fields', () => {
+    const dealWithRelations = {
+      ...baseDeal,
+      primaryContactId: contactId,
+      assignedStaffId: staffId,
+      expectedSqm: 100,
+      agreedAmount: 5000,
+      description: 'Existing notes',
+      primaryContact: {
+        id: contactId,
+        name: 'Jane',
+        phone: null,
+        email: null,
+        organizationId,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      },
+      assignedStaff: {
+        id: staffId,
+        name: 'Staff User',
+        email: 'staff@example.com',
+        status: UserStatus.ACTIVE,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      },
+    };
+
+    beforeEach(() => {
+      prisma.builderDeal.findUnique.mockResolvedValue(dealWithRelations);
+      prisma.builderDeal.update.mockImplementation(async ({ data }) => ({
+        ...dealWithRelations,
+        ...data,
+        primaryContactId:
+          data.primaryContact !== undefined
+            ? data.primaryContact.disconnect
+              ? null
+              : data.primaryContact.connect.id
+            : dealWithRelations.primaryContactId,
+        assignedStaffId:
+          data.assignedStaff !== undefined
+            ? data.assignedStaff.disconnect
+              ? null
+              : data.assignedStaff.connect.id
+            : dealWithRelations.assignedStaffId,
+        primaryContact: data.primaryContact?.disconnect ? null : dealWithRelations.primaryContact,
+        assignedStaff: data.assignedStaff?.disconnect ? null : dealWithRelations.assignedStaff,
+      }));
+    });
+
+    it('disconnects primary contact when primaryContactId is null', async () => {
+      await service.update(dealId, { primaryContactId: null });
+
+      expect(prisma.builderDeal.update).toHaveBeenCalledWith(
+        expect.objectContaining({
+          data: expect.objectContaining({
+            primaryContact: { disconnect: true },
+          }),
+        }),
+      );
+    });
+
+    it('disconnects assigned staff when assignedStaffId is null', async () => {
+      await service.update(dealId, { assignedStaffId: null });
+
+      expect(prisma.builderDeal.update).toHaveBeenCalledWith(
+        expect.objectContaining({
+          data: expect.objectContaining({
+            assignedStaff: { disconnect: true },
+          }),
+        }),
+      );
+    });
+
+    it('leaves absent relation and scalar fields unchanged', async () => {
+      await service.update(dealId, { stage: DealStage.CONTACTED });
+
+      const updateCall = prisma.builderDeal.update.mock.calls[0][0];
+      expect(updateCall.data).toEqual({ stage: DealStage.CONTACTED });
+    });
+
+    it('clears scalar fields when explicit null is sent', async () => {
+      await service.update(dealId, {
+        expectedSqm: null,
+        agreedAmount: null,
+        description: null,
+      });
+
+      expect(prisma.builderDeal.update).toHaveBeenCalledWith(
+        expect.objectContaining({
+          data: expect.objectContaining({
+            expectedSqm: null,
+            agreedAmount: null,
+            description: null,
+          }),
+        }),
+      );
+    });
+
+    it('rejects an invalid primary contact id', async () => {
+      prisma.contact.findUnique.mockResolvedValue(null);
+
+      await expect(
+        service.update(dealId, { primaryContactId: 'missing-contact' }),
+      ).rejects.toThrow(BadRequestException);
+      expect(prisma.builderDeal.update).not.toHaveBeenCalled();
+    });
+
+    it('rejects an invalid assigned staff id', async () => {
+      prisma.user.findUnique.mockResolvedValue(null);
+
+      await expect(service.update(dealId, { assignedStaffId: 'missing-staff' })).rejects.toThrow(
+        BadRequestException,
+      );
+      expect(prisma.builderDeal.update).not.toHaveBeenCalled();
+    });
+  });
 });
