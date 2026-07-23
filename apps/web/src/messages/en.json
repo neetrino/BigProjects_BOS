@@ -174,5 +174,104 @@
         "DISABLED": "Disabled"
       }
     }
+  },
+  "builderSales": {
+    "title": "Builder Sales",
+    "subtitle": "Manage exhibition space deals for the selected cycle.",
+    "create": "New deal",
+    "createTitle": "Create deal",
+    "detailTitle": "Deal",
+    "empty": "No deals in this cycle yet.",
+    "emptyNoCycles": "Create an event cycle before adding deals.",
+    "stages": {
+      "NEW": "New",
+      "CONTACTED": "Contacted",
+      "NEGOTIATION": "Negotiation",
+      "WON": "Won",
+      "LOST": "Lost"
+    },
+    "toolbar": {
+      "cycle": "Event cycle",
+      "noCycles": "No cycles",
+      "active": "active",
+      "view": "View",
+      "kanban": "Kanban",
+      "list": "List",
+      "searchPlaceholder": "Search by organization",
+      "staffFilter": "Assigned staff",
+      "allStaff": "All staff"
+    },
+    "card": {
+      "noContact": "No contact",
+      "expectedSqm": "{value} m² expected",
+      "amount": "{value}",
+      "assignedAreas": "{sqm} m² · {labels}"
+    },
+    "list": {
+      "organization": "Organization",
+      "contact": "Contact",
+      "stage": "Stage",
+      "expectedSqm": "Expected m²",
+      "amount": "Amount",
+      "staff": "Staff",
+      "updated": "Updated"
+    },
+    "sheet": {
+      "details": "Details",
+      "stage": "Stage",
+      "areas": "Areas",
+      "notes": "Notes",
+      "attachments": "Attachments"
+    },
+    "fields": {
+      "organization": "Organization",
+      "organizationSelect": "Select organization",
+      "contact": "Primary contact",
+      "staff": "Assigned staff",
+      "expectedSqm": "Expected m²",
+      "agreedAmount": "Agreed amount",
+      "description": "Description"
+    },
+    "createForm": {
+      "orgSearchPlaceholder": "Search organizations",
+      "pickOrganization": "Choose an organization",
+      "noContact": "No contact",
+      "unassigned": "Unassigned",
+      "organizationRequired": "Organization is required."
+    },
+    "stage": {
+      "current": "Current",
+      "markLostTitle": "Mark as lost",
+      "markLostDescription": "Move this deal to Lost?",
+      "actions": {
+        "NEW": "Move to New",
+        "CONTACTED": "Mark contacted",
+        "NEGOTIATION": "Start negotiation",
+        "WON": "Mark won",
+        "LOST": "Mark lost"
+      }
+    },
+    "areas": {
+      "empty": "Areas are assigned from the Venue Map.",
+      "summary": "{count} areas · {sqm} m² · {labels}"
+    },
+    "notes": {
+      "placeholder": "Add a note…",
+      "add": "Add note",
+      "empty": "No notes yet.",
+      "deleteTitle": "Delete note",
+      "deleteDescription": "Delete this note?"
+    },
+    "attachments": {
+      "upload": "Upload file",
+      "uploading": "Uploading…",
+      "download": "Download",
+      "empty": "No attachments yet.",
+      "tooLarge": "File is larger than 25 MB.",
+      "uploadSuccess": "File uploaded.",
+      "uploadFailed": "Could not upload the file.",
+      "deleteTitle": "Delete attachment",
+      "deleteDescription": "Delete “{name}”?"
+    }
   }
 }

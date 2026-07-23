@@ -174,5 +174,104 @@
         "DISABLED": "Անջատված"
       }
     }
+  },
+  "builderSales": {
+    "title": "Կառուցապատողների վաճառք",
+    "subtitle": "Ցուցահանդեսային տարածքի գործարքներ ընտրված ցիկլի համար։",
+    "create": "Նոր գործարք",
+    "createTitle": "Ստեղծել գործարք",
+    "detailTitle": "Գործարք",
+    "empty": "Այս ցիկլում դեռ գործարքներ չկան։",
+    "emptyNoCycles": "Նախ ստեղծեք միջոցառման ցիկլ։",
+    "stages": {
+      "NEW": "Նոր",
+      "CONTACTED": "Կապ",
+      "NEGOTIATION": "Բանակցություն",
+      "WON": "Հաղթած",
+      "LOST": "Կորած"
+    },
+    "toolbar": {
+      "cycle": "Միջոցառման ցիկլ",
+      "noCycles": "Ցիկլեր չկան",
+      "active": "ակտիվ",
+      "view": "Տեսք",
+      "kanban": "Կանբան",
+      "list": "Ցանկ",
+      "searchPlaceholder": "Որոնել կազմակերպությամբ",
+      "staffFilter": "Պատասխանատու",
+      "allStaff": "Բոլոր աշխատակիցները"
+    },
+    "card": {
+      "noContact": "Կոնտակտ չկա",
+      "expectedSqm": "{value} մ² սպասվող",
+      "amount": "{value}",
+      "assignedAreas": "{sqm} մ² · {labels}"
+    },
+    "list": {
+      "organization": "Կազմակերպություն",
+      "contact": "Կոնտակտ",
+      "stage": "Փուլ",
+      "expectedSqm": "Սպասվող մ²",
+      "amount": "Գումար",
+      "staff": "Աշխատակից",
+      "updated": "Թարմացված"
+    },
+    "sheet": {
+      "details": "Մանրամասներ",
+      "stage": "Փուլ",
+      "areas": "Տարածքներ",
+      "notes": "Նշումներ",
+      "attachments": "Կցորդներ"
+    },
+    "fields": {
+      "organization": "Կազմակերպություն",
+      "organizationSelect": "Ընտրել կազմակերպություն",
+      "contact": "Հիմնական կոնտակտ",
+      "staff": "Պատասխանատու",
+      "expectedSqm": "Սպասվող մ²",
+      "agreedAmount": "Համաձայնեցված գումար",
+      "description": "Նկարագրություն"
+    },
+    "createForm": {
+      "orgSearchPlaceholder": "Որոնել կազմակերպություններ",
+      "pickOrganization": "Ընտրեք կազմակերպություն",
+      "noContact": "Առանց կոնտակտի",
+      "unassigned": "Չնշանակված",
+      "organizationRequired": "Կազմակերպությունը պարտադիր է։"
+    },
+    "stage": {
+      "current": "Ընթացիկ",
+      "markLostTitle": "Նշել որպես կորած",
+      "markLostDescription": "Տեղափոխե՞լ գործարքը «Կորած»։",
+      "actions": {
+        "NEW": "Տեղափոխել Նոր",
+        "CONTACTED": "Նշել կապ",
+        "NEGOTIATION": "Սկսել բանակցություն",
+        "WON": "Նշել հաղթած",
+        "LOST": "Նշել կորած"
+      }
+    },
+    "areas": {
+      "empty": "Տարածքները նշանակվում են տարածքի քարտեզից։",
+      "summary": "{count} տարածք · {sqm} մ² · {labels}"
+    },
+    "notes": {
+      "placeholder": "Ավելացնել նշում…",
+      "add": "Ավելացնել",
+      "empty": "Նշումներ դեռ չկան։",
+      "deleteTitle": "Ջնջել նշումը",
+      "deleteDescription": "Ջնջե՞լ այս նշումը։"
+    },
+    "attachments": {
+      "upload": "Վերբեռնել ֆայլ",
+      "uploading": "Վերբեռնվում է…",
+      "download": "Ներբեռնել",
+      "empty": "Կցորդներ դեռ չկան։",
+      "tooLarge": "Ֆայլը մեծ է 25 ՄԲ-ից։",
+      "uploadSuccess": "Ֆայլը վերբեռնվեց։",
+      "uploadFailed": "Չհաջողվեց վերբեռնել ֆայլը։",
+      "deleteTitle": "Ջնջել կցորդը",
+      "deleteDescription": "Ջնջե՞լ «{name}»-ը։"
+    }
   }
 }

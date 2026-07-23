@@ -174,5 +174,104 @@
         "DISABLED": "Отключён"
       }
     }
+  },
+  "builderSales": {
+    "title": "Продажи застройщикам",
+    "subtitle": "Сделки на выставочные площади для выбранного цикла.",
+    "create": "Новая сделка",
+    "createTitle": "Создать сделку",
+    "detailTitle": "Сделка",
+    "empty": "В этом цикле пока нет сделок.",
+    "emptyNoCycles": "Сначала создайте цикл события.",
+    "stages": {
+      "NEW": "Новая",
+      "CONTACTED": "Контакт",
+      "NEGOTIATION": "Переговоры",
+      "WON": "Выиграна",
+      "LOST": "Проиграна"
+    },
+    "toolbar": {
+      "cycle": "Цикл события",
+      "noCycles": "Нет циклов",
+      "active": "активный",
+      "view": "Вид",
+      "kanban": "Канбан",
+      "list": "Список",
+      "searchPlaceholder": "Поиск по организации",
+      "staffFilter": "Ответственный",
+      "allStaff": "Все сотрудники"
+    },
+    "card": {
+      "noContact": "Нет контакта",
+      "expectedSqm": "{value} м² ожидаемо",
+      "amount": "{value}",
+      "assignedAreas": "{sqm} м² · {labels}"
+    },
+    "list": {
+      "organization": "Организация",
+      "contact": "Контакт",
+      "stage": "Этап",
+      "expectedSqm": "Ожид. м²",
+      "amount": "Сумма",
+      "staff": "Сотрудник",
+      "updated": "Обновлено"
+    },
+    "sheet": {
+      "details": "Детали",
+      "stage": "Этап",
+      "areas": "Площади",
+      "notes": "Заметки",
+      "attachments": "Вложения"
+    },
+    "fields": {
+      "organization": "Организация",
+      "organizationSelect": "Выберите организацию",
+      "contact": "Основной контакт",
+      "staff": "Ответственный",
+      "expectedSqm": "Ожидаемые м²",
+      "agreedAmount": "Согласованная сумма",
+      "description": "Описание"
+    },
+    "createForm": {
+      "orgSearchPlaceholder": "Поиск организаций",
+      "pickOrganization": "Выберите организацию",
+      "noContact": "Без контакта",
+      "unassigned": "Не назначен",
+      "organizationRequired": "Организация обязательна."
+    },
+    "stage": {
+      "current": "Текущий",
+      "markLostTitle": "Отметить как проигранную",
+      "markLostDescription": "Перевести сделку в «Проиграна»?",
+      "actions": {
+        "NEW": "В «Новая»",
+        "CONTACTED": "Отметить контакт",
+        "NEGOTIATION": "Начать переговоры",
+        "WON": "Отметить выигранной",
+        "LOST": "Отметить проигранной"
+      }
+    },
+    "areas": {
+      "empty": "Площади назначаются на карте площадки.",
+      "summary": "{count} зон · {sqm} м² · {labels}"
+    },
+    "notes": {
+      "placeholder": "Добавить заметку…",
+      "add": "Добавить",
+      "empty": "Заметок пока нет.",
+      "deleteTitle": "Удалить заметку",
+      "deleteDescription": "Удалить эту заметку?"
+    },
+    "attachments": {
+      "upload": "Загрузить файл",
+      "uploading": "Загрузка…",
+      "download": "Скачать",
+      "empty": "Вложений пока нет.",
+      "tooLarge": "Файл больше 25 МБ.",
+      "uploadSuccess": "Файл загружен.",
+      "uploadFailed": "Не удалось загрузить файл.",
+      "deleteTitle": "Удалить вложение",
+      "deleteDescription": "Удалить «{name}»?"
+    }
   }
 }

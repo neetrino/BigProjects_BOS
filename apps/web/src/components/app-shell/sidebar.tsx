@@ -20,7 +20,7 @@ type NavItem = {
 };
 
 const NAV_ITEMS: NavItem[] = [
-  { key: 'builderSales', soon: true },
+  { key: 'builderSales', href: '/builder-sales' },
   { key: 'partners', soon: true },
   { key: 'venueMap', soon: true },
   { key: 'cycles', href: '/cycles' },

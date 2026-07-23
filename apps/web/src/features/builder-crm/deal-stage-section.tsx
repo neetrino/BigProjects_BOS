@@ -1,0 +1,66 @@
+'use client';
+
+import { useState } from 'react';
+import { useTranslations } from 'next-intl';
+import type { DealListItem, DealStage } from '@/lib/api/types';
+import { Button } from '@/components/ui/button';
+import { Dialog } from '@/components/ui/dialog';
+import { StatusBadge } from '@/components/ui/status-badge';
+import { allowedNextStages, stageTone } from '@/features/builder-crm/constants';
+
+type DealStageSectionProps = {
+  deal: DealListItem;
+  busy: boolean;
+  onStageChange: (stage: DealStage) => Promise<void>;
+};
+
+export function DealStageSection({ deal, busy, onStageChange }: DealStageSectionProps) {
+  const t = useTranslations('builderSales');
+  const tCommon = useTranslations('common');
+  const [confirmLost, setConfirmLost] = useState(false);
+  const nextStages = allowedNextStages(deal.stage);
+
+  async function applyStage(stage: DealStage) {
+    if (stage === 'LOST') {
+      setConfirmLost(true);
+      return;
+    }
+    await onStageChange(stage);
+  }
+
+  return (
+    <section className="flex flex-col gap-3">
+      <h3 className="text-sm font-semibold text-[var(--color-fg)]">{t('sheet.stage')}</h3>
+      <div className="flex items-center gap-2">
+        <span className="text-xs text-[var(--color-muted)]">{t('stage.current')}</span>
+        <StatusBadge label={t(`stages.${deal.stage}`)} tone={stageTone(deal.stage)} />
+      </div>
+      <div className="flex flex-wrap gap-2">
+        {nextStages.map((stage) => (
+          <Button
+            key={stage}
+            variant={stage === 'LOST' ? 'danger' : 'secondary'}
+            disabled={busy}
+            onClick={() => void applyStage(stage)}
+          >
+            {t(`stage.actions.${stage}`)}
+          </Button>
+        ))}
+      </div>
+
+      <Dialog
+        open={confirmLost}
+        title={t('stage.markLostTitle')}
+        description={t('stage.markLostDescription')}
+        confirmLabel={t('stage.actions.LOST')}
+        cancelLabel={tCommon('cancel')}
+        confirmVariant="danger"
+        busy={busy}
+        onConfirm={() => {
+          void onStageChange('LOST').finally(() => setConfirmLost(false));
+        }}
+        onCancel={() => setConfirmLost(false)}
+      />
+    </section>
+  );
+}

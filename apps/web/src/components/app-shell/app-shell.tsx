@@ -1,9 +1,11 @@
 'use client';
 
+import { clsx } from 'clsx';
 import { usePathname } from 'next/navigation';
 import type { ReactNode } from 'react';
 import type { Locale } from '@/i18n/config';
 import { AppSidebar } from '@/components/app-shell/sidebar';
+import { ToastHost } from '@/components/ui/toast';
 
 type AppShellProps = {
   currentLocale: Locale;
@@ -12,11 +14,25 @@ type AppShellProps = {
 
 export function AppShell({ currentLocale, children }: AppShellProps) {
   const pathname = usePathname();
+  const isBoardPage = pathname.startsWith('/builder-sales');
 
   return (
-    <div className="flex min-h-screen bg-[var(--color-bg)]">
+    <div
+      className={clsx(
+        'flex bg-[var(--color-bg)]',
+        isBoardPage ? 'h-screen overflow-hidden' : 'min-h-screen',
+      )}
+    >
       <AppSidebar pathname={pathname} currentLocale={currentLocale} />
-      <main className="min-w-0 flex-1 overflow-auto px-6 py-5">{children}</main>
+      <main
+        className={clsx(
+          'min-w-0 flex-1 px-6 py-5',
+          isBoardPage ? 'flex min-h-0 flex-col overflow-hidden' : 'overflow-auto',
+        )}
+      >
+        {children}
+      </main>
+      <ToastHost />
     </div>
   );
 }

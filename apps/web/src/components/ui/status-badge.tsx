@@ -1,6 +1,15 @@
 import { clsx } from 'clsx';
 
-type StatusTone = 'draft' | 'active' | 'closed' | 'disabled' | 'neutral';
+type StatusTone =
+  | 'draft'
+  | 'active'
+  | 'closed'
+  | 'disabled'
+  | 'neutral'
+  | 'contacted'
+  | 'negotiation'
+  | 'won'
+  | 'lost';
 
 type StatusBadgeProps = {
   label: string;
@@ -13,7 +22,13 @@ const TONE_CLASS: Record<StatusTone, string> = {
   closed: 'bg-slate-100 text-slate-600',
   disabled: 'bg-red-50 text-red-700',
   neutral: 'bg-[var(--color-bg)] text-[var(--color-muted)]',
+  contacted: 'bg-sky-50 text-sky-800',
+  negotiation: 'bg-amber-50 text-amber-900',
+  won: 'bg-emerald-100 text-emerald-900',
+  lost: 'bg-rose-50 text-rose-800',
 };
+
+export type { StatusTone };
 
 export function StatusBadge({ label, tone }: StatusBadgeProps) {
   return (
