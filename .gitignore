@@ -15,6 +15,11 @@ node_modules/
 dist/
 build/
 coverage/
+*.tsbuildinfo
+
+# Prisma (generated client lives under node_modules with prisma-client-js;
+# keep this in case a custom output path is introduced later)
+prisma/generated/
 
 # Logs and temp
 *.log

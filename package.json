@@ -1,0 +1,25 @@
+{
+  "name": "bigprojects-bos",
+  "private": true,
+  "packageManager": "pnpm@11.14.0",
+  "scripts": {
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "lint": "pnpm -r --if-present lint",
+    "typecheck": "pnpm -r --if-present typecheck",
+    "test": "pnpm -r --if-present test",
+    "build": "pnpm -r --if-present build",
+    "dev": "pnpm -r --parallel --if-present dev",
+    "db:generate": "prisma generate",
+    "postinstall": "prisma generate"
+  },
+  "devDependencies": {
+    "dotenv": "^16.6.1",
+    "prettier": "^3.6.2",
+    "prisma": "^7.0.0",
+    "typescript": "^5.9.2"
+  },
+  "dependencies": {
+    "@prisma/client": "^7.0.0"
+  }
+}

@@ -1,0 +1,17 @@
+services:
+  postgres:
+    image: postgres:18
+    container_name: bos-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: bos
+    ports:
+      - '5432:5432'
+    volumes:
+      # Postgres 18 images expect the mount at /var/lib/postgresql (not .../data).
+      - bos_postgres_data:/var/lib/postgresql
+
+volumes:
+  bos_postgres_data:
