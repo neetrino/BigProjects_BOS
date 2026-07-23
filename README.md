@@ -26,6 +26,7 @@ Read [Documentation Hub](./docs/README.md) first.
 
 Canonical documents:
 
+- [Development Handoff](./docs/00-DEVELOPMENT-HANDOFF.md)
 - [Release 1 Scope](./docs/00-SCOPE.md)
 - [Architecture](./docs/01-ARCHITECTURE.md)
 - [Tech Card](./docs/TECH_CARD.md)

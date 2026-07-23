@@ -1,6 +1,6 @@
 # Agent Instructions - BigProjects BOS Simple V1
 
-Read `docs/README.md`, `docs/00-SCOPE.md`, `docs/01-ARCHITECTURE.md` and `docs/TECH_CARD.md` before implementation.
+Read `docs/00-DEVELOPMENT-HANDOFF.md` first. Then follow the canonical reading order in `docs/README.md` before implementation.
 
 ## Product Scale
 

@@ -4,16 +4,17 @@ This folder is the complete active documentation for the simple BOS Release 1.
 
 ## Read In This Order
 
-1. [Release 1 Scope](./00-SCOPE.md)
-2. [Architecture](./01-ARCHITECTURE.md)
-3. [Tech Card](./TECH_CARD.md)
-4. [Data Model](./02-DATA-MODEL.md)
-5. [Roles](./03-ROLES.md)
-6. [Screens And UX](./04-SCREENS-AND-UX.md)
-7. [ToonExpo Integration](./05-TOONEXPO-INTEGRATION.md)
-8. [Implementation Roadmap](./06-IMPLEMENTATION-ROADMAP.md)
-9. [Acceptance Criteria](./07-ACCEPTANCE.md)
-10. [Progress](./PROGRESS.md)
+1. [Development Handoff](./00-DEVELOPMENT-HANDOFF.md)
+2. [Release 1 Scope](./00-SCOPE.md)
+3. [Architecture](./01-ARCHITECTURE.md)
+4. [Tech Card](./TECH_CARD.md)
+5. [Data Model](./02-DATA-MODEL.md)
+6. [Roles](./03-ROLES.md)
+7. [Screens And UX](./04-SCREENS-AND-UX.md)
+8. [ToonExpo Integration](./05-TOONEXPO-INTEGRATION.md)
+9. [Implementation Roadmap](./06-IMPLEMENTATION-ROADMAP.md)
+10. [Acceptance Criteria](./07-ACCEPTANCE.md)
+11. [Progress](./PROGRESS.md)
 
 ## Module Specifications
 
