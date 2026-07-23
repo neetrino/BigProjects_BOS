@@ -1,11 +1,15 @@
 import { resolve } from 'node:path';
 import { config as loadEnv } from 'dotenv';
 import { NestFactory } from '@nestjs/core';
-import { ValidationPipe } from '@nestjs/common';
+import { INestApplication, ValidationPipe } from '@nestjs/common';
+import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import cookieParser from 'cookie-parser';
 import { AppModule } from './app.module';
+import { SESSION_COOKIE_NAME } from './common/constants/auth.constants';
 
 const DEFAULT_API_PORT = 4000;
 const DEFAULT_WEB_URL = 'http://localhost:3000';
+const SWAGGER_DOCS_PATH = 'api/docs';
 
 loadEnv({ path: resolve(__dirname, '../../../.env') });
 
@@ -17,6 +21,7 @@ async function bootstrap(): Promise<void> {
     origin: process.env.WEB_URL ?? DEFAULT_WEB_URL,
     credentials: true,
   });
+  app.use(cookieParser());
   app.useGlobalPipes(
     new ValidationPipe({
       whitelist: true,
@@ -25,8 +30,22 @@ async function bootstrap(): Promise<void> {
     }),
   );
 
+  setupSwagger(app);
+
   const port = Number(process.env.API_PORT ?? DEFAULT_API_PORT);
   await app.listen(port);
+}
+
+/** Runtime-only OpenAPI docs (no generated client). Cookie auth scheme matches the session cookie. */
+function setupSwagger(app: INestApplication): void {
+  const config = new DocumentBuilder()
+    .setTitle('BigProjects BOS API')
+    .setDescription('Internal backend API for BigProjects BOS')
+    .setVersion('1.0')
+    .addCookieAuth(SESSION_COOKIE_NAME, { type: 'apiKey', in: 'cookie', name: SESSION_COOKIE_NAME })
+    .build();
+  const document = SwaggerModule.createDocument(app, config);
+  SwaggerModule.setup(SWAGGER_DOCS_PATH, app, document);
 }
 
 void bootstrap();
