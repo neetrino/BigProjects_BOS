@@ -50,6 +50,17 @@ enum ContentOwnerType {
   PARTNER_PARTICIPATION
 }
 
+enum PublicDisplayMode {
+  ORGANIZATION
+  CUSTOM_LABEL
+  HIDDEN
+}
+
+enum PlanPublishStatus {
+  UNPUBLISHED
+  PUBLISHED
+}
+
 model User {
   id           String     @id @default(cuid())
   name         String
@@ -90,6 +101,7 @@ model EventCycle {
   updatedAt              DateTime               @updatedAt
   builderDeals           BuilderDeal[]
   partnerParticipations  PartnerParticipation[]
+  venuePlan              VenuePlan?
 }
 
 model Organization {
@@ -141,7 +153,8 @@ model BuilderDeal {
   eventCycle     EventCycle   @relation(fields: [eventCycleId], references: [id], onDelete: Restrict)
   organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Restrict)
   primaryContact Contact?     @relation(fields: [primaryContactId], references: [id], onDelete: SetNull)
-  assignedStaff  User?        @relation("AssignedStaff", fields: [assignedStaffId], references: [id], onDelete: SetNull)
+  assignedStaff    User?             @relation("AssignedStaff", fields: [assignedStaffId], references: [id], onDelete: SetNull)
+  spaceAllocations SpaceAllocation[]
 
   @@index([eventCycleId])
   @@index([organizationId])
@@ -163,11 +176,83 @@ model PartnerParticipation {
   eventCycle     EventCycle   @relation(fields: [eventCycleId], references: [id], onDelete: Restrict)
   organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Restrict)
   primaryContact Contact?     @relation(fields: [primaryContactId], references: [id], onDelete: SetNull)
-  assignedStaff  User?        @relation("AssignedPartnerStaff", fields: [assignedStaffId], references: [id], onDelete: SetNull)
+  assignedStaff    User?             @relation("AssignedPartnerStaff", fields: [assignedStaffId], references: [id], onDelete: SetNull)
+  spaceAllocations SpaceAllocation[]
 
   @@index([eventCycleId])
   @@index([organizationId])
   @@index([assignedStaffId])
+}
+
+model VenuePlan {
+  id             String            @id @default(cuid())
+  eventCycleId   String            @unique
+  title          String
+  imageKey       String?
+  imageWidth     Int?
+  imageHeight    Int?
+  pixelsPerMeter Float?
+  gridOriginX    Float             @default(0)
+  gridOriginY    Float             @default(0)
+  publishStatus  PlanPublishStatus @default(UNPUBLISHED)
+  createdAt      DateTime          @default(now())
+  updatedAt      DateTime          @updatedAt
+
+  eventCycle     EventCycle      @relation(fields: [eventCycleId], references: [id], onDelete: Restrict)
+  spaceAreas     SpaceArea[]
+  spaceAreaCells SpaceAreaCell[]
+}
+
+model SpaceArea {
+  id                String            @id @default(cuid())
+  venuePlanId       String
+  code              String?
+  name              String
+  squareMeters      Int
+  publicDisplayMode PublicDisplayMode @default(ORGANIZATION)
+  customPublicLabel String?
+  createdAt         DateTime          @default(now())
+  updatedAt         DateTime          @updatedAt
+
+  venuePlan   VenuePlan         @relation(fields: [venuePlanId], references: [id], onDelete: Cascade)
+  cells       SpaceAreaCell[]
+  allocations SpaceAllocation[]
+
+  @@index([venuePlanId])
+}
+
+model SpaceAreaCell {
+  id          String @id @default(cuid())
+  spaceAreaId String
+  venuePlanId String
+  x           Int
+  y           Int
+
+  spaceArea SpaceArea @relation(fields: [spaceAreaId], references: [id], onDelete: Cascade)
+  venuePlan VenuePlan @relation(fields: [venuePlanId], references: [id], onDelete: Cascade)
+
+  @@unique([venuePlanId, x, y])
+  @@index([spaceAreaId])
+}
+
+model SpaceAllocation {
+  id                     String    @id @default(cuid())
+  spaceAreaId            String
+  builderDealId          String?
+  partnerParticipationId String?
+  active                 Boolean   @default(true)
+  assignedAt             DateTime  @default(now())
+  releasedAt             DateTime?
+  createdAt              DateTime  @default(now())
+  updatedAt              DateTime  @updatedAt
+
+  spaceArea            SpaceArea             @relation(fields: [spaceAreaId], references: [id], onDelete: Restrict)
+  builderDeal          BuilderDeal?          @relation(fields: [builderDealId], references: [id], onDelete: Restrict)
+  partnerParticipation PartnerParticipation? @relation(fields: [partnerParticipationId], references: [id], onDelete: Restrict)
+
+  @@index([spaceAreaId])
+  @@index([builderDealId])
+  @@index([partnerParticipationId])
 }
 
 model Note {
