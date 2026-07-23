@@ -29,6 +29,20 @@ enum OrganizationType {
   OTHER
 }
 
+enum DealStage {
+  NEW
+  CONTACTED
+  NEGOTIATION
+  WON
+  LOST
+}
+
+enum ContentOwnerType {
+  ORGANIZATION
+  BUILDER_DEAL
+  PARTNER_PARTICIPATION
+}
+
 model User {
   id           String     @id @default(cuid())
   name         String
@@ -37,9 +51,12 @@ model User {
   role         UserRole
   status       UserStatus
   locale       String     @default("hy")
-  createdAt    DateTime   @default(now())
-  updatedAt    DateTime   @updatedAt
-  sessions     Session[]
+  createdAt             DateTime       @default(now())
+  updatedAt             DateTime       @updatedAt
+  sessions              Session[]
+  assignedBuilderDeals  BuilderDeal[]  @relation("AssignedStaff")
+  authoredNotes         Note[]
+  uploadedAttachments   Attachment[]
 }
 
 model Session {
@@ -61,8 +78,9 @@ model EventCycle {
   status    EventCycleStatus @default(DRAFT)
   startsAt  DateTime?
   endsAt    DateTime?
-  createdAt DateTime         @default(now())
-  updatedAt DateTime         @updatedAt
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+  builderDeals BuilderDeal[]
 }
 
 model Organization {
@@ -77,6 +95,7 @@ model Organization {
   createdAt         DateTime         @default(now())
   updatedAt         DateTime         @updatedAt
   contacts          Contact[]
+  builderDeals      BuilderDeal[]
 }
 
 model Contact {
@@ -89,7 +108,60 @@ model Contact {
   isPrimary      Boolean      @default(false)
   createdAt      DateTime     @default(now())
   updatedAt      DateTime     @updatedAt
-  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  organization   Organization  @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  builderDeals   BuilderDeal[]
 
   @@index([organizationId])
+}
+
+model BuilderDeal {
+  id               String     @id @default(cuid())
+  eventCycleId     String
+  organizationId   String
+  primaryContactId String?
+  assignedStaffId  String?
+  stage            DealStage  @default(NEW)
+  expectedSqm      Int?
+  agreedAmount     Decimal?   @db.Decimal(12, 2)
+  description      String?
+  createdAt        DateTime   @default(now())
+  updatedAt        DateTime   @updatedAt
+
+  eventCycle     EventCycle   @relation(fields: [eventCycleId], references: [id], onDelete: Restrict)
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Restrict)
+  primaryContact Contact?     @relation(fields: [primaryContactId], references: [id], onDelete: SetNull)
+  assignedStaff  User?        @relation("AssignedStaff", fields: [assignedStaffId], references: [id], onDelete: SetNull)
+
+  @@index([eventCycleId])
+  @@index([organizationId])
+  @@index([assignedStaffId])
+}
+
+model Note {
+  id        String           @id @default(cuid())
+  ownerType ContentOwnerType
+  ownerId   String
+  body      String           @db.Text
+  authorId  String
+  createdAt DateTime         @default(now())
+
+  author User @relation(fields: [authorId], references: [id], onDelete: Restrict)
+
+  @@index([ownerType, ownerId])
+}
+
+model Attachment {
+  id               String           @id @default(cuid())
+  ownerType        ContentOwnerType
+  ownerId          String
+  originalFilename String
+  objectKey        String           @unique
+  contentType      String
+  size             Int
+  uploaderId       String
+  createdAt        DateTime         @default(now())
+
+  uploader User @relation(fields: [uploaderId], references: [id], onDelete: Restrict)
+
+  @@index([ownerType, ownerId])
 }
