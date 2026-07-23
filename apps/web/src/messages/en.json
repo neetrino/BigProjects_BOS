@@ -1,17 +1,178 @@
 {
-  "home": {
-    "eyebrow": "Internal tool",
-    "title": "BigProjects BOS",
-    "description": "Phase 0 foundation check: the Next.js frontend calls the NestJS health endpoint.",
-    "health": {
-      "sectionLabel": "API health",
-      "status": "Status",
-      "database": "Database",
-      "timestamp": "Timestamp",
-      "unreachable": "API unreachable. Start `apps/api` and ensure `NEXT_PUBLIC_API_URL` points to it."
-    }
+  "common": {
+    "loading": "Loading…",
+    "save": "Save",
+    "saving": "Saving…",
+    "cancel": "Cancel",
+    "confirm": "Confirm",
+    "edit": "Edit",
+    "delete": "Delete",
+    "logout": "Log out",
+    "unexpectedError": "Something went wrong. Please try again."
   },
   "languageSwitcher": {
     "label": "Language"
+  },
+  "health": {
+    "checking": "API…",
+    "ok": "API ok",
+    "dbDown": "API: database down",
+    "unreachable": "API unreachable"
+  },
+  "nav": {
+    "label": "Main navigation",
+    "product": "Internal",
+    "brand": "BigProjects BOS",
+    "builderSales": "Builder Sales",
+    "partners": "Partners",
+    "venueMap": "Venue Map",
+    "cycles": "Event Cycles",
+    "organizations": "Organizations",
+    "settings": "Settings",
+    "soon": "soon"
+  },
+  "login": {
+    "eyebrow": "BigProjects BOS",
+    "title": "Sign in",
+    "description": "Use your staff account to continue.",
+    "email": "Email",
+    "password": "Password",
+    "submit": "Sign in",
+    "submitting": "Signing in…",
+    "invalidCredentials": "Invalid email or password.",
+    "tooManyAttempts": "Too many attempts. Please wait and try again.",
+    "genericError": "Could not sign in. Please try again."
+  },
+  "cycles": {
+    "title": "Event Cycles",
+    "subtitle": "Manage ToonExpo cycles and their status.",
+    "create": "New cycle",
+    "createTitle": "Create cycle",
+    "editTitle": "Edit cycle",
+    "empty": "No event cycles yet.",
+    "columns": {
+      "name": "Name",
+      "code": "Code",
+      "status": "Status",
+      "dates": "Dates",
+      "actions": "Actions"
+    },
+    "fields": {
+      "name": "Name",
+      "code": "Code",
+      "startsAt": "Starts",
+      "endsAt": "Ends"
+    },
+    "status": {
+      "DRAFT": "Draft",
+      "ACTIVE": "Active",
+      "CLOSED": "Closed"
+    },
+    "actions": {
+      "activate": "Activate",
+      "close": "Close"
+    },
+    "confirm": {
+      "activateTitle": "Activate cycle",
+      "activateDescription": "Activate “{name}”? Other active cycles may be closed by the API rules.",
+      "closeTitle": "Close cycle",
+      "closeDescription": "Close “{name}”? This cannot be undone from the UI."
+    }
+  },
+  "organizations": {
+    "title": "Organizations",
+    "subtitle": "Companies and contacts used across cycles.",
+    "create": "New organization",
+    "createTitle": "Create organization",
+    "detailTitle": "Organization",
+    "detailsSection": "Details",
+    "searchPlaceholder": "Search by name",
+    "typeFilter": "Type",
+    "allTypes": "All types",
+    "empty": "No organizations found.",
+    "notFound": "Organization not found.",
+    "columns": {
+      "name": "Name",
+      "type": "Type",
+      "contacts": "Contacts",
+      "phone": "Phone",
+      "email": "Email"
+    },
+    "fields": {
+      "name": "Name",
+      "type": "Type",
+      "phone": "Phone",
+      "email": "Email",
+      "website": "Website",
+      "registrationId": "Registration ID"
+    },
+    "types": {
+      "BUILDER": "Builder",
+      "BANK": "Bank",
+      "PARTNER": "Partner",
+      "OTHER": "Other"
+    },
+    "contacts": {
+      "title": "Contacts",
+      "add": "Add contact",
+      "saveNew": "Add",
+      "empty": "No contacts yet.",
+      "primary": "Primary",
+      "makePrimary": "Primary",
+      "deleteTitle": "Delete contact",
+      "deleteDescription": "Delete “{name}”?",
+      "fields": {
+        "name": "Name",
+        "phone": "Phone",
+        "email": "Email",
+        "position": "Position",
+        "isPrimary": "Primary contact"
+      }
+    }
+  },
+  "settings": {
+    "title": "Settings",
+    "subtitle": "Profile and staff accounts.",
+    "profile": {
+      "title": "Profile",
+      "name": "Name",
+      "email": "Email",
+      "role": "Role",
+      "language": "Language"
+    },
+    "staff": {
+      "title": "Staff accounts",
+      "subtitle": "Create and disable internal users.",
+      "create": "New user",
+      "createTitle": "Create user",
+      "empty": "No users found.",
+      "disable": "Disable",
+      "reactivate": "Reactivate",
+      "confirmDisableTitle": "Disable user",
+      "confirmDisableDescription": "Disable “{name}”? They will not be able to sign in.",
+      "confirmReactivateTitle": "Reactivate user",
+      "confirmReactivateDescription": "Reactivate “{name}”?",
+      "columns": {
+        "name": "Name",
+        "email": "Email",
+        "role": "Role",
+        "status": "Status",
+        "actions": "Actions"
+      },
+      "fields": {
+        "name": "Name",
+        "email": "Email",
+        "password": "Password",
+        "role": "Role"
+      },
+      "roles": {
+        "ADMIN": "Admin",
+        "STAFF": "Staff"
+      },
+      "status": {
+        "ACTIVE": "Active",
+        "DISABLED": "Disabled"
+      }
+    }
   }
 }

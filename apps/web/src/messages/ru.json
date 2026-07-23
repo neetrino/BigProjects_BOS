@@ -1,17 +1,178 @@
 {
-  "home": {
-    "eyebrow": "Внутренний инструмент",
-    "title": "BigProjects BOS",
-    "description": "Проверка основы фазы 0: фронтенд Next.js вызывает эндпоинт NestJS health.",
-    "health": {
-      "sectionLabel": "Состояние API",
-      "status": "Статус",
-      "database": "База данных",
-      "timestamp": "Время",
-      "unreachable": "API недоступен. Запустите `apps/api` и убедитесь, что `NEXT_PUBLIC_API_URL` указывает на него."
-    }
+  "common": {
+    "loading": "Загрузка…",
+    "save": "Сохранить",
+    "saving": "Сохранение…",
+    "cancel": "Отмена",
+    "confirm": "Подтвердить",
+    "edit": "Изменить",
+    "delete": "Удалить",
+    "logout": "Выйти",
+    "unexpectedError": "Что-то пошло не так. Попробуйте ещё раз."
   },
   "languageSwitcher": {
     "label": "Язык"
+  },
+  "health": {
+    "checking": "API…",
+    "ok": "API в порядке",
+    "dbDown": "API: база недоступна",
+    "unreachable": "API недоступен"
+  },
+  "nav": {
+    "label": "Основная навигация",
+    "product": "Внутренний",
+    "brand": "BigProjects BOS",
+    "builderSales": "Продажи застройщикам",
+    "partners": "Партнёры",
+    "venueMap": "Карта площадки",
+    "cycles": "Циклы событий",
+    "organizations": "Организации",
+    "settings": "Настройки",
+    "soon": "скоро"
+  },
+  "login": {
+    "eyebrow": "BigProjects BOS",
+    "title": "Вход",
+    "description": "Войдите со своей учётной записью сотрудника.",
+    "email": "Эл. почта",
+    "password": "Пароль",
+    "submit": "Войти",
+    "submitting": "Вход…",
+    "invalidCredentials": "Неверный email или пароль.",
+    "tooManyAttempts": "Слишком много попыток. Подождите и попробуйте снова.",
+    "genericError": "Не удалось войти. Попробуйте ещё раз."
+  },
+  "cycles": {
+    "title": "Циклы событий",
+    "subtitle": "Управление циклами ToonExpo и их статусами.",
+    "create": "Новый цикл",
+    "createTitle": "Создать цикл",
+    "editTitle": "Редактировать цикл",
+    "empty": "Циклов пока нет.",
+    "columns": {
+      "name": "Название",
+      "code": "Код",
+      "status": "Статус",
+      "dates": "Даты",
+      "actions": "Действия"
+    },
+    "fields": {
+      "name": "Название",
+      "code": "Код",
+      "startsAt": "Начало",
+      "endsAt": "Конец"
+    },
+    "status": {
+      "DRAFT": "Черновик",
+      "ACTIVE": "Активный",
+      "CLOSED": "Закрыт"
+    },
+    "actions": {
+      "activate": "Активировать",
+      "close": "Закрыть"
+    },
+    "confirm": {
+      "activateTitle": "Активировать цикл",
+      "activateDescription": "Активировать «{name}»? Другие активные циклы могут быть закрыты по правилам API.",
+      "closeTitle": "Закрыть цикл",
+      "closeDescription": "Закрыть «{name}»? Это действие нельзя отменить в интерфейсе."
+    }
+  },
+  "organizations": {
+    "title": "Организации",
+    "subtitle": "Компании и контакты для всех циклов.",
+    "create": "Новая организация",
+    "createTitle": "Создать организацию",
+    "detailTitle": "Организация",
+    "detailsSection": "Данные",
+    "searchPlaceholder": "Поиск по названию",
+    "typeFilter": "Тип",
+    "allTypes": "Все типы",
+    "empty": "Организации не найдены.",
+    "notFound": "Организация не найдена.",
+    "columns": {
+      "name": "Название",
+      "type": "Тип",
+      "contacts": "Контакты",
+      "phone": "Телефон",
+      "email": "Эл. почта"
+    },
+    "fields": {
+      "name": "Название",
+      "type": "Тип",
+      "phone": "Телефон",
+      "email": "Эл. почта",
+      "website": "Сайт",
+      "registrationId": "Рег. номер"
+    },
+    "types": {
+      "BUILDER": "Застройщик",
+      "BANK": "Банк",
+      "PARTNER": "Партнёр",
+      "OTHER": "Другое"
+    },
+    "contacts": {
+      "title": "Контакты",
+      "add": "Добавить контакт",
+      "saveNew": "Добавить",
+      "empty": "Контактов пока нет.",
+      "primary": "Основной",
+      "makePrimary": "Основной",
+      "deleteTitle": "Удалить контакт",
+      "deleteDescription": "Удалить «{name}»?",
+      "fields": {
+        "name": "Имя",
+        "phone": "Телефон",
+        "email": "Эл. почта",
+        "position": "Должность",
+        "isPrimary": "Основной контакт"
+      }
+    }
+  },
+  "settings": {
+    "title": "Настройки",
+    "subtitle": "Профиль и учётные записи сотрудников.",
+    "profile": {
+      "title": "Профиль",
+      "name": "Имя",
+      "email": "Эл. почта",
+      "role": "Роль",
+      "language": "Язык"
+    },
+    "staff": {
+      "title": "Учётные записи",
+      "subtitle": "Создание и отключение внутренних пользователей.",
+      "create": "Новый пользователь",
+      "createTitle": "Создать пользователя",
+      "empty": "Пользователи не найдены.",
+      "disable": "Отключить",
+      "reactivate": "Восстановить",
+      "confirmDisableTitle": "Отключить пользователя",
+      "confirmDisableDescription": "Отключить «{name}»? Вход будет недоступен.",
+      "confirmReactivateTitle": "Восстановить пользователя",
+      "confirmReactivateDescription": "Восстановить «{name}»?",
+      "columns": {
+        "name": "Имя",
+        "email": "Эл. почта",
+        "role": "Роль",
+        "status": "Статус",
+        "actions": "Действия"
+      },
+      "fields": {
+        "name": "Имя",
+        "email": "Эл. почта",
+        "password": "Пароль",
+        "role": "Роль"
+      },
+      "roles": {
+        "ADMIN": "Админ",
+        "STAFF": "Сотрудник"
+      },
+      "status": {
+        "ACTIVE": "Активен",
+        "DISABLED": "Отключён"
+      }
+    }
   }
 }

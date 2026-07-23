@@ -1,17 +1,178 @@
 {
-  "home": {
-    "eyebrow": "Ներքին գործիք",
-    "title": "BigProjects BOS",
-    "description": "Փուլ 0-ի հիմնական ստուգում. Next.js ֆրոնտենդը կանչում է NestJS health endpoint-ը:",
-    "health": {
-      "sectionLabel": "API-ի վիճակ",
-      "status": "Կարգավիճակ",
-      "database": "Տվյալների բազա",
-      "timestamp": "Ժամանակ",
-      "unreachable": "API-ն հասանելի չէ: Գործարկեք `apps/api`-ն և համոզված եղեք, որ `NEXT_PUBLIC_API_URL`-ը ուղղված է դեպի այն:"
-    }
+  "common": {
+    "loading": "Բեռնվում է…",
+    "save": "Պահպանել",
+    "saving": "Պահպանվում է…",
+    "cancel": "Չեղարկել",
+    "confirm": "Հաստատել",
+    "edit": "Խմբագրել",
+    "delete": "Ջնջել",
+    "logout": "Ելք",
+    "unexpectedError": "Ինչ-որ սխալ տեղի ունեցավ։ Փորձեք կրկին։"
   },
   "languageSwitcher": {
     "label": "Լեզու"
+  },
+  "health": {
+    "checking": "API…",
+    "ok": "API-ն աշխատում է",
+    "dbDown": "API՝ տվյալների բազան անհասանելի է",
+    "unreachable": "API-ն անհասանելի է"
+  },
+  "nav": {
+    "label": "Հիմնական նավիգացիա",
+    "product": "Ներքին",
+    "brand": "BigProjects BOS",
+    "builderSales": "Կառուցապատողների վաճառք",
+    "partners": "Գործընկերներ",
+    "venueMap": "Տարածքի քարտեզ",
+    "cycles": "Միջոցառման ցիկլեր",
+    "organizations": "Կազմակերպություններ",
+    "settings": "Կարգավորումներ",
+    "soon": "շուտով"
+  },
+  "login": {
+    "eyebrow": "BigProjects BOS",
+    "title": "Մուտք",
+    "description": "Շարունակելու համար մուտք գործեք աշխատակցի հաշվով։",
+    "email": "Էլ․ փոստ",
+    "password": "Գաղտնաբառ",
+    "submit": "Մուտք",
+    "submitting": "Մուտք…",
+    "invalidCredentials": "Սխալ էլ․ փոստ կամ գաղտնաբառ։",
+    "tooManyAttempts": "Չափից շատ փորձեր։ Սպասեք և փորձեք կրկին։",
+    "genericError": "Մուտքը չհաջողվեց։ Փորձեք կրկին։"
+  },
+  "cycles": {
+    "title": "Միջոցառման ցիկլեր",
+    "subtitle": "Կառավարեք ToonExpo ցիկլերը և դրանց կարգավիճակը։",
+    "create": "Նոր ցիկլ",
+    "createTitle": "Ստեղծել ցիկլ",
+    "editTitle": "Խմբագրել ցիկլը",
+    "empty": "Ցիկլեր դեռ չկան։",
+    "columns": {
+      "name": "Անվանում",
+      "code": "Կոդ",
+      "status": "Կարգավիճակ",
+      "dates": "Ամսաթվեր",
+      "actions": "Գործողություններ"
+    },
+    "fields": {
+      "name": "Անվանում",
+      "code": "Կոդ",
+      "startsAt": "Սկիզբ",
+      "endsAt": "Ավարտ"
+    },
+    "status": {
+      "DRAFT": "Սևագիր",
+      "ACTIVE": "Ակտիվ",
+      "CLOSED": "Փակված"
+    },
+    "actions": {
+      "activate": "Ակտիվացնել",
+      "close": "Փակել"
+    },
+    "confirm": {
+      "activateTitle": "Ակտիվացնել ցիկլը",
+      "activateDescription": "Ակտիվացնե՞լ «{name}»-ը։ Այլ ակտիվ ցիկլերը կարող են փակվել API-ի կանոններով։",
+      "closeTitle": "Փակել ցիկլը",
+      "closeDescription": "Փակե՞լ «{name}»-ը։ Այս գործողությունը ինտերֆեյսից չեղարկել հնարավոր չէ։"
+    }
+  },
+  "organizations": {
+    "title": "Կազմակերպություններ",
+    "subtitle": "Ընկերություններ և կոնտակտներ բոլոր ցիկլերի համար։",
+    "create": "Նոր կազմակերպություն",
+    "createTitle": "Ստեղծել կազմակերպություն",
+    "detailTitle": "Կազմակերպություն",
+    "detailsSection": "Տվյալներ",
+    "searchPlaceholder": "Որոնել ըստ անվան",
+    "typeFilter": "Տեսակ",
+    "allTypes": "Բոլոր տեսակները",
+    "empty": "Կազմակերպություններ չեն գտնվել։",
+    "notFound": "Կազմակերպությունը չի գտնվել։",
+    "columns": {
+      "name": "Անվանում",
+      "type": "Տեսակ",
+      "contacts": "Կոնտակտներ",
+      "phone": "Հեռախոս",
+      "email": "Էլ․ փոստ"
+    },
+    "fields": {
+      "name": "Անվանում",
+      "type": "Տեսակ",
+      "phone": "Հեռախոս",
+      "email": "Էլ․ փոստ",
+      "website": "Կայք",
+      "registrationId": "Գրանցման համար"
+    },
+    "types": {
+      "BUILDER": "Կառուցապատող",
+      "BANK": "Բանկ",
+      "PARTNER": "Գործընկեր",
+      "OTHER": "Այլ"
+    },
+    "contacts": {
+      "title": "Կոնտակտներ",
+      "add": "Ավելացնել կոնտակտ",
+      "saveNew": "Ավելացնել",
+      "empty": "Կոնտակտներ դեռ չկան։",
+      "primary": "Հիմնական",
+      "makePrimary": "Հիմնական",
+      "deleteTitle": "Ջնջել կոնտակտը",
+      "deleteDescription": "Ջնջե՞լ «{name}»-ը։",
+      "fields": {
+        "name": "Անուն",
+        "phone": "Հեռախոս",
+        "email": "Էլ․ փոստ",
+        "position": "Պաշտոն",
+        "isPrimary": "Հիմնական կոնտակտ"
+      }
+    }
+  },
+  "settings": {
+    "title": "Կարգավորումներ",
+    "subtitle": "Պրոֆիլ և աշխատակիցների հաշիվներ։",
+    "profile": {
+      "title": "Պրոֆիլ",
+      "name": "Անուն",
+      "email": "Էլ․ փոստ",
+      "role": "Դեր",
+      "language": "Լեզու"
+    },
+    "staff": {
+      "title": "Աշխատակիցների հաշիվներ",
+      "subtitle": "Ստեղծեք և անջատեք ներքին օգտատերերին։",
+      "create": "Նոր օգտատեր",
+      "createTitle": "Ստեղծել օգտատեր",
+      "empty": "Օգտատերեր չեն գտնվել։",
+      "disable": "Անջատել",
+      "reactivate": "Վերականգնել",
+      "confirmDisableTitle": "Անջատել օգտատիրոջը",
+      "confirmDisableDescription": "Անջատե՞լ «{name}»-ին։ Մուտքը կարգելվի։",
+      "confirmReactivateTitle": "Վերականգնել օգտատիրոջը",
+      "confirmReactivateDescription": "Վերականգնե՞լ «{name}»-ին։",
+      "columns": {
+        "name": "Անուն",
+        "email": "Էլ․ փոստ",
+        "role": "Դեր",
+        "status": "Կարգավիճակ",
+        "actions": "Գործողություններ"
+      },
+      "fields": {
+        "name": "Անուն",
+        "email": "Էլ․ փոստ",
+        "password": "Գաղտնաբառ",
+        "role": "Դեր"
+      },
+      "roles": {
+        "ADMIN": "Ադմին",
+        "STAFF": "Աշխատակից"
+      },
+      "status": {
+        "ACTIVE": "Ակտիվ",
+        "DISABLED": "Անջատված"
+      }
+    }
   }
 }

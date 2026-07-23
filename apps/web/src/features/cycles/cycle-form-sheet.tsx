@@ -1,0 +1,134 @@
+'use client';
+
+import { FormEvent, useState } from 'react';
+import { useTranslations } from 'next-intl';
+import { ApiError } from '@/lib/api/client';
+import { createCycle, updateCycle } from '@/lib/api/cycles';
+import type { EventCycle } from '@/lib/api/types';
+import { dateInputToIso, formatDate } from '@/lib/format';
+import { Button } from '@/components/ui/button';
+import { Field, TextInput } from '@/components/ui/field';
+import { Sheet } from '@/components/ui/sheet';
+
+type CycleFormSheetProps = {
+  open: boolean;
+  cycle: EventCycle | null;
+  onClose: () => void;
+  onSaved: (cycle: EventCycle) => void;
+};
+
+export function CycleFormSheet({ open, cycle, onClose, onSaved }: CycleFormSheetProps) {
+  if (!open) {
+    return null;
+  }
+
+  return (
+    <CycleFormSheetInner
+      key={cycle?.id ?? 'create'}
+      cycle={cycle}
+      onClose={onClose}
+      onSaved={onSaved}
+    />
+  );
+}
+
+type CycleFormSheetInnerProps = {
+  cycle: EventCycle | null;
+  onClose: () => void;
+  onSaved: (cycle: EventCycle) => void;
+};
+
+function CycleFormSheetInner({ cycle, onClose, onSaved }: CycleFormSheetInnerProps) {
+  const t = useTranslations('cycles');
+  const tCommon = useTranslations('common');
+  const isEdit = cycle !== null;
+  const [name, setName] = useState(cycle?.name ?? '');
+  const [code, setCode] = useState(cycle?.code ?? '');
+  const [startsAt, setStartsAt] = useState(formatDate(cycle?.startsAt));
+  const [endsAt, setEndsAt] = useState(formatDate(cycle?.endsAt));
+  const [error, setError] = useState<string | null>(null);
+  const [busy, setBusy] = useState(false);
+
+  async function handleSubmit(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    setBusy(true);
+    setError(null);
+
+    const payload = {
+      name: name.trim(),
+      code: code.trim(),
+      startsAt: dateInputToIso(startsAt),
+      endsAt: dateInputToIso(endsAt),
+    };
+
+    try {
+      const saved = isEdit
+        ? await updateCycle(cycle.id, payload)
+        : await createCycle(payload);
+      onSaved(saved);
+      onClose();
+    } catch (err) {
+      setError(err instanceof ApiError ? err.message : tCommon('unexpectedError'));
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  return (
+    <Sheet
+      open
+      title={isEdit ? t('editTitle') : t('createTitle')}
+      onClose={onClose}
+      footer={
+        <div className="flex justify-end gap-2">
+          <Button variant="secondary" onClick={onClose} disabled={busy}>
+            {tCommon('cancel')}
+          </Button>
+          <Button type="submit" form="cycle-form" variant="primary" disabled={busy}>
+            {busy ? tCommon('saving') : tCommon('save')}
+          </Button>
+        </div>
+      }
+    >
+      <form id="cycle-form" onSubmit={handleSubmit} className="flex flex-col gap-3">
+        <Field label={t('fields.name')} htmlFor="cycle-name">
+          <TextInput
+            id="cycle-name"
+            required
+            value={name}
+            onChange={(event) => setName(event.target.value)}
+          />
+        </Field>
+        <Field label={t('fields.code')} htmlFor="cycle-code">
+          <TextInput
+            id="cycle-code"
+            required
+            value={code}
+            onChange={(event) => setCode(event.target.value)}
+          />
+        </Field>
+        <Field label={t('fields.startsAt')} htmlFor="cycle-starts">
+          <TextInput
+            id="cycle-starts"
+            type="date"
+            value={startsAt}
+            onChange={(event) => setStartsAt(event.target.value)}
+          />
+        </Field>
+        <Field label={t('fields.endsAt')} htmlFor="cycle-ends">
+          <TextInput
+            id="cycle-ends"
+            type="date"
+            value={endsAt}
+            onChange={(event) => setEndsAt(event.target.value)}
+          />
+        </Field>
+        {error ? (
+          <p role="alert" className="text-sm text-red-700">
+            {error}
+          </p>
+        ) : null}
+      </form>
+    </Sheet>
+  );
+}

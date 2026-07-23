@@ -1,26 +1,12 @@
-export type HealthResponse = {
-  status: 'ok';
-  timestamp: string;
-  database: 'up' | 'down';
-};
-
-const DEFAULT_API_BASE_URL = 'http://localhost:4000';
-
-function getApiBaseUrl(): string {
-  return process.env.NEXT_PUBLIC_API_URL ?? DEFAULT_API_BASE_URL;
-}
+import { apiFetch } from './client';
+import type { HealthResponse } from './types';
 
 /**
- * Fetches NestJS health status. This module is the only place that knows the API base URL.
+ * Fetches NestJS health status via the same-origin API proxy.
  */
 export async function fetchHealth(): Promise<HealthResponse> {
-  const response = await fetch(`${getApiBaseUrl()}/api/v1/health`, {
+  return apiFetch<HealthResponse>('/api/v1/health', {
     cache: 'no-store',
+    redirectOn401: false,
   });
-
-  if (!response.ok) {
-    throw new Error(`Health request failed with status ${response.status}`);
-  }
-
-  return (await response.json()) as HealthResponse;
 }
