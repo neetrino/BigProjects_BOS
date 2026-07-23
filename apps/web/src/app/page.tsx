@@ -45,9 +45,7 @@ export default async function HomePage() {
             </div>
           </dl>
         ) : (
-          <p className="text-sm text-[var(--color-muted)]">
-            {t('health.unreachable')}
-          </p>
+          <p className="text-sm text-[var(--color-muted)]">{t('health.unreachable')}</p>
         )}
       </section>
     </main>

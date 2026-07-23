@@ -30,7 +30,10 @@ export class HealthService {
       await this.prisma.$queryRaw`SELECT 1`;
       return 'up';
     } catch (error: unknown) {
-      this.logger.error('Database health check failed', error instanceof Error ? error.stack : error);
+      this.logger.error(
+        'Database health check failed',
+        error instanceof Error ? error.stack : error,
+      );
       return 'down';
     }
   }

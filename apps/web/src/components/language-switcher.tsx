@@ -33,10 +33,7 @@ export function LanguageSwitcher({ currentLocale }: LanguageSwitcherProps) {
   }
 
   return (
-    <nav
-      aria-label={t('label')}
-      className="absolute right-6 top-6 flex flex-wrap gap-2"
-    >
+    <nav aria-label={t('label')} className="absolute right-6 top-6 flex flex-wrap gap-2">
       {locales.map((locale) => {
         const isActive = locale === currentLocale;
 

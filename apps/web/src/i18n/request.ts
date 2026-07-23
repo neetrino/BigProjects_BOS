@@ -1,10 +1,6 @@
 import { cookies } from 'next/headers';
 import { getRequestConfig } from 'next-intl/server';
-import {
-  LOCALE_COOKIE_NAME,
-  resolveLocale,
-  type Locale,
-} from '@/i18n/config';
+import { LOCALE_COOKIE_NAME, resolveLocale, type Locale } from '@/i18n/config';
 
 async function loadMessages(locale: Locale) {
   switch (locale) {
