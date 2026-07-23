@@ -310,9 +310,9 @@ describe('DealsService', () => {
     it('rejects an invalid primary contact id', async () => {
       prisma.contact.findUnique.mockResolvedValue(null);
 
-      await expect(
-        service.update(dealId, { primaryContactId: 'missing-contact' }),
-      ).rejects.toThrow(BadRequestException);
+      await expect(service.update(dealId, { primaryContactId: 'missing-contact' })).rejects.toThrow(
+        BadRequestException,
+      );
       expect(prisma.builderDeal.update).not.toHaveBeenCalled();
     });
 
