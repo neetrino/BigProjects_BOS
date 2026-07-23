@@ -29,7 +29,10 @@ function buildArea(overrides: Record<string, unknown>) {
     customPublicLabel: null,
     createdAt: new Date(),
     updatedAt: new Date(),
-    cells: [{ x: 1, y: 0 }, { x: 0, y: 0 }],
+    cells: [
+      { x: 1, y: 0 },
+      { x: 0, y: 0 },
+    ],
     allocations: [],
     ...overrides,
   };
@@ -37,14 +40,19 @@ function buildArea(overrides: Record<string, unknown>) {
 
 const allocatedByBuilder = [
   {
-    builderDeal: { organization: { id: 'org-1', name: 'Acme Builders', toonexpoCompanyId: 'toon-co-1' } },
+    builderDeal: {
+      organization: { id: 'org-1', name: 'Acme Builders', toonexpoCompanyId: 'toon-co-1' },
+    },
     partnerParticipation: null,
   },
 ];
 
 describe('buildSnapshotContent', () => {
   it('includes occupant when mode=organization and the area is allocated', () => {
-    const plan = { ...basePlan, spaceAreas: [buildArea({ allocations: allocatedByBuilder })] } as SnapshotPlan;
+    const plan = {
+      ...basePlan,
+      spaceAreas: [buildArea({ allocations: allocatedByBuilder })],
+    } as SnapshotPlan;
 
     const content = buildSnapshotContent(plan);
 
@@ -76,7 +84,10 @@ describe('buildSnapshotContent', () => {
     expect(content.areas[0].occupant).toBeUndefined();
     expect(content.areas[0].custom_label).toBeUndefined();
     expect(content.areas[0].code).toBe('A1');
-    expect(content.areas[0].cells).toEqual([{ x: 1, y: 0 }, { x: 0, y: 0 }]);
+    expect(content.areas[0].cells).toEqual([
+      { x: 1, y: 0 },
+      { x: 0, y: 0 },
+    ]);
   });
 
   it('includes only the custom label for custom_label areas, never occupant data', () => {

@@ -102,7 +102,8 @@ export function ToonExpoAccountSection({
       ? loadState.latestRequest.toonexpoCompanyId
       : null);
 
-  const isLinked = Boolean(toonexpoCompanyId) ||
+  const isLinked =
+    Boolean(toonexpoCompanyId) ||
     (loadState.status === 'ready' &&
       loadState.latestRequest != null &&
       (loadState.latestRequest.status === 'SUCCESS' ||

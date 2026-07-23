@@ -120,7 +120,9 @@ describe('ProvisioningRequestsService', () => {
       await service.create({ organizationId, eventCycleId, requestedModules: ['partner_profile'] });
 
       expect(prisma.toonExpoProvisioningRequest.create).toHaveBeenCalledWith(
-        expect.objectContaining({ data: expect.objectContaining({ companyType: OrganizationType.PARTNER }) }),
+        expect.objectContaining({
+          data: expect.objectContaining({ companyType: OrganizationType.PARTNER }),
+        }),
       );
     });
   });

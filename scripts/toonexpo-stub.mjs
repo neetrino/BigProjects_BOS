@@ -93,7 +93,10 @@ function handleVenueMapPublish(body) {
   }
 
   const status = resolvePublishStatus(plan, body);
-  const snapshotId = status === 'published' ? `toon-snap-${randomUUID()}` : (plan.byVersion.get(body.snapshot_version)?.snapshotId ?? null);
+  const snapshotId =
+    status === 'published'
+      ? `toon-snap-${randomUUID()}`
+      : (plan.byVersion.get(body.snapshot_version)?.snapshotId ?? null);
 
   if (status === 'published') {
     plan.maxVersion = body.snapshot_version;
@@ -107,7 +110,9 @@ function handleVenueMapPublish(body) {
     toonexpo_snapshot_id: snapshotId,
     status,
     ...(status === 'rejected' && {
-      validation_errors: ['Snapshot version/checksum conflicts with a previously accepted snapshot.'],
+      validation_errors: [
+        'Snapshot version/checksum conflicts with a previously accepted snapshot.',
+      ],
     }),
     ...(status !== 'rejected' && { activated_at: new Date().toISOString() }),
   };

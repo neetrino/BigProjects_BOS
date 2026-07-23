@@ -34,9 +34,7 @@ export const PARTNER_MODULES: readonly ToonExpoModule[] = [
 export function defaultModulesForCompanyType(
   companyType: Extract<OrganizationType, 'BUILDER' | 'PARTNER'>,
 ): ToonExpoModule[] {
-  return companyType === 'BUILDER'
-    ? [...BUILDER_DEFAULT_MODULES]
-    : [...PARTNER_DEFAULT_MODULES];
+  return companyType === 'BUILDER' ? [...BUILDER_DEFAULT_MODULES] : [...PARTNER_DEFAULT_MODULES];
 }
 
 export function availableModulesForCompanyType(

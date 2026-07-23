@@ -77,10 +77,14 @@ describe('VenueMapPublicationsService', () => {
         findFirst: jest.fn().mockResolvedValue(null),
         deleteMany: jest.fn().mockResolvedValue({ count: 0 }),
         create: jest.fn().mockImplementation(async ({ data }) => publicationRow(data)),
-        update: jest.fn().mockImplementation(async ({ data }) => ({ ...publicationRow(), ...data })),
+        update: jest
+          .fn()
+          .mockImplementation(async ({ data }) => ({ ...publicationRow(), ...data })),
         findMany: jest.fn(),
       },
-      $transaction: jest.fn().mockImplementation(async (fn: (tx: unknown) => Promise<unknown>) => fn(prisma)),
+      $transaction: jest
+        .fn()
+        .mockImplementation(async (fn: (tx: unknown) => Promise<unknown>) => fn(prisma)),
     };
     client = { publishVenueMap: jest.fn() };
     storage = { createPresignedGetUrl: jest.fn().mockResolvedValue(backgroundUrl) };
@@ -201,7 +205,9 @@ describe('VenueMapPublicationsService', () => {
       accepted_snapshot_version: 1,
       toonexpo_snapshot_id: null,
       status: 'rejected',
-      validation_errors: ['Snapshot version/checksum conflicts with a previously accepted snapshot.'],
+      validation_errors: [
+        'Snapshot version/checksum conflicts with a previously accepted snapshot.',
+      ],
     });
 
     const result = await service.publish(planId);

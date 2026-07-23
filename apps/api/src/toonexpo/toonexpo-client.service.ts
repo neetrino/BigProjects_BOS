@@ -33,9 +33,7 @@ export class ToonExpoClientService {
     return this.post<ToonExpoProvisioningResponseWire>(PROVISIONING_PATH, payload);
   }
 
-  async publishVenueMap(
-    payload: VenueMapPublishRequestWire,
-  ): Promise<VenueMapPublishResponseWire> {
+  async publishVenueMap(payload: VenueMapPublishRequestWire): Promise<VenueMapPublishResponseWire> {
     return this.post<VenueMapPublishResponseWire>(VENUE_MAP_PUBLISH_PATH, payload);
   }
 

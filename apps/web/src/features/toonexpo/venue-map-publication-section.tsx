@@ -153,7 +153,9 @@ export function VenueMapPublicationSection({
     }
   }
 
-  const planStatus = (publishStatus === 'PUBLISHED' ? 'PUBLISHED' : 'UNPUBLISHED') as PlanPublishStatus;
+  const planStatus = (
+    publishStatus === 'PUBLISHED' ? 'PUBLISHED' : 'UNPUBLISHED'
+  ) as PlanPublishStatus;
 
   return (
     <section className="rounded border border-[var(--color-border)] bg-[var(--color-surface)] p-3">

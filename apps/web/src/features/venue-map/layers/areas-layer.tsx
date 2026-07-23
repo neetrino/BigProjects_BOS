@@ -8,11 +8,7 @@ import {
   partnerStageMapColors,
   SELECTED_AREA_MAP_COLORS,
 } from '@/lib/stage-colors';
-import {
-  LABEL_BASE_FONT_SIZE,
-  LABEL_MAX_SCREEN_SIZE,
-  LABEL_MIN_SCREEN_SIZE,
-} from '../constants';
+import { LABEL_BASE_FONT_SIZE, LABEL_MAX_SCREEN_SIZE, LABEL_MIN_SCREEN_SIZE } from '../constants';
 import { cellsBoundingRect } from '../domain/cell-selection';
 import type { CalibrationGeometry } from '../domain/grid-transform';
 

@@ -132,7 +132,7 @@ export class ProvisioningRequestsService {
       status === ToonExpoRequestStatus.SUCCESS || status === ToonExpoRequestStatus.LINKED_EXISTING;
     const errorMessage = isSuccessLike
       ? null
-      : response.error_message ?? `Unexpected ToonExpo status: "${response.status}".`;
+      : (response.error_message ?? `Unexpected ToonExpo status: "${response.status}".`);
 
     const row = await this.prisma.toonExpoProvisioningRequest.update({
       where: { id },
@@ -155,7 +155,10 @@ export class ProvisioningRequestsService {
     return toProvisioningResponse(row);
   }
 
-  private async persistFailure(id: string, error: unknown): Promise<ProvisioningRequestResponseDto> {
+  private async persistFailure(
+    id: string,
+    error: unknown,
+  ): Promise<ProvisioningRequestResponseDto> {
     const message = error instanceof Error ? error.message : 'Unknown ToonExpo integration error.';
     this.logger.error(`ToonExpo provisioning request ${id} failed: ${message}`);
 

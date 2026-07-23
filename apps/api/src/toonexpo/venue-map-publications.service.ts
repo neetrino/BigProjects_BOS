@@ -107,7 +107,12 @@ export class VenueMapPublicationsService {
     return this.prisma.$transaction(async (tx) => {
       await tx.venueMapPublication.deleteMany({ where: { venuePlanId: planId, snapshotVersion } });
       return tx.venueMapPublication.create({
-        data: { venuePlanId: planId, snapshotVersion, checksum, status: VenueMapPublicationStatus.PENDING },
+        data: {
+          venuePlanId: planId,
+          snapshotVersion,
+          checksum,
+          status: VenueMapPublicationStatus.PENDING,
+        },
       });
     });
   }
@@ -120,12 +125,18 @@ export class VenueMapPublicationsService {
     const status = mapPublishStatusFromWire(response.status);
     const errorMessage = PUBLISHED_LIKE_STATUSES.has(status)
       ? null
-      : (response.validation_errors?.join('; ') ?? `Unexpected ToonExpo status: "${response.status}".`);
+      : (response.validation_errors?.join('; ') ??
+        `Unexpected ToonExpo status: "${response.status}".`);
     const publishedAt = PUBLISHED_LIKE_STATUSES.has(status) ? new Date() : null;
 
     const row = await this.prisma.venueMapPublication.update({
       where: { id: rowId },
-      data: { status, toonexpoSnapshotId: response.toonexpo_snapshot_id, errorMessage, publishedAt },
+      data: {
+        status,
+        toonexpoSnapshotId: response.toonexpo_snapshot_id,
+        errorMessage,
+        publishedAt,
+      },
     });
 
     if (PUBLISHED_LIKE_STATUSES.has(status)) {

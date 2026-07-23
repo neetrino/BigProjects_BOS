@@ -78,11 +78,7 @@ export interface SnapshotContentWire {
   areas: SnapshotAreaWire[];
 }
 
-export type VenueMapPublishStatusWire =
-  | 'published'
-  | 'already_published'
-  | 'rejected'
-  | 'failed';
+export type VenueMapPublishStatusWire = 'published' | 'already_published' | 'rejected' | 'failed';
 
 export interface VenueMapPublishRequestWire {
   request_id: string;

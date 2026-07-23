@@ -123,9 +123,7 @@ function ProvisioningRequestDialogInner({
           </label>
         ))}
       </fieldset>
-      <p className="mt-2 text-xs text-[var(--color-muted)]">
-        {t(`companyType.${companyType}`)}
-      </p>
+      <p className="mt-2 text-xs text-[var(--color-muted)]">{t(`companyType.${companyType}`)}</p>
     </Dialog>
   );
 }

@@ -12,11 +12,7 @@ export type ToonExpoModule =
   | 'analytics';
 
 export type VenueMapPublicationStatus =
-  | 'PENDING'
-  | 'PUBLISHED'
-  | 'ALREADY_PUBLISHED'
-  | 'REJECTED'
-  | 'FAILED';
+  'PENDING' | 'PUBLISHED' | 'ALREADY_PUBLISHED' | 'REJECTED' | 'FAILED';
 
 export type ProvisioningRequest = {
   id: string;

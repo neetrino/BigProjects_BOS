@@ -1,6 +1,10 @@
 import { Prisma, PublicDisplayMode } from '@prisma/client';
 import { mapDisplayModeToWire } from './toonexpo-mappers.util';
-import { SnapshotAreaWire, SnapshotContentWire, SnapshotOccupantWire } from './types/toonexpo-wire.types';
+import {
+  SnapshotAreaWire,
+  SnapshotContentWire,
+  SnapshotOccupantWire,
+} from './types/toonexpo-wire.types';
 
 /** Prisma include used to fetch everything the snapshot builder needs, in one shot. */
 export const SNAPSHOT_PLAN_INCLUDE = {
@@ -12,9 +16,15 @@ export const SNAPSHOT_PLAN_INCLUDE = {
       allocations: {
         where: { active: true },
         include: {
-          builderDeal: { include: { organization: { select: { id: true, name: true, toonexpoCompanyId: true } } } },
+          builderDeal: {
+            include: {
+              organization: { select: { id: true, name: true, toonexpoCompanyId: true } },
+            },
+          },
           partnerParticipation: {
-            include: { organization: { select: { id: true, name: true, toonexpoCompanyId: true } } },
+            include: {
+              organization: { select: { id: true, name: true, toonexpoCompanyId: true } },
+            },
           },
         },
       },
@@ -68,13 +78,16 @@ function buildAreaWire(area: SnapshotArea): SnapshotAreaWire {
 
 function resolveOccupant(area: SnapshotArea): SnapshotOccupantWire | undefined {
   const allocation = area.allocations[0];
-  const organization = allocation?.builderDeal?.organization ?? allocation?.partnerParticipation?.organization;
+  const organization =
+    allocation?.builderDeal?.organization ?? allocation?.partnerParticipation?.organization;
   if (!organization) {
     return undefined;
   }
 
   return {
-    ...(organization.toonexpoCompanyId ? { toonexpo_company_id: organization.toonexpoCompanyId } : {}),
+    ...(organization.toonexpoCompanyId
+      ? { toonexpo_company_id: organization.toonexpoCompanyId }
+      : {}),
     organization_name: organization.name,
   };
 }

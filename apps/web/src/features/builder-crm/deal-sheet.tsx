@@ -172,7 +172,12 @@ function DealSheetInner({ dealId, staffOptions, onClose, onUpdated }: DealSheetI
   function setDeal(deal: DealListItem, syncDraft: boolean) {
     setLoadState((prev) =>
       prev.status === 'ready'
-        ? { status: 'ready', deal, contacts: prev.contacts, toonexpoCompanyId: prev.toonexpoCompanyId }
+        ? {
+            status: 'ready',
+            deal,
+            contacts: prev.contacts,
+            toonexpoCompanyId: prev.toonexpoCompanyId,
+          }
         : prev,
     );
     if (syncDraft) {
