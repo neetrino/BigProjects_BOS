@@ -1,54 +1,39 @@
 # BigProjects BOS
 
-BigProjects BOS is the internal Business Operating System for BigProjects.
+BigProjects BOS is a small internal operating tool for approximately 20 BigProjects employees.
 
-This repository is for BOS only.
+Release 1 contains two lightweight Kanban workflows and one interactive venue-space map:
 
-## Scope
-
-In scope:
-
-- Event Cycles and Organizations/Contacts;
 - Builder Sales CRM;
-- separate Partner Relations pipeline;
-- interactive 1 m x 1 m Venue Sales Map;
-- deal/partner space allocations;
-- ToonExpo account provisioning;
-- public venue-map snapshot publication.
+- Partner Relations;
+- Venue Sales Map connected to CRM and partner records.
 
-Out of scope:
+The product is intentionally simple. It is a production application for a small internal team, not an enterprise platform.
 
-- ToonExpo public website;
-- buyer/visitor mobile app;
-- builder public portal;
-- constructor CRM sales module;
-- builder readiness scoring;
-- QR/event check-in implementation;
-- professional visitor routing in the current release.
+## Runtime Boundary
+
+```text
+Browser -> Next.js frontend -> NestJS API -> Prisma -> PostgreSQL
+```
+
+- Next.js owns frontend pages and interaction only.
+- NestJS owns all backend behavior and business rules.
+- Only NestJS may access Prisma/PostgreSQL.
 
 ## Documentation
 
-Start here:
+Read [Documentation Hub](./docs/README.md) first.
 
-- [Brief](./docs/BRIEF.md)
-- [Tech Card](./docs/TECH_CARD.md)
+Canonical documents:
+
+- [Release 1 Scope](./docs/00-SCOPE.md)
 - [Architecture](./docs/01-ARCHITECTURE.md)
-- [Frontend / Backend Boundary](./docs/architecture/FRONTEND_BACKEND_BOUNDARY.md)
-- [Development Start Pack](./docs/00-Development-Start/01-Production-Scope.md)
-- [Documentation Hub](./docs/00-Documentation-Hub.md)
-- [BOS Overview](./docs/01-BigProjects-BOS/00-BOS-Overview.md)
-- [BOS / ToonExpo Boundary](./docs/03-Integration-With-ToonExpo/01-BOS-ToonExpo-Boundary.md)
+- [Tech Card](./docs/TECH_CARD.md)
+- [Implementation Roadmap](./docs/06-IMPLEMENTATION-ROADMAP.md)
+- [Acceptance Criteria](./docs/07-ACCEPTANCE.md)
 
 ## Project Size
 
-Size C — large monorepo (`apps/*`, `packages/*`).
+`Size: B - medium, layout: simple feature-based monorepo.`
 
-The Release 1 documentation gate is closed. Implementation starts from Sprint 0 in the accepted development-start pack.
-
-Runtime boundary: `apps/web` is a Next.js frontend; `apps/api` is the complete NestJS backend and the only runtime allowed to access Prisma/PostgreSQL.
-
-Readiness baseline: [Release 1 Implementation Readiness](./docs/00-Development-Start/09-Implementation-Readiness.md).
-
-## Rule
-
-Do not implement ToonExpo Ecosystem modules in this repository.
+The previous enterprise-style implementation is preserved in the `sipan` branch. It is reference material only and must not define the architecture of this branch.
