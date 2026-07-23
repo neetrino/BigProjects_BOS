@@ -3,7 +3,10 @@
 ## Current State
 
 - branch: `bos-simple-v1`;
-- Phase 0 (Foundation) and Phase 1 (Auth And Core Records) are complete and verified;
+- Phases 0-2 (Foundation, Auth And Core Records, Builder Sales CRM) are complete and verified;
+- Builder Sales: Kanban (dnd-kit) + list, deal sheet (details draft editing, stage actions,
+  notes, attachments), stage machine with the `won` allocation block (real check in Phase 4);
+- attachments use MinIO locally (S3-compatible; R2-ready env), presigned upload/download;
 - session auth (Argon2id, 7-day sliding server-side sessions, HTTP-only cookie, login rate
   limit, Origin-based CSRF guard) with Admin/Staff roles;
 - admin user management, Event Cycles, Organizations and Contacts modules in NestJS;
@@ -16,10 +19,11 @@
 
 ## Next Gate
 
-1. Wait for owner approval to start Phase 2 (Builder Sales CRM) from
-   [Implementation Roadmap](./06-IMPLEMENTATION-ROADMAP.md).
-2. Phase 2 stop condition: a deal can move from `new` to `negotiation`; `won` remains blocked
-   until a map allocation exists.
+1. Continue with Phase 3 (Partner Relations) from
+   [Implementation Roadmap](./06-IMPLEMENTATION-ROADMAP.md) (owner approved phase-by-phase
+   continuation).
+2. Phase 3 stop condition: partner workflow works independently and does not appear in
+   Builder Sales.
 
 Do not copy the old architecture wholesale from `sipan`. Reuse individual UI or map components
 only after reviewing them against the new documents.
