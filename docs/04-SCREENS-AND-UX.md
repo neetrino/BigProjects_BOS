@@ -140,6 +140,34 @@ Contacts are managed inside the organization sheet. A separate Contacts module i
 
 No MFA setup screen exists in Release 1.
 
+## Visual Style Reference
+
+The Kanban / card / side-sheet visual language follows a simplified version of the
+[neetrino/nbos](https://github.com/neetrino/nbos) UI standards ("Kanban Board and List Standard",
+"Entity Detail Sheet Standard"). nbos is a style reference only; scope and fields come from this
+document and the module specifications.
+
+Adopted style rules:
+
+- one shared board component and one shared card shell (rounded card, thin border, hover shadow)
+  for both Kanban boards, so Builder Sales and Partners feel like one product;
+- card layout: title (organization) -> key meta -> status badge; color signals state only,
+  never decoration;
+- terminal outcomes (`won`/`lost`, `confirmed`/`declined`) are visually separated from active
+  stage columns;
+- list view reuses one table component and mirrors board data;
+- drag and drop via `@dnd-kit`;
+- entity detail opens in a side sheet; the user stays on the board;
+- sheet style is compact and operational: no duplicated labels, small muted labels only where
+  ambiguous, no nested bordered boxes, dense spacing inside sections;
+- sheet editing uses a local draft with a Save/Cancel footer that appears when dirty and sends
+  one update request;
+- short create/confirm flows use a small focused dialog, never a duplicate of the sheet;
+- related entities render as compact rows; clicking stacks one child sheet above the parent.
+
+Deliberately not adopted from nbos: rich-text editors, floating action rails, Active/Closed/All
+scope engines, deep-link infrastructure, sockets and charts.
+
 ## UX Priorities
 
 - desktop-first and dense;
