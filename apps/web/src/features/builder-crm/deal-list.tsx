@@ -2,7 +2,7 @@
 
 import { useTranslations } from 'next-intl';
 import type { DealListItem } from '@/lib/api/types';
-import { formatAmount, formatDate } from '@/lib/format';
+import { formatAmount, formatDate, formatSqm } from '@/lib/format';
 import { StatusBadge } from '@/components/ui/status-badge';
 import { stageTone } from '@/features/builder-crm/constants';
 
@@ -45,7 +45,7 @@ export function DealList({ deals, onOpen }: DealListProps) {
                 <StatusBadge label={t(`stages.${deal.stage}`)} tone={stageTone(deal.stage)} />
               </td>
               <td className="px-3 py-2.5 text-[var(--color-muted)]">
-                {deal.expectedSqm != null ? deal.expectedSqm : '—'}
+                {formatSqm(deal.expectedSqm) || '—'}
               </td>
               <td className="px-3 py-2.5 text-[var(--color-muted)]">
                 {deal.agreedAmount != null && String(deal.agreedAmount).length > 0

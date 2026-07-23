@@ -22,6 +22,9 @@ export function formatFileSize(bytes: number): string {
   return `${(bytes / BYTES_PER_MB).toFixed(1)} MB`;
 }
 
+/** Stable locale for amount formatting (avoids SSR/client hydration mismatches). */
+const AMOUNT_LOCALE = 'en-US';
+
 /** Formats a decimal amount string or number for display. */
 export function formatAmount(value: string | number | null | undefined): string {
   if (value == null || value === '') {
@@ -31,10 +34,22 @@ export function formatAmount(value: string | number | null | undefined): string 
   if (Number.isNaN(parsed)) {
     return String(value);
   }
-  return parsed.toLocaleString(undefined, {
+  return parsed.toLocaleString(AMOUNT_LOCALE, {
     minimumFractionDigits: 0,
     maximumFractionDigits: 2,
   });
+}
+
+/** Formats expected square meters for list/card display; empty when unset. */
+export function formatSqm(value: number | string | null | undefined): string {
+  if (value == null || value === '') {
+    return '';
+  }
+  const parsed = typeof value === 'number' ? value : Number(value);
+  if (Number.isNaN(parsed)) {
+    return String(value);
+  }
+  return String(parsed);
 }
 
 /** Two-letter initials from a display name. */

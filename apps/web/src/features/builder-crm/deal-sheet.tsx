@@ -5,7 +5,12 @@ import { useTranslations } from 'next-intl';
 import { ApiError } from '@/lib/api/client';
 import { getDeal, updateDeal } from '@/lib/api/deals';
 import { getOrganization } from '@/lib/api/organizations';
-import type { DealListItem, DealStage, OrganizationContact } from '@/lib/api/types';
+import type {
+  DealListItem,
+  DealStage,
+  OrganizationContact,
+  UpdateDealInput,
+} from '@/lib/api/types';
 import { Button } from '@/components/ui/button';
 import { ErrorState, LoadingState } from '@/components/ui/page-state';
 import { Sheet } from '@/components/ui/sheet';
@@ -34,12 +39,7 @@ type DealSheetProps = {
 type LoadState =
   | { status: 'loading' }
   | { status: 'error'; message: string }
-  | {
-      status: 'ready';
-      deal: DealListItem;
-      draft: DealDetailsDraft;
-      contacts: OrganizationContact[];
-    };
+  | { status: 'ready'; deal: DealListItem; contacts: OrganizationContact[] };
 
 function toDraft(deal: DealListItem): DealDetailsDraft {
   return {
@@ -49,6 +49,41 @@ function toDraft(deal: DealListItem): DealDetailsDraft {
     agreedAmount: deal.agreedAmount != null ? String(deal.agreedAmount) : '',
     description: deal.description ?? '',
   };
+}
+
+function draftsEqual(a: DealDetailsDraft, b: DealDetailsDraft): boolean {
+  return (
+    a.primaryContactId === b.primaryContactId &&
+    a.assignedStaffId === b.assignedStaffId &&
+    a.expectedSqm === b.expectedSqm &&
+    a.agreedAmount === b.agreedAmount &&
+    a.description === b.description
+  );
+}
+
+/** Build a PATCH body with only dirty fields. Never send null relation ids (API connect fails). */
+function buildDetailsPatch(draft: DealDetailsDraft, baseline: DealDetailsDraft): UpdateDealInput {
+  const payload: UpdateDealInput = {};
+
+  if (draft.primaryContactId !== baseline.primaryContactId && draft.primaryContactId) {
+    payload.primaryContactId = draft.primaryContactId;
+  }
+  if (draft.assignedStaffId !== baseline.assignedStaffId && draft.assignedStaffId) {
+    payload.assignedStaffId = draft.assignedStaffId;
+  }
+  if (draft.expectedSqm !== baseline.expectedSqm) {
+    const raw = draft.expectedSqm.trim();
+    const parsed = raw ? Number(raw) : null;
+    payload.expectedSqm = parsed != null && !Number.isNaN(parsed) ? parsed : null;
+  }
+  if (draft.agreedAmount !== baseline.agreedAmount) {
+    payload.agreedAmount = draft.agreedAmount.trim() || null;
+  }
+  if (draft.description !== baseline.description) {
+    payload.description = draft.description.trim() || null;
+  }
+
+  return payload;
 }
 
 export function DealSheet({ dealId, open, staffOptions, onClose, onUpdated }: DealSheetProps) {
@@ -78,6 +113,7 @@ function DealSheetInner({ dealId, staffOptions, onClose, onUpdated }: DealSheetI
   const t = useTranslations('builderSales');
   const tCommon = useTranslations('common');
   const [loadState, setLoadState] = useState<LoadState>({ status: 'loading' });
+  const [draft, setDraft] = useState<DealDetailsDraft | null>(null);
   const [saveError, setSaveError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
   const [stageBusy, setStageBusy] = useState(false);
@@ -89,12 +125,8 @@ function DealSheetInner({ dealId, staffOptions, onClose, onUpdated }: DealSheetI
       .then(async (deal) => {
         const detail = await getOrganization(deal.organizationId);
         if (!cancelled) {
-          setLoadState({
-            status: 'ready',
-            deal,
-            draft: toDraft(deal),
-            contacts: detail.contacts,
-          });
+          setLoadState({ status: 'ready', deal, contacts: detail.contacts });
+          setDraft(toDraft(deal));
         }
       })
       .catch((err: unknown) => {
@@ -109,71 +141,52 @@ function DealSheetInner({ dealId, staffOptions, onClose, onUpdated }: DealSheetI
     return () => {
       cancelled = true;
     };
-  }, [dealId, tCommon]);
+    // tCommon omitted: next-intl identity changes would re-fetch and reset draft mid-edit.
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- dealId is the load key
+  }, [dealId]);
 
-  const isDirty = useMemo(() => {
-    if (loadState.status !== 'ready') {
-      return false;
-    }
-    const baseline = toDraft(loadState.deal);
-    const { draft } = loadState;
-    return (
-      draft.primaryContactId !== baseline.primaryContactId ||
-      draft.assignedStaffId !== baseline.assignedStaffId ||
-      draft.expectedSqm !== baseline.expectedSqm ||
-      draft.agreedAmount !== baseline.agreedAmount ||
-      draft.description !== baseline.description
-    );
-  }, [loadState]);
+  const baseline = useMemo(
+    () => (loadState.status === 'ready' ? toDraft(loadState.deal) : null),
+    [loadState],
+  );
 
-  function setDraft(updater: (prev: DealDetailsDraft) => DealDetailsDraft) {
-    setLoadState((prev) => {
-      if (prev.status !== 'ready') {
-        return prev;
-      }
-      return { ...prev, draft: updater(prev.draft) };
-    });
+  const isDirty = draft != null && baseline != null && !draftsEqual(draft, baseline);
+
+  function updateDraft(updater: (prev: DealDetailsDraft) => DealDetailsDraft) {
+    setDraft((prev) => (prev ? updater(prev) : prev));
   }
 
-  function applyDeal(deal: DealListItem) {
-    setLoadState((prev) => {
-      if (prev.status !== 'ready') {
-        return prev;
-      }
-      return { ...prev, deal, draft: toDraft(deal) };
-    });
+  function setDeal(deal: DealListItem, syncDraft: boolean) {
+    setLoadState((prev) =>
+      prev.status === 'ready' ? { status: 'ready', deal, contacts: prev.contacts } : prev,
+    );
+    if (syncDraft) {
+      setDraft(toDraft(deal));
+    }
     onUpdated(deal);
   }
 
   function handleCancelDraft() {
-    setLoadState((prev) => {
-      if (prev.status !== 'ready') {
-        return prev;
-      }
-      return { ...prev, draft: toDraft(prev.deal) };
-    });
+    if (baseline) {
+      setDraft(baseline);
+    }
     setSaveError(null);
   }
 
   async function handleSave() {
-    if (loadState.status !== 'ready') {
+    if (loadState.status !== 'ready' || !draft || !baseline) {
       return;
     }
-    const { draft } = loadState;
-    const sqmRaw = draft.expectedSqm.trim();
-    const sqmValue = sqmRaw ? Number(sqmRaw) : null;
+    const payload = buildDetailsPatch(draft, baseline);
+    if (Object.keys(payload).length === 0) {
+      return;
+    }
 
     setBusy(true);
     setSaveError(null);
     try {
-      const updated = await updateDeal(dealId, {
-        primaryContactId: draft.primaryContactId || null,
-        assignedStaffId: draft.assignedStaffId || null,
-        expectedSqm: sqmValue != null && !Number.isNaN(sqmValue) ? sqmValue : null,
-        agreedAmount: draft.agreedAmount.trim() || null,
-        description: draft.description.trim() || null,
-      });
-      applyDeal(updated);
+      const updated = await updateDeal(dealId, payload);
+      setDeal(updated, true);
     } catch (err) {
       setSaveError(err instanceof ApiError ? err.message : tCommon('unexpectedError'));
     } finally {
@@ -182,11 +195,22 @@ function DealSheetInner({ dealId, staffOptions, onClose, onUpdated }: DealSheetI
   }
 
   async function handleStageChange(stage: DealStage) {
+    if (loadState.status !== 'ready') {
+      return;
+    }
+    const previous = loadState.deal;
+    if (previous.stage === stage) {
+      return;
+    }
+
+    const keepDraft = isDirty;
+    setDeal({ ...previous, stage }, !keepDraft);
     setStageBusy(true);
     try {
       const updated = await updateDeal(dealId, { stage });
-      applyDeal(updated);
+      setDeal(updated, !keepDraft);
     } catch (err) {
+      setDeal(previous, !keepDraft);
       showToast(err instanceof ApiError ? err.message : tCommon('unexpectedError'), 'error');
     } finally {
       setStageBusy(false);
@@ -217,14 +241,14 @@ function DealSheetInner({ dealId, staffOptions, onClose, onUpdated }: DealSheetI
     >
       {loadState.status === 'loading' ? <LoadingState message={tCommon('loading')} /> : null}
       {loadState.status === 'error' ? <ErrorState message={loadState.message} /> : null}
-      {loadState.status === 'ready' ? (
+      {loadState.status === 'ready' && draft ? (
         <div className="flex flex-col gap-6">
           <DealDetailsSection
             organizationName={loadState.deal.organization.name}
-            draft={loadState.draft}
+            draft={draft}
             contacts={loadState.contacts}
             staffOptions={staffOptions}
-            onChange={setDraft}
+            onChange={updateDraft}
           />
           <DealStageSection
             deal={loadState.deal}

@@ -231,8 +231,8 @@ function DealCreateSheetInner({
         <Field label={t('fields.expectedSqm')} htmlFor="create-sqm">
           <TextInput
             id="create-sqm"
-            type="number"
-            min={0}
+            inputMode="numeric"
+            pattern="[0-9]*"
             value={expectedSqm}
             onChange={(event) => setExpectedSqm(event.target.value)}
           />

@@ -2,7 +2,7 @@
 
 import { useTranslations } from 'next-intl';
 import type { DealListItem } from '@/lib/api/types';
-import { formatAmount, nameInitials } from '@/lib/format';
+import { formatAmount, formatSqm, nameInitials } from '@/lib/format';
 import { StatusBadge } from '@/components/ui/status-badge';
 import { stageTone } from '@/features/builder-crm/constants';
 
@@ -35,8 +35,8 @@ export function DealCard({ deal, isDragging }: DealCardProps) {
       )}
 
       <div className="mt-2 flex flex-wrap gap-x-3 gap-y-1 text-xs text-[var(--color-muted)]">
-        {deal.expectedSqm != null ? (
-          <span>{t('card.expectedSqm', { value: deal.expectedSqm })}</span>
+        {formatSqm(deal.expectedSqm) ? (
+          <span>{t('card.expectedSqm', { value: formatSqm(deal.expectedSqm) })}</span>
         ) : null}
         {deal.agreedAmount != null && String(deal.agreedAmount).length > 0 ? (
           <span>{t('card.amount', { value: formatAmount(deal.agreedAmount) })}</span>

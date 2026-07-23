@@ -78,8 +78,8 @@ export function DealDetailsSection({
       <Field label={t('fields.expectedSqm')} htmlFor="deal-sqm">
         <TextInput
           id="deal-sqm"
-          type="number"
-          min={0}
+          inputMode="numeric"
+          pattern="[0-9]*"
           value={draft.expectedSqm}
           onChange={(event) => onChange((prev) => ({ ...prev, expectedSqm: event.target.value }))}
         />
