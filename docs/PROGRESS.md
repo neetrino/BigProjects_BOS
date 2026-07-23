@@ -3,15 +3,19 @@
 ## Current State
 
 - branch: `bos-simple-v1`;
-- documentation reset to simple Size B architecture;
-- development handoff added for the next developer or AI agent;
-- previous enterprise implementation preserved in `sipan`;
-- implementation on this branch has not started.
+- Phase 0 (Foundation) is complete and verified;
+- pnpm workspace with `apps/web` (Next.js 16) and `apps/api` (NestJS 11);
+- Prisma 7 connected to local Docker PostgreSQL 18 (no models yet);
+- `GET /api/v1/health` returns database status; the web home page renders it;
+- Armenian, Russian and English localization foundation (next-intl, cookie-based);
+- format, lint, typecheck, test and production build all pass;
+- previous enterprise implementation remains in `sipan` (reference only).
 
 ## Next Gate
 
-1. Read [Development Handoff](./00-DEVELOPMENT-HANDOFF.md).
-2. Start Phase 0 from [Implementation Roadmap](./06-IMPLEMENTATION-ROADMAP.md).
-3. Stop when both applications start and the frontend can call the NestJS health endpoint.
+1. Wait for owner approval to start Phase 1 (Auth And Core Records) from
+   [Implementation Roadmap](./06-IMPLEMENTATION-ROADMAP.md).
+2. Phase 1 stop condition: Admin can create a Staff user, cycle, company and contact.
 
-Do not copy the old architecture wholesale from `sipan`. Reuse individual UI or map components only after reviewing them against the new documents.
+Do not copy the old architecture wholesale from `sipan`. Reuse individual UI or map components
+only after reviewing them against the new documents.
