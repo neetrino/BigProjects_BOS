@@ -141,14 +141,21 @@ export function DealNotesSection({ dealId }: DealNotesSectionProps) {
           {loadState.notes.map((note) => {
             const canDelete = isAdmin || note.author.id === user.id;
             return (
-              <li key={note.id} className="border-b border-[var(--color-border)] pb-2 last:border-0">
+              <li
+                key={note.id}
+                className="border-b border-[var(--color-border)] pb-2 last:border-0"
+              >
                 <p className="whitespace-pre-wrap text-sm text-[var(--color-fg)]">{note.body}</p>
                 <div className="mt-1 flex items-center justify-between gap-2">
                   <p className="text-xs text-[var(--color-muted)]">
                     {note.author.name} · {formatDate(note.createdAt)}
                   </p>
                   {canDelete ? (
-                    <Button variant="ghost" className="px-1.5 text-xs" onClick={() => setPendingDelete(note)}>
+                    <Button
+                      variant="ghost"
+                      className="px-1.5 text-xs"
+                      onClick={() => setPendingDelete(note)}
+                    >
                       {tCommon('delete')}
                     </Button>
                   ) : null}

@@ -1,8 +1,4 @@
-import {
-  ForbiddenException,
-  Injectable,
-  NotFoundException,
-} from '@nestjs/common';
+import { ForbiddenException, Injectable, NotFoundException } from '@nestjs/common';
 import { Note, User, UserRole } from '@prisma/client';
 import { assertContentOwnerExists } from '../common/content-owner/assert-content-owner-exists';
 import { AuthenticatedUser } from '../common/types/authenticated-user.type';

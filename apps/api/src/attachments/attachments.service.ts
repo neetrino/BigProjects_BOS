@@ -26,8 +26,7 @@ const ATTACHMENT_NOT_FOUND_MESSAGE = 'Attachment not found.';
 const ATTACHMENT_DELETE_FORBIDDEN_MESSAGE =
   'Only the uploader or an admin can delete this attachment.';
 const ATTACHMENT_SIZE_LIMIT_MESSAGE = `Attachment size must not exceed ${MAX_ATTACHMENT_SIZE_BYTES} bytes.`;
-const OBJECT_KEY_MISMATCH_MESSAGE =
-  'objectKey does not match the provided ownerType and ownerId.';
+const OBJECT_KEY_MISMATCH_MESSAGE = 'objectKey does not match the provided ownerType and ownerId.';
 const MAX_SANITIZED_FILENAME_LENGTH = 200;
 
 type AttachmentWithUploader = Attachment & { uploader: User };
@@ -57,10 +56,7 @@ export class AttachmentsService {
     await assertContentOwnerExists(this.prisma, dto.ownerType, dto.ownerId);
 
     const objectKey = this.buildObjectKey(dto.ownerType, dto.ownerId, dto.filename);
-    const uploadUrl = await this.storageService.createPresignedPutUrl(
-      objectKey,
-      dto.contentType,
-    );
+    const uploadUrl = await this.storageService.createPresignedPutUrl(objectKey, dto.contentType);
 
     return { objectKey, uploadUrl };
   }
@@ -136,11 +132,7 @@ export class AttachmentsService {
     throw new ForbiddenException(ATTACHMENT_DELETE_FORBIDDEN_MESSAGE);
   }
 
-  private buildObjectKey(
-    ownerType: ContentOwnerType,
-    ownerId: string,
-    filename: string,
-  ): string {
+  private buildObjectKey(ownerType: ContentOwnerType, ownerId: string, filename: string): string {
     const sanitized = this.sanitizeFilename(filename);
     return `${ownerType}/${ownerId}/${randomUUID()}-${sanitized}`;
   }

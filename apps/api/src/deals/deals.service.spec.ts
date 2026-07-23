@@ -153,9 +153,9 @@ describe('DealsService', () => {
         status: EventCycleStatus.CLOSED,
       });
 
-      await expect(
-        service.create({ eventCycleId: cycleId, organizationId }),
-      ).rejects.toThrow(BadRequestException);
+      await expect(service.create({ eventCycleId: cycleId, organizationId })).rejects.toThrow(
+        BadRequestException,
+      );
     });
 
     it('creates a deal when cycle and organization are valid', async () => {

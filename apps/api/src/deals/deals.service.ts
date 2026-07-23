@@ -1,8 +1,4 @@
-import {
-  BadRequestException,
-  Injectable,
-  NotFoundException,
-} from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import {
   BuilderDeal,
   Contact,
@@ -23,8 +19,7 @@ const DEAL_NOT_FOUND_MESSAGE = 'Builder deal not found.';
 const CYCLE_NOT_FOUND_MESSAGE = 'Event cycle not found.';
 const CYCLE_CLOSED_MESSAGE = 'Cannot create or update a deal for a closed event cycle.';
 const ORGANIZATION_NOT_FOUND_MESSAGE = 'Organization not found.';
-const CONTACT_NOT_IN_ORG_MESSAGE =
-  'Primary contact must belong to the selected organization.';
+const CONTACT_NOT_IN_ORG_MESSAGE = 'Primary contact must belong to the selected organization.';
 const ASSIGNED_STAFF_INVALID_MESSAGE = 'Assigned staff must be an existing active user.';
 const WON_WITHOUT_ALLOCATION_MESSAGE =
   'The deal cannot be won without an active venue-space allocation.';
@@ -85,10 +80,7 @@ export class DealsService {
   async create(dto: CreateDealDto): Promise<DealResponseDto> {
     await this.assertCycleAcceptsDeals(dto.eventCycleId);
     await this.assertOrganizationExists(dto.organizationId);
-    await this.assertPrimaryContactBelongsToOrganization(
-      dto.primaryContactId,
-      dto.organizationId,
-    );
+    await this.assertPrimaryContactBelongsToOrganization(dto.primaryContactId, dto.organizationId);
     await this.assertAssignedStaffActive(dto.assignedStaffId);
 
     const deal = await this.prisma.builderDeal.create({

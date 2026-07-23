@@ -2,10 +2,7 @@ import { BadRequestException } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import { ContentOwnerType } from '@prisma/client';
 import { PrismaService } from '../prisma/prisma.service';
-import {
-  AttachmentsService,
-  MAX_ATTACHMENT_SIZE_BYTES,
-} from './attachments.service';
+import { AttachmentsService, MAX_ATTACHMENT_SIZE_BYTES } from './attachments.service';
 import { StorageService } from './storage.service';
 
 describe('AttachmentsService', () => {

@@ -89,9 +89,7 @@ export function DealDetailsSection({
           id="deal-amount"
           inputMode="decimal"
           value={draft.agreedAmount}
-          onChange={(event) =>
-            onChange((prev) => ({ ...prev, agreedAmount: event.target.value }))
-          }
+          onChange={(event) => onChange((prev) => ({ ...prev, agreedAmount: event.target.value }))}
         />
       </Field>
       <Field label={t('fields.description')} htmlFor="deal-description">
@@ -99,9 +97,7 @@ export function DealDetailsSection({
           id="deal-description"
           rows={3}
           value={draft.description}
-          onChange={(event) =>
-            onChange((prev) => ({ ...prev, description: event.target.value }))
-          }
+          onChange={(event) => onChange((prev) => ({ ...prev, description: event.target.value }))}
         />
       </Field>
     </section>

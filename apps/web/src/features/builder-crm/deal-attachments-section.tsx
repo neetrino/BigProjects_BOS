@@ -101,10 +101,7 @@ export function DealAttachmentsSection({ dealId }: DealAttachmentsSectionProps) 
       );
       showToast(t('attachments.uploadSuccess'), 'success');
     } catch (err) {
-      showToast(
-        err instanceof ApiError ? err.message : t('attachments.uploadFailed'),
-        'error',
-      );
+      showToast(err instanceof ApiError ? err.message : t('attachments.uploadFailed'), 'error');
     } finally {
       setUploadBusy(false);
       if (inputRef.current) {
@@ -189,7 +186,11 @@ export function DealAttachmentsSection({ dealId }: DealAttachmentsSectionProps) 
                 </p>
               </div>
               <div className="flex shrink-0 gap-1">
-                <Button variant="ghost" className="px-1.5 text-xs" onClick={() => void handleDownload(item)}>
+                <Button
+                  variant="ghost"
+                  className="px-1.5 text-xs"
+                  onClick={() => void handleDownload(item)}
+                >
                   {t('attachments.download')}
                 </Button>
                 <Button

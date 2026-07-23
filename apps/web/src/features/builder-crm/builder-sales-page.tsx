@@ -13,10 +13,7 @@ import { Button } from '@/components/ui/button';
 import { EmptyState, ErrorState, LoadingState } from '@/components/ui/page-state';
 import { showToast } from '@/components/ui/toast';
 import { BuilderSalesToolbar } from '@/features/builder-crm/builder-sales-toolbar';
-import {
-  SEARCH_DEBOUNCE_MS,
-  type BoardViewMode,
-} from '@/features/builder-crm/constants';
+import { SEARCH_DEBOUNCE_MS, type BoardViewMode } from '@/features/builder-crm/constants';
 import { DealCreateSheet } from '@/features/builder-crm/deal-create-sheet';
 import { DealKanban } from '@/features/builder-crm/deal-kanban';
 import { DealList } from '@/features/builder-crm/deal-list';
@@ -173,10 +170,7 @@ export function BuilderSalesPage() {
     };
   }, [cycleId, search, assignedStaffId, reloadToken, tCommon]);
 
-  const deals = useMemo(
-    () => (dealsLoad.status === 'ready' ? dealsLoad.deals : []),
-    [dealsLoad],
-  );
+  const deals = useMemo(() => (dealsLoad.status === 'ready' ? dealsLoad.deals : []), [dealsLoad]);
 
   const staffOptions = useMemo<StaffOption[]>(() => {
     if (isAdmin && adminUsers.length > 0) {

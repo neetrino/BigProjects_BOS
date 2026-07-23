@@ -17,11 +17,7 @@ import { useMemo, useRef, useState } from 'react';
 import { useTranslations } from 'next-intl';
 import type { DealListItem, DealStage } from '@/lib/api/types';
 import { DealCard } from '@/features/builder-crm/deal-card';
-import {
-  ACTIVE_STAGES,
-  TERMINAL_STAGES,
-  isTerminalStage,
-} from '@/features/builder-crm/constants';
+import { ACTIVE_STAGES, TERMINAL_STAGES, isTerminalStage } from '@/features/builder-crm/constants';
 
 const CLICK_MAX_DISTANCE_PX = 6;
 
