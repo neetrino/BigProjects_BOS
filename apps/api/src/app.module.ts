@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { APP_GUARD } from '@nestjs/core';
 import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
 import { AttachmentsModule } from './attachments/attachments.module';
@@ -10,6 +10,7 @@ import {
 } from './common/constants/auth.constants';
 import { CsrfOriginGuard } from './common/guards/csrf-origin.guard';
 import { RolesGuard } from './common/guards/roles.guard';
+import { RequestLoggingMiddleware } from './common/middleware/request-logging.middleware';
 import { ContactsModule } from './contacts/contacts.module';
 import { CyclesModule } from './cycles/cycles.module';
 import { DealsModule } from './deals/deals.module';
@@ -49,4 +50,8 @@ import { VenueMapModule } from './venue-map/venue-map.module';
     { provide: APP_GUARD, useClass: RolesGuard },
   ],
 })
-export class AppModule {}
+export class AppModule implements NestModule {
+  configure(consumer: MiddlewareConsumer): void {
+    consumer.apply(RequestLoggingMiddleware).forRoutes('*');
+  }
+}

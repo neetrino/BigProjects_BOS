@@ -1,9 +1,5 @@
 import { test, expect } from '@playwright/test';
-import {
-  addContactToOrganization,
-  createCycle,
-  createOrganization,
-} from './helpers/records';
+import { addContactToOrganization, createCycle, createOrganization } from './helpers/records';
 import { uniqueSuffix } from './helpers/unique';
 
 test.describe('core records', () => {

@@ -18,11 +18,13 @@ export async function switchToEnglish(page: Page): Promise<void> {
   const english = page.getByRole('button', { name: 'English' });
   if (await english.isVisible()) {
     await english.click();
-    await expect(page.getByRole('navigation', { name: 'Main navigation' })).toBeVisible({
-      timeout: 15_000,
-    }).catch(async () => {
-      await expect(page.getByLabel('Email')).toBeVisible({ timeout: 15_000 });
-    });
+    await expect(page.getByRole('navigation', { name: 'Main navigation' }))
+      .toBeVisible({
+        timeout: 15_000,
+      })
+      .catch(async () => {
+        await expect(page.getByLabel('Email')).toBeVisible({ timeout: 15_000 });
+      });
   }
 }
 

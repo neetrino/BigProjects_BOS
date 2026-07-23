@@ -4,6 +4,7 @@ import { NestFactory } from '@nestjs/core';
 import { INestApplication, ValidationPipe } from '@nestjs/common';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import cookieParser from 'cookie-parser';
+import helmet from 'helmet';
 import { AppModule } from './app.module';
 import { SESSION_COOKIE_NAME } from './common/constants/auth.constants';
 
@@ -15,6 +16,15 @@ loadEnv({ path: resolve(__dirname, '../../../.env') });
 
 async function bootstrap(): Promise<void> {
   const app = await NestFactory.create(AppModule);
+
+  // CSP off: API serves JSON + Swagger HTML/assets (browser CSP belongs on apps/web).
+  // CORP off: keep CORS-based cross-origin access for the Next.js same-origin proxy and Swagger.
+  app.use(
+    helmet({
+      contentSecurityPolicy: false,
+      crossOriginResourcePolicy: false,
+    }),
+  );
 
   app.setGlobalPrefix('api/v1');
   app.enableCors({
@@ -30,10 +40,16 @@ async function bootstrap(): Promise<void> {
     }),
   );
 
-  setupSwagger(app);
+  if (isSwaggerEnabled()) {
+    setupSwagger(app);
+  }
 
   const port = Number(process.env.API_PORT ?? DEFAULT_API_PORT);
   await app.listen(port);
+}
+
+function isSwaggerEnabled(): boolean {
+  return process.env.NODE_ENV !== 'production' || process.env.SWAGGER_ENABLED === 'true';
 }
 
 /** Runtime-only OpenAPI docs (no generated client). Cookie auth scheme matches the session cookie. */

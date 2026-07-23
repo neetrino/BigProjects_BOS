@@ -79,7 +79,9 @@ export async function createDealForOrganization(
   await page.getByRole('button', { name: 'New deal' }).click();
   const sheet = page.getByRole('dialog', { name: 'Create deal' });
   await sheet.getByPlaceholder('Search organizations').fill(organizationName);
-  await expect(sheet.getByLabel('Select organization').locator('option', { hasText: organizationName })).toHaveCount(1);
+  await expect(
+    sheet.getByLabel('Select organization').locator('option', { hasText: organizationName }),
+  ).toHaveCount(1);
   await sheet.getByLabel('Select organization').selectOption({ label: organizationName });
   await sheet.getByRole('button', { name: 'Save' }).click();
   await expect(page.getByRole('dialog', { name: 'Deal' })).toBeVisible({ timeout: 15_000 });
@@ -92,7 +94,9 @@ export async function createPartnerForOrganization(
   await page.getByRole('button', { name: 'New partner' }).click();
   const sheet = page.getByRole('dialog', { name: 'Create partner' });
   await sheet.getByPlaceholder('Search organizations').fill(organizationName);
-  await expect(sheet.getByLabel('Select organization').locator('option', { hasText: organizationName })).toHaveCount(1);
+  await expect(
+    sheet.getByLabel('Select organization').locator('option', { hasText: organizationName }),
+  ).toHaveCount(1);
   await sheet.getByLabel('Select organization').selectOption({ label: organizationName });
   await sheet.getByRole('button', { name: 'Save' }).click();
   await expect(page.getByRole('dialog', { name: 'Partner' })).toBeVisible({ timeout: 15_000 });
