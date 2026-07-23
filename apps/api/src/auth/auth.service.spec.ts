@@ -118,7 +118,9 @@ describe('AuthService', () => {
   });
 
   describe('validateSession', () => {
-    const buildSession = (overrides: Partial<{ expiresAt: Date; userStatus: UserStatus }> = {}) => ({
+    const buildSession = (
+      overrides: Partial<{ expiresAt: Date; userStatus: UserStatus }> = {},
+    ) => ({
       id: 'session-1',
       userId: baseUser.id,
       tokenHash: 'hash',
@@ -182,7 +184,9 @@ describe('AuthService', () => {
       expect(prisma.session.update).toHaveBeenCalledTimes(1);
       const updateArgs = prisma.session.update.mock.calls[0][0];
       expect(updateArgs.where).toEqual({ id: session.id });
-      expect(updateArgs.data.expiresAt.getTime()).toBeGreaterThan(Date.now() + SESSION_TTL_MS - 1000);
+      expect(updateArgs.data.expiresAt.getTime()).toBeGreaterThan(
+        Date.now() + SESSION_TTL_MS - 1000,
+      );
     });
   });
 

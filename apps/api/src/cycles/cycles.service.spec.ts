@@ -18,7 +18,12 @@ const existingCycle = {
 describe('CyclesService', () => {
   let service: CyclesService;
   let prisma: {
-    eventCycle: { findMany: jest.Mock; create: jest.Mock; findUnique: jest.Mock; update: jest.Mock };
+    eventCycle: {
+      findMany: jest.Mock;
+      create: jest.Mock;
+      findUnique: jest.Mock;
+      update: jest.Mock;
+    };
   };
 
   beforeEach(async () => {
@@ -48,9 +53,9 @@ describe('CyclesService', () => {
       });
       prisma.eventCycle.create.mockRejectedValue(conflictError);
 
-      await expect(
-        service.create({ name: 'Duplicate', code: existingCycle.code }),
-      ).rejects.toThrow(ConflictException);
+      await expect(service.create({ name: 'Duplicate', code: existingCycle.code })).rejects.toThrow(
+        ConflictException,
+      );
     });
   });
 
@@ -58,7 +63,9 @@ describe('CyclesService', () => {
     it('throws when the target cycle does not exist', async () => {
       prisma.eventCycle.findUnique.mockResolvedValue(null);
 
-      await expect(service.update('missing', { name: 'Updated' })).rejects.toThrow(NotFoundException);
+      await expect(service.update('missing', { name: 'Updated' })).rejects.toThrow(
+        NotFoundException,
+      );
     });
 
     it('maps a duplicate-code database error to a readable 409', async () => {

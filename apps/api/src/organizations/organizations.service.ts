@@ -111,7 +111,9 @@ export class OrganizationsService {
     return where;
   }
 
-  private toListItemResponse(organization: OrganizationWithContactCount): OrganizationListItemResponseDto {
+  private toListItemResponse(
+    organization: OrganizationWithContactCount,
+  ): OrganizationListItemResponseDto {
     return {
       id: organization.id,
       name: organization.name,

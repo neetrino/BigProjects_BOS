@@ -106,7 +106,11 @@ describe('UsersService', () => {
     });
 
     it('prevents an admin from disabling their own account', async () => {
-      prisma.user.findUnique.mockResolvedValue({ ...existingUser, id: admin.id, role: UserRole.ADMIN });
+      prisma.user.findUnique.mockResolvedValue({
+        ...existingUser,
+        id: admin.id,
+        role: UserRole.ADMIN,
+      });
 
       await expect(
         service.update(admin.id, { status: UserStatus.DISABLED }, admin),
@@ -115,7 +119,11 @@ describe('UsersService', () => {
     });
 
     it('prevents an admin from demoting their own role', async () => {
-      prisma.user.findUnique.mockResolvedValue({ ...existingUser, id: admin.id, role: UserRole.ADMIN });
+      prisma.user.findUnique.mockResolvedValue({
+        ...existingUser,
+        id: admin.id,
+        role: UserRole.ADMIN,
+      });
 
       await expect(service.update(admin.id, { role: UserRole.STAFF }, admin)).rejects.toThrow(
         ForbiddenException,
@@ -124,7 +132,11 @@ describe('UsersService', () => {
     });
 
     it('allows an admin to update their own name', async () => {
-      prisma.user.findUnique.mockResolvedValue({ ...existingUser, id: admin.id, role: UserRole.ADMIN });
+      prisma.user.findUnique.mockResolvedValue({
+        ...existingUser,
+        id: admin.id,
+        role: UserRole.ADMIN,
+      });
       tx.user.update.mockResolvedValue({ ...existingUser, id: admin.id, name: 'New Name' });
 
       const result = await service.update(admin.id, { name: 'New Name' }, admin);

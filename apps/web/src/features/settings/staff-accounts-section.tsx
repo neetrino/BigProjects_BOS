@@ -153,18 +153,14 @@ export function StaffAccountsSection() {
         onClose={() => setCreateOpen(false)}
         onCreated={(created) =>
           setLoadState((prev) =>
-            prev.status === 'ready'
-              ? { status: 'ready', users: [created, ...prev.users] }
-              : prev,
+            prev.status === 'ready' ? { status: 'ready', users: [created, ...prev.users] } : prev,
           )
         }
       />
 
       <Dialog
         open={target !== null}
-        title={
-          target?.status === 'ACTIVE' ? t('confirmDisableTitle') : t('confirmReactivateTitle')
-        }
+        title={target?.status === 'ACTIVE' ? t('confirmDisableTitle') : t('confirmReactivateTitle')}
         description={
           target?.status === 'ACTIVE'
             ? t('confirmDisableDescription', { name: target.name })

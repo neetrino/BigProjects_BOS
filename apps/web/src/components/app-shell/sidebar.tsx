@@ -11,13 +11,7 @@ import { LanguageSwitcher } from '@/components/language-switcher';
 import { HealthIndicator } from '@/components/app-shell/health-indicator';
 import { Button } from '@/components/ui/button';
 
-type NavKey =
-  | 'builderSales'
-  | 'partners'
-  | 'venueMap'
-  | 'cycles'
-  | 'organizations'
-  | 'settings';
+type NavKey = 'builderSales' | 'partners' | 'venueMap' | 'cycles' | 'organizations' | 'settings';
 
 type NavItem = {
   key: NavKey;

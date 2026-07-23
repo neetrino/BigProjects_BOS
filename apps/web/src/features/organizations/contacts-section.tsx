@@ -180,9 +180,8 @@ export function ContactsSection({ organizationId, contacts, onChange }: Contacts
                     ) : null}
                   </p>
                   <p className="truncate text-xs text-[var(--color-muted)]">
-                    {[contact.position, contact.phone, contact.email]
-                      .filter(Boolean)
-                      .join(' · ') || '—'}
+                    {[contact.position, contact.phone, contact.email].filter(Boolean).join(' · ') ||
+                      '—'}
                   </p>
                 </div>
                 <div className="flex shrink-0 gap-1">

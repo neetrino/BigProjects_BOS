@@ -148,9 +148,7 @@ export function CyclesPage() {
                 <th className="px-3 py-2 font-medium">{t('columns.code')}</th>
                 <th className="px-3 py-2 font-medium">{t('columns.status')}</th>
                 <th className="px-3 py-2 font-medium">{t('columns.dates')}</th>
-                {isAdmin ? (
-                  <th className="px-3 py-2 font-medium">{t('columns.actions')}</th>
-                ) : null}
+                {isAdmin ? <th className="px-3 py-2 font-medium">{t('columns.actions')}</th> : null}
               </tr>
             </thead>
             <tbody>
@@ -179,10 +177,7 @@ export function CyclesPage() {
                   </td>
                   {isAdmin ? (
                     <td className="px-3 py-2.5">
-                      <div
-                        className="flex gap-2"
-                        onClick={(event) => event.stopPropagation()}
-                      >
+                      <div className="flex gap-2" onClick={(event) => event.stopPropagation()}>
                         {cycle.status === 'DRAFT' ? (
                           <Button
                             variant="secondary"
@@ -221,9 +216,7 @@ export function CyclesPage() {
       <Dialog
         open={confirm !== null}
         title={
-          confirm?.nextStatus === 'ACTIVE'
-            ? t('confirm.activateTitle')
-            : t('confirm.closeTitle')
+          confirm?.nextStatus === 'ACTIVE' ? t('confirm.activateTitle') : t('confirm.closeTitle')
         }
         description={
           confirm?.nextStatus === 'ACTIVE'

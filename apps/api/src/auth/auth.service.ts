@@ -120,7 +120,10 @@ export class AuthService {
     });
   }
 
-  private async verifyPassword(passwordHash: string | undefined, password: string): Promise<boolean> {
+  private async verifyPassword(
+    passwordHash: string | undefined,
+    password: string,
+  ): Promise<boolean> {
     try {
       return await argon2.verify(passwordHash ?? DUMMY_PASSWORD_HASH, password);
     } catch (error: unknown) {

@@ -17,11 +17,7 @@ type OrganizationFormSheetProps = {
   onCreated: (organization: OrganizationListItem) => void;
 };
 
-export function OrganizationFormSheet({
-  open,
-  onClose,
-  onCreated,
-}: OrganizationFormSheetProps) {
+export function OrganizationFormSheet({ open, onClose, onCreated }: OrganizationFormSheetProps) {
   if (!open) {
     return null;
   }

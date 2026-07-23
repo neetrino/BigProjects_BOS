@@ -6,7 +6,10 @@ import { AuthenticatedRequest } from '../../common/types/authenticated-request.t
 import { AuthService } from '../auth.service';
 import { SessionAuthGuard } from './session-auth.guard';
 
-const buildContext = (request: Partial<AuthenticatedRequest>, isPublic: boolean): ExecutionContext =>
+const buildContext = (
+  request: Partial<AuthenticatedRequest>,
+  isPublic: boolean,
+): ExecutionContext =>
   ({
     getHandler: () => (isPublic ? { __public: true } : {}),
     getClass: () => ({}),
@@ -57,7 +60,9 @@ describe('SessionAuthGuard', () => {
       locale: 'en',
     };
     authService.validateSession.mockResolvedValue({ user, sessionId: 'session-1' });
-    const request: Partial<AuthenticatedRequest> = { cookies: { [SESSION_COOKIE_NAME]: 'good-token' } };
+    const request: Partial<AuthenticatedRequest> = {
+      cookies: { [SESSION_COOKIE_NAME]: 'good-token' },
+    };
     const context = buildContext(request, false);
 
     await expect(guard.canActivate(context)).resolves.toBe(true);

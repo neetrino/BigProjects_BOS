@@ -21,7 +21,13 @@ describe('ContactsService', () => {
   let service: ContactsService;
   let prisma: {
     organization: { findUnique: jest.Mock };
-    contact: { findUnique: jest.Mock; create: jest.Mock; update: jest.Mock; updateMany: jest.Mock; delete: jest.Mock };
+    contact: {
+      findUnique: jest.Mock;
+      create: jest.Mock;
+      update: jest.Mock;
+      updateMany: jest.Mock;
+      delete: jest.Mock;
+    };
     $transaction: jest.Mock;
   };
   let tx: {
@@ -108,7 +114,9 @@ describe('ContactsService', () => {
     it('throws when the contact does not exist', async () => {
       prisma.contact.findUnique.mockResolvedValue(null);
 
-      await expect(service.update('missing', { name: 'Updated' })).rejects.toThrow(NotFoundException);
+      await expect(service.update('missing', { name: 'Updated' })).rejects.toThrow(
+        NotFoundException,
+      );
     });
   });
 });

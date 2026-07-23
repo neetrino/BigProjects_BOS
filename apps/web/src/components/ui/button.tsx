@@ -15,8 +15,7 @@ const VARIANT_CLASS: Record<ButtonVariant, string> = {
     'border-[var(--color-border)] bg-[var(--color-surface)] text-[var(--color-fg)] hover:bg-[var(--color-bg)] disabled:opacity-50',
   ghost:
     'border-transparent bg-transparent text-[var(--color-muted)] hover:text-[var(--color-fg)] disabled:opacity-50',
-  danger:
-    'border-transparent bg-red-700 text-white hover:bg-red-800 disabled:opacity-50',
+  danger: 'border-transparent bg-red-700 text-white hover:bg-red-800 disabled:opacity-50',
 };
 
 export function Button({

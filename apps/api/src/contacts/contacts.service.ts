@@ -16,7 +16,9 @@ export class ContactsService {
     organizationId: string,
     dto: CreateContactDto,
   ): Promise<OrganizationContactResponseDto> {
-    const organization = await this.prisma.organization.findUnique({ where: { id: organizationId } });
+    const organization = await this.prisma.organization.findUnique({
+      where: { id: organizationId },
+    });
     if (!organization) {
       throw new NotFoundException(ORGANIZATION_NOT_FOUND_MESSAGE);
     }

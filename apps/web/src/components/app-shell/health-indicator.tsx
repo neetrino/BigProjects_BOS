@@ -14,9 +14,7 @@ export function HealthIndicator() {
     void fetchHealth()
       .then((data) => {
         if (!cancelled) {
-          setLabel(
-            data.database === 'up' ? t('ok') : t('dbDown'),
-          );
+          setLabel(data.database === 'up' ? t('ok') : t('dbDown'));
         }
       })
       .catch(() => {

@@ -38,7 +38,9 @@ function extractErrorMessage(body: unknown, fallback: string): string {
   }
 
   if (Array.isArray(message) && message.length > 0) {
-    return message.filter((item): item is string => typeof item === 'string').join(', ') || fallback;
+    return (
+      message.filter((item): item is string => typeof item === 'string').join(', ') || fallback
+    );
   }
 
   return fallback;

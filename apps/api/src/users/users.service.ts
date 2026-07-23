@@ -1,4 +1,9 @@
-import { ConflictException, ForbiddenException, Injectable, NotFoundException } from '@nestjs/common';
+import {
+  ConflictException,
+  ForbiddenException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { Prisma, User, UserRole, UserStatus } from '@prisma/client';
 import * as argon2 from 'argon2';
 import { AuthenticatedUser } from '../common/types/authenticated-user.type';
@@ -49,7 +54,11 @@ export class UsersService {
    * disable nor demote their own account. Disabling a user deletes all of their sessions so an
    * already-open browser session is invalidated immediately, not just future logins.
    */
-  async update(id: string, dto: UpdateUserDto, currentUser: AuthenticatedUser): Promise<UserResponseDto> {
+  async update(
+    id: string,
+    dto: UpdateUserDto,
+    currentUser: AuthenticatedUser,
+  ): Promise<UserResponseDto> {
     const existing = await this.prisma.user.findUnique({ where: { id } });
     if (!existing) {
       throw new NotFoundException(USER_NOT_FOUND_MESSAGE);
@@ -79,7 +88,11 @@ export class UsersService {
     return this.toResponse(updated);
   }
 
-  private assertNotSelfLockout(targetId: string, dto: UpdateUserDto, currentUser: AuthenticatedUser): void {
+  private assertNotSelfLockout(
+    targetId: string,
+    dto: UpdateUserDto,
+    currentUser: AuthenticatedUser,
+  ): void {
     if (targetId !== currentUser.id) {
       return;
     }

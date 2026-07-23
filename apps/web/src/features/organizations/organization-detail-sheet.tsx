@@ -4,11 +4,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { useTranslations } from 'next-intl';
 import { ApiError } from '@/lib/api/client';
 import { getOrganization, updateOrganization } from '@/lib/api/organizations';
-import type {
-  OrganizationContact,
-  OrganizationDetail,
-  OrganizationType,
-} from '@/lib/api/types';
+import type { OrganizationContact, OrganizationDetail, OrganizationType } from '@/lib/api/types';
 import { ContactsSection } from '@/features/organizations/contacts-section';
 import { Button } from '@/components/ui/button';
 import { Field, SelectInput, TextInput } from '@/components/ui/field';
@@ -219,9 +215,7 @@ function OrganizationDetailSheetInner({
               <TextInput
                 id="detail-name"
                 value={loadState.draft.name}
-                onChange={(event) =>
-                  setDraft((prev) => ({ ...prev, name: event.target.value }))
-                }
+                onChange={(event) => setDraft((prev) => ({ ...prev, name: event.target.value }))}
               />
             </Field>
             <Field label={t('fields.type')} htmlFor="detail-type">
@@ -246,9 +240,7 @@ function OrganizationDetailSheetInner({
               <TextInput
                 id="detail-phone"
                 value={loadState.draft.phone}
-                onChange={(event) =>
-                  setDraft((prev) => ({ ...prev, phone: event.target.value }))
-                }
+                onChange={(event) => setDraft((prev) => ({ ...prev, phone: event.target.value }))}
               />
             </Field>
             <Field label={t('fields.email')} htmlFor="detail-email">
@@ -256,18 +248,14 @@ function OrganizationDetailSheetInner({
                 id="detail-email"
                 type="email"
                 value={loadState.draft.email}
-                onChange={(event) =>
-                  setDraft((prev) => ({ ...prev, email: event.target.value }))
-                }
+                onChange={(event) => setDraft((prev) => ({ ...prev, email: event.target.value }))}
               />
             </Field>
             <Field label={t('fields.website')} htmlFor="detail-website">
               <TextInput
                 id="detail-website"
                 value={loadState.draft.website}
-                onChange={(event) =>
-                  setDraft((prev) => ({ ...prev, website: event.target.value }))
-                }
+                onChange={(event) => setDraft((prev) => ({ ...prev, website: event.target.value }))}
               />
             </Field>
             <Field label={t('fields.registrationId')} htmlFor="detail-reg">

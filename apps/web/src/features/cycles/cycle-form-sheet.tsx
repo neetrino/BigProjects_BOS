@@ -62,9 +62,7 @@ function CycleFormSheetInner({ cycle, onClose, onSaved }: CycleFormSheetInnerPro
     };
 
     try {
-      const saved = isEdit
-        ? await updateCycle(cycle.id, payload)
-        : await createCycle(payload);
+      const saved = isEdit ? await updateCycle(cycle.id, payload) : await createCycle(payload);
       onSaved(saved);
       onClose();
     } catch (err) {
