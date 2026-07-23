@@ -9,7 +9,10 @@ import {
 } from './common/constants/auth.constants';
 import { CsrfOriginGuard } from './common/guards/csrf-origin.guard';
 import { RolesGuard } from './common/guards/roles.guard';
+import { ContactsModule } from './contacts/contacts.module';
+import { CyclesModule } from './cycles/cycles.module';
 import { HealthModule } from './health/health.module';
+import { OrganizationsModule } from './organizations/organizations.module';
 import { PrismaModule } from './prisma/prisma.module';
 import { UsersModule } from './users/users.module';
 
@@ -22,6 +25,9 @@ import { UsersModule } from './users/users.module';
     HealthModule,
     AuthModule,
     UsersModule,
+    CyclesModule,
+    OrganizationsModule,
+    ContactsModule,
   ],
   providers: [
     // Order matters: rate limit, then CSRF origin check, then session auth, then role check.
