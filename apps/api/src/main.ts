@@ -17,12 +17,23 @@ loadEnv({ path: resolve(__dirname, '../../../.env') });
 async function bootstrap(): Promise<void> {
   const app = await NestFactory.create(AppModule);
 
-  // CSP off: API serves JSON + Swagger HTML/assets (browser CSP belongs on apps/web).
-  // CORP off: keep CORS-based cross-origin access for the Next.js same-origin proxy and Swagger.
+  // Strict CSP for the API origin: it serves JSON plus the Swagger UI page, whose scripts,
+  // styles and generated init file are all same-origin ('unsafe-inline' styles are required
+  // by swagger-ui). The browser-facing app CSP lives in apps/web/next.config.ts.
   app.use(
     helmet({
-      contentSecurityPolicy: false,
-      crossOriginResourcePolicy: false,
+      contentSecurityPolicy: {
+        directives: {
+          defaultSrc: ["'self'"],
+          scriptSrc: ["'self'"],
+          styleSrc: ["'self'", "'unsafe-inline'"],
+          imgSrc: ["'self'", 'data:'],
+          objectSrc: ["'none'"],
+          frameAncestors: ["'none'"],
+          baseUri: ["'self'"],
+          formAction: ["'self'"],
+        },
+      },
     }),
   );
 

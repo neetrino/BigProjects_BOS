@@ -10,6 +10,7 @@ import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
 import { Injectable, Logger, OnModuleInit } from '@nestjs/common';
 
 const PRESIGN_EXPIRY_SECONDS = 10 * 60;
+const HTTP_STATUS_NOT_FOUND = 404;
 const S3_FORCE_PATH_STYLE_TRUE = 'true';
 
 @Injectable()
@@ -68,15 +69,45 @@ export class StorageService implements OnModuleInit {
     );
   }
 
+  /**
+   * Best-effort bucket check. Creates the bucket only when it is truly missing (local MinIO
+   * convenience). Managed stores like Cloudflare R2 pre-create buckets and issue object-scoped
+   * credentials without bucket-admin rights, so permission errors must not block startup.
+   */
   private async ensureBucketExists(): Promise<void> {
     try {
       await this.client.send(new HeadBucketCommand({ Bucket: this.bucket }));
       this.logger.log(`S3 bucket ready: ${this.bucket}`);
-    } catch {
+      return;
+    } catch (error: unknown) {
+      if (!this.isBucketMissingError(error)) {
+        this.logger.warn(
+          `Could not verify S3 bucket "${this.bucket}" (likely credentials without bucket-level rights); assuming it exists.`,
+        );
+        return;
+      }
+    }
+
+    try {
       this.logger.log(`Creating S3 bucket: ${this.bucket}`);
       await this.client.send(new CreateBucketCommand({ Bucket: this.bucket }));
       this.logger.log(`S3 bucket created: ${this.bucket}`);
+    } catch (error: unknown) {
+      this.logger.warn(
+        `Could not create S3 bucket "${this.bucket}": ${error instanceof Error ? error.message : String(error)}. Create it manually before uploading files.`,
+      );
     }
+  }
+
+  /** True only for a definite "bucket does not exist" (404/NotFound/NoSuchBucket) response. */
+  private isBucketMissingError(error: unknown): boolean {
+    if (typeof error !== 'object' || error === null) {
+      return false;
+    }
+    const name = (error as { name?: string }).name;
+    const status = (error as { $metadata?: { httpStatusCode?: number } }).$metadata
+      ?.httpStatusCode;
+    return name === 'NotFound' || name === 'NoSuchBucket' || status === HTTP_STATUS_NOT_FOUND;
   }
 
   private requireEnv(name: string): string {
