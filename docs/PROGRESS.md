@@ -38,15 +38,23 @@
 - GitHub Actions CI (format, lint, typecheck, test, build);
 - local Docker PostgreSQL runs on port 5433; first admin comes from `pnpm db:seed`;
 - format, lint, typecheck, tests and production builds all pass;
+- Phase 6 (in progress): Playwright smoke suite (`pnpm test:e2e`, 6 specs: auth, core
+  records, builder CRM, partners, venue map) and the security baseline from
+  `docs/reference/Check/Security/0-security-checklist.md` — helmet on the API, security
+  headers + baseline CSP on the web (S3 origin from `S3_ENDPOINT`), request-id + HTTP
+  request logging, Swagger disabled in production (`SWAGGER_ENABLED` override), Dependabot
+  npm updates + blocking `pnpm audit --prod --audit-level=critical` in CI, `sharp`/`postcss`
+  overridden to patched versions (`pnpm audit` clean);
 - previous enterprise implementation remains in `sipan` (reference only).
 
 ## Next Gate
 
-1. Phase 6 (Release Check) from
+1. Finish Phase 6 (Release Check) from
    [Implementation Roadmap](./06-IMPLEMENTATION-ROADMAP.md): owner walkthrough, critical
-   bug fixes, small Playwright smoke suite, staging deployment, production configuration
-   checklist. Staging/production credentials (Neon, R2, Cloud Run, real ToonExpo API key)
-   are owner-provided inputs.
+   bug fixes, staging deployment, production configuration checklist. Staging/production
+   credentials (Neon, R2, Cloud Run, real ToonExpo API key) are owner-provided inputs.
+   Manual (owner) security items at deploy time: Cloudflare HTTPS/HSTS/WAF/DDoS, Neon TLS +
+   pool limits + backups/restore test, alerts, secrets rotation runbook.
 2. Local `.env` note: `NODE_ENV` must NOT be set in `.env` — it breaks `next build` when
    exported; framework commands manage it themselves.
 
