@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
 import { APP_GUARD } from '@nestjs/core';
 import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
+import { AttachmentsModule } from './attachments/attachments.module';
 import { AuthModule } from './auth/auth.module';
 import { SessionAuthGuard } from './auth/guards/session-auth.guard';
 import {
@@ -11,7 +12,9 @@ import { CsrfOriginGuard } from './common/guards/csrf-origin.guard';
 import { RolesGuard } from './common/guards/roles.guard';
 import { ContactsModule } from './contacts/contacts.module';
 import { CyclesModule } from './cycles/cycles.module';
+import { DealsModule } from './deals/deals.module';
 import { HealthModule } from './health/health.module';
+import { NotesModule } from './notes/notes.module';
 import { OrganizationsModule } from './organizations/organizations.module';
 import { PrismaModule } from './prisma/prisma.module';
 import { UsersModule } from './users/users.module';
@@ -28,6 +31,9 @@ import { UsersModule } from './users/users.module';
     CyclesModule,
     OrganizationsModule,
     ContactsModule,
+    DealsModule,
+    NotesModule,
+    AttachmentsModule,
   ],
   providers: [
     // Order matters: rate limit, then CSRF origin check, then session auth, then role check.
