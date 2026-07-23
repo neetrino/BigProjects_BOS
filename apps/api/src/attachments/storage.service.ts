@@ -105,8 +105,7 @@ export class StorageService implements OnModuleInit {
       return false;
     }
     const name = (error as { name?: string }).name;
-    const status = (error as { $metadata?: { httpStatusCode?: number } }).$metadata
-      ?.httpStatusCode;
+    const status = (error as { $metadata?: { httpStatusCode?: number } }).$metadata?.httpStatusCode;
     return name === 'NotFound' || name === 'NoSuchBucket' || status === HTTP_STATUS_NOT_FOUND;
   }
 
