@@ -219,9 +219,7 @@
     "sheet": {
       "details": "Детали",
       "stage": "Этап",
-      "areas": "Площади",
-      "notes": "Заметки",
-      "attachments": "Вложения"
+      "areas": "Площади"
     },
     "fields": {
       "organization": "Организация",
@@ -254,8 +252,11 @@
     "areas": {
       "empty": "Площади назначаются на карте площадки.",
       "summary": "{count} зон · {sqm} м² · {labels}"
-    },
+    }
+  },
+  "content": {
     "notes": {
+      "title": "Заметки",
       "placeholder": "Добавить заметку…",
       "add": "Добавить",
       "empty": "Заметок пока нет.",
@@ -263,6 +264,7 @@
       "deleteDescription": "Удалить эту заметку?"
     },
     "attachments": {
+      "title": "Вложения",
       "upload": "Загрузить файл",
       "uploading": "Загрузка…",
       "download": "Скачать",
@@ -272,6 +274,82 @@
       "uploadFailed": "Не удалось загрузить файл.",
       "deleteTitle": "Удалить вложение",
       "deleteDescription": "Удалить «{name}»?"
+    }
+  },
+  "partners": {
+    "title": "Партнёры",
+    "subtitle": "Банки и другие участники (не застройщики) для выбранного цикла.",
+    "create": "Новый партнёр",
+    "createTitle": "Создать партнёра",
+    "detailTitle": "Партнёр",
+    "empty": "В этом цикле пока нет партнёров.",
+    "emptyNoCycles": "Сначала создайте цикл события.",
+    "stages": {
+      "NEW": "Новый",
+      "CONTACTED": "Контакт",
+      "CONFIRMED": "Подтверждён",
+      "DECLINED": "Отказ"
+    },
+    "toolbar": {
+      "cycle": "Цикл события",
+      "noCycles": "Нет циклов",
+      "active": "активный",
+      "view": "Вид",
+      "kanban": "Канбан",
+      "list": "Список",
+      "searchPlaceholder": "Поиск по организации",
+      "partnerTypeFilter": "Тип партнёра",
+      "allPartnerTypes": "Все типы",
+      "staffFilter": "Ответственный",
+      "allStaff": "Все сотрудники"
+    },
+    "card": {
+      "noContact": "Нет контакта",
+      "assignedAreas": "{labels}"
+    },
+    "list": {
+      "organization": "Организация",
+      "partnerType": "Тип",
+      "contact": "Контакт",
+      "stage": "Этап",
+      "staff": "Сотрудник",
+      "updated": "Обновлено"
+    },
+    "sheet": {
+      "details": "Детали",
+      "stage": "Этап",
+      "areas": "Площади"
+    },
+    "fields": {
+      "organization": "Организация",
+      "organizationSelect": "Выберите организацию",
+      "contact": "Основной контакт",
+      "staff": "Ответственный",
+      "partnerType": "Тип партнёра",
+      "description": "Описание"
+    },
+    "createForm": {
+      "orgSearchPlaceholder": "Поиск организаций",
+      "pickOrganization": "Выберите организацию",
+      "noContact": "Без контакта",
+      "unassigned": "Не назначен",
+      "partnerTypePlaceholder": "напр. Банк, Медиа",
+      "organizationRequired": "Организация обязательна."
+    },
+    "stage": {
+      "current": "Текущий",
+      "markDeclinedTitle": "Отметить отказ",
+      "markDeclinedDescription": "Перевести партнёра в «Отказ»?",
+      "actions": {
+        "NEW": "В «Новый»",
+        "CONTACTED": "Отметить контакт",
+        "CONFIRMED": "Подтвердить",
+        "DECLINED": "Отказ"
+      }
+    },
+    "areas": {
+      "empty": "Площади назначаются на карте площадки и для партнёров необязательны.",
+      "summary": "{count} зон · {sqm} м² · {labels}"
     }
   }
 }

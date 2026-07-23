@@ -219,9 +219,7 @@
     "sheet": {
       "details": "Details",
       "stage": "Stage",
-      "areas": "Areas",
-      "notes": "Notes",
-      "attachments": "Attachments"
+      "areas": "Areas"
     },
     "fields": {
       "organization": "Organization",
@@ -254,8 +252,11 @@
     "areas": {
       "empty": "Areas are assigned from the Venue Map.",
       "summary": "{count} areas · {sqm} m² · {labels}"
-    },
+    }
+  },
+  "content": {
     "notes": {
+      "title": "Notes",
       "placeholder": "Add a note…",
       "add": "Add note",
       "empty": "No notes yet.",
@@ -263,6 +264,7 @@
       "deleteDescription": "Delete this note?"
     },
     "attachments": {
+      "title": "Attachments",
       "upload": "Upload file",
       "uploading": "Uploading…",
       "download": "Download",
@@ -272,6 +274,82 @@
       "uploadFailed": "Could not upload the file.",
       "deleteTitle": "Delete attachment",
       "deleteDescription": "Delete “{name}”?"
+    }
+  },
+  "partners": {
+    "title": "Partner Relations",
+    "subtitle": "Manage banks and other non-builder participants for the selected cycle.",
+    "create": "New partner",
+    "createTitle": "Create partner",
+    "detailTitle": "Partner",
+    "empty": "No partners in this cycle yet.",
+    "emptyNoCycles": "Create an event cycle before adding partners.",
+    "stages": {
+      "NEW": "New",
+      "CONTACTED": "Contacted",
+      "CONFIRMED": "Confirmed",
+      "DECLINED": "Declined"
+    },
+    "toolbar": {
+      "cycle": "Event cycle",
+      "noCycles": "No cycles",
+      "active": "active",
+      "view": "View",
+      "kanban": "Kanban",
+      "list": "List",
+      "searchPlaceholder": "Search by organization",
+      "partnerTypeFilter": "Partner type",
+      "allPartnerTypes": "All types",
+      "staffFilter": "Assigned staff",
+      "allStaff": "All staff"
+    },
+    "card": {
+      "noContact": "No contact",
+      "assignedAreas": "{labels}"
+    },
+    "list": {
+      "organization": "Organization",
+      "partnerType": "Partner type",
+      "contact": "Contact",
+      "stage": "Stage",
+      "staff": "Staff",
+      "updated": "Updated"
+    },
+    "sheet": {
+      "details": "Details",
+      "stage": "Stage",
+      "areas": "Areas"
+    },
+    "fields": {
+      "organization": "Organization",
+      "organizationSelect": "Select organization",
+      "contact": "Primary contact",
+      "staff": "Assigned staff",
+      "partnerType": "Partner type",
+      "description": "Description"
+    },
+    "createForm": {
+      "orgSearchPlaceholder": "Search organizations",
+      "pickOrganization": "Choose an organization",
+      "noContact": "No contact",
+      "unassigned": "Unassigned",
+      "partnerTypePlaceholder": "e.g. Bank, Media",
+      "organizationRequired": "Organization is required."
+    },
+    "stage": {
+      "current": "Current",
+      "markDeclinedTitle": "Mark as declined",
+      "markDeclinedDescription": "Move this partner to Declined?",
+      "actions": {
+        "NEW": "Move to New",
+        "CONTACTED": "Mark contacted",
+        "CONFIRMED": "Confirm",
+        "DECLINED": "Decline"
+      }
+    },
+    "areas": {
+      "empty": "Areas are assigned from the Venue Map and are optional for partners.",
+      "summary": "{count} areas · {sqm} m² · {labels}"
     }
   }
 }

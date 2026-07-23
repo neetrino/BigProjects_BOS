@@ -21,7 +21,7 @@ type NavItem = {
 
 const NAV_ITEMS: NavItem[] = [
   { key: 'builderSales', href: '/builder-sales' },
-  { key: 'partners', soon: true },
+  { key: 'partners', href: '/partners' },
   { key: 'venueMap', soon: true },
   { key: 'cycles', href: '/cycles' },
   { key: 'organizations', href: '/organizations' },

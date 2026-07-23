@@ -3,82 +3,78 @@
 import { useEffect, useMemo, useState } from 'react';
 import { useTranslations } from 'next-intl';
 import { ApiError } from '@/lib/api/client';
-import { getDeal, updateDeal } from '@/lib/api/deals';
+import { getPartner, updatePartner } from '@/lib/api/partners';
 import { getOrganization } from '@/lib/api/organizations';
 import type {
-  DealListItem,
-  DealStage,
   OrganizationContact,
-  UpdateDealInput,
+  PartnerListItem,
+  PartnerStage,
+  UpdatePartnerInput,
 } from '@/lib/api/types';
 import { Button } from '@/components/ui/button';
 import { ErrorState, LoadingState } from '@/components/ui/page-state';
 import { Sheet } from '@/components/ui/sheet';
 import { showToast } from '@/components/ui/toast';
-import {
-  DealDetailsSection,
-  type DealDetailsDraft,
-} from '@/features/builder-crm/deal-details-section';
-import { DealStageSection } from '@/features/builder-crm/deal-stage-section';
 import { EntityAttachmentsSection } from '@/features/content/entity-attachments-section';
 import { EntityNotesSection } from '@/features/content/entity-notes-section';
-import { BUILDER_DEAL_OWNER } from '@/features/builder-crm/constants';
+import { PARTNER_OWNER } from '@/features/partners/constants';
+import {
+  PartnerDetailsSection,
+  type PartnerDetailsDraft,
+} from '@/features/partners/partner-details-section';
+import { PartnerStageSection } from '@/features/partners/partner-stage-section';
 
 type StaffOption = {
   id: string;
   name: string;
 };
 
-type DealSheetProps = {
-  dealId: string | null;
+type PartnerSheetProps = {
+  partnerId: string | null;
   open: boolean;
   staffOptions: StaffOption[];
   onClose: () => void;
-  onUpdated: (deal: DealListItem) => void;
+  onUpdated: (partner: PartnerListItem) => void;
 };
 
 type LoadState =
   | { status: 'loading' }
   | { status: 'error'; message: string }
-  | { status: 'ready'; deal: DealListItem; contacts: OrganizationContact[] };
+  | { status: 'ready'; partner: PartnerListItem; contacts: OrganizationContact[] };
 
-function toDraft(deal: DealListItem): DealDetailsDraft {
+function toDraft(partner: PartnerListItem): PartnerDetailsDraft {
   return {
-    primaryContactId: deal.primaryContact?.id ?? '',
-    assignedStaffId: deal.assignedStaff?.id ?? '',
-    expectedSqm: deal.expectedSqm != null ? String(deal.expectedSqm) : '',
-    agreedAmount: deal.agreedAmount != null ? String(deal.agreedAmount) : '',
-    description: deal.description ?? '',
+    primaryContactId: partner.primaryContact?.id ?? '',
+    assignedStaffId: partner.assignedStaff?.id ?? '',
+    partnerType: partner.partnerType ?? '',
+    description: partner.description ?? '',
   };
 }
 
-function draftsEqual(a: DealDetailsDraft, b: DealDetailsDraft): boolean {
+function draftsEqual(a: PartnerDetailsDraft, b: PartnerDetailsDraft): boolean {
   return (
     a.primaryContactId === b.primaryContactId &&
     a.assignedStaffId === b.assignedStaffId &&
-    a.expectedSqm === b.expectedSqm &&
-    a.agreedAmount === b.agreedAmount &&
+    a.partnerType === b.partnerType &&
     a.description === b.description
   );
 }
 
-/** Build a PATCH body with only dirty fields. Never send null relation ids (API connect fails). */
-function buildDetailsPatch(draft: DealDetailsDraft, baseline: DealDetailsDraft): UpdateDealInput {
-  const payload: UpdateDealInput = {};
+/** Build a PATCH body with only dirty fields. Explicit null clears relations/scalars. */
+function buildDetailsPatch(
+  draft: PartnerDetailsDraft,
+  baseline: PartnerDetailsDraft,
+): UpdatePartnerInput {
+  const payload: UpdatePartnerInput = {};
 
-  if (draft.primaryContactId !== baseline.primaryContactId && draft.primaryContactId) {
-    payload.primaryContactId = draft.primaryContactId;
+  if (draft.primaryContactId !== baseline.primaryContactId) {
+    payload.primaryContactId = draft.primaryContactId || null;
   }
-  if (draft.assignedStaffId !== baseline.assignedStaffId && draft.assignedStaffId) {
-    payload.assignedStaffId = draft.assignedStaffId;
+  if (draft.assignedStaffId !== baseline.assignedStaffId) {
+    payload.assignedStaffId = draft.assignedStaffId || null;
   }
-  if (draft.expectedSqm !== baseline.expectedSqm) {
-    const raw = draft.expectedSqm.trim();
-    const parsed = raw ? Number(raw) : null;
-    payload.expectedSqm = parsed != null && !Number.isNaN(parsed) ? parsed : null;
-  }
-  if (draft.agreedAmount !== baseline.agreedAmount) {
-    payload.agreedAmount = draft.agreedAmount.trim() || null;
+  if (draft.partnerType !== baseline.partnerType) {
+    payload.partnerType = draft.partnerType.trim() || null;
   }
   if (draft.description !== baseline.description) {
     payload.description = draft.description.trim() || null;
@@ -87,15 +83,21 @@ function buildDetailsPatch(draft: DealDetailsDraft, baseline: DealDetailsDraft):
   return payload;
 }
 
-export function DealSheet({ dealId, open, staffOptions, onClose, onUpdated }: DealSheetProps) {
-  if (!open || !dealId) {
+export function PartnerSheet({
+  partnerId,
+  open,
+  staffOptions,
+  onClose,
+  onUpdated,
+}: PartnerSheetProps) {
+  if (!open || !partnerId) {
     return null;
   }
 
   return (
-    <DealSheetInner
-      key={dealId}
-      dealId={dealId}
+    <PartnerSheetInner
+      key={partnerId}
+      partnerId={partnerId}
       staffOptions={staffOptions}
       onClose={onClose}
       onUpdated={onUpdated}
@@ -103,18 +105,23 @@ export function DealSheet({ dealId, open, staffOptions, onClose, onUpdated }: De
   );
 }
 
-type DealSheetInnerProps = {
-  dealId: string;
+type PartnerSheetInnerProps = {
+  partnerId: string;
   staffOptions: StaffOption[];
   onClose: () => void;
-  onUpdated: (deal: DealListItem) => void;
+  onUpdated: (partner: PartnerListItem) => void;
 };
 
-function DealSheetInner({ dealId, staffOptions, onClose, onUpdated }: DealSheetInnerProps) {
-  const t = useTranslations('builderSales');
+function PartnerSheetInner({
+  partnerId,
+  staffOptions,
+  onClose,
+  onUpdated,
+}: PartnerSheetInnerProps) {
+  const t = useTranslations('partners');
   const tCommon = useTranslations('common');
   const [loadState, setLoadState] = useState<LoadState>({ status: 'loading' });
-  const [draft, setDraft] = useState<DealDetailsDraft | null>(null);
+  const [draft, setDraft] = useState<PartnerDetailsDraft | null>(null);
   const [saveError, setSaveError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
   const [stageBusy, setStageBusy] = useState(false);
@@ -122,12 +129,12 @@ function DealSheetInner({ dealId, staffOptions, onClose, onUpdated }: DealSheetI
   useEffect(() => {
     let cancelled = false;
 
-    void getDeal(dealId)
-      .then(async (deal) => {
-        const detail = await getOrganization(deal.organizationId);
+    void getPartner(partnerId)
+      .then(async (partner) => {
+        const detail = await getOrganization(partner.organizationId);
         if (!cancelled) {
-          setLoadState({ status: 'ready', deal, contacts: detail.contacts });
-          setDraft(toDraft(deal));
+          setLoadState({ status: 'ready', partner, contacts: detail.contacts });
+          setDraft(toDraft(partner));
         }
       })
       .catch((err: unknown) => {
@@ -142,29 +149,28 @@ function DealSheetInner({ dealId, staffOptions, onClose, onUpdated }: DealSheetI
     return () => {
       cancelled = true;
     };
-    // tCommon omitted: next-intl identity changes would re-fetch and reset draft mid-edit.
-    // eslint-disable-next-line react-hooks/exhaustive-deps -- dealId is the load key
-  }, [dealId]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- partnerId is the load key
+  }, [partnerId]);
 
   const baseline = useMemo(
-    () => (loadState.status === 'ready' ? toDraft(loadState.deal) : null),
+    () => (loadState.status === 'ready' ? toDraft(loadState.partner) : null),
     [loadState],
   );
 
   const isDirty = draft != null && baseline != null && !draftsEqual(draft, baseline);
 
-  function updateDraft(updater: (prev: DealDetailsDraft) => DealDetailsDraft) {
+  function updateDraft(updater: (prev: PartnerDetailsDraft) => PartnerDetailsDraft) {
     setDraft((prev) => (prev ? updater(prev) : prev));
   }
 
-  function setDeal(deal: DealListItem, syncDraft: boolean) {
+  function setPartner(partner: PartnerListItem, syncDraft: boolean) {
     setLoadState((prev) =>
-      prev.status === 'ready' ? { status: 'ready', deal, contacts: prev.contacts } : prev,
+      prev.status === 'ready' ? { status: 'ready', partner, contacts: prev.contacts } : prev,
     );
     if (syncDraft) {
-      setDraft(toDraft(deal));
+      setDraft(toDraft(partner));
     }
-    onUpdated(deal);
+    onUpdated(partner);
   }
 
   function handleCancelDraft() {
@@ -186,8 +192,8 @@ function DealSheetInner({ dealId, staffOptions, onClose, onUpdated }: DealSheetI
     setBusy(true);
     setSaveError(null);
     try {
-      const updated = await updateDeal(dealId, payload);
-      setDeal(updated, true);
+      const updated = await updatePartner(partnerId, payload);
+      setPartner(updated, true);
     } catch (err) {
       setSaveError(err instanceof ApiError ? err.message : tCommon('unexpectedError'));
     } finally {
@@ -195,23 +201,23 @@ function DealSheetInner({ dealId, staffOptions, onClose, onUpdated }: DealSheetI
     }
   }
 
-  async function handleStageChange(stage: DealStage) {
+  async function handleStageChange(stage: PartnerStage) {
     if (loadState.status !== 'ready') {
       return;
     }
-    const previous = loadState.deal;
+    const previous = loadState.partner;
     if (previous.stage === stage) {
       return;
     }
 
     const keepDraft = isDirty;
-    setDeal({ ...previous, stage }, !keepDraft);
+    setPartner({ ...previous, stage }, !keepDraft);
     setStageBusy(true);
     try {
-      const updated = await updateDeal(dealId, { stage });
-      setDeal(updated, !keepDraft);
+      const updated = await updatePartner(partnerId, { stage });
+      setPartner(updated, !keepDraft);
     } catch (err) {
-      setDeal(previous, !keepDraft);
+      setPartner(previous, !keepDraft);
       showToast(err instanceof ApiError ? err.message : tCommon('unexpectedError'), 'error');
     } finally {
       setStageBusy(false);
@@ -244,34 +250,34 @@ function DealSheetInner({ dealId, staffOptions, onClose, onUpdated }: DealSheetI
       {loadState.status === 'error' ? <ErrorState message={loadState.message} /> : null}
       {loadState.status === 'ready' && draft ? (
         <div className="flex flex-col gap-6">
-          <DealDetailsSection
-            organizationName={loadState.deal.organization.name}
+          <PartnerDetailsSection
+            organizationName={loadState.partner.organization.name}
             draft={draft}
             contacts={loadState.contacts}
             staffOptions={staffOptions}
             onChange={updateDraft}
           />
-          <DealStageSection
-            deal={loadState.deal}
+          <PartnerStageSection
+            partner={loadState.partner}
             busy={stageBusy}
             onStageChange={handleStageChange}
           />
           <section className="flex flex-col gap-2">
             <h3 className="text-sm font-semibold text-[var(--color-fg)]">{t('sheet.areas')}</h3>
-            {loadState.deal.areasSummary.count === 0 ? (
+            {loadState.partner.areasSummary.count === 0 ? (
               <p className="text-sm text-[var(--color-muted)]">{t('areas.empty')}</p>
             ) : (
               <p className="text-sm text-[var(--color-muted)]">
                 {t('areas.summary', {
-                  count: loadState.deal.areasSummary.count,
-                  sqm: loadState.deal.areasSummary.totalSqm,
-                  labels: loadState.deal.areasSummary.labels.join(', '),
+                  count: loadState.partner.areasSummary.count,
+                  sqm: loadState.partner.areasSummary.totalSqm,
+                  labels: loadState.partner.areasSummary.labels.join(', '),
                 })}
               </p>
             )}
           </section>
-          <EntityNotesSection ownerType={BUILDER_DEAL_OWNER} ownerId={dealId} />
-          <EntityAttachmentsSection ownerType={BUILDER_DEAL_OWNER} ownerId={dealId} />
+          <EntityNotesSection ownerType={PARTNER_OWNER} ownerId={partnerId} />
+          <EntityAttachmentsSection ownerType={PARTNER_OWNER} ownerId={partnerId} />
         </div>
       ) : null}
     </Sheet>

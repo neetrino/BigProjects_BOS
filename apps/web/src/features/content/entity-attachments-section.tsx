@@ -11,16 +11,17 @@ import {
   presignAttachment,
   putPresignedFile,
 } from '@/lib/api/attachments';
-import type { AttachmentItem } from '@/lib/api/types';
+import type { AttachmentItem, ContentOwnerType } from '@/lib/api/types';
 import { Button } from '@/components/ui/button';
 import { Dialog } from '@/components/ui/dialog';
 import { ErrorState, LoadingState } from '@/components/ui/page-state';
 import { showToast } from '@/components/ui/toast';
-import { BUILDER_DEAL_OWNER, MAX_ATTACHMENT_BYTES } from '@/features/builder-crm/constants';
+import { MAX_ATTACHMENT_BYTES } from '@/lib/constants';
 import { formatDate, formatFileSize } from '@/lib/format';
 
-type DealAttachmentsSectionProps = {
-  dealId: string;
+type EntityAttachmentsSectionProps = {
+  ownerType: ContentOwnerType;
+  ownerId: string;
 };
 
 type LoadState =
@@ -28,8 +29,8 @@ type LoadState =
   | { status: 'error'; message: string }
   | { status: 'ready'; items: AttachmentItem[] };
 
-export function DealAttachmentsSection({ dealId }: DealAttachmentsSectionProps) {
-  const t = useTranslations('builderSales');
+export function EntityAttachmentsSection({ ownerType, ownerId }: EntityAttachmentsSectionProps) {
+  const t = useTranslations('content');
   const tCommon = useTranslations('common');
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -41,7 +42,7 @@ export function DealAttachmentsSection({ dealId }: DealAttachmentsSectionProps) 
   useEffect(() => {
     let cancelled = false;
 
-    void listAttachments(BUILDER_DEAL_OWNER, dealId)
+    void listAttachments(ownerType, ownerId)
       .then((items) => {
         if (!cancelled) {
           setLoadState({ status: 'ready', items });
@@ -59,7 +60,7 @@ export function DealAttachmentsSection({ dealId }: DealAttachmentsSectionProps) 
     return () => {
       cancelled = true;
     };
-  }, [dealId, tCommon]);
+  }, [ownerId, ownerType, tCommon]);
 
   async function handleFileChange(fileList: FileList | null) {
     const file = fileList?.[0];
@@ -79,16 +80,16 @@ export function DealAttachmentsSection({ dealId }: DealAttachmentsSectionProps) 
     try {
       const contentType = file.type || 'application/octet-stream';
       const presign = await presignAttachment({
-        ownerType: BUILDER_DEAL_OWNER,
-        ownerId: dealId,
+        ownerType,
+        ownerId,
         filename: file.name,
         contentType,
         size: file.size,
       });
       await putPresignedFile(presign.uploadUrl, file);
       const created = await confirmAttachment({
-        ownerType: BUILDER_DEAL_OWNER,
-        ownerId: dealId,
+        ownerType,
+        ownerId,
         objectKey: presign.objectKey,
         originalFilename: file.name,
         contentType,
@@ -146,7 +147,7 @@ export function DealAttachmentsSection({ dealId }: DealAttachmentsSectionProps) 
   return (
     <section className="flex flex-col gap-3">
       <div className="flex items-center justify-between gap-2">
-        <h3 className="text-sm font-semibold text-[var(--color-fg)]">{t('sheet.attachments')}</h3>
+        <h3 className="text-sm font-semibold text-[var(--color-fg)]">{t('attachments.title')}</h3>
         <div>
           <input
             ref={inputRef}

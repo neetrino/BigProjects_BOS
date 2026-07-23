@@ -3,6 +3,7 @@
 import { useTranslations } from 'next-intl';
 import type { DealListItem } from '@/lib/api/types';
 import { formatAmount, formatSqm, nameInitials } from '@/lib/format';
+import { KanbanCardShell } from '@/components/kanban';
 import { StatusBadge } from '@/components/ui/status-badge';
 import { stageTone } from '@/features/builder-crm/constants';
 
@@ -16,13 +17,7 @@ export function DealCard({ deal, isDragging }: DealCardProps) {
   const hasAreas = deal.areasSummary.count > 0;
 
   return (
-    <article
-      className={
-        isDragging
-          ? 'w-full rounded-xl border border-[var(--color-accent)] bg-[var(--color-surface)] p-3 text-left shadow-md opacity-95'
-          : 'w-full rounded-xl border border-[var(--color-border)] bg-[var(--color-surface)] p-3 text-left shadow-sm transition-shadow hover:shadow-md'
-      }
-    >
+    <KanbanCardShell isDragging={isDragging}>
       <div className="flex items-start justify-between gap-2">
         <p className="text-sm font-semibold text-[var(--color-fg)]">{deal.organization.name}</p>
         <StatusBadge label={t(`stages.${deal.stage}`)} tone={stageTone(deal.stage)} />
@@ -65,6 +60,6 @@ export function DealCard({ deal, isDragging }: DealCardProps) {
           </span>
         </div>
       ) : null}
-    </article>
+    </KanbanCardShell>
   );
 }

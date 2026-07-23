@@ -219,9 +219,7 @@
     "sheet": {
       "details": "Մանրամասներ",
       "stage": "Փուլ",
-      "areas": "Տարածքներ",
-      "notes": "Նշումներ",
-      "attachments": "Կցորդներ"
+      "areas": "Տարածքներ"
     },
     "fields": {
       "organization": "Կազմակերպություն",
@@ -254,8 +252,11 @@
     "areas": {
       "empty": "Տարածքները նշանակվում են տարածքի քարտեզից։",
       "summary": "{count} տարածք · {sqm} մ² · {labels}"
-    },
+    }
+  },
+  "content": {
     "notes": {
+      "title": "Նշումներ",
       "placeholder": "Ավելացնել նշում…",
       "add": "Ավելացնել",
       "empty": "Նշումներ դեռ չկան։",
@@ -263,6 +264,7 @@
       "deleteDescription": "Ջնջե՞լ այս նշումը։"
     },
     "attachments": {
+      "title": "Կցորդներ",
       "upload": "Վերբեռնել ֆայլ",
       "uploading": "Վերբեռնվում է…",
       "download": "Ներբեռնել",
@@ -272,6 +274,82 @@
       "uploadFailed": "Չհաջողվեց վերբեռնել ֆայլը։",
       "deleteTitle": "Ջնջել կցորդը",
       "deleteDescription": "Ջնջե՞լ «{name}»-ը։"
+    }
+  },
+  "partners": {
+    "title": "Գործընկերներ",
+    "subtitle": "Բանկեր և այլ ոչ կառուցապատող մասնակիցներ ընտրված ցիկլի համար։",
+    "create": "Նոր գործընկեր",
+    "createTitle": "Ստեղծել գործընկեր",
+    "detailTitle": "Գործընկեր",
+    "empty": "Այս ցիկլում դեռ գործընկերներ չկան։",
+    "emptyNoCycles": "Նախ ստեղծեք միջոցառման ցիկլ։",
+    "stages": {
+      "NEW": "Նոր",
+      "CONTACTED": "Կապ",
+      "CONFIRMED": "Հաստատված",
+      "DECLINED": "Մերժված"
+    },
+    "toolbar": {
+      "cycle": "Միջոցառման ցիկլ",
+      "noCycles": "Ցիկլեր չկան",
+      "active": "ակտիվ",
+      "view": "Տեսք",
+      "kanban": "Կանբան",
+      "list": "Ցանկ",
+      "searchPlaceholder": "Որոնել կազմակերպությամբ",
+      "partnerTypeFilter": "Գործընկերոջ տեսակ",
+      "allPartnerTypes": "Բոլոր տեսակները",
+      "staffFilter": "Պատասխանատու",
+      "allStaff": "Բոլոր աշխատակիցները"
+    },
+    "card": {
+      "noContact": "Կոնտակտ չկա",
+      "assignedAreas": "{labels}"
+    },
+    "list": {
+      "organization": "Կազմակերպություն",
+      "partnerType": "Տեսակ",
+      "contact": "Կոնտակտ",
+      "stage": "Փուլ",
+      "staff": "Աշխատակից",
+      "updated": "Թարմացված"
+    },
+    "sheet": {
+      "details": "Մանրամասներ",
+      "stage": "Փուլ",
+      "areas": "Տարածքներ"
+    },
+    "fields": {
+      "organization": "Կազմակերպություն",
+      "organizationSelect": "Ընտրել կազմակերպություն",
+      "contact": "Հիմնական կոնտակտ",
+      "staff": "Պատասխանատու",
+      "partnerType": "Գործընկերոջ տեսակ",
+      "description": "Նկարագրություն"
+    },
+    "createForm": {
+      "orgSearchPlaceholder": "Որոնել կազմակերպություններ",
+      "pickOrganization": "Ընտրեք կազմակերպություն",
+      "noContact": "Առանց կոնտակտի",
+      "unassigned": "Չնշանակված",
+      "partnerTypePlaceholder": "օր. Բանկ, Մեդիա",
+      "organizationRequired": "Կազմակերպությունը պարտադիր է։"
+    },
+    "stage": {
+      "current": "Ընթացիկ",
+      "markDeclinedTitle": "Նշել որպես մերժված",
+      "markDeclinedDescription": "Տեղափոխե՞լ գործընկերոջը «Մերժված»։",
+      "actions": {
+        "NEW": "Տեղափոխել Նոր",
+        "CONTACTED": "Նշել կապ",
+        "CONFIRMED": "Հաստատել",
+        "DECLINED": "Մերժել"
+      }
+    },
+    "areas": {
+      "empty": "Տարածքները նշանակվում են տարածքի քարտեզից և գործընկերների համար պարտադիր չեն։",
+      "summary": "{count} տարածք · {sqm} մ² · {labels}"
     }
   }
 }

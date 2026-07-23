@@ -1,15 +1,14 @@
 import type { DealStage } from '@/lib/api/types';
 import type { StatusTone } from '@/components/ui/status-badge';
+import type { BoardViewMode } from '@/components/kanban';
 
-export const SEARCH_DEBOUNCE_MS = 300;
-export const MAX_ATTACHMENT_BYTES = 25 * 1024 * 1024;
+export type { BoardViewMode };
+
 export const BUILDER_DEAL_OWNER = 'BUILDER_DEAL' as const;
 
 export const ACTIVE_STAGES: DealStage[] = ['NEW', 'CONTACTED', 'NEGOTIATION'];
 export const TERMINAL_STAGES: DealStage[] = ['WON', 'LOST'];
 export const ALL_STAGES: DealStage[] = [...ACTIVE_STAGES, ...TERMINAL_STAGES];
-
-export type BoardViewMode = 'kanban' | 'list';
 
 export function stageTone(stage: DealStage): StatusTone {
   switch (stage) {

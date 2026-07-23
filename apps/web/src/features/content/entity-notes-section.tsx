@@ -4,17 +4,17 @@ import { FormEvent, useEffect, useState } from 'react';
 import { useTranslations } from 'next-intl';
 import { ApiError } from '@/lib/api/client';
 import { createNote, deleteNote, listNotes } from '@/lib/api/notes';
-import type { NoteItem } from '@/lib/api/types';
+import type { ContentOwnerType, NoteItem } from '@/lib/api/types';
 import { useAuth } from '@/components/auth/auth-provider';
 import { Button } from '@/components/ui/button';
 import { Dialog } from '@/components/ui/dialog';
 import { TextArea } from '@/components/ui/field';
 import { ErrorState, LoadingState } from '@/components/ui/page-state';
-import { BUILDER_DEAL_OWNER } from '@/features/builder-crm/constants';
 import { formatDate } from '@/lib/format';
 
-type DealNotesSectionProps = {
-  dealId: string;
+type EntityNotesSectionProps = {
+  ownerType: ContentOwnerType;
+  ownerId: string;
 };
 
 type LoadState =
@@ -22,8 +22,8 @@ type LoadState =
   | { status: 'error'; message: string }
   | { status: 'ready'; notes: NoteItem[] };
 
-export function DealNotesSection({ dealId }: DealNotesSectionProps) {
-  const t = useTranslations('builderSales');
+export function EntityNotesSection({ ownerType, ownerId }: EntityNotesSectionProps) {
+  const t = useTranslations('content');
   const tCommon = useTranslations('common');
   const { user } = useAuth();
   const isAdmin = user.role === 'ADMIN';
@@ -38,7 +38,7 @@ export function DealNotesSection({ dealId }: DealNotesSectionProps) {
   useEffect(() => {
     let cancelled = false;
 
-    void listNotes(BUILDER_DEAL_OWNER, dealId)
+    void listNotes(ownerType, ownerId)
       .then((notes) => {
         if (!cancelled) {
           setLoadState({ status: 'ready', notes });
@@ -56,7 +56,7 @@ export function DealNotesSection({ dealId }: DealNotesSectionProps) {
     return () => {
       cancelled = true;
     };
-  }, [dealId, tCommon]);
+  }, [ownerId, ownerType, tCommon]);
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -69,8 +69,8 @@ export function DealNotesSection({ dealId }: DealNotesSectionProps) {
     setFormError(null);
     try {
       const created = await createNote({
-        ownerType: BUILDER_DEAL_OWNER,
-        ownerId: dealId,
+        ownerType,
+        ownerId,
         body: trimmed,
       });
       setBody('');
@@ -109,7 +109,7 @@ export function DealNotesSection({ dealId }: DealNotesSectionProps) {
 
   return (
     <section className="flex flex-col gap-3">
-      <h3 className="text-sm font-semibold text-[var(--color-fg)]">{t('sheet.notes')}</h3>
+      <h3 className="text-sm font-semibold text-[var(--color-fg)]">{t('notes.title')}</h3>
 
       <form onSubmit={handleSubmit} className="flex flex-col gap-2">
         <TextArea

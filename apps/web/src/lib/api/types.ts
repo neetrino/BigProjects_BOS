@@ -205,6 +205,52 @@ export type UpdateDealInput = {
   description?: string | null;
 };
 
+export type PartnerStage = 'NEW' | 'CONTACTED' | 'CONFIRMED' | 'DECLINED';
+
+export type PartnerListItem = {
+  id: string;
+  eventCycleId: string;
+  organizationId: string;
+  organization: {
+    id: string;
+    name: string;
+    type: OrganizationType;
+  };
+  primaryContact: DealContactRef | null;
+  assignedStaff: DealStaffRef | null;
+  stage: PartnerStage;
+  partnerType: string | null;
+  description: string | null;
+  areasSummary: DealAreasSummary;
+  createdAt: string;
+  updatedAt: string;
+};
+
+export type ListPartnersQuery = {
+  cycleId: string;
+  search?: string;
+  assignedStaffId?: string;
+  stage?: PartnerStage;
+  partnerType?: string;
+};
+
+export type CreatePartnerInput = {
+  eventCycleId: string;
+  organizationId: string;
+  primaryContactId?: string;
+  assignedStaffId?: string;
+  partnerType?: string;
+  description?: string;
+};
+
+export type UpdatePartnerInput = {
+  stage?: PartnerStage;
+  primaryContactId?: string | null;
+  assignedStaffId?: string | null;
+  partnerType?: string | null;
+  description?: string | null;
+};
+
 export type NoteItem = {
   id: string;
   body: string;

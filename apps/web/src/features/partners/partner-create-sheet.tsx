@@ -3,9 +3,13 @@
 import { FormEvent, useEffect, useState } from 'react';
 import { useTranslations } from 'next-intl';
 import { ApiError } from '@/lib/api/client';
-import { createDeal } from '@/lib/api/deals';
+import { createPartner } from '@/lib/api/partners';
 import { getOrganization, listOrganizations } from '@/lib/api/organizations';
-import type { DealListItem, OrganizationContact, OrganizationListItem } from '@/lib/api/types';
+import type {
+  OrganizationContact,
+  OrganizationListItem,
+  PartnerListItem,
+} from '@/lib/api/types';
 import { Button } from '@/components/ui/button';
 import { Field, SelectInput, TextArea, TextInput } from '@/components/ui/field';
 import { Sheet } from '@/components/ui/sheet';
@@ -16,27 +20,27 @@ type StaffOption = {
   name: string;
 };
 
-type DealCreateSheetProps = {
+type PartnerCreateSheetProps = {
   open: boolean;
   eventCycleId: string;
   staffOptions: StaffOption[];
   onClose: () => void;
-  onCreated: (deal: DealListItem) => void;
+  onCreated: (partner: PartnerListItem) => void;
 };
 
-export function DealCreateSheet({
+export function PartnerCreateSheet({
   open,
   eventCycleId,
   staffOptions,
   onClose,
   onCreated,
-}: DealCreateSheetProps) {
+}: PartnerCreateSheetProps) {
   if (!open) {
     return null;
   }
 
   return (
-    <DealCreateSheetInner
+    <PartnerCreateSheetInner
       key={eventCycleId}
       eventCycleId={eventCycleId}
       staffOptions={staffOptions}
@@ -46,20 +50,20 @@ export function DealCreateSheet({
   );
 }
 
-type DealCreateSheetInnerProps = {
+type PartnerCreateSheetInnerProps = {
   eventCycleId: string;
   staffOptions: StaffOption[];
   onClose: () => void;
-  onCreated: (deal: DealListItem) => void;
+  onCreated: (partner: PartnerListItem) => void;
 };
 
-function DealCreateSheetInner({
+function PartnerCreateSheetInner({
   eventCycleId,
   staffOptions,
   onClose,
   onCreated,
-}: DealCreateSheetInnerProps) {
-  const t = useTranslations('builderSales');
+}: PartnerCreateSheetInnerProps) {
+  const t = useTranslations('partners');
   const tCommon = useTranslations('common');
 
   const [orgSearch, setOrgSearch] = useState('');
@@ -69,8 +73,7 @@ function DealCreateSheetInner({
   const [contacts, setContacts] = useState<OrganizationContact[]>([]);
   const [primaryContactId, setPrimaryContactId] = useState('');
   const [assignedStaffId, setAssignedStaffId] = useState('');
-  const [expectedSqm, setExpectedSqm] = useState('');
-  const [agreedAmount, setAgreedAmount] = useState('');
+  const [partnerType, setPartnerType] = useState('');
   const [description, setDescription] = useState('');
   const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
@@ -135,14 +138,12 @@ function DealCreateSheetInner({
     setBusy(true);
     setError(null);
     try {
-      const sqmValue = expectedSqm.trim() ? Number(expectedSqm) : undefined;
-      const created = await createDeal({
+      const created = await createPartner({
         eventCycleId,
         organizationId,
         primaryContactId: primaryContactId || undefined,
         assignedStaffId: assignedStaffId || undefined,
-        expectedSqm: sqmValue != null && !Number.isNaN(sqmValue) ? sqmValue : undefined,
-        agreedAmount: agreedAmount.trim() || undefined,
+        partnerType: partnerType.trim() || undefined,
         description: description.trim() || undefined,
       });
       onCreated(created);
@@ -165,24 +166,24 @@ function DealCreateSheetInner({
           <Button variant="secondary" onClick={onClose} disabled={busy}>
             {tCommon('cancel')}
           </Button>
-          <Button type="submit" form="deal-create-form" variant="primary" disabled={busy}>
+          <Button type="submit" form="partner-create-form" variant="primary" disabled={busy}>
             {busy ? tCommon('saving') : tCommon('save')}
           </Button>
         </div>
       }
     >
-      <form id="deal-create-form" onSubmit={handleSubmit} className="flex flex-col gap-3">
-        <Field label={t('fields.organization')} htmlFor="create-org-search">
+      <form id="partner-create-form" onSubmit={handleSubmit} className="flex flex-col gap-3">
+        <Field label={t('fields.organization')} htmlFor="partner-create-org-search">
           <TextInput
-            id="create-org-search"
+            id="partner-create-org-search"
             value={orgSearch}
             onChange={(event) => setOrgSearch(event.target.value)}
             placeholder={t('createForm.orgSearchPlaceholder')}
           />
         </Field>
-        <Field label={t('fields.organizationSelect')} htmlFor="create-org">
+        <Field label={t('fields.organizationSelect')} htmlFor="partner-create-org">
           <SelectInput
-            id="create-org"
+            id="partner-create-org"
             required
             value={organizationId}
             onChange={(event) => {
@@ -199,9 +200,9 @@ function DealCreateSheetInner({
             ))}
           </SelectInput>
         </Field>
-        <Field label={t('fields.contact')} htmlFor="create-contact">
+        <Field label={t('fields.contact')} htmlFor="partner-create-contact">
           <SelectInput
-            id="create-contact"
+            id="partner-create-contact"
             value={primaryContactId}
             onChange={(event) => setPrimaryContactId(event.target.value)}
             disabled={!organizationId}
@@ -214,9 +215,17 @@ function DealCreateSheetInner({
             ))}
           </SelectInput>
         </Field>
-        <Field label={t('fields.staff')} htmlFor="create-staff">
+        <Field label={t('fields.partnerType')} htmlFor="partner-create-type">
+          <TextInput
+            id="partner-create-type"
+            value={partnerType}
+            onChange={(event) => setPartnerType(event.target.value)}
+            placeholder={t('createForm.partnerTypePlaceholder')}
+          />
+        </Field>
+        <Field label={t('fields.staff')} htmlFor="partner-create-staff">
           <SelectInput
-            id="create-staff"
+            id="partner-create-staff"
             value={assignedStaffId}
             onChange={(event) => setAssignedStaffId(event.target.value)}
           >
@@ -228,26 +237,9 @@ function DealCreateSheetInner({
             ))}
           </SelectInput>
         </Field>
-        <Field label={t('fields.expectedSqm')} htmlFor="create-sqm">
-          <TextInput
-            id="create-sqm"
-            inputMode="numeric"
-            pattern="[0-9]*"
-            value={expectedSqm}
-            onChange={(event) => setExpectedSqm(event.target.value)}
-          />
-        </Field>
-        <Field label={t('fields.agreedAmount')} htmlFor="create-amount">
-          <TextInput
-            id="create-amount"
-            inputMode="decimal"
-            value={agreedAmount}
-            onChange={(event) => setAgreedAmount(event.target.value)}
-          />
-        </Field>
-        <Field label={t('fields.description')} htmlFor="create-description">
+        <Field label={t('fields.description')} htmlFor="partner-create-description">
           <TextArea
-            id="create-description"
+            id="partner-create-description"
             rows={3}
             value={description}
             onChange={(event) => setDescription(event.target.value)}

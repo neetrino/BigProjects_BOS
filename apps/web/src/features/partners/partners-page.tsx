@@ -5,56 +5,31 @@ import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { useTranslations } from 'next-intl';
 import { ApiError } from '@/lib/api/client';
 import { listCycles } from '@/lib/api/cycles';
-import { listDeals, updateDeal } from '@/lib/api/deals';
+import { listPartners, updatePartner } from '@/lib/api/partners';
 import { listUsers } from '@/lib/api/users';
-import type { DealListItem, DealStage, EventCycle, UserAccount } from '@/lib/api/types';
+import type { PartnerListItem, PartnerStage, UserAccount } from '@/lib/api/types';
+import type { BoardViewMode } from '@/components/kanban';
 import { useAuth } from '@/components/auth/auth-provider';
 import { Button } from '@/components/ui/button';
 import { EmptyState, ErrorState, LoadingState } from '@/components/ui/page-state';
 import { showToast } from '@/components/ui/toast';
-import { BuilderSalesToolbar } from '@/features/builder-crm/builder-sales-toolbar';
-import type { BoardViewMode } from '@/features/builder-crm/constants';
 import { SEARCH_DEBOUNCE_MS } from '@/lib/constants';
-import { DealCreateSheet } from '@/features/builder-crm/deal-create-sheet';
-import { DealKanban } from '@/features/builder-crm/deal-kanban';
-import { DealList } from '@/features/builder-crm/deal-list';
-import { DealSheet } from '@/features/builder-crm/deal-sheet';
+import { PartnerCreateSheet } from '@/features/partners/partner-create-sheet';
+import { PartnerKanban } from '@/features/partners/partner-kanban';
+import { PartnerList } from '@/features/partners/partner-list';
+import { PartnerSheet } from '@/features/partners/partner-sheet';
+import {
+  mergePartnerTypes,
+  pickDefaultCycleId,
+  staffFromPartners,
+  type CyclesLoad,
+  type PartnersLoad,
+  type StaffOption,
+} from '@/features/partners/partners-helpers';
+import { PartnersToolbar } from '@/features/partners/partners-toolbar';
 
-type CyclesLoad =
-  | { status: 'loading' }
-  | { status: 'error'; message: string }
-  | { status: 'ready'; cycles: EventCycle[] };
-
-type DealsLoad =
-  | { status: 'idle' }
-  | { status: 'loading' }
-  | { status: 'error'; message: string }
-  | { status: 'ready'; deals: DealListItem[] };
-
-type StaffOption = { id: string; name: string };
-
-function pickDefaultCycleId(cycles: EventCycle[], requested: string | null): string {
-  if (requested && cycles.some((cycle) => cycle.id === requested)) {
-    return requested;
-  }
-  const active = cycles.find((cycle) => cycle.status === 'ACTIVE');
-  return active?.id ?? cycles[0]?.id ?? '';
-}
-
-function staffFromDeals(deals: DealListItem[]): StaffOption[] {
-  const map = new Map<string, string>();
-  for (const deal of deals) {
-    if (deal.assignedStaff) {
-      map.set(deal.assignedStaff.id, deal.assignedStaff.name);
-    }
-  }
-  return [...map.entries()]
-    .map(([id, name]) => ({ id, name }))
-    .sort((a, b) => a.name.localeCompare(b.name));
-}
-
-export function BuilderSalesPage() {
-  const t = useTranslations('builderSales');
+export function PartnersPage() {
+  const t = useTranslations('partners');
   const tCommon = useTranslations('common');
   const { user } = useAuth();
   const isAdmin = user.role === 'ADMIN';
@@ -69,11 +44,13 @@ export function BuilderSalesPage() {
   const [view, setView] = useState<BoardViewMode>('kanban');
   const [searchInput, setSearchInput] = useState('');
   const [search, setSearch] = useState('');
+  const [partnerType, setPartnerType] = useState('');
   const [assignedStaffId, setAssignedStaffId] = useState('');
   const [adminUsers, setAdminUsers] = useState<UserAccount[]>([]);
-  const [dealsLoad, setDealsLoad] = useState<DealsLoad>({ status: 'idle' });
+  const [partnersLoad, setPartnersLoad] = useState<PartnersLoad>({ status: 'idle' });
+  const [knownPartnerTypes, setKnownPartnerTypes] = useState<string[]>([]);
   const [createOpen, setCreateOpen] = useState(false);
-  const [selectedDealId, setSelectedDealId] = useState<string | null>(null);
+  const [selectedPartnerId, setSelectedPartnerId] = useState<string | null>(null);
   const [reloadToken, setReloadToken] = useState(0);
 
   useEffect(() => {
@@ -89,7 +66,7 @@ export function BuilderSalesPage() {
           return;
         }
         setCyclesLoad({ status: 'ready', cycles });
-        setDealsLoad({ status: 'loading' });
+        setPartnersLoad({ status: 'loading' });
         setCycleId(pickDefaultCycleId(cycles, cycleFromUrl));
       })
       .catch((err: unknown) => {
@@ -103,7 +80,6 @@ export function BuilderSalesPage() {
     return () => {
       cancelled = true;
     };
-    // Initial cycle from the URL only — do not re-run when we write ?cycle= back.
     // eslint-disable-next-line react-hooks/exhaustive-deps -- intentional mount-only seed
   }, [tCommon]);
 
@@ -147,19 +123,21 @@ export function BuilderSalesPage() {
 
     let cancelled = false;
 
-    void listDeals({
+    void listPartners({
       cycleId,
       search: search || undefined,
       assignedStaffId: assignedStaffId || undefined,
+      partnerType: partnerType || undefined,
     })
-      .then((deals) => {
+      .then((partners) => {
         if (!cancelled) {
-          setDealsLoad({ status: 'ready', deals });
+          setPartnersLoad({ status: 'ready', partners });
+          setKnownPartnerTypes((prev) => mergePartnerTypes(prev, partners));
         }
       })
       .catch((err: unknown) => {
         if (!cancelled) {
-          setDealsLoad({
+          setPartnersLoad({
             status: 'error',
             message: err instanceof ApiError ? err.message : tCommon('unexpectedError'),
           });
@@ -169,9 +147,12 @@ export function BuilderSalesPage() {
     return () => {
       cancelled = true;
     };
-  }, [cycleId, search, assignedStaffId, reloadToken, tCommon]);
+  }, [cycleId, search, assignedStaffId, partnerType, reloadToken, tCommon]);
 
-  const deals = useMemo(() => (dealsLoad.status === 'ready' ? dealsLoad.deals : []), [dealsLoad]);
+  const partners = useMemo(
+    () => (partnersLoad.status === 'ready' ? partnersLoad.partners : []),
+    [partnersLoad],
+  );
 
   const staffOptions = useMemo<StaffOption[]>(() => {
     if (isAdmin && adminUsers.length > 0) {
@@ -179,36 +160,44 @@ export function BuilderSalesPage() {
         .map((item) => ({ id: item.id, name: item.name }))
         .sort((a, b) => a.name.localeCompare(b.name));
     }
-    return staffFromDeals(deals);
-  }, [adminUsers, deals, isAdmin]);
+    return staffFromPartners(partners);
+  }, [adminUsers, isAdmin, partners]);
 
-  const replaceDeal = useCallback((saved: DealListItem) => {
-    setDealsLoad((prev) => {
+  const partnerTypeOptions = useMemo(() => {
+    const set = new Set(knownPartnerTypes);
+    if (partnerType) {
+      set.add(partnerType);
+    }
+    return [...set].sort((a, b) => a.localeCompare(b));
+  }, [knownPartnerTypes, partnerType]);
+
+  const replacePartner = useCallback((saved: PartnerListItem) => {
+    setPartnersLoad((prev) => {
       if (prev.status !== 'ready') {
         return prev;
       }
-      const index = prev.deals.findIndex((item) => item.id === saved.id);
+      const index = prev.partners.findIndex((item) => item.id === saved.id);
       if (index === -1) {
-        return { status: 'ready', deals: [saved, ...prev.deals] };
+        return { status: 'ready', partners: [saved, ...prev.partners] };
       }
-      const next = [...prev.deals];
+      const next = [...prev.partners];
       next[index] = saved;
-      return { status: 'ready', deals: next };
+      return { status: 'ready', partners: next };
     });
   }, []);
 
-  async function handleStageChange(dealId: string, stage: DealStage) {
-    const previous = deals.find((item) => item.id === dealId);
+  async function handleStageChange(partnerId: string, stage: PartnerStage) {
+    const previous = partners.find((item) => item.id === partnerId);
     if (!previous) {
       return;
     }
 
-    replaceDeal({ ...previous, stage });
+    replacePartner({ ...previous, stage });
     try {
-      const updated = await updateDeal(dealId, { stage });
-      replaceDeal(updated);
+      const updated = await updatePartner(partnerId, { stage });
+      replacePartner(updated);
     } catch (err) {
-      replaceDeal(previous);
+      replacePartner(previous);
       showToast(err instanceof ApiError ? err.message : tCommon('unexpectedError'), 'error');
     }
   }
@@ -217,21 +206,29 @@ export function BuilderSalesPage() {
 
   return (
     <div className="flex min-h-0 flex-1 flex-col gap-4">
-      <BuilderSalesToolbar
+      <PartnersToolbar
         cycles={cycles}
         cycleId={cycleId}
         onCycleChange={(nextCycleId) => {
-          setDealsLoad({ status: 'loading' });
+          setPartnersLoad({ status: 'loading' });
+          setKnownPartnerTypes([]);
+          setPartnerType('');
           setCycleId(nextCycleId);
         }}
         view={view}
         onViewChange={setView}
         searchInput={searchInput}
         onSearchChange={setSearchInput}
+        partnerTypeOptions={partnerTypeOptions}
+        partnerType={partnerType}
+        onPartnerTypeChange={(nextType) => {
+          setPartnersLoad({ status: 'loading' });
+          setPartnerType(nextType);
+        }}
         staffOptions={staffOptions}
         assignedStaffId={assignedStaffId}
         onAssignedStaffChange={(nextStaffId) => {
-          setDealsLoad({ status: 'loading' });
+          setPartnersLoad({ status: 'loading' });
           setAssignedStaffId(nextStaffId);
         }}
         onCreate={() => setCreateOpen(true)}
@@ -246,9 +243,9 @@ export function BuilderSalesPage() {
 
       {cyclesLoad.status === 'ready' && cycleId ? (
         <>
-          {dealsLoad.status === 'loading' ? <LoadingState message={tCommon('loading')} /> : null}
-          {dealsLoad.status === 'error' ? <ErrorState message={dealsLoad.message} /> : null}
-          {dealsLoad.status === 'ready' && deals.length === 0 ? (
+          {partnersLoad.status === 'loading' ? <LoadingState message={tCommon('loading')} /> : null}
+          {partnersLoad.status === 'error' ? <ErrorState message={partnersLoad.message} /> : null}
+          {partnersLoad.status === 'ready' && partners.length === 0 ? (
             <EmptyState
               message={t('empty')}
               action={
@@ -258,37 +255,37 @@ export function BuilderSalesPage() {
               }
             />
           ) : null}
-          {dealsLoad.status === 'ready' && deals.length > 0 && view === 'kanban' ? (
-            <DealKanban
-              deals={deals}
-              onOpen={setSelectedDealId}
+          {partnersLoad.status === 'ready' && partners.length > 0 && view === 'kanban' ? (
+            <PartnerKanban
+              partners={partners}
+              onOpen={setSelectedPartnerId}
               onStageChange={handleStageChange}
             />
           ) : null}
-          {dealsLoad.status === 'ready' && deals.length > 0 && view === 'list' ? (
-            <DealList deals={deals} onOpen={setSelectedDealId} />
+          {partnersLoad.status === 'ready' && partners.length > 0 && view === 'list' ? (
+            <PartnerList partners={partners} onOpen={setSelectedPartnerId} />
           ) : null}
         </>
       ) : null}
 
-      <DealCreateSheet
+      <PartnerCreateSheet
         open={createOpen}
         eventCycleId={cycleId}
         staffOptions={staffOptions}
         onClose={() => setCreateOpen(false)}
-        onCreated={(deal) => {
-          replaceDeal(deal);
+        onCreated={(partner) => {
+          replacePartner(partner);
           setReloadToken((value) => value + 1);
-          setSelectedDealId(deal.id);
+          setSelectedPartnerId(partner.id);
         }}
       />
 
-      <DealSheet
-        open={selectedDealId !== null}
-        dealId={selectedDealId}
+      <PartnerSheet
+        open={selectedPartnerId !== null}
+        partnerId={selectedPartnerId}
         staffOptions={staffOptions}
-        onClose={() => setSelectedDealId(null)}
-        onUpdated={replaceDeal}
+        onClose={() => setSelectedPartnerId(null)}
+        onUpdated={replacePartner}
       />
     </div>
   );
