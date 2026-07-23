@@ -44,10 +44,7 @@ export function PartnerList({ partners, onOpen }: PartnerListProps) {
                 {partner.primaryContact?.name ?? '—'}
               </td>
               <td className="px-3 py-2.5">
-                <StatusBadge
-                  label={t(`stages.${partner.stage}`)}
-                  tone={stageTone(partner.stage)}
-                />
+                <StatusBadge label={t(`stages.${partner.stage}`)} tone={stageTone(partner.stage)} />
               </td>
               <td className="px-3 py-2.5 text-[var(--color-muted)]">
                 {partner.assignedStaff?.name ?? '—'}

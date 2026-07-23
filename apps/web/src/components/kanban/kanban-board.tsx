@@ -143,9 +143,7 @@ export function KanbanBoard<TItem extends { id: string }, TStage extends string>
         </div>
       </div>
 
-      <DragOverlay>
-        {activeItem ? renderCard(activeItem, { isDragging: true }) : null}
-      </DragOverlay>
+      <DragOverlay>{activeItem ? renderCard(activeItem, { isDragging: true }) : null}</DragOverlay>
     </DndContext>
   );
 }
@@ -197,12 +195,7 @@ function KanbanColumn<TItem extends { id: string }, TStage extends string>({
       </header>
       <div className="flex min-h-0 flex-1 flex-col gap-2 overflow-y-auto p-2">
         {items.map((item) => (
-          <DraggableKanbanCard
-            key={item.id}
-            item={item}
-            onOpen={onOpen}
-            renderCard={renderCard}
-          />
+          <DraggableKanbanCard key={item.id} item={item} onOpen={onOpen} renderCard={renderCard} />
         ))}
       </div>
     </section>

@@ -19,9 +19,7 @@ export function PartnerCard({ partner, isDragging }: PartnerCardProps) {
   return (
     <KanbanCardShell isDragging={isDragging}>
       <div className="flex items-start justify-between gap-2">
-        <p className="text-sm font-semibold text-[var(--color-fg)]">
-          {partner.organization.name}
-        </p>
+        <p className="text-sm font-semibold text-[var(--color-fg)]">{partner.organization.name}</p>
         <StatusBadge label={t(`stages.${partner.stage}`)} tone={stageTone(partner.stage)} />
       </div>
 

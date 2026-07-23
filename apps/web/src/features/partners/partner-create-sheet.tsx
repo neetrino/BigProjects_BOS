@@ -5,11 +5,7 @@ import { useTranslations } from 'next-intl';
 import { ApiError } from '@/lib/api/client';
 import { createPartner } from '@/lib/api/partners';
 import { getOrganization, listOrganizations } from '@/lib/api/organizations';
-import type {
-  OrganizationContact,
-  OrganizationListItem,
-  PartnerListItem,
-} from '@/lib/api/types';
+import type { OrganizationContact, OrganizationListItem, PartnerListItem } from '@/lib/api/types';
 import { Button } from '@/components/ui/button';
 import { Field, SelectInput, TextArea, TextInput } from '@/components/ui/field';
 import { Sheet } from '@/components/ui/sheet';

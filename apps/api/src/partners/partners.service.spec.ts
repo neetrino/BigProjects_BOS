@@ -1,11 +1,6 @@
 import { BadRequestException } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
-import {
-  EventCycleStatus,
-  OrganizationType,
-  PartnerStage,
-  UserStatus,
-} from '@prisma/client';
+import { EventCycleStatus, OrganizationType, PartnerStage, UserStatus } from '@prisma/client';
 import { PrismaService } from '../prisma/prisma.service';
 import { PartnersService } from './partners.service';
 
@@ -264,7 +259,9 @@ describe('PartnersService', () => {
               ? null
               : data.assignedStaff.connect.id
             : partnerWithRelations.assignedStaffId,
-        primaryContact: data.primaryContact?.disconnect ? null : partnerWithRelations.primaryContact,
+        primaryContact: data.primaryContact?.disconnect
+          ? null
+          : partnerWithRelations.primaryContact,
         assignedStaff: data.assignedStaff?.disconnect ? null : partnerWithRelations.assignedStaff,
       }));
     });

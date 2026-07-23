@@ -14,11 +14,7 @@ type PartnerStageSectionProps = {
   onStageChange: (stage: PartnerStage) => Promise<void>;
 };
 
-export function PartnerStageSection({
-  partner,
-  busy,
-  onStageChange,
-}: PartnerStageSectionProps) {
+export function PartnerStageSection({ partner, busy, onStageChange }: PartnerStageSectionProps) {
   const t = useTranslations('partners');
   const tCommon = useTranslations('common');
   const [confirmDecline, setConfirmDecline] = useState(false);
