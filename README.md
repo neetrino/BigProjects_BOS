@@ -55,7 +55,7 @@ pnpm install
 pnpm dev
 ```
 
-`docker compose up -d` starts PostgreSQL 18 on port `5432` with database `bos`.
+`docker compose up -d` starts PostgreSQL 18 on port `5433` with database `bos`.
 
 Run apps individually if needed:
 
