@@ -17,6 +17,8 @@ import { useMemo, useRef, useState, type ReactNode } from 'react';
 import type { KanbanColumnDef, KanbanColumnTone } from '@/components/kanban/types';
 
 const CLICK_MAX_DISTANCE_PX = 6;
+/** Terminal group uses `p-2.5` (0.625rem); nested column radius stays concentric. */
+const TERMINAL_COLUMN_RADIUS_CLASS = 'rounded-[calc(var(--radius-panel)-0.625rem)]';
 
 const TONE_HEADER_CLASS: Record<KanbanColumnTone, string> = {
   default: '',
@@ -113,7 +115,7 @@ export function KanbanBoard<TItem extends { id: string }, TStage extends string>
       }}
       onDragCancel={() => setActiveId(null)}
     >
-      <div className="flex min-h-0 flex-1 gap-4 overflow-x-auto pb-1">
+      <div className="no-scrollbar flex min-h-0 flex-1 gap-4 overflow-x-auto pb-1">
         <div className="flex min-h-0 min-w-max gap-3">
           {activeColumns.map((column) => (
             <KanbanColumn
@@ -132,7 +134,7 @@ export function KanbanBoard<TItem extends { id: string }, TStage extends string>
           className="mx-1 w-px shrink-0 self-stretch bg-gradient-to-b from-transparent via-[var(--color-border)] to-transparent"
         />
 
-        <div className="flex min-h-0 min-w-max gap-3 rounded-[var(--radius-panel)] border border-white/70 bg-[linear-gradient(180deg,rgb(255_255_255/0.72),rgb(247_243_238/0.55))] p-2.5 shadow-[var(--shadow-soft)] outline outline-1 outline-[var(--color-border)]">
+        <div className="flex min-h-0 min-w-max gap-3 rounded-[var(--radius-panel)] border border-white/70 bg-[linear-gradient(180deg,rgb(255_255_255/0.72),rgb(247_243_238/0.55))] p-2.5 outline outline-1 outline-[var(--color-border)]">
           {terminalColumns.map((column) => (
             <KanbanColumn
               key={column.id}
@@ -177,11 +179,14 @@ function KanbanColumn<TItem extends { id: string }, TStage extends string>({
     <section
       ref={setNodeRef}
       className={clsx(
-        'flex w-72 shrink-0 flex-col rounded-[var(--radius-panel)] border transition-all duration-200',
+        'flex w-72 shrink-0 flex-col overflow-hidden border transition-all duration-200',
         terminal
-          ? 'border-dashed border-[var(--color-border-strong)] bg-white/70'
-          : 'border-white/80 bg-[linear-gradient(180deg,#ffffff,#fffcf8)] shadow-[var(--shadow-soft)] outline outline-1 outline-[var(--color-border)]',
-        isOver && 'ring-2 ring-[var(--color-accent)]/30 shadow-[var(--shadow-lift)]',
+          ? clsx(
+              TERMINAL_COLUMN_RADIUS_CLASS,
+              'border-dashed border-[var(--color-border-strong)] bg-white/70',
+            )
+          : 'rounded-[var(--radius-panel)] border-white/80 bg-[linear-gradient(180deg,#ffffff,#fffcf8)] outline outline-1 outline-[var(--color-border)]',
+        isOver && 'ring-2 ring-[var(--color-accent)]/30',
       )}
     >
       <header
@@ -196,7 +201,7 @@ function KanbanColumn<TItem extends { id: string }, TStage extends string>({
         <h3 className="text-[11px] font-bold uppercase tracking-[0.14em] text-[var(--color-muted)]">
           {column.title}
         </h3>
-        <span className="rounded-lg bg-white px-2 py-0.5 text-[11px] font-semibold text-[var(--color-muted)] shadow-sm">
+        <span className="rounded-lg bg-white px-2 py-0.5 text-[11px] font-semibold text-[var(--color-muted)]">
           {items.length}
         </span>
       </header>
