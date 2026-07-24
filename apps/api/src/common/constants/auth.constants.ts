@@ -23,9 +23,9 @@ export const SESSION_TOKEN_BYTES = 32;
 export const LOGIN_RATE_LIMIT_TTL_MS = MS_PER_MINUTE;
 export const LOGIN_RATE_LIMIT_MAX_ATTEMPTS = 5;
 
-/** Generous default rate limit applied to every other route via the global throttler. */
+/** Default rate limit for API routes (Size B: ~20 staff; Next SSR fans out several calls per page). */
 export const DEFAULT_RATE_LIMIT_TTL_MS = MS_PER_MINUTE;
-export const DEFAULT_RATE_LIMIT_MAX_REQUESTS = 60;
+export const DEFAULT_RATE_LIMIT_MAX_REQUESTS = 300;
 
 /** Single, generic message for all login failures so responses do not reveal account existence or status. */
 export const INVALID_CREDENTIALS_MESSAGE = 'Invalid email or password.';

@@ -1,6 +1,6 @@
 import { Body, Controller, Get, HttpCode, HttpStatus, Post, Req, Res } from '@nestjs/common';
 import { ApiCookieAuth, ApiOkResponse, ApiTags, ApiUnauthorizedResponse } from '@nestjs/swagger';
-import { Throttle } from '@nestjs/throttler';
+import { SkipThrottle, Throttle } from '@nestjs/throttler';
 import { Response } from 'express';
 import {
   LOGIN_RATE_LIMIT_MAX_ATTEMPTS,
@@ -48,6 +48,8 @@ export class AuthController {
     response.clearCookie(SESSION_COOKIE_NAME, { path: '/' });
   }
 
+  /** Session probe used on every Next.js page render — must not share the global quota. */
+  @SkipThrottle()
   @ApiCookieAuth()
   @Get('me')
   @ApiOkResponse({ type: CurrentUserResponseDto })
