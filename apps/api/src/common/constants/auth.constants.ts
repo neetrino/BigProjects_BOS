@@ -10,7 +10,8 @@ export const SESSION_COOKIE_NAME = 'bos_session';
 
 /** Session lifetime, and the sliding-renewal window, expressed in days. */
 export const SESSION_TTL_DAYS = 7;
-export const SESSION_RENEWAL_THRESHOLD_DAYS = 6;
+/** Renew when remaining lifetime falls below this many days (half of TTL). */
+export const SESSION_RENEWAL_THRESHOLD_DAYS = 3.5;
 
 /** Same values in milliseconds, for use with `Date` arithmetic. */
 export const SESSION_TTL_MS = SESSION_TTL_DAYS * MS_PER_DAY;

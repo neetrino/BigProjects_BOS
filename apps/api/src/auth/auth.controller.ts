@@ -54,7 +54,17 @@ export class AuthController {
   @Get('me')
   @ApiOkResponse({ type: CurrentUserResponseDto })
   @ApiUnauthorizedResponse()
-  me(@CurrentUser() user: AuthenticatedUser): CurrentUserResponseDto {
+  me(
+    @Req() request: AuthenticatedRequest,
+    @Res({ passthrough: true }) response: Response,
+    @CurrentUser() user: AuthenticatedUser,
+  ): CurrentUserResponseDto {
+    // Sliding browser cookie: keep maxAge refreshed while the user is actively using the app,
+    // so a short idle gap cannot drop a still-valid server session.
+    const token = request.cookies?.[SESSION_COOKIE_NAME];
+    if (typeof token === 'string' && token.length > 0) {
+      this.setSessionCookie(response, token);
+    }
     return user;
   }
 

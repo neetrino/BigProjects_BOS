@@ -103,10 +103,8 @@ export class AuthService {
   }
 
   /**
-   * Sliding renewal: only writes when less than `SESSION_RENEWAL_THRESHOLD_MS` remains before
-   * expiry. Since a renewal always resets the remaining time back to the full TTL, the session
-   * cannot drop below the threshold again for at least one day, which naturally caps renewal
-   * writes to at most one per day per session without needing a separate "last renewed" field.
+   * Sliding renewal: extend when less than half the TTL remains.
+   * Caps writes to roughly once per ~3.5 days of active use.
    */
   private async renewSessionIfNeeded(session: SessionWithUser, now: Date): Promise<void> {
     const remainingMs = session.expiresAt.getTime() - now.getTime();

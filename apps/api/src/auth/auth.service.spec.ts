@@ -159,7 +159,7 @@ describe('AuthService', () => {
       expect(prisma.session.update).not.toHaveBeenCalled();
     });
 
-    it('does not renew a session with 6+ days remaining', async () => {
+    it('does not renew a session with more than the renewal threshold remaining', async () => {
       const session = buildSession({
         expiresAt: new Date(Date.now() + SESSION_RENEWAL_THRESHOLD_MS + MS_PER_DAY),
       });
@@ -171,7 +171,7 @@ describe('AuthService', () => {
       expect(prisma.session.update).not.toHaveBeenCalled();
     });
 
-    it('slides the expiry back to the full TTL when less than 6 days remain', async () => {
+    it('slides the expiry back to the full TTL when below the renewal threshold', async () => {
       const session = buildSession({
         expiresAt: new Date(Date.now() + SESSION_RENEWAL_THRESHOLD_MS - MS_PER_DAY),
       });
