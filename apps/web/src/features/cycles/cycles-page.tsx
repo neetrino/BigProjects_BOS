@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { Plus } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { ApiError } from '@/lib/api/client';
 import { listCycles, updateCycle } from '@/lib/api/cycles';
@@ -126,6 +127,7 @@ export function CyclesPage() {
         </div>
         {isAdmin ? (
           <Button variant="primary" onClick={openCreate}>
+            <Plus className="size-4" aria-hidden />
             {t('create')}
           </Button>
         ) : null}

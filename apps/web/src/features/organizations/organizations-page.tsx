@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { Plus } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { ApiError } from '@/lib/api/client';
 import { listOrganizations } from '@/lib/api/organizations';
@@ -70,26 +71,21 @@ export function OrganizationsPage() {
 
   return (
     <div className="flex flex-col gap-4">
-      <header className="flex items-center justify-between gap-3">
-        <div>
-          <h1 className="page-heading">{t('title')}</h1>
-          <p className="page-subtitle">{t('subtitle')}</p>
-        </div>
-        <Button variant="primary" onClick={() => setCreateOpen(true)}>
-          {t('create')}
-        </Button>
+      <header>
+        <h1 className="page-heading">{t('title')}</h1>
+        <p className="page-subtitle">{t('subtitle')}</p>
       </header>
 
       <div className="toolbar-shell">
         <SearchInput
-          className="max-w-xs"
+          className="min-w-[12rem] flex-1"
           placeholder={t('searchPlaceholder')}
           value={searchInput}
           onChange={(event) => setSearchInput(event.target.value)}
           aria-label={t('searchPlaceholder')}
         />
         <SelectInput
-          className="max-w-[180px]"
+          fitContent
           value={typeFilter}
           onChange={(event) => setTypeFilter(event.target.value as OrganizationType | '')}
           aria-label={t('typeFilter')}
@@ -101,6 +97,10 @@ export function OrganizationsPage() {
             </option>
           ))}
         </SelectInput>
+        <Button variant="primary" onClick={() => setCreateOpen(true)} className="shrink-0">
+          <Plus className="size-4" aria-hidden />
+          {t('create')}
+        </Button>
       </div>
 
       {loadState.status === 'loading' ? <LoadingState message={tCommon('loading')} /> : null}

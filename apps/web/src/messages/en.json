@@ -42,7 +42,7 @@
   "cycles": {
     "title": "Event Cycles",
     "subtitle": "Manage ToonExpo cycles and their status.",
-    "create": "New cycle",
+    "create": "New Cycle",
     "createTitle": "Create cycle",
     "editTitle": "Edit cycle",
     "empty": "No event cycles yet.",
@@ -83,7 +83,7 @@
   "organizations": {
     "title": "Organizations",
     "subtitle": "Companies and contacts used across cycles.",
-    "create": "New organization",
+    "create": "New Organization",
     "createTitle": "Create organization",
     "detailTitle": "Organization",
     "detailsSection": "Details",
@@ -144,7 +144,7 @@
     "staff": {
       "title": "Staff accounts",
       "subtitle": "Create and disable internal users.",
-      "create": "New user",
+      "create": "New User",
       "createTitle": "Create user",
       "empty": "No users found.",
       "disable": "Disable",
@@ -179,7 +179,7 @@
   "builderSales": {
     "title": "Builder Sales",
     "subtitle": "Manage exhibition space deals for the selected cycle.",
-    "create": "New deal",
+    "create": "New Deal",
     "createTitle": "Create deal",
     "detailTitle": "Deal",
     "empty": "No deals in this cycle yet.",
@@ -396,7 +396,7 @@
   "partners": {
     "title": "Partner Relations",
     "subtitle": "Manage banks and other non-builder participants for the selected cycle.",
-    "create": "New partner",
+    "create": "New Partner",
     "createTitle": "Create partner",
     "detailTitle": "Partner",
     "empty": "No partners in this cycle yet.",

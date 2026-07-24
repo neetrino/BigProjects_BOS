@@ -42,6 +42,11 @@ function readOptions(select: HTMLSelectElement | null): SelectOption[] {
   }));
 }
 
+type SelectInputProps = SelectHTMLAttributes<HTMLSelectElement> & {
+  /** Shrink trigger to the selected label width (toolbar filters). */
+  fitContent?: boolean;
+};
+
 export function SelectInput({
   children,
   className,
@@ -52,8 +57,9 @@ export function SelectInput({
   id,
   name,
   required,
+  fitContent = false,
   'aria-label': ariaLabel,
-}: SelectHTMLAttributes<HTMLSelectElement>) {
+}: SelectInputProps) {
   const listboxId = useId();
   const rootRef = useRef<HTMLDivElement>(null);
   const triggerRef = useRef<HTMLButtonElement>(null);
@@ -158,7 +164,9 @@ export function SelectInput({
         position: 'fixed',
         zIndex: 1000,
         left: menuPosition.left,
-        width: Math.max(menuPosition.width, 160),
+        minWidth: Math.max(menuPosition.width, 160),
+        width: 'max-content',
+        maxWidth: 'min(24rem, calc(100vw - 1.5rem))',
         maxHeight: MENU_MAX_HEIGHT_PX,
         ...(menuPosition.openUpward
           ? { bottom: window.innerHeight - menuPosition.top }
@@ -167,7 +175,10 @@ export function SelectInput({
     : undefined;
 
   return (
-    <div ref={rootRef} className={clsx('relative min-w-0', className)}>
+    <div
+      ref={rootRef}
+      className={clsx('relative min-w-0', fitContent ? 'inline-flex w-fit shrink-0' : 'w-full', className)}
+    >
       <select
         ref={selectRef}
         id={id ? `${id}-native` : undefined}
@@ -205,7 +216,8 @@ export function SelectInput({
           setOpen(true);
         }}
         className={clsx(
-          'relative z-[1] flex w-full min-w-0 items-center justify-between gap-2 rounded-xl',
+          'relative z-[1] flex items-center justify-between gap-2 rounded-xl',
+          fitContent ? 'w-auto' : 'w-full min-w-0',
           'border border-[var(--color-border)] bg-[#f3f2ee] px-3.5 py-2.5 text-left text-sm font-medium',
           'text-[var(--color-fg)] outline-none transition-colors duration-150',
           'hover:border-[var(--color-border-strong)]',
@@ -213,7 +225,9 @@ export function SelectInput({
           'disabled:cursor-not-allowed disabled:opacity-50',
         )}
       >
-        <span className="min-w-0 truncate">{selectedLabel || '\u00A0'}</span>
+        <span className={clsx(fitContent ? 'whitespace-nowrap' : 'min-w-0 truncate')}>
+          {selectedLabel || '\u00A0'}
+        </span>
         <ChevronDown
           className={clsx(
             'size-4 shrink-0 text-[var(--color-muted)] transition-transform duration-200',

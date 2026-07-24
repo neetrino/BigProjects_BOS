@@ -1,11 +1,12 @@
 'use client';
 
-import { clsx } from 'clsx';
+import { Plus } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import type { EventCycle } from '@/lib/api/types';
 import type { BoardViewMode } from '@/features/builder-crm/constants';
 import { Button } from '@/components/ui/button';
 import { SearchInput, SelectInput } from '@/components/ui/field';
+import { ViewModeSwitcher } from '@/components/ui/view-mode-switcher';
 
 type StaffOption = {
   id: string;
@@ -43,19 +44,22 @@ export function BuilderSalesToolbar({
 
   return (
     <div className="flex flex-col gap-3">
-      <header className="flex flex-wrap items-center justify-between gap-3">
-        <div>
-          <h1 className="page-heading">{t('title')}</h1>
-          <p className="page-subtitle">{t('subtitle')}</p>
-        </div>
-        <Button variant="primary" onClick={onCreate}>
-          {t('create')}
-        </Button>
+      <header>
+        <h1 className="page-heading">{t('title')}</h1>
+        <p className="page-subtitle">{t('subtitle')}</p>
       </header>
 
       <div className="toolbar-shell">
+        <SearchInput
+          className="min-w-[12rem] flex-1"
+          placeholder={t('toolbar.searchPlaceholder')}
+          value={searchInput}
+          onChange={(event) => onSearchChange(event.target.value)}
+          aria-label={t('toolbar.searchPlaceholder')}
+        />
+
         <SelectInput
-          className="max-w-[220px]"
+          fitContent
           value={cycleId}
           onChange={(event) => onCycleChange(event.target.value)}
           aria-label={t('toolbar.cycle')}
@@ -69,47 +73,8 @@ export function BuilderSalesToolbar({
           ))}
         </SelectInput>
 
-        <div
-          role="group"
-          aria-label={t('toolbar.view')}
-          className="inline-flex rounded-[var(--radius-control)] border border-[var(--color-border)] bg-[var(--color-bg)]/80 p-0.5"
-        >
-          <button
-            type="button"
-            className={clsx(
-              'rounded-[calc(var(--radius-control)-2px)] px-2.5 py-1.5 text-xs font-semibold transition-colors',
-              view === 'kanban'
-                ? 'bg-[var(--color-surface)] text-[var(--color-accent)] shadow-sm'
-                : 'text-[var(--color-muted)] hover:text-[var(--color-fg)]',
-            )}
-            onClick={() => onViewChange('kanban')}
-          >
-            {t('toolbar.kanban')}
-          </button>
-          <button
-            type="button"
-            className={clsx(
-              'rounded-[calc(var(--radius-control)-2px)] px-2.5 py-1.5 text-xs font-semibold transition-colors',
-              view === 'list'
-                ? 'bg-[var(--color-surface)] text-[var(--color-accent)] shadow-sm'
-                : 'text-[var(--color-muted)] hover:text-[var(--color-fg)]',
-            )}
-            onClick={() => onViewChange('list')}
-          >
-            {t('toolbar.list')}
-          </button>
-        </div>
-
-        <SearchInput
-          className="max-w-xs"
-          placeholder={t('toolbar.searchPlaceholder')}
-          value={searchInput}
-          onChange={(event) => onSearchChange(event.target.value)}
-          aria-label={t('toolbar.searchPlaceholder')}
-        />
-
         <SelectInput
-          className="max-w-[200px]"
+          fitContent
           value={assignedStaffId}
           onChange={(event) => onAssignedStaffChange(event.target.value)}
           aria-label={t('toolbar.staffFilter')}
@@ -121,6 +86,19 @@ export function BuilderSalesToolbar({
             </option>
           ))}
         </SelectInput>
+
+        <ViewModeSwitcher
+          value={view}
+          onChange={onViewChange}
+          ariaLabel={t('toolbar.view')}
+          kanbanLabel={t('toolbar.kanban')}
+          listLabel={t('toolbar.list')}
+        />
+
+        <Button variant="primary" onClick={onCreate} className="shrink-0">
+          <Plus className="size-4" aria-hidden />
+          {t('create')}
+        </Button>
       </div>
     </div>
   );

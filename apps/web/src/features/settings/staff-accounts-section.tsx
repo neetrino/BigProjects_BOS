@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { Plus } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { useAuth } from '@/components/auth/auth-provider';
 import { CreateUserSheet } from '@/features/settings/create-user-sheet';
@@ -89,6 +90,7 @@ export function StaffAccountsSection() {
           <p className="page-subtitle">{t('subtitle')}</p>
         </div>
         <Button variant="primary" onClick={() => setCreateOpen(true)}>
+          <Plus className="size-4" aria-hidden />
           {t('create')}
         </Button>
       </div>

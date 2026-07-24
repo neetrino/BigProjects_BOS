@@ -207,6 +207,10 @@ input:disabled,
   outline-offset: -1px;
 }
 
+.toolbar-shell > * {
+  min-width: 0;
+}
+
 .brand-tile {
   display: flex;
   align-items: center;
