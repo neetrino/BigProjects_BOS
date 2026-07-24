@@ -100,14 +100,23 @@ function buildDetailsPatch(draft: DealDetailsDraft, baseline: DealDetailsDraft):
 }
 
 export function DealSheet({ dealId, open, staffOptions, onClose, onUpdated }: DealSheetProps) {
-  if (!open || !dealId) {
+  const [activeId, setActiveId] = useState<string | null>(dealId);
+
+  useEffect(() => {
+    if (open && dealId) {
+      setActiveId(dealId);
+    }
+  }, [open, dealId]);
+
+  if (!activeId) {
     return null;
   }
 
   return (
     <DealSheetInner
-      key={dealId}
-      dealId={dealId}
+      key={activeId}
+      open={open && dealId === activeId}
+      dealId={activeId}
       staffOptions={staffOptions}
       onClose={onClose}
       onUpdated={onUpdated}
@@ -116,13 +125,20 @@ export function DealSheet({ dealId, open, staffOptions, onClose, onUpdated }: De
 }
 
 type DealSheetInnerProps = {
+  open: boolean;
   dealId: string;
   staffOptions: StaffOption[];
   onClose: () => void;
   onUpdated: (deal: DealListItem) => void;
 };
 
-function DealSheetInner({ dealId, staffOptions, onClose, onUpdated }: DealSheetInnerProps) {
+function DealSheetInner({
+  open,
+  dealId,
+  staffOptions,
+  onClose,
+  onUpdated,
+}: DealSheetInnerProps) {
   const t = useTranslations('builderSales');
   const tCommon = useTranslations('common');
   const [loadState, setLoadState] = useState<LoadState>({ status: 'loading' });
@@ -266,25 +282,27 @@ function DealSheetInner({ dealId, staffOptions, onClose, onUpdated }: DealSheetI
     }
   }
 
+  const sheetTitle =
+    loadState.status === 'ready' ? loadState.deal.organization.name : t('detailTitle');
+  const sheetSubtitle = loadState.status === 'ready' ? loadState.deal.stage : undefined;
+
   return (
     <Sheet
-      open
-      title={t('detailTitle')}
+      open={open}
+      title={sheetTitle}
+      subtitle={sheetSubtitle}
       onClose={onClose}
-      widthClassName="w-full max-w-md"
       footer={
         isDirty ? (
-          <div className="flex items-center justify-between gap-2">
+          <div className="flex flex-col gap-2">
             {saveError ? (
               <p className="text-sm text-[var(--color-danger)]">{saveError}</p>
-            ) : (
-              <span />
-            )}
+            ) : null}
             <div className="flex gap-2">
-              <Button variant="secondary" onClick={handleCancelDraft} disabled={busy}>
+              <Button variant="secondary" onClick={handleCancelDraft} disabled={busy} className="flex-1">
                 {tCommon('cancel')}
               </Button>
-              <Button variant="primary" onClick={() => void handleSave()} disabled={busy}>
+              <Button variant="primary" onClick={() => void handleSave()} disabled={busy} className="flex-1">
                 {busy ? tCommon('saving') : tCommon('save')}
               </Button>
             </div>

@@ -7,7 +7,7 @@ import { createDeal } from '@/lib/api/deals';
 import { getOrganization, listOrganizations } from '@/lib/api/organizations';
 import type { DealListItem, OrganizationContact, OrganizationListItem } from '@/lib/api/types';
 import { Button } from '@/components/ui/button';
-import { Field, SelectInput, TextArea, TextInput } from '@/components/ui/field';
+import { Field, SearchInput, SelectInput, TextArea, TextInput } from '@/components/ui/field';
 import { Sheet } from '@/components/ui/sheet';
 import { SEARCH_DEBOUNCE_MS } from '@/lib/constants';
 
@@ -31,13 +31,10 @@ export function DealCreateSheet({
   onClose,
   onCreated,
 }: DealCreateSheetProps) {
-  if (!open) {
-    return null;
-  }
-
   return (
     <DealCreateSheetInner
       key={eventCycleId}
+      open={open}
       eventCycleId={eventCycleId}
       staffOptions={staffOptions}
       onClose={onClose}
@@ -47,6 +44,7 @@ export function DealCreateSheet({
 }
 
 type DealCreateSheetInnerProps = {
+  open: boolean;
   eventCycleId: string;
   staffOptions: StaffOption[];
   onClose: () => void;
@@ -54,6 +52,7 @@ type DealCreateSheetInnerProps = {
 };
 
 function DealCreateSheetInner({
+  open,
   eventCycleId,
   staffOptions,
   onClose,
@@ -156,10 +155,9 @@ function DealCreateSheetInner({
 
   return (
     <Sheet
-      open
+      open={open}
       title={t('createTitle')}
       onClose={onClose}
-      widthClassName="w-full max-w-md"
       footer={
         <div className="flex justify-end gap-2">
           <Button variant="secondary" onClick={onClose} disabled={busy}>
@@ -173,7 +171,7 @@ function DealCreateSheetInner({
     >
       <form id="deal-create-form" onSubmit={handleSubmit} className="flex flex-col gap-3">
         <Field label={t('fields.organization')} htmlFor="create-org-search">
-          <TextInput
+          <SearchInput
             id="create-org-search"
             value={orgSearch}
             onChange={(event) => setOrgSearch(event.target.value)}

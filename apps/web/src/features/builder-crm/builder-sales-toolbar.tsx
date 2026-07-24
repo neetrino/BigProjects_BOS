@@ -5,7 +5,7 @@ import { useTranslations } from 'next-intl';
 import type { EventCycle } from '@/lib/api/types';
 import type { BoardViewMode } from '@/features/builder-crm/constants';
 import { Button } from '@/components/ui/button';
-import { SelectInput, TextInput } from '@/components/ui/field';
+import { SearchInput, SelectInput } from '@/components/ui/field';
 
 type StaffOption = {
   id: string;
@@ -100,7 +100,7 @@ export function BuilderSalesToolbar({
           </button>
         </div>
 
-        <TextInput
+        <SearchInput
           className="max-w-xs"
           placeholder={t('toolbar.searchPlaceholder')}
           value={searchInput}

@@ -18,13 +18,10 @@ type CycleFormSheetProps = {
 };
 
 export function CycleFormSheet({ open, cycle, onClose, onSaved }: CycleFormSheetProps) {
-  if (!open) {
-    return null;
-  }
-
   return (
     <CycleFormSheetInner
       key={cycle?.id ?? 'create'}
+      open={open}
       cycle={cycle}
       onClose={onClose}
       onSaved={onSaved}
@@ -33,12 +30,13 @@ export function CycleFormSheet({ open, cycle, onClose, onSaved }: CycleFormSheet
 }
 
 type CycleFormSheetInnerProps = {
+  open: boolean;
   cycle: EventCycle | null;
   onClose: () => void;
   onSaved: (cycle: EventCycle) => void;
 };
 
-function CycleFormSheetInner({ cycle, onClose, onSaved }: CycleFormSheetInnerProps) {
+function CycleFormSheetInner({ open, cycle, onClose, onSaved }: CycleFormSheetInnerProps) {
   const t = useTranslations('cycles');
   const tCommon = useTranslations('common');
   const isEdit = cycle !== null;
@@ -92,7 +90,7 @@ function CycleFormSheetInner({ cycle, onClose, onSaved }: CycleFormSheetInnerPro
 
   return (
     <Sheet
-      open
+      open={open}
       title={isEdit ? t('editTitle') : t('createTitle')}
       onClose={onClose}
       footer={

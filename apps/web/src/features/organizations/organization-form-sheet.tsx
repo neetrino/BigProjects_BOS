@@ -18,19 +18,16 @@ type OrganizationFormSheetProps = {
 };
 
 export function OrganizationFormSheet({ open, onClose, onCreated }: OrganizationFormSheetProps) {
-  if (!open) {
-    return null;
-  }
-
-  return <OrganizationFormSheetInner onClose={onClose} onCreated={onCreated} />;
+  return <OrganizationFormSheetInner open={open} onClose={onClose} onCreated={onCreated} />;
 }
 
 type OrganizationFormSheetInnerProps = {
+  open: boolean;
   onClose: () => void;
   onCreated: (organization: OrganizationListItem) => void;
 };
 
-function OrganizationFormSheetInner({ onClose, onCreated }: OrganizationFormSheetInnerProps) {
+function OrganizationFormSheetInner({ open, onClose, onCreated }: OrganizationFormSheetInnerProps) {
   const t = useTranslations('organizations');
   const tCommon = useTranslations('common');
   const [name, setName] = useState('');
@@ -67,7 +64,7 @@ function OrganizationFormSheetInner({ onClose, onCreated }: OrganizationFormShee
 
   return (
     <Sheet
-      open
+      open={open}
       title={t('createTitle')}
       onClose={onClose}
       footer={

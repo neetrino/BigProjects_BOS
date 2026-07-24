@@ -12,7 +12,7 @@ import {
 } from '@/lib/api/venue-map';
 import { Button } from '@/components/ui/button';
 import { Dialog } from '@/components/ui/dialog';
-import { Field, TextInput } from '@/components/ui/field';
+import { Field, SearchInput } from '@/components/ui/field';
 import { showToast } from '@/components/ui/toast';
 
 type EntityAreasSectionProps = {
@@ -221,7 +221,7 @@ function AssignFreeAreaDialogInner({
           </h2>
           <div className="mt-3">
             <Field label={t('search')} htmlFor="entity-assign-search">
-              <TextInput
+              <SearchInput
                 id="entity-assign-search"
                 value={search}
                 onChange={(event) => setSearch(event.target.value)}

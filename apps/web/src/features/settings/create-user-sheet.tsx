@@ -16,19 +16,16 @@ type CreateUserSheetProps = {
 };
 
 export function CreateUserSheet({ open, onClose, onCreated }: CreateUserSheetProps) {
-  if (!open) {
-    return null;
-  }
-
-  return <CreateUserSheetInner onClose={onClose} onCreated={onCreated} />;
+  return <CreateUserSheetInner open={open} onClose={onClose} onCreated={onCreated} />;
 }
 
 type CreateUserSheetInnerProps = {
+  open: boolean;
   onClose: () => void;
   onCreated: (user: UserAccount) => void;
 };
 
-function CreateUserSheetInner({ onClose, onCreated }: CreateUserSheetInnerProps) {
+function CreateUserSheetInner({ open, onClose, onCreated }: CreateUserSheetInnerProps) {
   const t = useTranslations('settings.staff');
   const tCommon = useTranslations('common');
   const [name, setName] = useState('');
@@ -60,7 +57,7 @@ function CreateUserSheetInner({ onClose, onCreated }: CreateUserSheetInnerProps)
 
   return (
     <Sheet
-      open
+      open={open}
       title={t('createTitle')}
       onClose={onClose}
       footer={

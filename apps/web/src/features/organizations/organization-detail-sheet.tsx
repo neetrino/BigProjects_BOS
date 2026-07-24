@@ -51,14 +51,23 @@ export function OrganizationDetailSheet({
   onClose,
   onUpdated,
 }: OrganizationDetailSheetProps) {
-  if (!open || !organizationId) {
+  const [activeId, setActiveId] = useState<string | null>(organizationId);
+
+  useEffect(() => {
+    if (open && organizationId) {
+      setActiveId(organizationId);
+    }
+  }, [open, organizationId]);
+
+  if (!activeId) {
     return null;
   }
 
   return (
     <OrganizationDetailSheetInner
-      key={organizationId}
-      organizationId={organizationId}
+      key={activeId}
+      open={open && organizationId === activeId}
+      organizationId={activeId}
       onClose={onClose}
       onUpdated={onUpdated}
     />
@@ -66,12 +75,14 @@ export function OrganizationDetailSheet({
 }
 
 type OrganizationDetailSheetInnerProps = {
+  open: boolean;
   organizationId: string;
   onClose: () => void;
   onUpdated: () => void;
 };
 
 function OrganizationDetailSheetInner({
+  open,
   organizationId,
   onClose,
   onUpdated,
@@ -183,25 +194,28 @@ function OrganizationDetailSheetInner({
     }
   }
 
+  const sheetTitle =
+    loadState.status === 'ready' ? loadState.detail.name : t('detailTitle');
+  const sheetSubtitle =
+    loadState.status === 'ready' ? t(`types.${loadState.detail.type}`) : undefined;
+
   return (
     <Sheet
-      open
-      title={t('detailTitle')}
+      open={open}
+      title={sheetTitle}
+      subtitle={sheetSubtitle}
       onClose={onClose}
-      widthClassName="w-full max-w-lg"
       footer={
         isDirty ? (
-          <div className="flex items-center justify-between gap-2">
+          <div className="flex flex-col gap-2">
             {saveError ? (
               <p className="text-sm text-[var(--color-danger)]">{saveError}</p>
-            ) : (
-              <span />
-            )}
+            ) : null}
             <div className="flex gap-2">
-              <Button variant="secondary" onClick={handleCancelDraft} disabled={busy}>
+              <Button variant="secondary" onClick={handleCancelDraft} disabled={busy} className="flex-1">
                 {tCommon('cancel')}
               </Button>
-              <Button variant="primary" onClick={() => void handleSave()} disabled={busy}>
+              <Button variant="primary" onClick={() => void handleSave()} disabled={busy} className="flex-1">
                 {busy ? tCommon('saving') : tCommon('save')}
               </Button>
             </div>

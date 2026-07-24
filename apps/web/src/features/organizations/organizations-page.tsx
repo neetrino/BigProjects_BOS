@@ -9,7 +9,7 @@ import { OrganizationDetailSheet } from '@/features/organizations/organization-d
 import { OrganizationFormSheet } from '@/features/organizations/organization-form-sheet';
 import { Button } from '@/components/ui/button';
 import { EmptyState, ErrorState, LoadingState } from '@/components/ui/page-state';
-import { SelectInput, TextInput } from '@/components/ui/field';
+import { SearchInput, SelectInput } from '@/components/ui/field';
 
 const SEARCH_DEBOUNCE_MS = 300;
 const ORGANIZATION_TYPES: OrganizationType[] = ['BUILDER', 'BANK', 'PARTNER', 'OTHER'];
@@ -81,7 +81,7 @@ export function OrganizationsPage() {
       </header>
 
       <div className="toolbar-shell">
-        <TextInput
+        <SearchInput
           className="max-w-xs"
           placeholder={t('searchPlaceholder')}
           value={searchInput}

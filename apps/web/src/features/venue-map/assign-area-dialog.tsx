@@ -8,7 +8,7 @@ import { listPartners } from '@/lib/api/partners';
 import type { DealListItem, PartnerListItem } from '@/lib/api/types';
 import { createSpaceAllocation } from '@/lib/api/venue-map';
 import { Button } from '@/components/ui/button';
-import { Field, TextInput } from '@/components/ui/field';
+import { Field, SearchInput } from '@/components/ui/field';
 import { showToast } from '@/components/ui/toast';
 
 type AssignTab = 'builders' | 'partners';
@@ -159,7 +159,7 @@ function AssignAreaDialogInner({
           </div>
           <div className="mt-3">
             <Field label={t('assign.search')} htmlFor="assign-search">
-              <TextInput
+              <SearchInput
                 id="assign-search"
                 value={search}
                 onChange={(event) => setSearch(event.target.value)}

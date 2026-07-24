@@ -97,14 +97,23 @@ export function PartnerSheet({
   onClose,
   onUpdated,
 }: PartnerSheetProps) {
-  if (!open || !partnerId) {
+  const [activeId, setActiveId] = useState<string | null>(partnerId);
+
+  useEffect(() => {
+    if (open && partnerId) {
+      setActiveId(partnerId);
+    }
+  }, [open, partnerId]);
+
+  if (!activeId) {
     return null;
   }
 
   return (
     <PartnerSheetInner
-      key={partnerId}
-      partnerId={partnerId}
+      key={activeId}
+      open={open && partnerId === activeId}
+      partnerId={activeId}
       staffOptions={staffOptions}
       onClose={onClose}
       onUpdated={onUpdated}
@@ -113,6 +122,7 @@ export function PartnerSheet({
 }
 
 type PartnerSheetInnerProps = {
+  open: boolean;
   partnerId: string;
   staffOptions: StaffOption[];
   onClose: () => void;
@@ -120,6 +130,7 @@ type PartnerSheetInnerProps = {
 };
 
 function PartnerSheetInner({
+  open,
   partnerId,
   staffOptions,
   onClose,
@@ -262,25 +273,30 @@ function PartnerSheetInner({
     }
   }
 
+  const sheetTitle =
+    loadState.status === 'ready' ? loadState.partner.organization.name : t('detailTitle');
+  const sheetSubtitle =
+    loadState.status === 'ready'
+      ? `${loadState.partner.stage}${loadState.partner.partnerType ? ` · ${loadState.partner.partnerType}` : ''}`
+      : undefined;
+
   return (
     <Sheet
-      open
-      title={t('detailTitle')}
+      open={open}
+      title={sheetTitle}
+      subtitle={sheetSubtitle}
       onClose={onClose}
-      widthClassName="w-full max-w-md"
       footer={
         isDirty ? (
-          <div className="flex items-center justify-between gap-2">
+          <div className="flex flex-col gap-2">
             {saveError ? (
               <p className="text-sm text-[var(--color-danger)]">{saveError}</p>
-            ) : (
-              <span />
-            )}
+            ) : null}
             <div className="flex gap-2">
-              <Button variant="secondary" onClick={handleCancelDraft} disabled={busy}>
+              <Button variant="secondary" onClick={handleCancelDraft} disabled={busy} className="flex-1">
                 {tCommon('cancel')}
               </Button>
-              <Button variant="primary" onClick={() => void handleSave()} disabled={busy}>
+              <Button variant="primary" onClick={() => void handleSave()} disabled={busy} className="flex-1">
                 {busy ? tCommon('saving') : tCommon('save')}
               </Button>
             </div>
