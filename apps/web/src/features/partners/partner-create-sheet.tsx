@@ -142,8 +142,8 @@ function PartnerCreateSheetInner({
         partnerType: partnerType.trim() || undefined,
         description: description.trim() || undefined,
       });
-      onCreated(created);
       onClose();
+      onCreated(created);
     } catch (err) {
       setError(err instanceof ApiError ? err.message : tCommon('unexpectedError'));
     } finally {

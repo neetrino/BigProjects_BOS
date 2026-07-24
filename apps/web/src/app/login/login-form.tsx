@@ -23,7 +23,7 @@ export function LoginForm() {
 
     try {
       await login({ email: email.trim(), password });
-      router.replace('/cycles');
+      router.replace('/builder-sales');
       router.refresh();
     } catch (err) {
       if (err instanceof ApiError) {

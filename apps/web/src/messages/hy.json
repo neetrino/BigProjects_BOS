@@ -59,6 +59,11 @@
       "startsAt": "Սկիզբ",
       "endsAt": "Ավարտ"
     },
+    "errors": {
+      "nameRequired": "Անվանումը պարտադիր է։",
+      "codeRequired": "Կոդը պարտադիր է։",
+      "endsBeforeStarts": "Ավարտի ամսաթիվը պետք է լինի սկզբից ոչ շուտ։"
+    },
     "status": {
       "DRAFT": "Սևագիր",
       "ACTIVE": "Ակտիվ",

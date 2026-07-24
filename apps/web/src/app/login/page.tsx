@@ -8,7 +8,7 @@ import { resolveLocale } from '@/i18n/config';
 export default async function LoginPage() {
   const user = await fetchCurrentUserServer();
   if (user) {
-    redirect('/cycles');
+    redirect('/builder-sales');
   }
 
   const t = await getTranslations('login');

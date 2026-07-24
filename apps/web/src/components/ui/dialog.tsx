@@ -51,7 +51,7 @@ export function Dialog({
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
       <button
         type="button"
-        aria-label="Close"
+        aria-label="Dismiss overlay"
         className="absolute inset-0 bg-[#122033]/32 backdrop-blur-[3px]"
         onClick={() => {
           if (!busy) {

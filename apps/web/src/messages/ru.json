@@ -59,6 +59,11 @@
       "startsAt": "Начало",
       "endsAt": "Конец"
     },
+    "errors": {
+      "nameRequired": "Название обязательно.",
+      "codeRequired": "Код обязателен.",
+      "endsBeforeStarts": "Дата окончания должна быть не раньше даты начала."
+    },
     "status": {
       "DRAFT": "Черновик",
       "ACTIVE": "Активный",

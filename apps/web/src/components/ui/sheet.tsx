@@ -45,7 +45,7 @@ export function Sheet({
     <div className="fixed inset-0 z-40 flex justify-end">
       <button
         type="button"
-        aria-label="Close"
+        aria-label="Dismiss overlay"
         className="absolute inset-0 bg-[#122033]/28 backdrop-blur-[3px]"
         onClick={onClose}
       />

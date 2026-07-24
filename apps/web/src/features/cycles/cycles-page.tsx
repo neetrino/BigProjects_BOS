@@ -10,6 +10,7 @@ import { useAuth } from '@/components/auth/auth-provider';
 import { Button } from '@/components/ui/button';
 import { Dialog } from '@/components/ui/dialog';
 import { EmptyState, ErrorState, LoadingState } from '@/components/ui/page-state';
+import { showToast } from '@/components/ui/toast';
 import { StatusBadge } from '@/components/ui/status-badge';
 import { CycleFormSheet } from '@/features/cycles/cycle-form-sheet';
 
@@ -107,10 +108,7 @@ export function CyclesPage() {
       replaceCycle(updated);
       setConfirm(null);
     } catch (err) {
-      setLoadState({
-        status: 'error',
-        message: err instanceof ApiError ? err.message : tCommon('unexpectedError'),
-      });
+      showToast(err instanceof ApiError ? err.message : tCommon('unexpectedError'), 'error');
       setConfirm(null);
     } finally {
       setConfirmBusy(false);

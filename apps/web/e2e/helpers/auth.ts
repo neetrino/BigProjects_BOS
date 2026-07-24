@@ -35,7 +35,7 @@ export async function loginAsAdmin(page: Page): Promise<void> {
   await page.getByLabel('Email').fill(email);
   await page.getByLabel('Password').fill(password);
   await page.getByRole('button', { name: 'Sign in' }).click();
-  await expect(page).toHaveURL(/\/cycles/);
+  await expect(page).toHaveURL(/\/builder-sales/);
   await expect(page.getByRole('navigation', { name: 'Main navigation' })).toBeVisible();
 }
 

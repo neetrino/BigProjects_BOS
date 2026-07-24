@@ -54,9 +54,27 @@ function CycleFormSheetInner({ cycle, onClose, onSaved }: CycleFormSheetInnerPro
     setBusy(true);
     setError(null);
 
+    const trimmedName = name.trim();
+    const trimmedCode = code.trim();
+    if (!trimmedName) {
+      setError(t('errors.nameRequired'));
+      setBusy(false);
+      return;
+    }
+    if (!trimmedCode) {
+      setError(t('errors.codeRequired'));
+      setBusy(false);
+      return;
+    }
+    if (startsAt && endsAt && endsAt < startsAt) {
+      setError(t('errors.endsBeforeStarts'));
+      setBusy(false);
+      return;
+    }
+
     const payload = {
-      name: name.trim(),
-      code: code.trim(),
+      name: trimmedName,
+      code: trimmedCode,
       startsAt: dateInputToIso(startsAt),
       endsAt: dateInputToIso(endsAt),
     };

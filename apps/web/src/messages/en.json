@@ -59,6 +59,11 @@
       "startsAt": "Starts",
       "endsAt": "Ends"
     },
+    "errors": {
+      "nameRequired": "Name is required.",
+      "codeRequired": "Code is required.",
+      "endsBeforeStarts": "End date must be on or after the start date."
+    },
     "status": {
       "DRAFT": "Draft",
       "ACTIVE": "Active",
