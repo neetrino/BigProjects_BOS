@@ -33,7 +33,7 @@ export function Field({ label, htmlFor, error, children, className }: FieldProps
 }
 
 const CONTROL_CLASS =
-  'w-full rounded-xl border border-[var(--color-border)] bg-[#f3f2ee] px-3.5 py-2.5 text-sm font-medium text-[var(--color-fg)] outline-none transition-colors duration-150 placeholder:font-medium placeholder:text-[var(--color-muted)]/60 hover:border-[var(--color-border-strong)] focus:border-[var(--color-brand)] focus:bg-white';
+  'w-full rounded-xl border border-[var(--color-border)] bg-white px-3.5 py-2.5 text-sm font-medium text-[var(--color-fg)] outline-none transition-colors duration-150 placeholder:font-medium placeholder:text-[var(--color-muted)]/60 hover:border-[var(--color-border-strong)] focus:border-[var(--color-brand)]';
 
 export function TextInput(props: InputHTMLAttributes<HTMLInputElement>) {
   return <input className={clsx(CONTROL_CLASS, props.className)} {...props} />;

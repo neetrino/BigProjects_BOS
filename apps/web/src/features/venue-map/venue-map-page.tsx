@@ -150,6 +150,7 @@ export function VenueMapPage() {
               value={cycleId}
               onChange={(event) => handleCycleChange(event.target.value)}
               className="min-w-[12rem]"
+              fitContent
             >
               {cyclesLoad.cycles.map((cycle) => (
                 <option key={cycle.id} value={cycle.id}>

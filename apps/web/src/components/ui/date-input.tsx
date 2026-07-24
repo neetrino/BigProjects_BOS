@@ -154,8 +154,8 @@ export function DateInput({
     <div ref={rootRef} className={clsx('relative', className)}>
       <div
         className={clsx(
-          'flex w-full items-center gap-1 rounded-xl border border-[var(--color-border)] bg-[#f3f2ee] px-2.5 transition-colors duration-150',
-          'hover:border-[var(--color-border-strong)] focus-within:border-[var(--color-brand)] focus-within:bg-white',
+          'flex w-full items-center gap-1 rounded-xl border border-[var(--color-border)] bg-white px-2.5 transition-colors duration-150',
+          'hover:border-[var(--color-border-strong)] focus-within:border-[var(--color-brand)]',
           disabled && 'cursor-not-allowed opacity-60',
         )}
       >
