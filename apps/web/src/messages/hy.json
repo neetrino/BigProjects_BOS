@@ -11,7 +11,7 @@
     "unexpectedError": "Ինչ-որ սխալ տեղի ունեցավ։ Փորձեք կրկին։",
     "datePicker": {
       "title": "Ընտրել ամսաթիվ",
-      "placeholder": "Ընտրեք ամսաթիվ",
+      "placeholder": "DD.MM.YYYY",
       "clear": "Մաքրել",
       "today": "Այսօր",
       "prevMonth": "Նախորդ ամիս",

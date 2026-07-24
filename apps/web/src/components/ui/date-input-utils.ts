@@ -7,6 +7,12 @@ export type CalendarCell = {
   inMonth: boolean;
 };
 
+export type { DateMaskEdit } from '@/components/ui/date-input-mask';
+export {
+  applyDateBackspace,
+  applyDateDigitInput,
+} from '@/components/ui/date-input-mask';
+
 function pad2(value: number): string {
   return String(value).padStart(2, '0');
 }
@@ -27,7 +33,48 @@ export function parseIsoDate(
   if (!Number.isFinite(year) || monthIndex < 0 || monthIndex > 11 || day < 1 || day > 31) {
     return null;
   }
+  const check = new Date(year, monthIndex, day);
+  if (
+    check.getFullYear() !== year ||
+    check.getMonth() !== monthIndex ||
+    check.getDate() !== day
+  ) {
+    return null;
+  }
   return { year, monthIndex, day };
+}
+
+/** Accepts `YYYY-MM-DD`, `DD.MM.YYYY`, `DD/MM/YYYY`, `DD-MM-YYYY`. Empty → `''`. Invalid → `null`. */
+export function parseFlexibleDateInput(raw: string): string | null {
+  const trimmed = raw.trim();
+  if (!trimmed) {
+    return '';
+  }
+  if (parseIsoDate(trimmed)) {
+    return trimmed;
+  }
+  const match = trimmed.match(/^(\d{1,2})[.\/-](\d{1,2})[.\/-](\d{4})$/);
+  if (!match) {
+    return null;
+  }
+  const day = Number(match[1]);
+  const monthIndex = Number(match[2]) - 1;
+  const year = Number(match[3]);
+  return parseIsoDate(toIsoDate(year, monthIndex, day))
+    ? toIsoDate(year, monthIndex, day)
+    : null;
+}
+
+export function formatIsoToDisplay(iso: string): string {
+  const parsed = parseIsoDate(iso);
+  if (!parsed) {
+    return '';
+  }
+  return `${pad2(parsed.day)}.${pad2(parsed.monthIndex + 1)}.${parsed.year}`;
+}
+
+export function isoToDisplayInput(iso: string): string {
+  return formatIsoToDisplay(iso);
 }
 
 export function todayIso(): string {
@@ -46,7 +93,7 @@ export function shiftMonth(
 
 /** Monday-first weekday index: Mon=0 … Sun=6 */
 function mondayFirstWeekday(date: Date): number {
-  return (date.getDay() + 6) % 7;
+  return (date.getDay() + 6) % WEEKDAY_COUNT;
 }
 
 export function buildCalendarCells(year: number, monthIndex: number): CalendarCell[] {

@@ -11,7 +11,7 @@
     "unexpectedError": "Что-то пошло не так. Попробуйте ещё раз.",
     "datePicker": {
       "title": "Выбор даты",
-      "placeholder": "Выберите дату",
+      "placeholder": "ДД.ММ.ГГГГ",
       "clear": "Очистить",
       "today": "Сегодня",
       "prevMonth": "Предыдущий месяц",

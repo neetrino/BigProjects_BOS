@@ -1,26 +1,13 @@
 'use client';
 
 import { clsx } from 'clsx';
-import { CalendarDays, ChevronLeft, ChevronRight } from 'lucide-react';
+import { CalendarDays, X } from 'lucide-react';
 import { useLocale, useTranslations } from 'next-intl';
-import {
-  useEffect,
-  useId,
-  useLayoutEffect,
-  useMemo,
-  useRef,
-  useState,
-  type CSSProperties,
-} from 'react';
+import { useEffect, useId, useLayoutEffect, useRef, useState, type CSSProperties } from 'react';
 import { createPortal } from 'react-dom';
-import {
-  buildCalendarCells,
-  formatDateDisplay,
-  parseIsoDate,
-  shiftMonth,
-  todayIso,
-  weekdayLabelsForLocale,
-} from '@/components/ui/date-input-utils';
+import { DateInputCalendar } from '@/components/ui/date-input-calendar';
+import { isoToDisplayInput, parseIsoDate, todayIso } from '@/components/ui/date-input-utils';
+import { useDateInputDraft } from '@/components/ui/use-date-input-draft';
 
 type DateInputProps = {
   id?: string;
@@ -39,9 +26,13 @@ type MenuPosition = {
 };
 
 const MENU_GAP_PX = 8;
+const PANEL_HEIGHT_PX = 340;
+const PANEL_MIN_WIDTH_PX = 288;
+const PANEL_Z_INDEX = 220;
 
 /**
- * Site-styled date picker. Value is always `YYYY-MM-DD` or empty string.
+ * Site-styled date field: type manually (`YYYY-MM-DD` / `DD.MM.YYYY`) or pick from calendar.
+ * Value is always `YYYY-MM-DD` or empty string.
  */
 export function DateInput({
   id,
@@ -55,7 +46,6 @@ export function DateInput({
   const locale = useLocale();
   const panelId = useId();
   const rootRef = useRef<HTMLDivElement>(null);
-  const triggerRef = useRef<HTMLButtonElement>(null);
   const panelRef = useRef<HTMLDivElement>(null);
   const [open, setOpen] = useState(false);
   const [menuPosition, setMenuPosition] = useState<MenuPosition | null>(null);
@@ -66,31 +56,34 @@ export function DateInput({
   const [viewYear, setViewYear] = useState(seed.year);
   const [viewMonth, setViewMonth] = useState(seed.monthIndex);
 
-  const weekdayLabels = useMemo(() => weekdayLabelsForLocale(locale), [locale]);
-  const monthTitle = useMemo(
-    () =>
-      new Intl.DateTimeFormat(locale, { month: 'long', year: 'numeric' }).format(
-        new Date(viewYear, viewMonth, 1),
-      ),
-    [locale, viewMonth, viewYear],
-  );
-  const cells = useMemo(() => buildCalendarCells(viewYear, viewMonth), [viewMonth, viewYear]);
-  const today = todayIso();
-  const display = value ? formatDateDisplay(value, locale) : '';
+  const draftApi = useDateInputDraft({
+    value,
+    onChange,
+    onCommitView: (year, monthIndex) => {
+      setViewYear(year);
+      setViewMonth(monthIndex);
+    },
+    onClose: () => setOpen(false),
+  });
+
+  function clearValue(): void {
+    draftApi.clearDraft();
+    setOpen(false);
+    draftApi.inputRef.current?.focus();
+  }
 
   function updateMenuPosition(): void {
-    const trigger = triggerRef.current;
+    const trigger = rootRef.current;
     if (!trigger) {
       return;
     }
     const rect = trigger.getBoundingClientRect();
-    const panelHeight = 340;
     const spaceBelow = window.innerHeight - rect.bottom - MENU_GAP_PX;
-    const openUpward = spaceBelow < panelHeight && rect.top > spaceBelow;
+    const openUpward = spaceBelow < PANEL_HEIGHT_PX && rect.top > spaceBelow;
     setMenuPosition({
       top: openUpward ? rect.top - MENU_GAP_PX : rect.bottom + MENU_GAP_PX,
       left: rect.left,
-      width: Math.max(rect.width, 288),
+      width: Math.max(rect.width, PANEL_MIN_WIDTH_PX),
       openUpward,
     });
   }
@@ -130,7 +123,7 @@ export function DateInput({
       }
       setOpen(false);
     }
-    function handleKeyDown(event: KeyboardEvent) {
+    function handleKeyDown(event: globalThis.KeyboardEvent) {
       if (event.key === 'Escape') {
         event.preventDefault();
         setOpen(false);
@@ -151,146 +144,96 @@ export function DateInput({
         bottom: menuPosition.openUpward ? window.innerHeight - menuPosition.top : undefined,
         left: menuPosition.left,
         width: menuPosition.width,
-        zIndex: 220,
+        zIndex: PANEL_Z_INDEX,
       }
     : undefined;
 
+  const showClear = Boolean(value || draftApi.draft);
+
   return (
     <div ref={rootRef} className={clsx('relative', className)}>
-      <button
-        ref={triggerRef}
-        id={id}
-        type="button"
-        disabled={disabled}
-        aria-label={ariaLabel}
-        aria-haspopup="dialog"
-        aria-expanded={open}
-        aria-controls={open ? panelId : undefined}
+      <div
         className={clsx(
-          'flex w-full items-center justify-between gap-2 rounded-xl border border-[var(--color-border)] bg-[#f3f2ee] px-3.5 py-2.5 text-left text-sm font-medium outline-none transition-colors duration-150',
-          'hover:border-[var(--color-border-strong)] focus:border-[var(--color-brand)] focus:bg-white',
+          'flex w-full items-center gap-1 rounded-xl border border-[var(--color-border)] bg-[#f3f2ee] px-2.5 transition-colors duration-150',
+          'hover:border-[var(--color-border-strong)] focus-within:border-[var(--color-brand)] focus-within:bg-white',
           disabled && 'cursor-not-allowed opacity-60',
-          display ? 'text-[var(--color-fg)]' : 'text-[var(--color-muted)]/60',
         )}
-        onClick={() => {
-          if (!disabled) {
-            setOpen((prev) => !prev);
-          }
-        }}
       >
-        <span className="truncate">{display || t('placeholder')}</span>
-        <CalendarDays className="size-4 shrink-0 text-[var(--color-muted)]" aria-hidden />
-      </button>
+        <input
+          ref={draftApi.inputRef}
+          id={id}
+          type="text"
+          inputMode="numeric"
+          autoComplete="off"
+          disabled={disabled}
+          aria-label={ariaLabel}
+          aria-haspopup="dialog"
+          aria-expanded={open}
+          aria-controls={open ? panelId : undefined}
+          placeholder={t('placeholder')}
+          value={draftApi.draft}
+          onBeforeInput={draftApi.handleBeforeInput}
+          onChange={(event) => draftApi.handleChange(event.target.value)}
+          onFocus={() => draftApi.setFocused(true)}
+          onBlur={draftApi.handleBlur}
+          onKeyDown={draftApi.handleKeyDown}
+          className="min-w-0 flex-1 bg-transparent py-2.5 pl-1 text-sm font-medium text-[var(--color-fg)] outline-none placeholder:font-medium placeholder:text-[var(--color-muted)]/60"
+        />
+        {showClear && !disabled ? (
+          <button
+            type="button"
+            tabIndex={-1}
+            aria-label={t('clear')}
+            className="inline-flex size-7 shrink-0 items-center justify-center rounded-lg text-[var(--color-danger)] transition-colors hover:bg-[var(--color-danger-soft)]"
+            onMouseDown={(event) => event.preventDefault()}
+            onClick={clearValue}
+          >
+            <X className="size-3.5" aria-hidden />
+          </button>
+        ) : null}
+        <button
+          type="button"
+          tabIndex={-1}
+          disabled={disabled}
+          aria-label={t('title')}
+          className="inline-flex size-7 shrink-0 items-center justify-center rounded-lg text-[var(--color-muted)] transition-colors hover:bg-white hover:text-[var(--color-fg)] disabled:opacity-50"
+          onMouseDown={(event) => event.preventDefault()}
+          onClick={() => {
+            if (!disabled) {
+              setOpen((prev) => !prev);
+            }
+          }}
+        >
+          <CalendarDays className="size-4" aria-hidden />
+        </button>
+      </div>
 
       {open && menuPosition && typeof document !== 'undefined'
         ? createPortal(
-            <div
-              ref={panelRef}
-              data-portal
-              id={panelId}
-              role="dialog"
-              aria-label={t('title')}
-              className="dropdown-panel-in overflow-hidden rounded-[1.15rem] border border-white/80 bg-[linear-gradient(180deg,#fffcf8,#ffffff)] p-3 shadow-[var(--shadow-lift)] outline outline-1 outline-[var(--color-border)]"
-              style={panelStyle}
-            >
-              <div className="mb-3 flex items-center justify-between gap-2">
-                <button
-                  type="button"
-                  aria-label={t('prevMonth')}
-                  className="inline-flex size-8 items-center justify-center rounded-lg text-[var(--color-muted)] transition-colors hover:bg-[var(--color-bg-warm)] hover:text-[var(--color-fg)]"
-                  onClick={() => {
-                    const next = shiftMonth(viewYear, viewMonth, -1);
-                    setViewYear(next.year);
-                    setViewMonth(next.monthIndex);
-                  }}
-                >
-                  <ChevronLeft className="size-4" aria-hidden />
-                </button>
-                <p className="text-sm font-semibold capitalize tracking-tight text-[var(--color-fg)]">
-                  {monthTitle}
-                </p>
-                <button
-                  type="button"
-                  aria-label={t('nextMonth')}
-                  className="inline-flex size-8 items-center justify-center rounded-lg text-[var(--color-muted)] transition-colors hover:bg-[var(--color-bg-warm)] hover:text-[var(--color-fg)]"
-                  onClick={() => {
-                    const next = shiftMonth(viewYear, viewMonth, 1);
-                    setViewYear(next.year);
-                    setViewMonth(next.monthIndex);
-                  }}
-                >
-                  <ChevronRight className="size-4" aria-hidden />
-                </button>
-              </div>
-
-              <div className="mb-1 grid grid-cols-7 gap-0.5">
-                {weekdayLabels.map((label, index) => (
-                  <span
-                    key={`${label}-${index}`}
-                    className="py-1 text-center text-[10px] font-bold uppercase tracking-[0.08em] text-[var(--color-muted)]"
-                  >
-                    {label}
-                  </span>
-                ))}
-              </div>
-
-              <div className="grid grid-cols-7 gap-0.5">
-                {cells.map((cell) => {
-                  const isSelected = cell.iso === value;
-                  const isToday = cell.iso === today;
-                  return (
-                    <button
-                      key={cell.iso}
-                      type="button"
-                      onClick={() => {
-                        onChange(cell.iso);
-                        setOpen(false);
-                      }}
-                      className={clsx(
-                        'flex size-9 items-center justify-center rounded-lg text-sm font-medium transition-colors',
-                        !cell.inMonth && 'text-[var(--color-muted)]/35',
-                        cell.inMonth &&
-                          !isSelected &&
-                          'text-[var(--color-fg)] hover:bg-[var(--color-accent-soft)]',
-                        isSelected &&
-                          'bg-[var(--color-brand)] text-white shadow-sm hover:bg-[var(--color-brand)]',
-                        isToday && !isSelected && 'ring-1 ring-[var(--color-brass)]/50',
-                      )}
-                    >
-                      {cell.day}
-                    </button>
-                  );
-                })}
-              </div>
-
-              <div className="mt-3 flex items-center justify-between gap-2 border-t border-[var(--color-border)] pt-2.5">
-                <button
-                  type="button"
-                  className="rounded-lg px-2 py-1 text-sm font-medium text-[var(--color-muted)] transition-colors hover:bg-[var(--color-bg-warm)] hover:text-[var(--color-fg)]"
-                  onClick={() => {
-                    onChange('');
-                    setOpen(false);
-                  }}
-                >
-                  {t('clear')}
-                </button>
-                <button
-                  type="button"
-                  className="rounded-lg px-2 py-1 text-sm font-semibold text-[var(--color-brand)] transition-colors hover:bg-[var(--color-accent-soft)]"
-                  onClick={() => {
-                    const iso = todayIso();
-                    onChange(iso);
-                    const parsed = parseIsoDate(iso);
-                    if (parsed) {
-                      setViewYear(parsed.year);
-                      setViewMonth(parsed.monthIndex);
-                    }
-                    setOpen(false);
-                  }}
-                >
-                  {t('today')}
-                </button>
-              </div>
+            <div ref={panelRef} data-portal id={panelId} style={panelStyle}>
+              <DateInputCalendar
+                value={value}
+                viewYear={viewYear}
+                viewMonth={viewMonth}
+                locale={locale}
+                labels={{
+                  title: t('title'),
+                  prevMonth: t('prevMonth'),
+                  nextMonth: t('nextMonth'),
+                  clear: t('clear'),
+                  today: t('today'),
+                }}
+                onViewChange={(year, monthIndex) => {
+                  setViewYear(year);
+                  setViewMonth(monthIndex);
+                }}
+                onSelect={(iso) => {
+                  onChange(iso);
+                  draftApi.setDraft(isoToDisplayInput(iso));
+                  setOpen(false);
+                }}
+                onClear={clearValue}
+              />
             </div>,
             document.body,
           )

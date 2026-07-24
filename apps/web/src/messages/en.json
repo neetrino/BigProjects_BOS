@@ -11,7 +11,7 @@
     "unexpectedError": "Something went wrong. Please try again.",
     "datePicker": {
       "title": "Choose date",
-      "placeholder": "Select date",
+      "placeholder": "DD.MM.YYYY",
       "clear": "Clear",
       "today": "Today",
       "prevMonth": "Previous month",
