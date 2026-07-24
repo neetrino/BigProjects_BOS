@@ -8,7 +8,15 @@
     "edit": "Изменить",
     "delete": "Удалить",
     "logout": "Выйти",
-    "unexpectedError": "Что-то пошло не так. Попробуйте ещё раз."
+    "unexpectedError": "Что-то пошло не так. Попробуйте ещё раз.",
+    "datePicker": {
+      "title": "Выбор даты",
+      "placeholder": "Выберите дату",
+      "clear": "Очистить",
+      "today": "Сегодня",
+      "prevMonth": "Предыдущий месяц",
+      "nextMonth": "Следующий месяц"
+    }
   },
   "languageSwitcher": {
     "label": "Язык"

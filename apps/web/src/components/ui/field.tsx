@@ -7,6 +7,7 @@ import type {
 
 export { SelectInput } from '@/components/ui/select-input';
 export { SearchInput } from '@/components/ui/search-input';
+export { DateInput } from '@/components/ui/date-input';
 
 type FieldProps = {
   label: ReactNode;

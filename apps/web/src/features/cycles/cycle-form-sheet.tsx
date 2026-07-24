@@ -7,7 +7,7 @@ import { createCycle, updateCycle } from '@/lib/api/cycles';
 import type { EventCycle } from '@/lib/api/types';
 import { dateInputToIso, formatDate } from '@/lib/format';
 import { Button } from '@/components/ui/button';
-import { Field, TextInput } from '@/components/ui/field';
+import { Field, TextInput, DateInput } from '@/components/ui/field';
 import { Sheet } from '@/components/ui/sheet';
 
 type CycleFormSheetProps = {
@@ -123,19 +123,19 @@ function CycleFormSheetInner({ open, cycle, onClose, onSaved }: CycleFormSheetIn
           />
         </Field>
         <Field label={t('fields.startsAt')} htmlFor="cycle-starts">
-          <TextInput
+          <DateInput
             id="cycle-starts"
-            type="date"
             value={startsAt}
-            onChange={(event) => setStartsAt(event.target.value)}
+            onChange={setStartsAt}
+            aria-label={t('fields.startsAt')}
           />
         </Field>
         <Field label={t('fields.endsAt')} htmlFor="cycle-ends">
-          <TextInput
+          <DateInput
             id="cycle-ends"
-            type="date"
             value={endsAt}
-            onChange={(event) => setEndsAt(event.target.value)}
+            onChange={setEndsAt}
+            aria-label={t('fields.endsAt')}
           />
         </Field>
         {error ? (

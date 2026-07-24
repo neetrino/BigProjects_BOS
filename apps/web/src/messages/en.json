@@ -8,7 +8,15 @@
     "edit": "Edit",
     "delete": "Delete",
     "logout": "Log out",
-    "unexpectedError": "Something went wrong. Please try again."
+    "unexpectedError": "Something went wrong. Please try again.",
+    "datePicker": {
+      "title": "Choose date",
+      "placeholder": "Select date",
+      "clear": "Clear",
+      "today": "Today",
+      "prevMonth": "Previous month",
+      "nextMonth": "Next month"
+    }
   },
   "languageSwitcher": {
     "label": "Language"

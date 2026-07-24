@@ -8,7 +8,15 @@
     "edit": "Խմբագրել",
     "delete": "Ջնջել",
     "logout": "Ելք",
-    "unexpectedError": "Ինչ-որ սխալ տեղի ունեցավ։ Փորձեք կրկին։"
+    "unexpectedError": "Ինչ-որ սխալ տեղի ունեցավ։ Փորձեք կրկին։",
+    "datePicker": {
+      "title": "Ընտրել ամսաթիվ",
+      "placeholder": "Ընտրեք ամսաթիվ",
+      "clear": "Մաքրել",
+      "today": "Այսօր",
+      "prevMonth": "Նախորդ ամիս",
+      "nextMonth": "Հաջորդ ամիս"
+    }
   },
   "languageSwitcher": {
     "label": "Լեզու"
