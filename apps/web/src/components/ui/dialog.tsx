@@ -1,6 +1,8 @@
 'use client';
 
-import { useEffect, type ReactNode } from 'react';
+import { clsx } from 'clsx';
+import { useEffect, useState, type ReactNode } from 'react';
+import { createPortal } from 'react-dom';
 import { Button } from './button';
 
 type DialogProps = {
@@ -16,6 +18,8 @@ type DialogProps = {
   children?: ReactNode;
 };
 
+const DIALOG_EXIT_MS = 200;
+
 export function Dialog({
   open,
   title,
@@ -28,8 +32,25 @@ export function Dialog({
   onCancel,
   children,
 }: DialogProps) {
+  const [mounted, setMounted] = useState(open);
+  const [entered, setEntered] = useState(false);
+
   useEffect(() => {
-    if (!open) {
+    if (open) {
+      setMounted(true);
+      const frame = window.requestAnimationFrame(() => {
+        window.requestAnimationFrame(() => setEntered(true));
+      });
+      return () => window.cancelAnimationFrame(frame);
+    }
+
+    setEntered(false);
+    const timer = window.setTimeout(() => setMounted(false), DIALOG_EXIT_MS);
+    return () => window.clearTimeout(timer);
+  }, [open]);
+
+  useEffect(() => {
+    if (!mounted) {
       return;
     }
 
@@ -39,20 +60,33 @@ export function Dialog({
       }
     }
 
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
     document.addEventListener('keydown', handleKeyDown);
-    return () => document.removeEventListener('keydown', handleKeyDown);
-  }, [open, busy, onCancel]);
 
-  if (!open) {
+    return () => {
+      document.body.style.overflow = previousOverflow;
+      document.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [mounted, busy, onCancel]);
+
+  if (!mounted || typeof document === 'undefined') {
     return null;
   }
 
-  return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+  return createPortal(
+    <div
+      data-portal
+      className="fixed inset-0 z-[200] flex items-center justify-center p-4"
+    >
       <button
         type="button"
         aria-label="Dismiss overlay"
-        className="absolute inset-0 bg-[#122033]/32 backdrop-blur-[3px]"
+        className={clsx(
+          'absolute inset-0 border-0 bg-[#0e0f14]/55',
+          'transition-opacity duration-200 ease-[var(--ease-out-premium)]',
+          entered ? 'opacity-100' : 'opacity-0',
+        )}
         onClick={() => {
           if (!busy) {
             onCancel();
@@ -63,7 +97,14 @@ export function Dialog({
         role="alertdialog"
         aria-modal="true"
         aria-labelledby="dialog-title"
-        className="relative z-10 w-full max-w-sm rounded-[1.25rem] border border-white/80 bg-[linear-gradient(180deg,#fffcf8,#ffffff)] p-6 shadow-[var(--shadow-lift)] outline outline-1 outline-[var(--color-border)]"
+        className={clsx(
+          'relative z-10 w-full max-w-sm rounded-[1.25rem] border border-white/80',
+          'bg-[linear-gradient(180deg,#fffcf8,#ffffff)] p-6 shadow-[var(--shadow-lift)]',
+          'outline outline-1 outline-[var(--color-border)]',
+          'transition-[opacity,transform] duration-200 ease-[var(--ease-out-premium)]',
+          'will-change-transform',
+          entered ? 'translate-y-0 scale-100 opacity-100' : 'translate-y-2 scale-[0.96] opacity-0',
+        )}
       >
         <h2
           id="dialog-title"
@@ -84,6 +125,7 @@ export function Dialog({
           </Button>
         </div>
       </div>
-    </div>
+    </div>,
+    document.body,
   );
 }

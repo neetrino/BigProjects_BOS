@@ -98,7 +98,7 @@ body::before {
   mask-image: linear-gradient(180deg, rgb(0 0 0 / 55%), transparent 85%);
 }
 
-body > * {
+body > *:not([data-portal]) {
   position: relative;
   z-index: 1;
 }

@@ -121,7 +121,7 @@
       "primary": "Primary",
       "makePrimary": "Primary",
       "deleteTitle": "Delete contact",
-      "deleteDescription": "Delete “{name}”?",
+      "deleteDescription": "Are you sure you want to delete “{name}”? This cannot be undone.",
       "fields": {
         "name": "Name",
         "phone": "Phone",
@@ -359,7 +359,7 @@
       "releaseDescription": "Release this area from its assignment?",
       "delete": "Delete area",
       "deleteTitle": "Delete area",
-      "deleteDescription": "Delete this free area?"
+      "deleteDescription": "Are you sure you want to delete “{name}”? This cannot be undone."
     },
     "displayMode": {
       "ORGANIZATION": "Organization",
@@ -378,7 +378,7 @@
       "add": "Add note",
       "empty": "No notes yet.",
       "deleteTitle": "Delete note",
-      "deleteDescription": "Delete this note?"
+      "deleteDescription": "Are you sure you want to delete this note? This cannot be undone."
     },
     "attachments": {
       "title": "Attachments",
@@ -390,7 +390,7 @@
       "uploadSuccess": "File uploaded.",
       "uploadFailed": "Could not upload the file.",
       "deleteTitle": "Delete attachment",
-      "deleteDescription": "Delete “{name}”?"
+      "deleteDescription": "Are you sure you want to delete “{name}”? This cannot be undone."
     }
   },
   "partners": {

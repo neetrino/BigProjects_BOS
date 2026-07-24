@@ -121,7 +121,7 @@
       "primary": "Основной",
       "makePrimary": "Основной",
       "deleteTitle": "Удалить контакт",
-      "deleteDescription": "Удалить «{name}»?",
+      "deleteDescription": "Вы уверены, что хотите удалить «{name}»? Это действие нельзя отменить.",
       "fields": {
         "name": "Имя",
         "phone": "Телефон",
@@ -359,7 +359,7 @@
       "releaseDescription": "Освободить эту площадь от назначения?",
       "delete": "Удалить площадь",
       "deleteTitle": "Удалить площадь",
-      "deleteDescription": "Удалить эту свободную площадь?"
+      "deleteDescription": "Вы уверены, что хотите удалить «{name}»? Это действие нельзя отменить."
     },
     "displayMode": {
       "ORGANIZATION": "Организация",
@@ -378,7 +378,7 @@
       "add": "Добавить",
       "empty": "Заметок пока нет.",
       "deleteTitle": "Удалить заметку",
-      "deleteDescription": "Удалить эту заметку?"
+      "deleteDescription": "Вы уверены, что хотите удалить эту заметку? Это действие нельзя отменить."
     },
     "attachments": {
       "title": "Вложения",
@@ -390,7 +390,7 @@
       "uploadSuccess": "Файл загружен.",
       "uploadFailed": "Не удалось загрузить файл.",
       "deleteTitle": "Удалить вложение",
-      "deleteDescription": "Удалить «{name}»?"
+      "deleteDescription": "Вы уверены, что хотите удалить «{name}»? Это действие нельзя отменить."
     }
   },
   "partners": {

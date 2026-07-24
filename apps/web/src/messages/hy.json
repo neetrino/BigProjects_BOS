@@ -121,7 +121,7 @@
       "primary": "Հիմնական",
       "makePrimary": "Հիմնական",
       "deleteTitle": "Ջնջել կոնտակտը",
-      "deleteDescription": "Ջնջե՞լ «{name}»-ը։",
+      "deleteDescription": "Վստա՞հ եք, որ ուզում եք ջնջել «{name}»-ը։ Այս գործողությունը հնարավոր չէ չեղարկել։",
       "fields": {
         "name": "Անուն",
         "phone": "Հեռախոս",
@@ -359,7 +359,7 @@
       "releaseDescription": "Ազատե՞լ այս տարածքը նշանակումից։",
       "delete": "Ջնջել տարածքը",
       "deleteTitle": "Ջնջել տարածքը",
-      "deleteDescription": "Ջնջե՞լ այս ազատ տարածքը։"
+      "deleteDescription": "Վստա՞հ եք, որ ուզում եք ջնջել «{name}»-ը։ Այս գործողությունը հնարավոր չէ չեղարկել։"
     },
     "displayMode": {
       "ORGANIZATION": "Կազմակերպություն",
@@ -378,7 +378,7 @@
       "add": "Ավելացնել",
       "empty": "Նշումներ դեռ չկան։",
       "deleteTitle": "Ջնջել նշումը",
-      "deleteDescription": "Ջնջե՞լ այս նշումը։"
+      "deleteDescription": "Վստա՞հ եք, որ ուզում եք ջնջել այս նշումը։ Այս գործողությունը հնարավոր չէ չեղարկել։"
     },
     "attachments": {
       "title": "Կցորդներ",
@@ -390,7 +390,7 @@
       "uploadSuccess": "Ֆայլը վերբեռնվեց։",
       "uploadFailed": "Չհաջողվեց վերբեռնել ֆայլը։",
       "deleteTitle": "Ջնջել կցորդը",
-      "deleteDescription": "Ջնջե՞լ «{name}»-ը։"
+      "deleteDescription": "Վստա՞հ եք, որ ուզում եք ջնջել «{name}»-ը։ Այս գործողությունը հնարավոր չէ չեղարկել։"
     }
   },
   "partners": {

@@ -300,7 +300,7 @@ function AreaDetailForm({ area, cycleId, onChanged }: AreaDetailFormProps) {
       <Dialog
         open={confirmDelete}
         title={t('panel.deleteTitle')}
-        description={t('panel.deleteDescription')}
+        description={t('panel.deleteDescription', { name: area.name })}
         confirmLabel={tCommon('delete')}
         cancelLabel={tCommon('cancel')}
         confirmVariant="danger"

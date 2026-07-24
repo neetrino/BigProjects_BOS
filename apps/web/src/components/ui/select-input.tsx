@@ -244,6 +244,7 @@ export function SelectInput({
               id={listboxId}
               role="listbox"
               aria-label={ariaLabel}
+              data-portal
               style={menuStyle}
               className={clsx(
                 'overflow-y-auto rounded-[12px] border border-[var(--color-border)]',
