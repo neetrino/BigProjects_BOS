@@ -60,6 +60,7 @@ function CreateUserSheetInner({ open, onClose, onCreated }: CreateUserSheetInner
       open={open}
       title={t('createTitle')}
       onClose={onClose}
+      widthClassName="w-full sm:w-[min(100%,24rem)]"
       footer={
         <div className="flex justify-end gap-2">
           <Button variant="secondary" onClick={onClose} disabled={busy}>

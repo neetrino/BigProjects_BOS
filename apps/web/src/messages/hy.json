@@ -176,6 +176,11 @@
       "confirmDisableDescription": "Անջատե՞լ «{name}»-ին։ Մուտքը կարգելվի։",
       "confirmReactivateTitle": "Վերականգնել օգտատիրոջը",
       "confirmReactivateDescription": "Վերականգնե՞լ «{name}»-ին։",
+      "toolbar": {
+        "view": "Տեսք",
+        "kanban": "Քարտեր",
+        "list": "Ցուցակ"
+      },
       "columns": {
         "name": "Անուն",
         "email": "Էլ․ փոստ",

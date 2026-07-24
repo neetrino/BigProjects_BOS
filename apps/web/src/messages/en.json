@@ -176,6 +176,11 @@
       "confirmDisableDescription": "Disable “{name}”? They will not be able to sign in.",
       "confirmReactivateTitle": "Reactivate user",
       "confirmReactivateDescription": "Reactivate “{name}”?",
+      "toolbar": {
+        "view": "View",
+        "kanban": "Cards",
+        "list": "List"
+      },
       "columns": {
         "name": "Name",
         "email": "Email",

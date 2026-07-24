@@ -176,6 +176,11 @@
       "confirmDisableDescription": "Отключить «{name}»? Вход будет недоступен.",
       "confirmReactivateTitle": "Восстановить пользователя",
       "confirmReactivateDescription": "Восстановить «{name}»?",
+      "toolbar": {
+        "view": "Вид",
+        "kanban": "Карточки",
+        "list": "Список"
+      },
       "columns": {
         "name": "Имя",
         "email": "Эл. почта",
