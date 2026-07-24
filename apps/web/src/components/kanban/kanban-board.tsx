@@ -183,9 +183,9 @@ function KanbanColumn<TItem extends { id: string }, TStage extends string>({
         terminal
           ? clsx(
               TERMINAL_COLUMN_RADIUS_CLASS,
-              'border-dashed border-[var(--color-border-strong)] bg-white/70',
+              'border-dashed border-[var(--color-border-strong)] bg-[#ffffff]',
             )
-          : 'rounded-[var(--radius-panel)] border-white/80 bg-[linear-gradient(180deg,#ffffff,#fffcf8)] outline outline-1 outline-[var(--color-border)]',
+          : 'rounded-[var(--radius-panel)] border-white/80 bg-[#ffffff] outline outline-1 outline-[var(--color-border)]',
         isOver && 'ring-2 ring-[var(--color-accent)]/30',
       )}
     >
@@ -194,7 +194,7 @@ function KanbanColumn<TItem extends { id: string }, TStage extends string>({
           'flex items-center justify-between gap-2 border-b px-3.5 py-3',
           terminal
             ? 'border-[var(--color-border)]/70 bg-[var(--color-brass-soft)]/50'
-            : 'border-[var(--color-border)] bg-[linear-gradient(180deg,rgb(247_243_238/0.75),rgb(247_243_238/0.35))]',
+            : 'border-[var(--color-border)] bg-[var(--color-bg-warm)]/60',
           TONE_HEADER_CLASS[tone],
         )}
       >
