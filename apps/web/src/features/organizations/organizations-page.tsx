@@ -106,6 +106,7 @@ export function OrganizationsPage() {
           className="ml-auto shrink-0"
           value={view}
           onChange={setView}
+          boardIcon="grid"
           kanbanLabel={t('toolbar.kanban')}
           listLabel={t('toolbar.list')}
         />

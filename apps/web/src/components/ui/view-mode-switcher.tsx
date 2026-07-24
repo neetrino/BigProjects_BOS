@@ -1,15 +1,19 @@
 'use client';
 
 import { clsx } from 'clsx';
-import { LayoutGrid, List } from 'lucide-react';
+import { Columns3, LayoutGrid, List } from 'lucide-react';
 import type { BoardViewMode } from '@/components/kanban';
+
+type BoardIconVariant = 'columns' | 'grid';
 
 type ViewModeSwitcherProps = {
   value: BoardViewMode;
   onChange: (view: BoardViewMode) => void;
-  ariaLabel: string;
+  ariaLabel?: string;
   kanbanLabel: string;
   listLabel: string;
+  /** `columns` for kanban boards; `grid` for flat card grids (e.g. Organizations). */
+  boardIcon?: BoardIconVariant;
   className?: string;
 };
 
@@ -21,9 +25,11 @@ export function ViewModeSwitcher({
   ariaLabel,
   kanbanLabel,
   listLabel,
+  boardIcon = 'columns',
   className,
 }: ViewModeSwitcherProps) {
   const activeIndex = MODES.indexOf(value);
+  const BoardIcon = boardIcon === 'grid' ? LayoutGrid : Columns3;
 
   return (
     <div
@@ -52,7 +58,7 @@ export function ViewModeSwitcher({
             : 'text-[var(--color-muted)] hover:text-[var(--color-fg)]',
         )}
       >
-        <LayoutGrid className="size-4" aria-hidden />
+        <BoardIcon className="size-4" aria-hidden />
       </button>
 
       <button
