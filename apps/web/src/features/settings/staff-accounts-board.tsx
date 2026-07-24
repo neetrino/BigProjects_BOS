@@ -16,7 +16,7 @@ export function StaffAccountsBoard({
   onToggleStatus,
 }: StaffAccountsBoardProps) {
   return (
-    <ul className="grid grid-cols-1 items-stretch gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+    <ul className="grid grid-cols-1 items-stretch gap-3 sm:grid-cols-2 xl:grid-cols-3">
       {users.map((account) => (
         <li key={account.id} className="min-h-0">
           <StaffAccountCard

@@ -24,33 +24,33 @@ export function StaffAccountCard({
   return (
     <div className="h-full w-full [&>article]:flex [&>article]:h-full [&>article]:flex-col">
       <KanbanCardShell>
-        <div className="flex items-start justify-between gap-2">
-          <div className="flex min-w-0 items-center gap-2.5">
+        <div className="flex items-start justify-between gap-3">
+          <div className="flex min-w-0 flex-1 items-center gap-2.5">
             <span
               aria-hidden
-              className="inline-flex size-9 shrink-0 items-center justify-center rounded-xl bg-[var(--color-accent-soft)] text-xs font-semibold text-[var(--color-accent)]"
+              className="inline-flex size-10 shrink-0 items-center justify-center rounded-xl bg-[var(--color-accent-soft)] text-sm font-semibold text-[var(--color-accent)]"
             >
               {nameInitials(account.name)}
             </span>
-            <div className="min-w-0">
-              <p className="truncate text-sm font-semibold tracking-tight text-[var(--color-fg)]">
-                {account.name}
-              </p>
-              <p className="mt-0.5 flex min-w-0 items-center gap-1.5 text-xs text-[var(--color-muted)]">
-                <Mail className="size-3.5 shrink-0 opacity-70" aria-hidden />
-                <span className="truncate">{account.email}</span>
-              </p>
-            </div>
+            <p className="min-w-0 break-words text-base font-semibold tracking-tight text-[var(--color-fg)]">
+              {account.name}
+            </p>
           </div>
-          <StatusBadge
-            label={t(`status.${account.status}`)}
-            tone={account.status === 'ACTIVE' ? 'active' : 'disabled'}
-          />
+          <div className="flex shrink-0 flex-col items-center gap-1.5">
+            <StatusBadge
+              label={t(`status.${account.status}`)}
+              tone={account.status === 'ACTIVE' ? 'active' : 'disabled'}
+            />
+            <p className="flex items-center gap-1.5 text-sm text-[var(--color-muted)]">
+              <Shield className="size-3.5 shrink-0 opacity-70" aria-hidden />
+              {t(`roles.${account.role}`)}
+            </p>
+          </div>
         </div>
 
-        <p className="mt-3 flex items-center gap-1.5 text-xs text-[var(--color-muted)]">
-          <Shield className="size-3.5 shrink-0 opacity-70" aria-hidden />
-          {t(`roles.${account.role}`)}
+        <p className="mt-2.5 flex items-start gap-1.5 text-sm text-[var(--color-muted)]">
+          <Mail className="mt-0.5 size-3.5 shrink-0 opacity-70" aria-hidden />
+          <span className="min-w-0 break-all">{account.email}</span>
         </p>
 
         <div className="mt-auto flex justify-end pt-3">
