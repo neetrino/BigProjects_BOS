@@ -3,6 +3,7 @@
 import { clsx } from 'clsx';
 import { X } from 'lucide-react';
 import { useEffect, useState, type ReactNode } from 'react';
+import { createPortal } from 'react-dom';
 
 type SheetProps = {
   open: boolean;
@@ -65,17 +66,17 @@ export function Sheet({
     };
   }, [mounted, onClose]);
 
-  if (!mounted) {
+  if (!mounted || typeof document === 'undefined') {
     return null;
   }
 
-  return (
-    <div className="fixed inset-0 z-[130] flex justify-end">
+  return createPortal(
+    <div data-portal className="fixed inset-0 z-[130] flex justify-end">
       <button
         type="button"
         aria-label="Dismiss overlay"
         className={clsx(
-          'absolute inset-0 border-0 bg-[#0e0f14]/40 transition-opacity',
+          'absolute inset-0 border-0 bg-[#0e0f14]/55 transition-opacity',
           'duration-[var(--side-sheet-backdrop-ms)] ease-[var(--ease-out-premium)]',
           entered ? 'opacity-100' : 'opacity-0',
         )}
@@ -153,6 +154,7 @@ export function Sheet({
           ) : null}
         </aside>
       </div>
-    </div>
+    </div>,
+    document.body,
   );
 }

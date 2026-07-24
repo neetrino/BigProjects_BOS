@@ -14,10 +14,11 @@ import type {
 import { Button } from '@/components/ui/button';
 import { ErrorState, LoadingState } from '@/components/ui/page-state';
 import { Sheet } from '@/components/ui/sheet';
+import { StatusBadge } from '@/components/ui/status-badge';
 import { showToast } from '@/components/ui/toast';
 import { EntityAttachmentsSection } from '@/features/content/entity-attachments-section';
 import { EntityNotesSection } from '@/features/content/entity-notes-section';
-import { PARTNER_OWNER } from '@/features/partners/constants';
+import { PARTNER_OWNER, stageTone } from '@/features/partners/constants';
 import { ToonExpoAccountSection } from '@/features/toonexpo/toonexpo-account-section';
 import { EntityAreasSection } from '@/features/venue-map/entity-areas-section';
 import {
@@ -275,16 +276,19 @@ function PartnerSheetInner({
 
   const sheetTitle =
     loadState.status === 'ready' ? loadState.partner.organization.name : t('detailTitle');
-  const sheetSubtitle =
-    loadState.status === 'ready'
-      ? `${loadState.partner.stage}${loadState.partner.partnerType ? ` · ${loadState.partner.partnerType}` : ''}`
-      : undefined;
+  const stageBadge =
+    loadState.status === 'ready' ? (
+      <StatusBadge
+        label={t(`stages.${loadState.partner.stage}`)}
+        tone={stageTone(loadState.partner.stage)}
+      />
+    ) : null;
 
   return (
     <Sheet
       open={open}
       title={sheetTitle}
-      subtitle={sheetSubtitle}
+      headerActions={stageBadge}
       onClose={onClose}
       footer={
         isDirty ? (
@@ -309,7 +313,6 @@ function PartnerSheetInner({
       {loadState.status === 'ready' && draft ? (
         <div className="flex flex-col gap-6">
           <PartnerDetailsSection
-            organizationName={loadState.partner.organization.name}
             draft={draft}
             contacts={loadState.contacts}
             staffOptions={staffOptions}
