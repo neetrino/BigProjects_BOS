@@ -257,9 +257,7 @@ function AssignFreeAreaDialogInner({
                 className="flex items-center justify-between gap-2 rounded px-2 py-2 hover:bg-[var(--color-bg)]"
               >
                 <div className="min-w-0">
-                  <p className="truncate text-sm font-medium text-[var(--color-fg)]">
-                    {area.name}
-                  </p>
+                  <p className="truncate text-sm font-medium text-[var(--color-fg)]">{area.name}</p>
                   <p className="text-xs text-[var(--color-muted)]">{area.squareMeters} m²</p>
                 </div>
                 <Button

@@ -45,9 +45,7 @@ function InfoRow({ icon: Icon, children, href }: InfoRowProps) {
     );
   }
 
-  return (
-    <p className="flex items-center gap-1.5 text-xs text-[var(--color-muted)]">{content}</p>
-  );
+  return <p className="flex items-center gap-1.5 text-xs text-[var(--color-muted)]">{content}</p>;
 }
 
 export function OrganizationCard({ organization }: OrganizationCardProps) {

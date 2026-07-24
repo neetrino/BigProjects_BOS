@@ -155,7 +155,9 @@ export function EntityNotesSection({ ownerType, ownerId }: EntityNotesSectionPro
               >
                 <div className="flex items-start justify-between gap-3">
                   <div className="min-w-0 flex-1">
-                    <p className="whitespace-pre-wrap text-sm text-[var(--color-fg)]">{note.body}</p>
+                    <p className="whitespace-pre-wrap text-sm text-[var(--color-fg)]">
+                      {note.body}
+                    </p>
                     <p className="mt-2 text-xs text-[var(--color-muted)]">
                       {note.author.name} · {formatDate(note.createdAt)}
                     </p>

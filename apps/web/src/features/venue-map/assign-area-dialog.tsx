@@ -151,10 +151,7 @@ function AssignAreaDialogInner({
       panelClassName="flex max-h-[80vh] max-w-md flex-col overflow-hidden rounded-[var(--radius-panel)] border border-[var(--color-border)] bg-[var(--color-surface-elevated)] shadow-[var(--shadow-lift)]"
     >
       <div className="border-b border-[var(--color-border)] px-4 py-3">
-        <h2
-          id="assign-area-title"
-          className="text-base font-semibold text-[var(--color-fg)]"
-        >
+        <h2 id="assign-area-title" className="text-base font-semibold text-[var(--color-fg)]">
           {t('assign.title')}
         </h2>
         <div className="mt-3 flex gap-2">

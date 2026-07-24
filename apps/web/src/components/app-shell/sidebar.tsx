@@ -182,9 +182,7 @@ export function AppSidebar({ pathname, currentLocale }: AppSidebarProps) {
             {userInitials(user.name)}
           </div>
           <div className="min-w-0">
-            <p className="truncate text-sm font-semibold tracking-tight text-white">
-              {user.name}
-            </p>
+            <p className="truncate text-sm font-semibold tracking-tight text-white">{user.name}</p>
             <p className="truncate text-[11px] text-white/60">{user.email}</p>
           </div>
         </div>

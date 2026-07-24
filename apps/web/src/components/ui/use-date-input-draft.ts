@@ -1,12 +1,6 @@
 'use client';
 
-import {
-  useRef,
-  useState,
-  type FormEvent,
-  type KeyboardEvent,
-  type RefObject,
-} from 'react';
+import { useRef, useState, type FormEvent, type KeyboardEvent, type RefObject } from 'react';
 import {
   applyDateBackspace,
   applyDateDigitInput,

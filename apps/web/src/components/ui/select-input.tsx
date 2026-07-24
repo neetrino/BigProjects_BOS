@@ -187,7 +187,11 @@ export function SelectInput({
   return (
     <div
       ref={rootRef}
-      className={clsx('relative min-w-0', fitContent ? 'inline-flex w-fit shrink-0' : 'w-full', className)}
+      className={clsx(
+        'relative min-w-0',
+        fitContent ? 'inline-flex w-fit shrink-0' : 'w-full',
+        className,
+      )}
     >
       <select
         ref={selectRef}
@@ -291,7 +295,10 @@ export function SelectInput({
                       >
                         <span>{option.label}</span>
                         {isSelected ? (
-                          <Check className="size-3.5 shrink-0 text-[var(--color-brand)]" aria-hidden />
+                          <Check
+                            className="size-3.5 shrink-0 text-[var(--color-brand)]"
+                            aria-hidden
+                          />
                         ) : null}
                       </button>
                     </li>

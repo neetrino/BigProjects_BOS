@@ -83,7 +83,9 @@ export function DealCard({ deal, isDragging }: DealCardProps) {
             {deal.agreedAmount != null && String(deal.agreedAmount).length > 0 ? (
               <>
                 <Wallet className="size-3.5 shrink-0 opacity-70" aria-hidden />
-                <span className="truncate">{t('card.amount', { value: formatAmount(deal.agreedAmount) })}</span>
+                <span className="truncate">
+                  {t('card.amount', { value: formatAmount(deal.agreedAmount) })}
+                </span>
               </>
             ) : (
               <span aria-hidden>—</span>
@@ -94,4 +96,3 @@ export function DealCard({ deal, isDragging }: DealCardProps) {
     </KanbanCardShell>
   );
 }
-

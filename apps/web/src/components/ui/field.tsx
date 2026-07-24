@@ -1,9 +1,5 @@
 import { clsx } from 'clsx';
-import type {
-  InputHTMLAttributes,
-  ReactNode,
-  TextareaHTMLAttributes,
-} from 'react';
+import type { InputHTMLAttributes, ReactNode, TextareaHTMLAttributes } from 'react';
 
 export { SelectInput } from '@/components/ui/select-input';
 export { SearchInput } from '@/components/ui/search-input';

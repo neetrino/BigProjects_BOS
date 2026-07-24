@@ -9,8 +9,7 @@ type ButtonProps = ButtonHTMLAttributes<HTMLButtonElement> & {
 };
 
 const VARIANT_CLASS: Record<ButtonVariant, string> = {
-  primary:
-    'btn-primary-fill border-transparent text-white disabled:opacity-50',
+  primary: 'btn-primary-fill border-transparent text-white disabled:opacity-50',
   secondary:
     'border-transparent bg-[var(--color-brand)] text-white hover:bg-[var(--color-brand-mid)] disabled:opacity-50',
   ghost:

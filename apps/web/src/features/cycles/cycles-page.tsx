@@ -158,9 +158,7 @@ export function CyclesPage() {
       if (!query) {
         return true;
       }
-      return (
-        cycle.name.toLowerCase().includes(query) || cycle.code.toLowerCase().includes(query)
-      );
+      return cycle.name.toLowerCase().includes(query) || cycle.code.toLowerCase().includes(query);
     });
   }, [allCycles, search, statusFilter]);
 

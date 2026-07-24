@@ -68,18 +68,12 @@ export function CycleList({ cycles, isAdmin, onOpen, onRequestStatus }: CycleLis
                     onClick={(event) => event.stopPropagation()}
                   >
                     {cycle.status === 'DRAFT' ? (
-                      <Button
-                        variant="secondary"
-                        onClick={() => onRequestStatus(cycle, 'ACTIVE')}
-                      >
+                      <Button variant="secondary" onClick={() => onRequestStatus(cycle, 'ACTIVE')}>
                         {t('actions.activate')}
                       </Button>
                     ) : null}
                     {cycle.status === 'ACTIVE' ? (
-                      <Button
-                        variant="secondary"
-                        onClick={() => onRequestStatus(cycle, 'CLOSED')}
-                      >
+                      <Button variant="secondary" onClick={() => onRequestStatus(cycle, 'CLOSED')}>
                         {t('actions.close')}
                       </Button>
                     ) : null}

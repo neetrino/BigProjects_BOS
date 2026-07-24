@@ -8,10 +8,7 @@ export type CalendarCell = {
 };
 
 export type { DateMaskEdit } from '@/components/ui/date-input-mask';
-export {
-  applyDateBackspace,
-  applyDateDigitInput,
-} from '@/components/ui/date-input-mask';
+export { applyDateBackspace, applyDateDigitInput } from '@/components/ui/date-input-mask';
 
 function pad2(value: number): string {
   return String(value).padStart(2, '0');
@@ -34,11 +31,7 @@ export function parseIsoDate(
     return null;
   }
   const check = new Date(year, monthIndex, day);
-  if (
-    check.getFullYear() !== year ||
-    check.getMonth() !== monthIndex ||
-    check.getDate() !== day
-  ) {
+  if (check.getFullYear() !== year || check.getMonth() !== monthIndex || check.getDate() !== day) {
     return null;
   }
   return { year, monthIndex, day };
@@ -60,9 +53,7 @@ export function parseFlexibleDateInput(raw: string): string | null {
   const day = Number(match[1]);
   const monthIndex = Number(match[2]) - 1;
   const year = Number(match[3]);
-  return parseIsoDate(toIsoDate(year, monthIndex, day))
-    ? toIsoDate(year, monthIndex, day)
-    : null;
+  return parseIsoDate(toIsoDate(year, monthIndex, day)) ? toIsoDate(year, monthIndex, day) : null;
 }
 
 export function formatIsoToDisplay(iso: string): string {

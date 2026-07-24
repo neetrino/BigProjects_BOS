@@ -20,14 +20,20 @@ export function DealList({ deals, onOpen }: DealListProps) {
         <thead className="sticky top-0 border-b border-[var(--color-border)] bg-[var(--color-bg-warm)] text-xs text-[var(--color-muted)]">
           <tr>
             <th className="px-4 py-3 font-semibold tracking-wide">{t('list.organization')}</th>
-            <th className="px-4 py-3 text-center font-semibold tracking-wide">{t('list.contact')}</th>
+            <th className="px-4 py-3 text-center font-semibold tracking-wide">
+              {t('list.contact')}
+            </th>
             <th className="px-4 py-3 text-center font-semibold tracking-wide">{t('list.stage')}</th>
             <th className="px-4 py-3 text-center font-semibold tracking-wide">
               {t('list.expectedSqm')}
             </th>
-            <th className="px-4 py-3 text-center font-semibold tracking-wide">{t('list.amount')}</th>
+            <th className="px-4 py-3 text-center font-semibold tracking-wide">
+              {t('list.amount')}
+            </th>
             <th className="px-4 py-3 text-center font-semibold tracking-wide">{t('list.staff')}</th>
-            <th className="px-4 py-3 text-center font-semibold tracking-wide">{t('list.updated')}</th>
+            <th className="px-4 py-3 text-center font-semibold tracking-wide">
+              {t('list.updated')}
+            </th>
           </tr>
         </thead>
         <tbody>

@@ -53,10 +53,7 @@ export function ContactForm({
 
   return (
     <form onSubmit={onSubmit} className="flex flex-col gap-2">
-      <Field
-        label={<FieldLabel icon={User}>{t('fields.name')}</FieldLabel>}
-        htmlFor="contact-name"
-      >
+      <Field label={<FieldLabel icon={User}>{t('fields.name')}</FieldLabel>} htmlFor="contact-name">
         <TextInput
           id="contact-name"
           required

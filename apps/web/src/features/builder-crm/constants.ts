@@ -10,13 +10,7 @@ export const ACTIVE_STAGES: DealStage[] = ['NEW', 'CONTACTED', 'NEGOTIATION'];
 export const TERMINAL_STAGES: DealStage[] = ['WON', 'LOST'];
 export const ALL_STAGES: DealStage[] = [...ACTIVE_STAGES, ...TERMINAL_STAGES];
 /** Sheet stage switcher order: Lost before Won. */
-export const STAGE_SWITCHER_ORDER: DealStage[] = [
-  'NEW',
-  'CONTACTED',
-  'NEGOTIATION',
-  'LOST',
-  'WON',
-];
+export const STAGE_SWITCHER_ORDER: DealStage[] = ['NEW', 'CONTACTED', 'NEGOTIATION', 'LOST', 'WON'];
 
 export { dealStageTone as stageTone };
 

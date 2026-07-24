@@ -89,7 +89,9 @@ export function Dialog({
         {shown.title}
       </h2>
       {shown.description ? (
-        <p className="mt-2 text-sm leading-relaxed text-[var(--color-muted)]">{shown.description}</p>
+        <p className="mt-2 text-sm leading-relaxed text-[var(--color-muted)]">
+          {shown.description}
+        </p>
       ) : null}
       {shown.children}
       <div className="mt-5 flex justify-end gap-2">

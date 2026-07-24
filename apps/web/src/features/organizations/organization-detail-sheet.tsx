@@ -192,8 +192,7 @@ function OrganizationDetailSheetInner({
     }
   }
 
-  const sheetTitle =
-    loadState.status === 'ready' ? loadState.detail.name : t('detailTitle');
+  const sheetTitle = loadState.status === 'ready' ? loadState.detail.name : t('detailTitle');
   const sheetSubtitle =
     loadState.status === 'ready' ? t(`types.${loadState.detail.type}`) : undefined;
 
@@ -207,14 +206,22 @@ function OrganizationDetailSheetInner({
       footer={
         isDirty ? (
           <div className="flex flex-col gap-2">
-            {saveError ? (
-              <p className="text-sm text-[var(--color-danger)]">{saveError}</p>
-            ) : null}
+            {saveError ? <p className="text-sm text-[var(--color-danger)]">{saveError}</p> : null}
             <div className="flex gap-2">
-              <Button variant="secondary" onClick={handleCancelDraft} disabled={busy} className="flex-1">
+              <Button
+                variant="secondary"
+                onClick={handleCancelDraft}
+                disabled={busy}
+                className="flex-1"
+              >
                 {tCommon('cancel')}
               </Button>
-              <Button variant="primary" onClick={() => void handleSave()} disabled={busy} className="flex-1">
+              <Button
+                variant="primary"
+                onClick={() => void handleSave()}
+                disabled={busy}
+                className="flex-1"
+              >
                 {busy ? tCommon('saving') : tCommon('save')}
               </Button>
             </div>
