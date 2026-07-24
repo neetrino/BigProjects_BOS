@@ -82,7 +82,7 @@ export function Sheet({
         onClick={onClose}
       />
 
-      {/* Width = sheet only, so close btn sits on the panel's left edge (ToonExpo admin). */}
+      {/* Width = sheet only; close tab sits behind the left edge and peeks out. */}
       <div
         className={clsx(
           'relative z-10 flex h-full min-h-0',
@@ -97,10 +97,12 @@ export function Sheet({
           onClick={onClose}
           aria-label="Close"
           className={clsx(
-            'absolute top-6 z-20 hidden h-10 w-11 items-center justify-center sm:inline-flex',
-            '-left-11 rounded-l-full bg-[var(--color-brand)] text-white',
-            'transition-colors duration-150 hover:bg-[var(--color-brand-mid)]',
-            'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/70',
+            'absolute top-6 right-full z-0 hidden h-10 w-10 items-center justify-center sm:inline-flex',
+            'rounded-l-full bg-[var(--color-brand)] text-white',
+            // Slightly tucked under the panel; hover slides it out further.
+            'translate-x-1.5 transition-transform duration-200 ease-[var(--ease-out-premium)]',
+            'hover:translate-x-0',
+            'focus-visible:translate-x-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/70',
           )}
         >
           <X className="size-4 stroke-[2.5]" aria-hidden />
@@ -111,7 +113,7 @@ export function Sheet({
           aria-modal="true"
           aria-label={title}
           className={clsx(
-            'flex h-full min-h-0 w-full flex-col overflow-hidden bg-white',
+            'relative z-10 flex h-full min-h-0 w-full flex-col overflow-hidden bg-white',
             'rounded-l-[28px] border-l border-[var(--color-border)]',
             'shadow-[var(--shadow-sheet)]',
           )}
