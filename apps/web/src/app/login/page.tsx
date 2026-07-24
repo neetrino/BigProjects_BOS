@@ -40,7 +40,9 @@ export default async function LoginPage() {
             {t('title')}
           </h1>
           <div className="mt-4 h-px w-14 bg-gradient-to-r from-[var(--color-brass)] to-transparent" />
-          <p className="mt-4 text-sm leading-relaxed text-[var(--color-muted)]">{t('description')}</p>
+          <p className="mt-4 text-sm leading-relaxed text-[var(--color-muted)]">
+            {t('description')}
+          </p>
           <div className="mt-8">
             <LoginForm />
           </div>

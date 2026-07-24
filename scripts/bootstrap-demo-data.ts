@@ -76,9 +76,13 @@ async function main(): Promise<void> {
   );
   console.log(`Cycle created: ${cycle.name} (${cycle.code})`);
 
-  const activated = await api<{ id: string; status: string }>('PATCH', `/api/v1/cycles/${cycle.id}`, {
-    status: 'ACTIVE',
-  });
+  const activated = await api<{ id: string; status: string }>(
+    'PATCH',
+    `/api/v1/cycles/${cycle.id}`,
+    {
+      status: 'ACTIVE',
+    },
+  );
   console.log(`Cycle status → ${activated.status}`);
 
   const builder = await api<{ id: string; name: string }>('POST', '/api/v1/organizations', {
@@ -211,14 +215,21 @@ async function main(): Promise<void> {
   console.log(`Web:       ${ORIGIN}/builder-sales?cycle=${cycle.id}`);
   console.log(`Partners:  ${ORIGIN}/partners?cycle=${cycle.id}`);
   console.log(`Venue map: ${ORIGIN}/venue-map?cycle=${cycle.id}`);
-  console.log(`Deals:     ${deals.length} → ${deals.map((d) => `${d.organization.name}:${d.stage}`).join(', ')}`);
+  console.log(
+    `Deals:     ${deals.length} → ${deals.map((d) => `${d.organization.name}:${d.stage}`).join(', ')}`,
+  );
   console.log(
     `Partners:  ${partners.length} → ${partners.map((p) => `${p.organization.name}:${p.stage}`).join(', ')}`,
   );
   console.log(
-    `Orgs:      ${orgs.filter((o) => o.name.includes(stamp)).map((o) => `${o.name} (${o.type})`).join(', ')}`,
+    `Orgs:      ${orgs
+      .filter((o) => o.name.includes(stamp))
+      .map((o) => `${o.name} (${o.type})`)
+      .join(', ')}`,
   );
-  console.log('\nNext in UI: upload plan image → calibrate → create area → assign to deal → move deal to WON.');
+  console.log(
+    '\nNext in UI: upload plan image → calibrate → create area → assign to deal → move deal to WON.',
+  );
 }
 
 main().catch((error: unknown) => {

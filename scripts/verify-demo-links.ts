@@ -161,22 +161,27 @@ async function main(): Promise<void> {
     'GET',
     `/api/v1/notes?ownerType=BUILDER_DEAL&ownerId=${deal.id}`,
   );
-  assert.equal(dealNotes.some((n) => n.body.includes('area assignment')), true);
+  assert.equal(
+    dealNotes.some((n) => n.body.includes('area assignment')),
+    true,
+  );
   pass('Deal notes linked', `${dealNotes.length} note(s)`);
 
   const partnerNotes = await api<Note[]>(
     'GET',
     `/api/v1/notes?ownerType=PARTNER_PARTICIPATION&ownerId=${bankPartner.id}`,
   );
-  assert.equal(partnerNotes.some((n) => n.body.includes('sponsorship')), true);
+  assert.equal(
+    partnerNotes.some((n) => n.body.includes('sponsorship')),
+    true,
+  );
   pass('Partner notes linked', `${partnerNotes.length} note(s)`);
 
   const plan = await api<Plan | null>('GET', `/api/v1/venue-plans?cycleId=${cycle.id}`);
   // API may return object or wrapped — handle both
-  const planObj = (plan && 'id' in (plan as object) ? plan : (plan as { plan?: Plan } | null)?.plan) as
-    | Plan
-    | null
-    | undefined;
+  const planObj = (
+    plan && 'id' in (plan as object) ? plan : (plan as { plan?: Plan } | null)?.plan
+  ) as Plan | null | undefined;
   // Try alternate shapes from frontend client
   let venuePlan: Plan | null = null;
   try {
@@ -225,7 +230,10 @@ async function main(): Promise<void> {
     'GET',
     `/api/v1/deals?cycleId=${cycle.id}&assignedStaffId=${me.id}`,
   );
-  assert.equal(staffDeals.some((d) => d.id === deal.id), true);
+  assert.equal(
+    staffDeals.some((d) => d.id === deal.id),
+    true,
+  );
   pass('Deal filter by assigned staff', `${staffDeals.length} deal(s)`);
 
   const staffPartners = await api<Partner[]>(

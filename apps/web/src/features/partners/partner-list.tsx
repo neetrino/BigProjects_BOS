@@ -37,9 +37,7 @@ export function PartnerList({ partners, onOpen }: PartnerListProps) {
               <td className="px-4 py-3 font-medium text-[var(--color-fg)]">
                 {partner.organization.name}
               </td>
-              <td className="px-4 py-3 text-[var(--color-muted)]">
-                {partner.partnerType ?? '—'}
-              </td>
+              <td className="px-4 py-3 text-[var(--color-muted)]">{partner.partnerType ?? '—'}</td>
               <td className="px-4 py-3 text-[var(--color-muted)]">
                 {partner.primaryContact?.name ?? '—'}
               </td>

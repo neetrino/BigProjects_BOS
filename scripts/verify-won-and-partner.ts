@@ -58,9 +58,7 @@ async function main() {
   }>;
   const bank = partners.find((p) => p.partnerType === 'Bank');
   if (!bank) throw new Error('bank partner missing');
-  const bankDetail = (
-    await api('GET', `/api/v1/partners/${bank.id}`)
-  ).body as {
+  const bankDetail = (await api('GET', `/api/v1/partners/${bank.id}`)).body as {
     organization: { name: string };
     primaryContact: { name: string } | null;
     stage: string;
