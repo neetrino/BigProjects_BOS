@@ -9,7 +9,7 @@ export { SelectInput } from '@/components/ui/select-input';
 export { SearchInput } from '@/components/ui/search-input';
 
 type FieldProps = {
-  label: string;
+  label: ReactNode;
   htmlFor: string;
   error?: string;
   children: ReactNode;
@@ -19,7 +19,10 @@ type FieldProps = {
 export function Field({ label, htmlFor, error, children, className }: FieldProps) {
   return (
     <div className={clsx('flex flex-col gap-1.5', className)}>
-      <label htmlFor={htmlFor} className="text-sm font-medium text-[var(--color-muted)]">
+      <label
+        htmlFor={htmlFor}
+        className="inline-flex items-center gap-1.5 text-sm font-medium text-[var(--color-muted)]"
+      >
         {label}
       </label>
       {children}

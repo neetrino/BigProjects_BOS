@@ -14,17 +14,24 @@ export function OrganizationList({ organizations, onOpen }: OrganizationListProp
   return (
     <div className="panel min-h-0 max-h-full overflow-auto">
       <table className="w-full min-w-[720px] table-fixed text-left text-sm">
+        <colgroup>
+          <col className="w-[26%]" />
+          <col className="w-[9rem]" />
+          <col className="w-[8rem]" />
+          <col className="w-[12rem]" />
+          <col />
+        </colgroup>
         <thead className="sticky top-0 border-b border-[var(--color-border)] bg-[var(--color-bg-warm)]/90 text-xs text-[var(--color-muted)] backdrop-blur-sm">
           <tr>
             <th className="px-4 py-3 font-semibold tracking-wide">{t('columns.name')}</th>
-            <th className="px-4 py-3 text-center font-semibold tracking-wide">
+            <th className="px-2 py-3 text-center font-semibold tracking-wide">
               {t('columns.type')}
             </th>
-            <th className="px-4 py-3 text-center font-semibold tracking-wide">
+            <th className="px-2 py-3 text-center font-semibold tracking-wide">
               {t('columns.contacts')}
             </th>
-            <th className="px-4 py-3 font-semibold tracking-wide">{t('columns.phone')}</th>
-            <th className="px-4 py-3 font-semibold tracking-wide">{t('columns.email')}</th>
+            <th className="pl-10 pr-2 py-3 font-semibold tracking-wide">{t('columns.phone')}</th>
+            <th className="pl-10 pr-2 py-3 font-semibold tracking-wide">{t('columns.email')}</th>
           </tr>
         </thead>
         <tbody>
@@ -35,14 +42,16 @@ export function OrganizationList({ organizations, onOpen }: OrganizationListProp
               onClick={() => onOpen(item.id)}
             >
               <td className="truncate px-4 py-3 font-medium text-[var(--color-fg)]">{item.name}</td>
-              <td className="px-4 py-3 text-center text-[var(--color-muted)]">
+              <td className="px-2 py-3 text-center text-[var(--color-muted)]">
                 {t(`types.${item.type}`)}
               </td>
-              <td className="px-4 py-3 text-center text-[var(--color-muted)]">
+              <td className="px-2 py-3 text-center text-[var(--color-muted)]">
                 {item.contactCount}
               </td>
-              <td className="truncate px-4 py-3 text-[var(--color-muted)]">{item.phone || '—'}</td>
-              <td className="truncate px-4 py-3 text-[var(--color-muted)]">{item.email || '—'}</td>
+              <td className="truncate py-3 pl-10 pr-2 text-[var(--color-muted)]">
+                {item.phone || '—'}
+              </td>
+              <td className="py-3 pl-10 pr-4 text-[var(--color-muted)]">{item.email || '—'}</td>
             </tr>
           ))}
         </tbody>
