@@ -1,7 +1,7 @@
 import { clsx } from 'clsx';
 import type { ButtonHTMLAttributes, ReactNode } from 'react';
 
-type ButtonVariant = 'primary' | 'secondary' | 'ghost' | 'danger';
+type ButtonVariant = 'primary' | 'secondary' | 'ghost' | 'danger' | 'onBrand';
 
 type ButtonProps = ButtonHTMLAttributes<HTMLButtonElement> & {
   variant?: ButtonVariant;
@@ -10,13 +10,15 @@ type ButtonProps = ButtonHTMLAttributes<HTMLButtonElement> & {
 
 const VARIANT_CLASS: Record<ButtonVariant, string> = {
   primary:
-    'btn-primary-fill border-transparent text-white hover:brightness-[1.04] active:translate-y-px disabled:opacity-50',
+    'btn-primary-fill border-transparent text-white disabled:opacity-50',
   secondary:
-    'border-[var(--color-border)] bg-white/90 text-[var(--color-fg)] shadow-sm hover:border-[var(--color-border-strong)] hover:bg-white hover:shadow-[var(--shadow-soft)] disabled:opacity-50',
+    'border-transparent bg-[var(--color-brand)] text-white hover:bg-[var(--color-brand-mid)] disabled:opacity-50',
   ghost:
-    'border-transparent bg-transparent text-[var(--color-muted)] hover:bg-[var(--color-accent-soft)]/70 hover:text-[var(--color-fg)] disabled:opacity-50',
+    'border-transparent bg-transparent text-[var(--color-brand)] hover:bg-[var(--color-accent-soft)] hover:text-[var(--color-brand)] disabled:opacity-50',
   danger:
-    'border-transparent bg-[var(--color-danger)] text-white shadow-sm hover:brightness-110 disabled:opacity-50',
+    'border-transparent bg-[var(--color-danger)] text-white hover:bg-[#9b1c14] disabled:opacity-50',
+  onBrand:
+    'border-white/20 bg-white/10 text-white hover:border-white/35 hover:bg-white/15 disabled:opacity-50',
 };
 
 export function Button({

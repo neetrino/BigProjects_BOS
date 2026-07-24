@@ -90,26 +90,16 @@ export function AppSidebar({ pathname, currentLocale }: AppSidebarProps) {
 
   return (
     <aside className="app-sidebar relative flex h-screen w-[17.5rem] shrink-0 flex-col overflow-hidden">
-      <div
-        aria-hidden
-        className="pointer-events-none absolute -left-16 top-0 h-56 w-56 rounded-full bg-[var(--color-accent-soft)]/70 blur-3xl"
-      />
-      <div
-        aria-hidden
-        className="pointer-events-none absolute -right-20 bottom-24 h-64 w-64 rounded-full bg-[var(--color-brass-soft)]/90 blur-3xl"
-      />
-      <div
-        aria-hidden
-        className="pointer-events-none absolute inset-y-0 right-0 w-px bg-gradient-to-b from-transparent via-[var(--color-brass)]/35 to-transparent"
-      />
-
       <div className="relative px-5 pb-5 pt-7">
         <div className="flex items-start gap-3.5">
-          <div
-            aria-hidden
-            className="brand-tile mt-0.5 size-11 rounded-2xl text-[0.95rem] font-bold tracking-tight"
-          >
-            B
+          <div className="mt-0.5 flex size-11 shrink-0 items-center justify-center overflow-hidden rounded-2xl bg-white">
+            <img
+              src="/brand-logo.png"
+              alt=""
+              width={30}
+              height={30}
+              className="size-[30px] object-contain"
+            />
           </div>
           <div className="min-w-0 pt-0.5">
             <p className="brand-eyebrow">{t('product')}</p>
@@ -118,7 +108,7 @@ export function AppSidebar({ pathname, currentLocale }: AppSidebarProps) {
         </div>
         <div
           aria-hidden
-          className="mt-5 h-px w-full bg-gradient-to-r from-[var(--color-brass)] via-[var(--color-brass)]/35 to-transparent"
+          className="mt-5 h-px w-full bg-gradient-to-r from-white/45 via-white/20 to-transparent"
         />
       </div>
 
@@ -130,15 +120,15 @@ export function AppSidebar({ pathname, currentLocale }: AppSidebarProps) {
             return (
               <span
                 key={item.key}
-                className="flex items-center justify-between rounded-[var(--radius-control)] px-2.5 py-2.5 text-sm text-[var(--color-muted)]/55"
+                className="flex items-center justify-between rounded-[var(--radius-control)] px-2.5 py-2.5 text-sm text-white/40"
               >
                 <span className="flex items-center gap-2.5">
-                  <span className="flex size-8 items-center justify-center rounded-xl bg-[var(--color-bg-warm)]/60">
+                  <span className="flex size-8 items-center justify-center rounded-xl bg-white/10">
                     <Icon className="size-4 opacity-50" aria-hidden />
                   </span>
                   {t(item.key)}
                 </span>
-                <span className="rounded-md bg-[var(--color-brass-soft)] px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-[0.14em] text-[var(--color-brass)]">
+                <span className="rounded-md bg-white/15 px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-[0.14em] text-white/70">
                   {t('soon')}
                 </span>
               </span>
@@ -152,24 +142,24 @@ export function AppSidebar({ pathname, currentLocale }: AppSidebarProps) {
               key={item.key}
               href={navHref(item)}
               className={clsx(
-                'group relative flex items-center gap-2.5 rounded-[var(--radius-control)] px-2.5 py-2 text-sm transition-all duration-200',
+                'group relative flex items-center gap-2.5 rounded-[var(--radius-control)] px-2.5 py-2 text-sm transition-colors duration-200',
                 isActive
-                  ? 'bg-[linear-gradient(135deg,rgb(213_238_240/0.95),rgb(255_252_248/0.9))] font-semibold text-[var(--color-accent)] shadow-[0_1px_0_rgb(255_255_255/0.8)_inset,0_8px_20px_rgb(15_107_110/0.08)] outline outline-1 outline-[var(--color-accent-soft)]'
-                  : 'text-[var(--color-muted)] hover:bg-white/70 hover:text-[var(--color-fg)] hover:shadow-[0_1px_0_rgb(255_255_255/0.9)_inset]',
+                  ? 'bg-white/15 font-semibold text-white'
+                  : 'text-white/70 hover:bg-white/10 hover:text-white',
               )}
             >
               {isActive ? (
                 <span
                   aria-hidden
-                  className="absolute inset-y-2.5 left-0 w-[3px] rounded-full bg-gradient-to-b from-[var(--color-brass)] to-[var(--color-accent)]"
+                  className="absolute inset-y-2.5 left-0 w-[3px] rounded-full bg-white"
                 />
               ) : null}
               <span
                 className={clsx(
-                  'flex size-8 shrink-0 items-center justify-center rounded-xl transition-all duration-200',
+                  'flex size-8 shrink-0 items-center justify-center rounded-xl transition-colors duration-200',
                   isActive
-                    ? 'bg-[linear-gradient(145deg,var(--color-accent-mid),var(--color-accent))] text-white shadow-[0_6px_14px_rgb(15_107_110/0.28)]'
-                    : 'bg-[var(--color-bg-warm)]/80 text-[var(--color-muted)] group-hover:bg-white group-hover:text-[var(--color-fg)] group-hover:shadow-sm',
+                    ? 'bg-white text-[var(--color-brand)]'
+                    : 'bg-white/10 text-white/80 group-hover:bg-white/15 group-hover:text-white',
                 )}
               >
                 <Icon className="size-4" aria-hidden />
@@ -180,19 +170,19 @@ export function AppSidebar({ pathname, currentLocale }: AppSidebarProps) {
         })}
       </nav>
 
-      <div className="relative mt-auto border-t border-[var(--color-border)]/80 bg-[linear-gradient(180deg,rgb(247_243_238/0.25),rgb(247_243_238/0.72))] px-4 py-4 backdrop-blur-[2px]">
-        <div className="mb-3 flex items-center gap-3 rounded-[var(--radius-control)] border border-white/80 bg-white/85 px-3 py-2.5 shadow-[var(--shadow-soft)] outline outline-1 outline-[var(--color-border)]">
+      <div className="relative mt-auto border-t border-white/15 px-4 py-4">
+        <div className="mb-3 flex items-center gap-3 rounded-[var(--radius-control)] border border-white/15 bg-white/10 px-3 py-2.5">
           <div
             aria-hidden
-            className="flex size-9 shrink-0 items-center justify-center rounded-full bg-[linear-gradient(145deg,var(--color-brass),#8f7040)] text-[0.7rem] font-bold tracking-wide text-white shadow-[0_4px_12px_rgb(164_132_79/0.35)]"
+            className="flex size-9 shrink-0 items-center justify-center rounded-full bg-white text-[0.7rem] font-bold tracking-wide text-[var(--color-brand)]"
           >
             {userInitials(user.name)}
           </div>
           <div className="min-w-0">
-            <p className="truncate text-sm font-semibold tracking-tight text-[var(--color-fg)]">
+            <p className="truncate text-sm font-semibold tracking-tight text-white">
               {user.name}
             </p>
-            <p className="truncate text-[11px] text-[var(--color-muted)]">{user.email}</p>
+            <p className="truncate text-[11px] text-white/60">{user.email}</p>
           </div>
         </div>
 
@@ -201,10 +191,10 @@ export function AppSidebar({ pathname, currentLocale }: AppSidebarProps) {
         </div>
 
         <Button
-          variant="secondary"
+          variant="onBrand"
           onClick={handleLogout}
           disabled={isPending}
-          className="w-full justify-center gap-2 border-[var(--color-border)] bg-white/75 text-[var(--color-muted)] hover:border-[var(--color-border-strong)] hover:bg-white hover:text-[var(--color-fg)]"
+          className="w-full justify-center gap-2"
         >
           <LogOut className="size-3.5" aria-hidden />
           {tCommon('logout')}
