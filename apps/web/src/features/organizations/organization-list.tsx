@@ -12,7 +12,7 @@ export function OrganizationList({ organizations, onOpen }: OrganizationListProp
   const t = useTranslations('organizations');
 
   return (
-    <div className="panel min-h-0 flex-1 overflow-auto">
+    <div className="panel min-h-0 max-h-full overflow-auto">
       <table className="w-full min-w-[720px] table-fixed text-left text-sm">
         <thead className="sticky top-0 border-b border-[var(--color-border)] bg-[var(--color-bg-warm)]/90 text-xs text-[var(--color-muted)] backdrop-blur-sm">
           <tr>
