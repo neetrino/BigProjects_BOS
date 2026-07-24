@@ -146,7 +146,11 @@ export function KanbanBoard<TItem extends { id: string }, TStage extends string>
         </div>
       </div>
 
-      <DragOverlay>{activeItem ? renderCard(activeItem, { isDragging: true }) : null}</DragOverlay>
+      <DragOverlay dropAnimation={null}>
+        {activeItem ? (
+          <div className="cursor-grabbing">{renderCard(activeItem, { isDragging: true })}</div>
+        ) : null}
+      </DragOverlay>
     </DndContext>
   );
 }
