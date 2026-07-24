@@ -118,8 +118,8 @@ export function Sheet({
             'shadow-[var(--shadow-sheet)]',
           )}
         >
-          <header className="flex shrink-0 items-start justify-between gap-4 px-7 pb-4 pt-6">
-            <div className="min-w-0">
+          <header className="flex shrink-0 items-center justify-between gap-4 px-7 pb-4 pt-6">
+            <div className="min-w-0 flex-1">
               <h2 className="truncate text-[1.5rem] font-bold leading-tight tracking-tight text-[var(--color-fg)]">
                 {title}
               </h2>

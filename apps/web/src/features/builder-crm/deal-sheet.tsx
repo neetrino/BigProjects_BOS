@@ -14,6 +14,7 @@ import type {
 import { Button } from '@/components/ui/button';
 import { ErrorState, LoadingState } from '@/components/ui/page-state';
 import { Sheet } from '@/components/ui/sheet';
+import { StatusBadge } from '@/components/ui/status-badge';
 import { showToast } from '@/components/ui/toast';
 import {
   DealDetailsSection,
@@ -22,7 +23,7 @@ import {
 import { DealStageSection } from '@/features/builder-crm/deal-stage-section';
 import { EntityAttachmentsSection } from '@/features/content/entity-attachments-section';
 import { EntityNotesSection } from '@/features/content/entity-notes-section';
-import { BUILDER_DEAL_OWNER } from '@/features/builder-crm/constants';
+import { BUILDER_DEAL_OWNER, stageTone } from '@/features/builder-crm/constants';
 import { ToonExpoAccountSection } from '@/features/toonexpo/toonexpo-account-section';
 import { EntityAreasSection } from '@/features/venue-map/entity-areas-section';
 
@@ -284,13 +285,19 @@ function DealSheetInner({
 
   const sheetTitle =
     loadState.status === 'ready' ? loadState.deal.organization.name : t('detailTitle');
-  const sheetSubtitle = loadState.status === 'ready' ? loadState.deal.stage : undefined;
+  const stageBadge =
+    loadState.status === 'ready' ? (
+      <StatusBadge
+        label={t(`stages.${loadState.deal.stage}`)}
+        tone={stageTone(loadState.deal.stage)}
+      />
+    ) : null;
 
   return (
     <Sheet
       open={open}
       title={sheetTitle}
-      subtitle={sheetSubtitle}
+      headerActions={stageBadge}
       onClose={onClose}
       footer={
         isDirty ? (

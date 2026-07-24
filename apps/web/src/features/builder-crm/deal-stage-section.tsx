@@ -5,8 +5,7 @@ import { useTranslations } from 'next-intl';
 import type { DealListItem, DealStage } from '@/lib/api/types';
 import { Button } from '@/components/ui/button';
 import { Dialog } from '@/components/ui/dialog';
-import { StatusBadge } from '@/components/ui/status-badge';
-import { allowedNextStages, stageTone } from '@/features/builder-crm/constants';
+import { allowedNextStages } from '@/features/builder-crm/constants';
 
 type StageChangeOptions = {
   releaseAreas?: boolean;
@@ -38,10 +37,6 @@ export function DealStageSection({ deal, busy, onStageChange }: DealStageSection
   return (
     <section className="flex flex-col gap-3">
       <h3 className="text-sm font-semibold text-[var(--color-fg)]">{t('sheet.stage')}</h3>
-      <div className="flex items-center gap-2">
-        <span className="text-xs text-[var(--color-muted)]">{t('stage.current')}</span>
-        <StatusBadge label={t(`stages.${deal.stage}`)} tone={stageTone(deal.stage)} />
-      </div>
       <div className="flex flex-wrap gap-2">
         {nextStages.map((stage) => (
           <Button

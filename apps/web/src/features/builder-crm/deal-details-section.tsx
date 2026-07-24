@@ -43,55 +43,57 @@ export function DealDetailsSection({
           {organizationName}
         </p>
       </div>
-      <Field label={t('fields.contact')} htmlFor="deal-contact">
-        <SelectInput
-          id="deal-contact"
-          value={draft.primaryContactId}
-          onChange={(event) =>
-            onChange((prev) => ({ ...prev, primaryContactId: event.target.value }))
-          }
-        >
-          <option value="">{t('createForm.noContact')}</option>
-          {contacts.map((contact) => (
-            <option key={contact.id} value={contact.id}>
-              {contact.name}
-            </option>
-          ))}
-        </SelectInput>
-      </Field>
-      <Field label={t('fields.staff')} htmlFor="deal-staff">
-        <SelectInput
-          id="deal-staff"
-          value={draft.assignedStaffId}
-          onChange={(event) =>
-            onChange((prev) => ({ ...prev, assignedStaffId: event.target.value }))
-          }
-        >
-          <option value="">{t('createForm.unassigned')}</option>
-          {staffOptions.map((staff) => (
-            <option key={staff.id} value={staff.id}>
-              {staff.name}
-            </option>
-          ))}
-        </SelectInput>
-      </Field>
-      <Field label={t('fields.expectedSqm')} htmlFor="deal-sqm">
-        <TextInput
-          id="deal-sqm"
-          inputMode="numeric"
-          pattern="[0-9]*"
-          value={draft.expectedSqm}
-          onChange={(event) => onChange((prev) => ({ ...prev, expectedSqm: event.target.value }))}
-        />
-      </Field>
-      <Field label={t('fields.agreedAmount')} htmlFor="deal-amount">
-        <TextInput
-          id="deal-amount"
-          inputMode="decimal"
-          value={draft.agreedAmount}
-          onChange={(event) => onChange((prev) => ({ ...prev, agreedAmount: event.target.value }))}
-        />
-      </Field>
+      <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+        <Field label={t('fields.contact')} htmlFor="deal-contact">
+          <SelectInput
+            id="deal-contact"
+            value={draft.primaryContactId}
+            onChange={(event) =>
+              onChange((prev) => ({ ...prev, primaryContactId: event.target.value }))
+            }
+          >
+            <option value="">{t('createForm.noContact')}</option>
+            {contacts.map((contact) => (
+              <option key={contact.id} value={contact.id}>
+                {contact.name}
+              </option>
+            ))}
+          </SelectInput>
+        </Field>
+        <Field label={t('fields.staff')} htmlFor="deal-staff">
+          <SelectInput
+            id="deal-staff"
+            value={draft.assignedStaffId}
+            onChange={(event) =>
+              onChange((prev) => ({ ...prev, assignedStaffId: event.target.value }))
+            }
+          >
+            <option value="">{t('createForm.unassigned')}</option>
+            {staffOptions.map((staff) => (
+              <option key={staff.id} value={staff.id}>
+                {staff.name}
+              </option>
+            ))}
+          </SelectInput>
+        </Field>
+        <Field label={t('fields.expectedSqm')} htmlFor="deal-sqm">
+          <TextInput
+            id="deal-sqm"
+            inputMode="numeric"
+            pattern="[0-9]*"
+            value={draft.expectedSqm}
+            onChange={(event) => onChange((prev) => ({ ...prev, expectedSqm: event.target.value }))}
+          />
+        </Field>
+        <Field label={t('fields.agreedAmount')} htmlFor="deal-amount">
+          <TextInput
+            id="deal-amount"
+            inputMode="decimal"
+            value={draft.agreedAmount}
+            onChange={(event) => onChange((prev) => ({ ...prev, agreedAmount: event.target.value }))}
+          />
+        </Field>
+      </div>
       <Field label={t('fields.description')} htmlFor="deal-description">
         <TextArea
           id="deal-description"
