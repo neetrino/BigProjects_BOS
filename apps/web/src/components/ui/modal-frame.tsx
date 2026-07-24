@@ -1,7 +1,7 @@
 'use client';
 
 import { clsx } from 'clsx';
-import { useEffect, useState, type ReactNode } from 'react';
+import { useEffect, useState, type AnimationEvent, type ReactNode } from 'react';
 import { createPortal } from 'react-dom';
 
 type ModalFrameProps = {
@@ -15,10 +15,12 @@ type ModalFrameProps = {
   role?: 'dialog' | 'alertdialog';
 };
 
-const MODAL_EXIT_MS = 200;
+const PANEL_OUT_ANIMATION_NAME = 'modal-panel-out';
+const EXIT_FALLBACK_MS = 320;
 
 /**
- * Full-viewport centered modal: portals to body, dim backdrop (no blur), enter/exit motion.
+ * Full-viewport centered modal: portals to body, dim backdrop (no blur),
+ * ToonExpo-style enter/exit motion (stays mounted through exit animation).
  */
 export function ModalFrame({
   open,
@@ -29,25 +31,33 @@ export function ModalFrame({
   labelledBy,
   role = 'dialog',
 }: ModalFrameProps) {
-  const [mounted, setMounted] = useState(open);
-  const [entered, setEntered] = useState(false);
+  const [visible, setVisible] = useState(open);
+  const [exiting, setExiting] = useState(false);
 
   useEffect(() => {
     if (open) {
-      setMounted(true);
-      const frame = window.requestAnimationFrame(() => {
-        window.requestAnimationFrame(() => setEntered(true));
-      });
-      return () => window.cancelAnimationFrame(frame);
+      setVisible(true);
+      setExiting(false);
+      return;
     }
-
-    setEntered(false);
-    const timer = window.setTimeout(() => setMounted(false), MODAL_EXIT_MS);
-    return () => window.clearTimeout(timer);
-  }, [open]);
+    if (visible) {
+      setExiting(true);
+    }
+  }, [open, visible]);
 
   useEffect(() => {
-    if (!mounted) {
+    if (!exiting) {
+      return;
+    }
+    const timer = window.setTimeout(() => {
+      setVisible(false);
+      setExiting(false);
+    }, EXIT_FALLBACK_MS);
+    return () => window.clearTimeout(timer);
+  }, [exiting]);
+
+  useEffect(() => {
+    if (!visible) {
       return;
     }
 
@@ -67,9 +77,20 @@ export function ModalFrame({
       document.body.style.overflow = previousOverflow;
       document.removeEventListener('keydown', handleKeyDown, true);
     };
-  }, [mounted, busy, onClose]);
+  }, [visible, busy, onClose]);
 
-  if (!mounted || typeof document === 'undefined') {
+  function handlePanelAnimationEnd(event: AnimationEvent<HTMLElement>) {
+    if (event.target !== event.currentTarget) {
+      return;
+    }
+    if (!event.animationName.includes(PANEL_OUT_ANIMATION_NAME)) {
+      return;
+    }
+    setVisible(false);
+    setExiting(false);
+  }
+
+  if (!visible || typeof document === 'undefined') {
     return null;
   }
 
@@ -77,14 +98,15 @@ export function ModalFrame({
     <div data-portal className="fixed inset-0 z-[200] flex items-center justify-center p-4">
       <button
         type="button"
+        tabIndex={-1}
         aria-label="Dismiss overlay"
         className={clsx(
-          'absolute inset-0 border-0 bg-[#0e0f14]/55',
-          'transition-opacity duration-200 ease-[var(--ease-out-premium)]',
-          entered ? 'opacity-100' : 'opacity-0',
+          'absolute inset-0 cursor-default border-0 bg-[#0e0f14]/55',
+          exiting ? 'animate-modal-backdrop-out' : 'animate-modal-backdrop-in',
         )}
+        disabled={busy || exiting}
         onClick={() => {
-          if (!busy) {
+          if (!busy && !exiting) {
             onClose();
           }
         }}
@@ -94,12 +116,11 @@ export function ModalFrame({
         aria-modal="true"
         aria-labelledby={labelledBy}
         className={clsx(
-          'relative z-10 w-full',
-          'transition-[opacity,transform] duration-200 ease-[var(--ease-out-premium)]',
-          'will-change-transform',
-          entered ? 'translate-y-0 scale-100 opacity-100' : 'translate-y-2 scale-[0.96] opacity-0',
+          'relative z-10 w-full will-change-transform',
+          exiting ? 'pointer-events-none animate-modal-panel-out' : 'animate-modal-panel-in',
           panelClassName,
         )}
+        onAnimationEnd={handlePanelAnimationEnd}
       >
         {children}
       </div>

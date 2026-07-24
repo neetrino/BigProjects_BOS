@@ -29,12 +29,9 @@ export function AssignAreaDialog({
   onAssigned,
   onClose,
 }: AssignAreaDialogProps) {
-  if (!open) {
-    return null;
-  }
   return (
     <AssignAreaDialogInner
-      key={`${areaId}:${cycleId}`}
+      open={open}
       areaId={areaId}
       cycleId={cycleId}
       onAssigned={onAssigned}
@@ -44,6 +41,7 @@ export function AssignAreaDialog({
 }
 
 type AssignAreaDialogInnerProps = {
+  open: boolean;
   areaId: string;
   cycleId: string;
   onAssigned: () => void;
@@ -51,6 +49,7 @@ type AssignAreaDialogInnerProps = {
 };
 
 function AssignAreaDialogInner({
+  open,
   areaId,
   cycleId,
   onAssigned,
@@ -66,6 +65,13 @@ function AssignAreaDialogInner({
   const [busyId, setBusyId] = useState<string | null>(null);
 
   useEffect(() => {
+    if (!open) {
+      return;
+    }
+    setTab('builders');
+    setSearch('');
+    setLoading(true);
+    setBusyId(null);
     let cancelled = false;
     void Promise.all([listDeals({ cycleId }), listPartners({ cycleId })])
       .then(([dealItems, partnerItems]) => {
@@ -87,7 +93,7 @@ function AssignAreaDialogInner({
     return () => {
       cancelled = true;
     };
-  }, [cycleId, tCommon]);
+  }, [open, areaId, cycleId, tCommon]);
 
   const filteredDeals = useMemo(() => {
     const q = search.trim().toLowerCase();
@@ -131,7 +137,7 @@ function AssignAreaDialogInner({
 
   return (
     <ModalFrame
-      open
+      open={open}
       onClose={onClose}
       busy={busyId !== null}
       labelledBy="assign-area-title"

@@ -1,6 +1,6 @@
 'use client';
 
-import type { ReactNode } from 'react';
+import { useEffect, useState, type ReactNode } from 'react';
 import { Button } from './button';
 import { ModalFrame } from './modal-frame';
 
@@ -17,6 +17,18 @@ type DialogProps = {
   children?: ReactNode;
 };
 
+type DialogSnapshot = {
+  title: string;
+  description: string | undefined;
+  confirmLabel: string;
+  cancelLabel: string;
+  confirmVariant: 'primary' | 'danger';
+  children: ReactNode | undefined;
+};
+
+/**
+ * Centered confirm/create dialog. Stays mounted through close so exit motion can play.
+ */
 export function Dialog({
   open,
   title,
@@ -29,11 +41,39 @@ export function Dialog({
   onCancel,
   children,
 }: DialogProps) {
+  const [snapshot, setSnapshot] = useState<DialogSnapshot>({
+    title,
+    description,
+    confirmLabel,
+    cancelLabel,
+    confirmVariant,
+    children,
+  });
+
+  useEffect(() => {
+    if (!open) {
+      return;
+    }
+    setSnapshot({
+      title,
+      description,
+      confirmLabel,
+      cancelLabel,
+      confirmVariant,
+      children,
+    });
+  }, [open, title, description, confirmLabel, cancelLabel, confirmVariant, children]);
+
+  const shown = open
+    ? { title, description, confirmLabel, cancelLabel, confirmVariant, children }
+    : snapshot;
+  const actionsDisabled = busy || !open;
+
   return (
     <ModalFrame
       open={open}
       onClose={onCancel}
-      busy={busy}
+      busy={actionsDisabled}
       role="alertdialog"
       labelledBy="dialog-title"
       panelClassName="max-w-sm rounded-[1.25rem] border border-white/80 bg-[linear-gradient(180deg,#fffcf8,#ffffff)] p-6 shadow-[var(--shadow-lift)] outline outline-1 outline-[var(--color-border)]"
@@ -42,18 +82,18 @@ export function Dialog({
         id="dialog-title"
         className="font-[family-name:var(--font-display)] text-xl font-medium tracking-tight text-[var(--color-fg)]"
       >
-        {title}
+        {shown.title}
       </h2>
-      {description ? (
-        <p className="mt-2 text-sm leading-relaxed text-[var(--color-muted)]">{description}</p>
+      {shown.description ? (
+        <p className="mt-2 text-sm leading-relaxed text-[var(--color-muted)]">{shown.description}</p>
       ) : null}
-      {children}
+      {shown.children}
       <div className="mt-5 flex justify-end gap-2">
-        <Button variant="secondary" onClick={onCancel} disabled={busy}>
-          {cancelLabel}
+        <Button variant="secondary" onClick={onCancel} disabled={actionsDisabled}>
+          {shown.cancelLabel}
         </Button>
-        <Button variant={confirmVariant} onClick={onConfirm} disabled={busy}>
-          {confirmLabel}
+        <Button variant={shown.confirmVariant} onClick={onConfirm} disabled={actionsDisabled}>
+          {shown.confirmLabel}
         </Button>
       </div>
     </ModalFrame>

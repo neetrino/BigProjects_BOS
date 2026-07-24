@@ -117,12 +117,9 @@ function AssignFreeAreaDialog({
   onAssigned,
   onClose,
 }: AssignFreeAreaDialogProps) {
-  if (!open) {
-    return null;
-  }
   return (
     <AssignFreeAreaDialogInner
-      key={cycleId}
+      open={open}
       cycleId={cycleId}
       target={target}
       onAssigned={onAssigned}
@@ -132,6 +129,7 @@ function AssignFreeAreaDialog({
 }
 
 type AssignFreeAreaDialogInnerProps = {
+  open: boolean;
   cycleId: string;
   target: EntityAreasSectionProps['target'];
   onAssigned: () => void;
@@ -139,6 +137,7 @@ type AssignFreeAreaDialogInnerProps = {
 };
 
 function AssignFreeAreaDialogInner({
+  open,
   cycleId,
   target,
   onAssigned,
@@ -152,6 +151,12 @@ function AssignFreeAreaDialogInner({
   const [busyId, setBusyId] = useState<string | null>(null);
 
   useEffect(() => {
+    if (!open) {
+      return;
+    }
+    setSearch('');
+    setLoading(true);
+    setBusyId(null);
     let cancelled = false;
     void getVenuePlan(cycleId)
       .then((response) => {
@@ -173,7 +178,7 @@ function AssignFreeAreaDialogInner({
     return () => {
       cancelled = true;
     };
-  }, [cycleId, tCommon]);
+  }, [open, cycleId, tCommon]);
 
   const filtered = useMemo(() => {
     const q = search.trim().toLowerCase();
@@ -203,7 +208,7 @@ function AssignFreeAreaDialogInner({
 
   return (
     <ModalFrame
-      open
+      open={open}
       onClose={onClose}
       busy={busyId !== null}
       labelledBy="entity-assign-title"
