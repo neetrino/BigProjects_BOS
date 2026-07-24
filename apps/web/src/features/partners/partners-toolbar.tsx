@@ -59,7 +59,7 @@ export function PartnersToolbar({
         </Button>
       </header>
 
-      <div className="flex flex-wrap items-center gap-2 rounded-[var(--radius-panel)] border border-[var(--color-border)] bg-[var(--color-surface)]/80 p-2.5 shadow-[var(--shadow-soft)]">
+      <div className="toolbar-shell">
         <SelectInput
           className="max-w-[220px]"
           value={cycleId}
@@ -78,7 +78,7 @@ export function PartnersToolbar({
         <div
           role="group"
           aria-label={t('toolbar.view')}
-          className="inline-flex rounded-[var(--radius-control)] border border-[var(--color-border)] bg-[var(--color-bg)]/70 p-0.5"
+          className="inline-flex rounded-[var(--radius-control)] border border-[var(--color-border)] bg-[var(--color-bg)]/80 p-0.5"
         >
           <button
             type="button"

@@ -29,7 +29,7 @@ export function AppShell({ currentLocale, children }: AppShellProps) {
       <AppSidebar pathname={pathname} currentLocale={currentLocale} />
       <main
         className={clsx(
-          'min-w-0 flex-1 px-7 py-6',
+          'page-enter min-w-0 flex-1 px-8 py-7',
           isFullHeightPage ? 'flex min-h-0 flex-col overflow-hidden' : 'overflow-auto',
         )}
       >

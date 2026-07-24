@@ -80,7 +80,7 @@ export function OrganizationsPage() {
         </Button>
       </header>
 
-      <div className="flex flex-wrap gap-3">
+      <div className="toolbar-shell">
         <TextInput
           className="max-w-xs"
           placeholder={t('searchPlaceholder')}

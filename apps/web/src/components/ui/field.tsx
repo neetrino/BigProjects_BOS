@@ -19,7 +19,7 @@ export function Field({ label, htmlFor, error, children, className }: FieldProps
     <div className={clsx('flex flex-col gap-1.5', className)}>
       <label
         htmlFor={htmlFor}
-        className="text-xs font-semibold tracking-wide text-[var(--color-muted)]"
+        className="text-[11px] font-bold uppercase tracking-[0.08em] text-[var(--color-muted)]"
       >
         {label}
       </label>
@@ -30,7 +30,7 @@ export function Field({ label, htmlFor, error, children, className }: FieldProps
 }
 
 const CONTROL_CLASS =
-  'w-full rounded-[var(--radius-control)] border border-[var(--color-border)] bg-[var(--color-surface)] px-3 py-2 text-sm text-[var(--color-fg)] shadow-sm outline-none transition-colors placeholder:text-[var(--color-muted)]/70 focus:border-[var(--color-accent)] focus:ring-2 focus:ring-[var(--color-accent-soft)]';
+  'w-full rounded-[var(--radius-control)] border border-[var(--color-border)] bg-white/95 px-3.5 py-2.5 text-sm text-[var(--color-fg)] shadow-sm outline-none transition-all duration-200 placeholder:text-[var(--color-muted)]/65 hover:border-[var(--color-border-strong)] focus:border-[var(--color-accent)] focus:ring-[3px] focus:ring-[var(--color-accent-soft)]';
 
 export function TextInput(props: InputHTMLAttributes<HTMLInputElement>) {
   return <input className={clsx(CONTROL_CLASS, props.className)} {...props} />;

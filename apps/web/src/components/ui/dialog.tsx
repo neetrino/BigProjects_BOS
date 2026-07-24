@@ -52,7 +52,7 @@ export function Dialog({
       <button
         type="button"
         aria-label="Close"
-        className="absolute inset-0 bg-[#152033]/30 backdrop-blur-[2px]"
+        className="absolute inset-0 bg-[#122033]/32 backdrop-blur-[3px]"
         onClick={() => {
           if (!busy) {
             onCancel();
@@ -63,7 +63,7 @@ export function Dialog({
         role="alertdialog"
         aria-modal="true"
         aria-labelledby="dialog-title"
-        className="relative z-10 w-full max-w-sm rounded-[var(--radius-panel)] border border-[var(--color-border)] bg-[var(--color-surface-elevated)] p-5 shadow-[var(--shadow-lift)]"
+        className="relative z-10 w-full max-w-sm rounded-[1.25rem] border border-white/80 bg-[linear-gradient(180deg,#fffcf8,#ffffff)] p-6 shadow-[var(--shadow-lift)] outline outline-1 outline-[var(--color-border)]"
       >
         <h2
           id="dialog-title"

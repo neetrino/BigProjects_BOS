@@ -38,7 +38,7 @@ export function LanguageSwitcher({ currentLocale, compact = false }: LanguageSwi
     <nav
       aria-label={t('label')}
       className={clsx(
-        'flex flex-wrap gap-1.5',
+        'inline-flex flex-wrap gap-1 rounded-[var(--radius-control)] border border-[var(--color-border)] bg-white/80 p-1 shadow-sm',
         compact ? '' : 'absolute right-6 top-6 z-10',
       )}
     >
@@ -53,10 +53,10 @@ export function LanguageSwitcher({ currentLocale, compact = false }: LanguageSwi
             disabled={isPending}
             onClick={() => handleSelect(locale)}
             className={clsx(
-              'rounded-[var(--radius-control)] border px-2.5 py-1 text-xs font-medium transition-colors',
+              'rounded-[calc(var(--radius-control)-2px)] px-2.5 py-1 text-xs font-semibold transition-all duration-150',
               isActive
-                ? 'border-[var(--color-accent)] bg-[var(--color-accent-soft)] text-[var(--color-accent)]'
-                : 'border-[var(--color-border)] bg-[var(--color-surface)]/80 text-[var(--color-muted)] hover:text-[var(--color-fg)]',
+                ? 'bg-[var(--color-accent-soft)] text-[var(--color-accent)] shadow-sm'
+                : 'text-[var(--color-muted)] hover:bg-[var(--color-bg)] hover:text-[var(--color-fg)]',
             )}
           >
             {LOCALE_LABELS[locale]}

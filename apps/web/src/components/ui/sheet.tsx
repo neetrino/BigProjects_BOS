@@ -46,7 +46,7 @@ export function Sheet({
       <button
         type="button"
         aria-label="Close"
-        className="absolute inset-0 bg-[#152033]/25 backdrop-blur-[2px]"
+        className="absolute inset-0 bg-[#122033]/28 backdrop-blur-[3px]"
         onClick={onClose}
       />
       <aside
@@ -54,11 +54,11 @@ export function Sheet({
         aria-modal="true"
         aria-label={title}
         className={clsx(
-          'relative z-10 flex h-full flex-col border-l border-[var(--color-border)] bg-[var(--color-surface-elevated)] shadow-[var(--shadow-lift)]',
+          'relative z-10 flex h-full flex-col border-l border-[var(--color-border)] bg-[linear-gradient(180deg,#fffcf8,#ffffff)] shadow-[var(--shadow-lift)]',
           widthClassName,
         )}
       >
-        <header className="flex items-center justify-between gap-3 border-b border-[var(--color-border)] bg-[var(--color-surface)] px-5 py-4">
+        <header className="flex items-center justify-between gap-3 border-b border-[var(--color-border)] bg-white/90 px-5 py-4 backdrop-blur-sm">
           <h2 className="font-[family-name:var(--font-display)] text-xl font-medium tracking-tight text-[var(--color-fg)]">
             {title}
           </h2>

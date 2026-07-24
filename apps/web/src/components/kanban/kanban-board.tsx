@@ -132,7 +132,7 @@ export function KanbanBoard<TItem extends { id: string }, TStage extends string>
           className="mx-1 w-px shrink-0 self-stretch bg-gradient-to-b from-transparent via-[var(--color-border)] to-transparent"
         />
 
-        <div className="flex min-h-0 min-w-max gap-3 rounded-[var(--radius-panel)] border border-[var(--color-border)] bg-white/50 p-2.5 shadow-[var(--shadow-soft)]">
+        <div className="flex min-h-0 min-w-max gap-3 rounded-[var(--radius-panel)] border border-white/70 bg-[linear-gradient(180deg,rgb(255_255_255/0.72),rgb(247_243_238/0.55))] p-2.5 shadow-[var(--shadow-soft)] outline outline-1 outline-[var(--color-border)]">
           {terminalColumns.map((column) => (
             <KanbanColumn
               key={column.id}
@@ -173,26 +173,26 @@ function KanbanColumn<TItem extends { id: string }, TStage extends string>({
     <section
       ref={setNodeRef}
       className={clsx(
-        'flex w-72 shrink-0 flex-col rounded-[var(--radius-panel)] border transition-shadow',
+        'flex w-72 shrink-0 flex-col rounded-[var(--radius-panel)] border transition-all duration-200',
         terminal
-          ? 'border-dashed border-[var(--color-border-strong)] bg-[var(--color-surface)]/80'
-          : 'border-[var(--color-border)] bg-[var(--color-surface)]/70 shadow-[var(--shadow-soft)]',
-        isOver && 'ring-2 ring-[var(--color-accent)]/35 shadow-[var(--shadow-lift)]',
+          ? 'border-dashed border-[var(--color-border-strong)] bg-white/70'
+          : 'border-white/80 bg-[linear-gradient(180deg,#ffffff,#fffcf8)] shadow-[var(--shadow-soft)] outline outline-1 outline-[var(--color-border)]',
+        isOver && 'ring-2 ring-[var(--color-accent)]/30 shadow-[var(--shadow-lift)]',
       )}
     >
       <header
         className={clsx(
-          'flex items-center justify-between gap-2 border-b px-3.5 py-2.5',
+          'flex items-center justify-between gap-2 border-b px-3.5 py-3',
           terminal
-            ? 'border-[var(--color-border)]/70 bg-[var(--color-brass-soft)]/40'
-            : 'border-[var(--color-border)] bg-[var(--color-bg-warm)]/60',
+            ? 'border-[var(--color-border)]/70 bg-[var(--color-brass-soft)]/50'
+            : 'border-[var(--color-border)] bg-[linear-gradient(180deg,rgb(247_243_238/0.75),rgb(247_243_238/0.35))]',
           TONE_HEADER_CLASS[tone],
         )}
       >
-        <h3 className="text-[11px] font-semibold uppercase tracking-[0.12em] text-[var(--color-muted)]">
+        <h3 className="text-[11px] font-bold uppercase tracking-[0.14em] text-[var(--color-muted)]">
           {column.title}
         </h3>
-        <span className="rounded-md bg-[var(--color-surface)] px-2 py-0.5 text-[11px] font-semibold text-[var(--color-muted)] shadow-sm">
+        <span className="rounded-lg bg-white px-2 py-0.5 text-[11px] font-semibold text-[var(--color-muted)] shadow-sm">
           {items.length}
         </span>
       </header>
