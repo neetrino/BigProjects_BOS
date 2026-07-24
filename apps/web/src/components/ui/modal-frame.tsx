@@ -3,6 +3,7 @@
 import { clsx } from 'clsx';
 import { useEffect, useState, type AnimationEvent, type ReactNode } from 'react';
 import { createPortal } from 'react-dom';
+import { getAppPortalRoot } from '@/lib/portal-root';
 
 type ModalFrameProps = {
   open: boolean;
@@ -129,6 +130,6 @@ export function ModalFrame({
         {children}
       </div>
     </div>,
-    document.body,
+    getAppPortalRoot(),
   );
 }

@@ -4,6 +4,7 @@ import { clsx } from 'clsx';
 import { X } from 'lucide-react';
 import { useEffect, useState, type ReactNode } from 'react';
 import { createPortal } from 'react-dom';
+import { getAppPortalRoot } from '@/lib/portal-root';
 
 type SheetProps = {
   open: boolean;
@@ -160,6 +161,6 @@ export function Sheet({
         </aside>
       </div>
     </div>,
-    document.body,
+    getAppPortalRoot(),
   );
 }

@@ -34,6 +34,9 @@
   --radius-panel: 1.15rem;
   --font-sans: var(--font-manrope), var(--font-armenian), 'Segoe UI', sans-serif;
   --font-display: var(--font-fraunces), var(--font-armenian), Georgia, serif;
+  /* Same proportional desktop layout as ToonExpo: design at 1440px, scale to viewport. */
+  --desktop-layout-design-width: 1440px;
+  --desktop-layout-scale: calc(100vw / var(--desktop-layout-design-width));
 }
 
 @keyframes fade-rise {
@@ -139,12 +142,42 @@
   }
 }
 
+html {
+  height: 100%;
+  overflow-x: clip;
+}
+
 body {
   margin: 0;
   min-height: 100vh;
   color: var(--color-fg);
   font-family: var(--font-sans);
   background-color: var(--color-bg);
+  overflow-x: clip;
+}
+
+/* Fixed design-width stage scaled with zoom so every viewport keeps the same layout. */
+.desktop-fluid-frame {
+  display: flex;
+  width: 100%;
+  justify-content: center;
+  align-items: stretch;
+}
+
+.desktop-fluid-stage {
+  position: relative;
+  width: var(--desktop-layout-design-width);
+  min-width: 0;
+  flex-shrink: 0;
+  zoom: var(--desktop-layout-scale);
+}
+
+.min-h-fluid-screen {
+  min-height: calc(100svh / var(--desktop-layout-scale));
+}
+
+.h-fluid-screen {
+  height: calc(100svh / var(--desktop-layout-scale));
 }
 
 body > *:not([data-portal]) {
