@@ -108,6 +108,36 @@ body > * {
   color: var(--color-fg);
 }
 
+/* Clickable controls use pointer; disabled use not-allowed. */
+button:not(:disabled),
+a[href],
+summary,
+label[for],
+select:not(:disabled),
+input[type='button']:not(:disabled),
+input[type='submit']:not(:disabled),
+input[type='reset']:not(:disabled),
+input[type='checkbox']:not(:disabled),
+input[type='radio']:not(:disabled),
+input[type='file']:not(:disabled),
+[role='button']:not([aria-disabled='true']),
+[role='link'],
+[role='menuitem'],
+[role='option'],
+[role='tab']:not([aria-disabled='true']),
+[role='switch']:not([aria-disabled='true']),
+[role='checkbox']:not([aria-disabled='true']),
+[role='radio']:not([aria-disabled='true']) {
+  cursor: pointer;
+}
+
+button:disabled,
+select:disabled,
+input:disabled,
+[aria-disabled='true'] {
+  cursor: not-allowed;
+}
+
 .page-heading {
   font-family: var(--font-display);
   font-size: clamp(1.75rem, 2vw, 2.05rem);
