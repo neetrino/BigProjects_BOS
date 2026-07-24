@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import type { EventCycle } from '@/lib/api/types';
 
@@ -24,16 +24,12 @@ export function useCycleQueryParam(cycles: EventCycle[] | null): {
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const cycleFromUrl = searchParams.get('cycle');
-  const [cycleId, setCycleIdState] = useState('');
-  const seededRef = useRef(false);
-  const skipUrlFollowRef = useRef(false);
 
   const writeCycleToUrl = useCallback(
     (nextId: string) => {
       if (!nextId || cycleFromUrl === nextId) {
         return;
       }
-      skipUrlFollowRef.current = true;
       const params = new URLSearchParams(searchParams.toString());
       params.set('cycle', nextId);
       router.replace(`${pathname}?${params.toString()}`, { scroll: false });
@@ -41,36 +37,31 @@ export function useCycleQueryParam(cycles: EventCycle[] | null): {
     [cycleFromUrl, pathname, router, searchParams],
   );
 
+  const [optimisticCycleId, setOptimisticCycleId] = useState<string | null>(null);
+  const [prevCycleFromUrl, setPrevCycleFromUrl] = useState(cycleFromUrl);
+
+  if (cycleFromUrl !== prevCycleFromUrl) {
+    setPrevCycleFromUrl(cycleFromUrl);
+    setOptimisticCycleId(null);
+  }
+
+  const cycleId =
+    cycles && cycles.length > 0
+      ? optimisticCycleId && cycles.some((cycle) => cycle.id === optimisticCycleId)
+        ? optimisticCycleId
+        : pickDefaultCycleId(cycles, cycleFromUrl)
+      : '';
+
   useEffect(() => {
-    if (!cycles || cycles.length === 0) {
+    if (!cycleId) {
       return;
     }
-
-    if (!seededRef.current) {
-      seededRef.current = true;
-      const initial = pickDefaultCycleId(cycles, cycleFromUrl);
-      setCycleIdState(initial);
-      writeCycleToUrl(initial);
-      return;
-    }
-
-    if (skipUrlFollowRef.current) {
-      skipUrlFollowRef.current = false;
-      return;
-    }
-
-    if (
-      cycleFromUrl &&
-      cycles.some((cycle) => cycle.id === cycleFromUrl) &&
-      cycleFromUrl !== cycleId
-    ) {
-      setCycleIdState(cycleFromUrl);
-    }
-  }, [cycleFromUrl, cycleId, cycles, writeCycleToUrl]);
+    writeCycleToUrl(cycleId);
+  }, [cycleId, writeCycleToUrl]);
 
   const setCycleId = useCallback(
     (nextId: string) => {
-      setCycleIdState(nextId);
+      setOptimisticCycleId(nextId);
       writeCycleToUrl(nextId);
     },
     [writeCycleToUrl],
