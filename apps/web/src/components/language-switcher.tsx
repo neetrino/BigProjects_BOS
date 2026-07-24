@@ -39,7 +39,7 @@ export function LanguageSwitcher({ currentLocale, compact = false }: LanguageSwi
       aria-label={t('label')}
       className={clsx(
         'inline-flex flex-wrap gap-1 rounded-[var(--radius-control)] border border-[var(--color-border)] bg-white/80 p-1 shadow-sm',
-        compact ? '' : 'absolute right-6 top-6 z-10',
+        compact ? 'w-full' : 'absolute right-6 top-6 z-10',
       )}
     >
       {locales.map((locale) => {
@@ -54,6 +54,7 @@ export function LanguageSwitcher({ currentLocale, compact = false }: LanguageSwi
             onClick={() => handleSelect(locale)}
             className={clsx(
               'rounded-[calc(var(--radius-control)-2px)] px-2.5 py-1 text-xs font-semibold transition-all duration-150',
+              compact && 'min-w-0 flex-1',
               isActive
                 ? 'bg-[var(--color-accent-soft)] text-[var(--color-accent)] shadow-sm'
                 : 'text-[var(--color-muted)] hover:bg-[var(--color-bg)] hover:text-[var(--color-fg)]',
