@@ -52,7 +52,7 @@ export function Dialog({
       <button
         type="button"
         aria-label="Close"
-        className="absolute inset-0 bg-black/35"
+        className="absolute inset-0 bg-[#152033]/30 backdrop-blur-[2px]"
         onClick={() => {
           if (!busy) {
             onCancel();
@@ -63,16 +63,19 @@ export function Dialog({
         role="alertdialog"
         aria-modal="true"
         aria-labelledby="dialog-title"
-        className="relative z-10 w-full max-w-sm rounded border border-[var(--color-border)] bg-[var(--color-surface)] p-4 shadow-lg"
+        className="relative z-10 w-full max-w-sm rounded-[var(--radius-panel)] border border-[var(--color-border)] bg-[var(--color-surface-elevated)] p-5 shadow-[var(--shadow-lift)]"
       >
-        <h2 id="dialog-title" className="text-base font-semibold text-[var(--color-fg)]">
+        <h2
+          id="dialog-title"
+          className="font-[family-name:var(--font-display)] text-xl font-medium tracking-tight text-[var(--color-fg)]"
+        >
           {title}
         </h2>
         {description ? (
-          <p className="mt-2 text-sm text-[var(--color-muted)]">{description}</p>
+          <p className="mt-2 text-sm leading-relaxed text-[var(--color-muted)]">{description}</p>
         ) : null}
         {children}
-        <div className="mt-4 flex justify-end gap-2">
+        <div className="mt-5 flex justify-end gap-2">
           <Button variant="secondary" onClick={onCancel} disabled={busy}>
             {cancelLabel}
           </Button>

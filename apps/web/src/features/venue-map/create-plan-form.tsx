@@ -38,7 +38,7 @@ export function CreatePlanForm({ cycleId, onCreated }: CreatePlanFormProps) {
   }
 
   return (
-    <div className="flex max-w-sm flex-col gap-3 rounded border border-[var(--color-border)] bg-[var(--color-surface)] p-4">
+    <div className="panel flex max-w-sm flex-col gap-3 p-5">
       <h2 className="text-sm font-semibold text-[var(--color-fg)]">{t('createPlan.title')}</h2>
       <p className="text-sm text-[var(--color-muted)]">{t('createPlan.description')}</p>
       <Field label={t('createPlan.name')} htmlFor="plan-title">

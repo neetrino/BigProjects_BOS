@@ -22,14 +22,14 @@ export function AppShell({ currentLocale, children }: AppShellProps) {
   return (
     <div
       className={clsx(
-        'flex bg-[var(--color-bg)]',
+        'flex',
         isFullHeightPage ? 'h-screen overflow-hidden' : 'min-h-screen',
       )}
     >
       <AppSidebar pathname={pathname} currentLocale={currentLocale} />
       <main
         className={clsx(
-          'min-w-0 flex-1 px-6 py-5',
+          'min-w-0 flex-1 px-7 py-6',
           isFullHeightPage ? 'flex min-h-0 flex-col overflow-hidden' : 'overflow-auto',
         )}
       >

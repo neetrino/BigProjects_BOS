@@ -15,41 +15,41 @@ export function PartnerList({ partners, onOpen }: PartnerListProps) {
   const t = useTranslations('partners');
 
   return (
-    <div className="min-h-0 flex-1 overflow-auto rounded-xl border border-[var(--color-border)] bg-[var(--color-surface)]">
+    <div className="panel min-h-0 flex-1 overflow-auto">
       <table className="w-full min-w-[800px] text-left text-sm">
-        <thead className="sticky top-0 border-b border-[var(--color-border)] bg-[var(--color-surface)] text-xs text-[var(--color-muted)]">
+        <thead className="sticky top-0 border-b border-[var(--color-border)] bg-[var(--color-bg-warm)]/90 text-xs text-[var(--color-muted)] backdrop-blur-sm">
           <tr>
-            <th className="px-3 py-2 font-medium">{t('list.organization')}</th>
-            <th className="px-3 py-2 font-medium">{t('list.partnerType')}</th>
-            <th className="px-3 py-2 font-medium">{t('list.contact')}</th>
-            <th className="px-3 py-2 font-medium">{t('list.stage')}</th>
-            <th className="px-3 py-2 font-medium">{t('list.staff')}</th>
-            <th className="px-3 py-2 font-medium">{t('list.updated')}</th>
+            <th className="px-4 py-3 font-semibold tracking-wide">{t('list.organization')}</th>
+            <th className="px-4 py-3 font-semibold tracking-wide">{t('list.partnerType')}</th>
+            <th className="px-4 py-3 font-semibold tracking-wide">{t('list.contact')}</th>
+            <th className="px-4 py-3 font-semibold tracking-wide">{t('list.stage')}</th>
+            <th className="px-4 py-3 font-semibold tracking-wide">{t('list.staff')}</th>
+            <th className="px-4 py-3 font-semibold tracking-wide">{t('list.updated')}</th>
           </tr>
         </thead>
         <tbody>
           {partners.map((partner) => (
             <tr
               key={partner.id}
-              className="cursor-pointer border-b border-[var(--color-border)] last:border-0 hover:bg-[var(--color-bg)]"
+              className="cursor-pointer border-b border-[var(--color-border)] last:border-0 hover:bg-[var(--color-accent-soft)]/35"
               onClick={() => onOpen(partner.id)}
             >
-              <td className="px-3 py-2.5 font-medium text-[var(--color-fg)]">
+              <td className="px-4 py-3 font-medium text-[var(--color-fg)]">
                 {partner.organization.name}
               </td>
-              <td className="px-3 py-2.5 text-[var(--color-muted)]">
+              <td className="px-4 py-3 text-[var(--color-muted)]">
                 {partner.partnerType ?? '—'}
               </td>
-              <td className="px-3 py-2.5 text-[var(--color-muted)]">
+              <td className="px-4 py-3 text-[var(--color-muted)]">
                 {partner.primaryContact?.name ?? '—'}
               </td>
-              <td className="px-3 py-2.5">
+              <td className="px-4 py-3">
                 <StatusBadge label={t(`stages.${partner.stage}`)} tone={stageTone(partner.stage)} />
               </td>
-              <td className="px-3 py-2.5 text-[var(--color-muted)]">
+              <td className="px-4 py-3 text-[var(--color-muted)]">
                 {partner.assignedStaff?.name ?? '—'}
               </td>
-              <td className="px-3 py-2.5 text-[var(--color-muted)]">
+              <td className="px-4 py-3 text-[var(--color-muted)]">
                 {formatDate(partner.updatedAt) || '—'}
               </td>
             </tr>

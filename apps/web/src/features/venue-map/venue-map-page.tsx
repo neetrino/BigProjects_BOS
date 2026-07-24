@@ -166,8 +166,8 @@ export function VenueMapPage() {
     <div className="flex min-h-0 flex-1 flex-col gap-3">
       <header className="flex flex-wrap items-end justify-between gap-3">
         <div>
-          <h1 className="text-lg font-semibold text-[var(--color-fg)]">{t('title')}</h1>
-          <p className="text-sm text-[var(--color-muted)]">{t('subtitle')}</p>
+          <h1 className="page-heading">{t('title')}</h1>
+          <p className="page-subtitle">{t('subtitle')}</p>
         </div>
         <div className="flex flex-wrap items-end gap-2">
           <label className="flex flex-col gap-1 text-xs text-[var(--color-muted)]">
@@ -263,7 +263,7 @@ export function VenueMapPage() {
           ) : (
             <p className="text-xs text-[var(--color-muted)]">{t('selectHint')}</p>
           )}
-          <div className="flex min-h-0 flex-1 overflow-hidden rounded border border-[var(--color-border)]">
+          <div className="panel flex min-h-0 flex-1 overflow-hidden">
             <div className="min-h-0 min-w-0 flex-1">
               <VenueMapStageClient
                 plan={plan}

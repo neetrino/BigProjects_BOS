@@ -20,8 +20,8 @@ const CLICK_MAX_DISTANCE_PX = 6;
 
 const TONE_HEADER_CLASS: Record<KanbanColumnTone, string> = {
   default: '',
-  positive: 'text-emerald-900',
-  negative: 'text-rose-900',
+  positive: 'text-[var(--color-success)]',
+  negative: 'text-[var(--color-danger)]',
 };
 
 type KanbanBoardProps<TItem extends { id: string }, TStage extends string> = {
@@ -113,7 +113,7 @@ export function KanbanBoard<TItem extends { id: string }, TStage extends string>
       }}
       onDragCancel={() => setActiveId(null)}
     >
-      <div className="flex min-h-0 flex-1 gap-3 overflow-x-auto pb-1">
+      <div className="flex min-h-0 flex-1 gap-4 overflow-x-auto pb-1">
         <div className="flex min-h-0 min-w-max gap-3">
           {activeColumns.map((column) => (
             <KanbanColumn
@@ -127,9 +127,12 @@ export function KanbanBoard<TItem extends { id: string }, TStage extends string>
           ))}
         </div>
 
-        <div aria-hidden className="mx-1 w-px shrink-0 self-stretch bg-[var(--color-border)]" />
+        <div
+          aria-hidden
+          className="mx-1 w-px shrink-0 self-stretch bg-gradient-to-b from-transparent via-[var(--color-border)] to-transparent"
+        />
 
-        <div className="flex min-h-0 min-w-max gap-3 rounded-xl bg-[var(--color-bg)]/80 p-2">
+        <div className="flex min-h-0 min-w-max gap-3 rounded-[var(--radius-panel)] border border-[var(--color-border)] bg-white/50 p-2.5 shadow-[var(--shadow-soft)]">
           {terminalColumns.map((column) => (
             <KanbanColumn
               key={column.id}
@@ -170,30 +173,30 @@ function KanbanColumn<TItem extends { id: string }, TStage extends string>({
     <section
       ref={setNodeRef}
       className={clsx(
-        'flex w-72 shrink-0 flex-col rounded-xl border',
+        'flex w-72 shrink-0 flex-col rounded-[var(--radius-panel)] border transition-shadow',
         terminal
-          ? 'border-dashed border-[var(--color-border)] bg-[var(--color-surface)]/70'
-          : 'border-[var(--color-border)] bg-[var(--color-bg)]/40',
-        isOver && 'ring-2 ring-[var(--color-accent)]/40',
+          ? 'border-dashed border-[var(--color-border-strong)] bg-[var(--color-surface)]/80'
+          : 'border-[var(--color-border)] bg-[var(--color-surface)]/70 shadow-[var(--shadow-soft)]',
+        isOver && 'ring-2 ring-[var(--color-accent)]/35 shadow-[var(--shadow-lift)]',
       )}
     >
       <header
         className={clsx(
-          'flex items-center justify-between gap-2 border-b px-3 py-2',
+          'flex items-center justify-between gap-2 border-b px-3.5 py-2.5',
           terminal
-            ? 'border-[var(--color-border)]/70 bg-[var(--color-bg)]'
-            : 'border-[var(--color-border)]',
+            ? 'border-[var(--color-border)]/70 bg-[var(--color-brass-soft)]/40'
+            : 'border-[var(--color-border)] bg-[var(--color-bg-warm)]/60',
           TONE_HEADER_CLASS[tone],
         )}
       >
-        <h3 className="text-xs font-semibold uppercase tracking-wide text-[var(--color-muted)]">
+        <h3 className="text-[11px] font-semibold uppercase tracking-[0.12em] text-[var(--color-muted)]">
           {column.title}
         </h3>
-        <span className="rounded-full bg-[var(--color-surface)] px-2 py-0.5 text-[11px] text-[var(--color-muted)]">
+        <span className="rounded-md bg-[var(--color-surface)] px-2 py-0.5 text-[11px] font-semibold text-[var(--color-muted)] shadow-sm">
           {items.length}
         </span>
       </header>
-      <div className="flex min-h-0 flex-1 flex-col gap-2 overflow-y-auto p-2">
+      <div className="flex min-h-0 flex-1 flex-col gap-2.5 overflow-y-auto p-2.5">
         {items.map((item) => (
           <DraggableKanbanCard key={item.id} item={item} onOpen={onOpen} renderCard={renderCard} />
         ))}

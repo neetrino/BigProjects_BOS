@@ -242,7 +242,7 @@ function PartnerCreateSheetInner({
           />
         </Field>
         {error ? (
-          <p role="alert" className="text-sm text-red-700">
+          <p role="alert" className="text-sm text-[var(--color-danger)]">
             {error}
           </p>
         ) : null}

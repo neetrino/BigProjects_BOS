@@ -1,18 +1,90 @@
 @import 'tailwindcss';
 
 :root {
-  --color-bg: #f3f6f4;
-  --color-fg: #1a2420;
-  --color-muted: #5c6b63;
-  --color-accent: #2f6f4e;
+  --color-bg: #f3f6fb;
+  --color-bg-warm: #faf7f4;
+  --color-fg: #152033;
+  --color-muted: #5f6b82;
+  --color-accent: #1a6b72;
+  --color-accent-soft: #d8eef0;
+  --color-accent-hover: #15575d;
+  --color-brass: #9a7b4f;
+  --color-brass-soft: #f3ebe0;
   --color-surface: #ffffff;
-  --color-border: #d5e0d9;
+  --color-surface-elevated: #fffcfa;
+  --color-border: #dde3ee;
+  --color-border-strong: #c5cedd;
+  --color-danger: #b42318;
+  --color-danger-soft: #fef3f2;
+  --color-success: #067647;
+  --color-success-soft: #ecfdf3;
+  --shadow-soft: 0 1px 2px rgb(21 32 51 / 4%), 0 8px 24px rgb(21 32 51 / 5%);
+  --shadow-lift: 0 4px 16px rgb(21 32 51 / 8%), 0 1px 3px rgb(21 32 51 / 4%);
+  --radius-control: 0.625rem;
+  --radius-panel: 1rem;
+  --font-sans: var(--font-manrope), var(--font-armenian), 'Segoe UI', sans-serif;
+  --font-display: var(--font-fraunces), var(--font-armenian), Georgia, serif;
 }
 
 body {
   margin: 0;
   min-height: 100vh;
   color: var(--color-fg);
-  background: var(--color-bg);
-  font-family: 'IBM Plex Sans', 'Segoe UI', sans-serif;
+  font-family: var(--font-sans);
+  background-color: var(--color-bg);
+  background-image:
+    radial-gradient(ellipse 900px 480px at 8% -10%, rgb(216 238 240 / 55%), transparent 55%),
+    radial-gradient(ellipse 700px 420px at 100% 0%, rgb(243 235 224 / 70%), transparent 50%),
+    linear-gradient(165deg, var(--color-bg-warm) 0%, var(--color-bg) 48%, #eef2f8 100%);
+  background-attachment: fixed;
+}
+
+::selection {
+  background: var(--color-accent-soft);
+  color: var(--color-fg);
+}
+
+.page-heading {
+  font-family: var(--font-display);
+  font-size: 1.75rem;
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+  color: var(--color-fg);
+}
+
+.page-subtitle {
+  margin-top: 0.35rem;
+  font-size: 0.875rem;
+  line-height: 1.45;
+  color: var(--color-muted);
+}
+
+.panel {
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-panel);
+  background: var(--color-surface);
+  box-shadow: var(--shadow-soft);
+}
+
+.panel-muted {
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-panel);
+  background: rgb(255 255 255 / 55%);
+  backdrop-filter: blur(8px);
+}
+
+.brand-mark {
+  font-family: var(--font-display);
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  color: var(--color-fg);
+}
+
+.brand-eyebrow {
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--color-brass);
 }

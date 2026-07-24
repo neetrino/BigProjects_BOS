@@ -123,8 +123,8 @@ export function CyclesPage() {
     <div className="flex flex-col gap-4">
       <header className="flex items-center justify-between gap-3">
         <div>
-          <h1 className="text-xl font-semibold text-[var(--color-fg)]">{t('title')}</h1>
-          <p className="mt-1 text-sm text-[var(--color-muted)]">{t('subtitle')}</p>
+          <h1 className="page-heading">{t('title')}</h1>
+          <p className="page-subtitle">{t('subtitle')}</p>
         </div>
         {isAdmin ? (
           <Button variant="primary" onClick={openCreate}>
@@ -140,15 +140,17 @@ export function CyclesPage() {
       ) : null}
 
       {loadState.status === 'ready' && cycles.length > 0 ? (
-        <div className="overflow-x-auto rounded border border-[var(--color-border)] bg-[var(--color-surface)]">
+        <div className="panel overflow-x-auto">
           <table className="w-full min-w-[640px] text-left text-sm">
-            <thead className="border-b border-[var(--color-border)] text-xs text-[var(--color-muted)]">
+            <thead className="border-b border-[var(--color-border)] bg-[var(--color-bg-warm)]/70 text-xs text-[var(--color-muted)]">
               <tr>
-                <th className="px-3 py-2 font-medium">{t('columns.name')}</th>
-                <th className="px-3 py-2 font-medium">{t('columns.code')}</th>
-                <th className="px-3 py-2 font-medium">{t('columns.status')}</th>
-                <th className="px-3 py-2 font-medium">{t('columns.dates')}</th>
-                {isAdmin ? <th className="px-3 py-2 font-medium">{t('columns.actions')}</th> : null}
+                <th className="px-4 py-3 font-semibold tracking-wide">{t('columns.name')}</th>
+                <th className="px-4 py-3 font-semibold tracking-wide">{t('columns.code')}</th>
+                <th className="px-4 py-3 font-semibold tracking-wide">{t('columns.status')}</th>
+                <th className="px-4 py-3 font-semibold tracking-wide">{t('columns.dates')}</th>
+                {isAdmin ? (
+                  <th className="px-4 py-3 font-semibold tracking-wide">{t('columns.actions')}</th>
+                ) : null}
               </tr>
             </thead>
             <tbody>
@@ -157,26 +159,26 @@ export function CyclesPage() {
                   key={cycle.id}
                   className={
                     isAdmin
-                      ? 'cursor-pointer border-b border-[var(--color-border)] last:border-0 hover:bg-[var(--color-bg)]'
+                      ? 'cursor-pointer border-b border-[var(--color-border)] last:border-0 hover:bg-[var(--color-accent-soft)]/35'
                       : 'border-b border-[var(--color-border)] last:border-0'
                   }
                   onClick={() => openEdit(cycle)}
                 >
-                  <td className="px-3 py-2.5 font-medium text-[var(--color-fg)]">{cycle.name}</td>
-                  <td className="px-3 py-2.5 text-[var(--color-muted)]">{cycle.code}</td>
-                  <td className="px-3 py-2.5">
+                  <td className="px-4 py-3 font-medium text-[var(--color-fg)]">{cycle.name}</td>
+                  <td className="px-4 py-3 text-[var(--color-muted)]">{cycle.code}</td>
+                  <td className="px-4 py-3">
                     <StatusBadge
                       label={t(`status.${cycle.status}`)}
                       tone={statusTone(cycle.status)}
                     />
                   </td>
-                  <td className="px-3 py-2.5 text-[var(--color-muted)]">
+                  <td className="px-4 py-3 text-[var(--color-muted)]">
                     {[formatDate(cycle.startsAt), formatDate(cycle.endsAt)]
                       .filter(Boolean)
                       .join(' – ') || '—'}
                   </td>
                   {isAdmin ? (
-                    <td className="px-3 py-2.5">
+                    <td className="px-4 py-3">
                       <div className="flex gap-2" onClick={(event) => event.stopPropagation()}>
                         {cycle.status === 'DRAFT' ? (
                           <Button

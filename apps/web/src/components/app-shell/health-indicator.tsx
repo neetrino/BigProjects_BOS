@@ -7,6 +7,7 @@ import { fetchHealth } from '@/lib/api/health';
 export function HealthIndicator() {
   const t = useTranslations('health');
   const [label, setLabel] = useState(t('checking'));
+  const [ok, setOk] = useState<boolean | null>(null);
 
   useEffect(() => {
     let cancelled = false;
@@ -14,11 +15,14 @@ export function HealthIndicator() {
     void fetchHealth()
       .then((data) => {
         if (!cancelled) {
-          setLabel(data.database === 'up' ? t('ok') : t('dbDown'));
+          const isOk = data.database === 'up';
+          setOk(isOk);
+          setLabel(isOk ? t('ok') : t('dbDown'));
         }
       })
       .catch(() => {
         if (!cancelled) {
+          setOk(false);
           setLabel(t('unreachable'));
         }
       });
@@ -29,7 +33,17 @@ export function HealthIndicator() {
   }, [t]);
 
   return (
-    <p className="text-[11px] text-[var(--color-muted)]" title={label}>
+    <p className="flex items-center gap-1.5 text-[11px] text-[var(--color-muted)]" title={label}>
+      <span
+        aria-hidden
+        className={
+          ok === null
+            ? 'size-1.5 rounded-full bg-[var(--color-border-strong)]'
+            : ok
+              ? 'size-1.5 rounded-full bg-[var(--color-success)]'
+              : 'size-1.5 rounded-full bg-[var(--color-danger)]'
+        }
+      />
       {label}
     </p>
   );

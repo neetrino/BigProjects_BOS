@@ -134,7 +134,7 @@ export function ToonExpoAccountSection({
                 tone={requestStatusTone('FAILED')}
               />
               {loadState.latestRequest.errorMessage ? (
-                <p className="text-sm text-red-700">{loadState.latestRequest.errorMessage}</p>
+                <p className="text-sm text-[var(--color-danger)]">{loadState.latestRequest.errorMessage}</p>
               ) : null}
               <Button
                 variant="secondary"

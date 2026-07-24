@@ -13,10 +13,10 @@ export function KanbanCardShell({ children, isDragging = false }: KanbanCardShel
   return (
     <article
       className={clsx(
-        'w-full rounded-xl border bg-[var(--color-surface)] p-3 text-left',
+        'w-full rounded-[0.875rem] border bg-[var(--color-surface)] p-3.5 text-left transition-all duration-150',
         isDragging
-          ? 'border-[var(--color-accent)] shadow-md opacity-95'
-          : 'border-[var(--color-border)] shadow-sm transition-shadow hover:shadow-md',
+          ? 'border-[var(--color-accent)] shadow-[var(--shadow-lift)] opacity-95'
+          : 'border-[var(--color-border)] shadow-[var(--shadow-soft)] hover:border-[var(--color-border-strong)] hover:shadow-[var(--shadow-lift)]',
       )}
     >
       {children}

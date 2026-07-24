@@ -43,7 +43,7 @@ export function LoginForm() {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="flex w-full max-w-sm flex-col gap-4">
+    <form onSubmit={handleSubmit} className="flex w-full flex-col gap-4">
       <Field label={t('email')} htmlFor="login-email">
         <TextInput
           id="login-email"
@@ -67,11 +67,14 @@ export function LoginForm() {
         />
       </Field>
       {error ? (
-        <p role="alert" className="text-sm text-red-700">
+        <p
+          role="alert"
+          className="rounded-[var(--radius-control)] border border-red-200 bg-[var(--color-danger-soft)] px-3 py-2 text-sm text-[var(--color-danger)]"
+        >
           {error}
         </p>
       ) : null}
-      <Button type="submit" variant="primary" disabled={busy}>
+      <Button type="submit" variant="primary" disabled={busy} className="mt-1 w-full py-2.5">
         {busy ? t('submitting') : t('submit')}
       </Button>
     </form>
