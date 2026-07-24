@@ -1,6 +1,7 @@
 'use client';
 
 import { FormEvent, useEffect, useState } from 'react';
+import { Plus, Trash2 } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { ApiError } from '@/lib/api/client';
 import { createNote, deleteNote, listNotes } from '@/lib/api/notes';
@@ -121,7 +122,14 @@ export function EntityNotesSection({ ownerType, ownerId }: EntityNotesSectionPro
         />
         <div className="flex justify-end">
           <Button type="submit" variant="secondary" disabled={busy || body.trim().length === 0}>
-            {busy ? tCommon('saving') : t('notes.add')}
+            {busy ? (
+              tCommon('saving')
+            ) : (
+              <>
+                <Plus className="size-4" aria-hidden />
+                {t('notes.add')}
+              </>
+            )}
           </Button>
         </div>
         {formError ? (
@@ -143,21 +151,27 @@ export function EntityNotesSection({ ownerType, ownerId }: EntityNotesSectionPro
             return (
               <li
                 key={note.id}
-                className="border-b border-[var(--color-border)] pb-2 last:border-0"
+                className="rounded-2xl border border-[var(--color-border)] bg-white px-3.5 py-3"
               >
-                <p className="whitespace-pre-wrap text-sm text-[var(--color-fg)]">{note.body}</p>
-                <div className="mt-1 flex items-center justify-between gap-2">
-                  <p className="text-xs text-[var(--color-muted)]">
-                    {note.author.name} · {formatDate(note.createdAt)}
-                  </p>
+                <div className="flex items-start justify-between gap-3">
+                  <div className="min-w-0 flex-1">
+                    <p className="whitespace-pre-wrap text-sm text-[var(--color-fg)]">
+                      {note.body}
+                    </p>
+                    <p className="mt-2 text-xs text-[var(--color-muted)]">
+                      {note.author.name} · {formatDate(note.createdAt)}
+                    </p>
+                  </div>
                   {canDelete ? (
-                    <Button
-                      variant="ghost"
-                      className="px-1.5 text-xs"
+                    <button
+                      type="button"
+                      aria-label={tCommon('delete')}
+                      title={tCommon('delete')}
+                      className="inline-flex size-8 shrink-0 items-center justify-center rounded-lg text-[var(--color-muted)] transition-colors hover:bg-[var(--color-danger)]/10 hover:text-[var(--color-danger)]"
                       onClick={() => setPendingDelete(note)}
                     >
-                      {tCommon('delete')}
-                    </Button>
+                      <Trash2 className="size-4" aria-hidden />
+                    </button>
                   ) : null}
                 </div>
               </li>

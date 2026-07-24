@@ -7,7 +7,7 @@ import { createDeal } from '@/lib/api/deals';
 import { getOrganization, listOrganizations } from '@/lib/api/organizations';
 import type { DealListItem, OrganizationContact, OrganizationListItem } from '@/lib/api/types';
 import { Button } from '@/components/ui/button';
-import { Field, SelectInput, TextArea, TextInput } from '@/components/ui/field';
+import { Field, SearchInput, SelectInput, TextArea, TextInput } from '@/components/ui/field';
 import { Sheet } from '@/components/ui/sheet';
 import { SEARCH_DEBOUNCE_MS } from '@/lib/constants';
 
@@ -31,13 +31,10 @@ export function DealCreateSheet({
   onClose,
   onCreated,
 }: DealCreateSheetProps) {
-  if (!open) {
-    return null;
-  }
-
   return (
     <DealCreateSheetInner
       key={eventCycleId}
+      open={open}
       eventCycleId={eventCycleId}
       staffOptions={staffOptions}
       onClose={onClose}
@@ -47,6 +44,7 @@ export function DealCreateSheet({
 }
 
 type DealCreateSheetInnerProps = {
+  open: boolean;
   eventCycleId: string;
   staffOptions: StaffOption[];
   onClose: () => void;
@@ -54,6 +52,7 @@ type DealCreateSheetInnerProps = {
 };
 
 function DealCreateSheetInner({
+  open,
   eventCycleId,
   staffOptions,
   onClose,
@@ -156,10 +155,9 @@ function DealCreateSheetInner({
 
   return (
     <Sheet
-      open
+      open={open}
       title={t('createTitle')}
       onClose={onClose}
-      widthClassName="w-full max-w-md"
       footer={
         <div className="flex justify-end gap-2">
           <Button variant="secondary" onClick={onClose} disabled={busy}>
@@ -173,7 +171,7 @@ function DealCreateSheetInner({
     >
       <form id="deal-create-form" onSubmit={handleSubmit} className="flex flex-col gap-3">
         <Field label={t('fields.organization')} htmlFor="create-org-search">
-          <TextInput
+          <SearchInput
             id="create-org-search"
             value={orgSearch}
             onChange={(event) => setOrgSearch(event.target.value)}
@@ -199,52 +197,54 @@ function DealCreateSheetInner({
             ))}
           </SelectInput>
         </Field>
-        <Field label={t('fields.contact')} htmlFor="create-contact">
-          <SelectInput
-            id="create-contact"
-            value={primaryContactId}
-            onChange={(event) => setPrimaryContactId(event.target.value)}
-            disabled={!organizationId}
-          >
-            <option value="">{t('createForm.noContact')}</option>
-            {contacts.map((contact) => (
-              <option key={contact.id} value={contact.id}>
-                {contact.name}
-              </option>
-            ))}
-          </SelectInput>
-        </Field>
-        <Field label={t('fields.staff')} htmlFor="create-staff">
-          <SelectInput
-            id="create-staff"
-            value={assignedStaffId}
-            onChange={(event) => setAssignedStaffId(event.target.value)}
-          >
-            <option value="">{t('createForm.unassigned')}</option>
-            {staffOptions.map((staff) => (
-              <option key={staff.id} value={staff.id}>
-                {staff.name}
-              </option>
-            ))}
-          </SelectInput>
-        </Field>
-        <Field label={t('fields.expectedSqm')} htmlFor="create-sqm">
-          <TextInput
-            id="create-sqm"
-            inputMode="numeric"
-            pattern="[0-9]*"
-            value={expectedSqm}
-            onChange={(event) => setExpectedSqm(event.target.value)}
-          />
-        </Field>
-        <Field label={t('fields.agreedAmount')} htmlFor="create-amount">
-          <TextInput
-            id="create-amount"
-            inputMode="decimal"
-            value={agreedAmount}
-            onChange={(event) => setAgreedAmount(event.target.value)}
-          />
-        </Field>
+        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+          <Field label={t('fields.contact')} htmlFor="create-contact">
+            <SelectInput
+              id="create-contact"
+              value={primaryContactId}
+              onChange={(event) => setPrimaryContactId(event.target.value)}
+              disabled={!organizationId}
+            >
+              <option value="">{t('createForm.noContact')}</option>
+              {contacts.map((contact) => (
+                <option key={contact.id} value={contact.id}>
+                  {contact.name}
+                </option>
+              ))}
+            </SelectInput>
+          </Field>
+          <Field label={t('fields.staff')} htmlFor="create-staff">
+            <SelectInput
+              id="create-staff"
+              value={assignedStaffId}
+              onChange={(event) => setAssignedStaffId(event.target.value)}
+            >
+              <option value="">{t('createForm.unassigned')}</option>
+              {staffOptions.map((staff) => (
+                <option key={staff.id} value={staff.id}>
+                  {staff.name}
+                </option>
+              ))}
+            </SelectInput>
+          </Field>
+          <Field label={t('fields.expectedSqm')} htmlFor="create-sqm">
+            <TextInput
+              id="create-sqm"
+              inputMode="numeric"
+              pattern="[0-9]*"
+              value={expectedSqm}
+              onChange={(event) => setExpectedSqm(event.target.value)}
+            />
+          </Field>
+          <Field label={t('fields.agreedAmount')} htmlFor="create-amount">
+            <TextInput
+              id="create-amount"
+              inputMode="decimal"
+              value={agreedAmount}
+              onChange={(event) => setAgreedAmount(event.target.value)}
+            />
+          </Field>
+        </div>
         <Field label={t('fields.description')} htmlFor="create-description">
           <TextArea
             id="create-description"

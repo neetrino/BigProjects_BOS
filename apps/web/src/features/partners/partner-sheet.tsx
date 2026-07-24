@@ -14,10 +14,11 @@ import type {
 import { Button } from '@/components/ui/button';
 import { ErrorState, LoadingState } from '@/components/ui/page-state';
 import { Sheet } from '@/components/ui/sheet';
+import { StatusBadge } from '@/components/ui/status-badge';
 import { showToast } from '@/components/ui/toast';
 import { EntityAttachmentsSection } from '@/features/content/entity-attachments-section';
 import { EntityNotesSection } from '@/features/content/entity-notes-section';
-import { PARTNER_OWNER } from '@/features/partners/constants';
+import { PARTNER_OWNER, stageTone } from '@/features/partners/constants';
 import { ToonExpoAccountSection } from '@/features/toonexpo/toonexpo-account-section';
 import { EntityAreasSection } from '@/features/venue-map/entity-areas-section';
 import {
@@ -97,14 +98,21 @@ export function PartnerSheet({
   onClose,
   onUpdated,
 }: PartnerSheetProps) {
-  if (!open || !partnerId) {
+  const [activeId, setActiveId] = useState<string | null>(partnerId);
+
+  if (open && partnerId && partnerId !== activeId) {
+    setActiveId(partnerId);
+  }
+
+  if (!activeId) {
     return null;
   }
 
   return (
     <PartnerSheetInner
-      key={partnerId}
-      partnerId={partnerId}
+      key={activeId}
+      open={open && partnerId === activeId}
+      partnerId={activeId}
       staffOptions={staffOptions}
       onClose={onClose}
       onUpdated={onUpdated}
@@ -113,6 +121,7 @@ export function PartnerSheet({
 }
 
 type PartnerSheetInnerProps = {
+  open: boolean;
   partnerId: string;
   staffOptions: StaffOption[];
   onClose: () => void;
@@ -120,6 +129,7 @@ type PartnerSheetInnerProps = {
 };
 
 function PartnerSheetInner({
+  open,
   partnerId,
   staffOptions,
   onClose,
@@ -262,25 +272,41 @@ function PartnerSheetInner({
     }
   }
 
+  const sheetTitle =
+    loadState.status === 'ready' ? loadState.partner.organization.name : t('detailTitle');
+  const stageBadge =
+    loadState.status === 'ready' ? (
+      <StatusBadge
+        label={t(`stages.${loadState.partner.stage}`)}
+        tone={stageTone(loadState.partner.stage)}
+      />
+    ) : null;
+
   return (
     <Sheet
-      open
-      title={t('detailTitle')}
+      open={open}
+      title={sheetTitle}
+      headerActions={stageBadge}
       onClose={onClose}
-      widthClassName="w-full max-w-md"
       footer={
         isDirty ? (
-          <div className="flex items-center justify-between gap-2">
-            {saveError ? (
-              <p className="text-sm text-[var(--color-danger)]">{saveError}</p>
-            ) : (
-              <span />
-            )}
+          <div className="flex flex-col gap-2">
+            {saveError ? <p className="text-sm text-[var(--color-danger)]">{saveError}</p> : null}
             <div className="flex gap-2">
-              <Button variant="secondary" onClick={handleCancelDraft} disabled={busy}>
+              <Button
+                variant="secondary"
+                onClick={handleCancelDraft}
+                disabled={busy}
+                className="flex-1"
+              >
                 {tCommon('cancel')}
               </Button>
-              <Button variant="primary" onClick={() => void handleSave()} disabled={busy}>
+              <Button
+                variant="primary"
+                onClick={() => void handleSave()}
+                disabled={busy}
+                className="flex-1"
+              >
                 {busy ? tCommon('saving') : tCommon('save')}
               </Button>
             </div>
@@ -293,7 +319,6 @@ function PartnerSheetInner({
       {loadState.status === 'ready' && draft ? (
         <div className="flex flex-col gap-6">
           <PartnerDetailsSection
-            organizationName={loadState.partner.organization.name}
             draft={draft}
             contacts={loadState.contacts}
             staffOptions={staffOptions}

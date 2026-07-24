@@ -1,6 +1,7 @@
 'use client';
 
 import { useCallback, useEffect, useMemo, useState } from 'react';
+import { Plus } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { ApiError } from '@/lib/api/client';
 import { listCycles } from '@/lib/api/cycles';
@@ -231,6 +232,7 @@ export function PartnersPage() {
               message={t('empty')}
               action={
                 <Button variant="primary" onClick={() => setCreateOpen(true)}>
+                  <Plus className="size-4" aria-hidden />
                   {t('create')}
                 </Button>
               }

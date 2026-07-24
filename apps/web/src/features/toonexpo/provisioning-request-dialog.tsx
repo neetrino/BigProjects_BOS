@@ -33,37 +33,27 @@ export function ProvisioningRequestDialog({
   onClose,
   onCreated,
 }: ProvisioningRequestDialogProps) {
-  if (!open) {
-    return null;
-  }
-
-  return (
-    <ProvisioningRequestDialogInner
-      key={companyType}
-      organizationId={organizationId}
-      eventCycleId={eventCycleId}
-      companyType={companyType}
-      onClose={onClose}
-      onCreated={onCreated}
-    />
-  );
-}
-
-type ProvisioningRequestDialogInnerProps = Omit<ProvisioningRequestDialogProps, 'open'>;
-
-function ProvisioningRequestDialogInner({
-  organizationId,
-  eventCycleId,
-  companyType,
-  onClose,
-  onCreated,
-}: ProvisioningRequestDialogInnerProps) {
   const t = useTranslations('toonexpo');
   const tCommon = useTranslations('common');
   const [selectedModules, setSelectedModules] = useState<ToonExpoModule[]>(() =>
     defaultModulesForCompanyType(companyType),
   );
   const [busy, setBusy] = useState(false);
+  const [wasOpen, setWasOpen] = useState(open);
+  const [prevCompanyType, setPrevCompanyType] = useState(companyType);
+
+  if (open !== wasOpen) {
+    setWasOpen(open);
+    if (open) {
+      setSelectedModules(defaultModulesForCompanyType(companyType));
+      setBusy(false);
+      setPrevCompanyType(companyType);
+    }
+  } else if (open && companyType !== prevCompanyType) {
+    setPrevCompanyType(companyType);
+    setSelectedModules(defaultModulesForCompanyType(companyType));
+    setBusy(false);
+  }
 
   function toggleModule(module: ToonExpoModule) {
     setSelectedModules((prev) =>
@@ -98,7 +88,7 @@ function ProvisioningRequestDialogInner({
 
   return (
     <Dialog
-      open
+      open={open}
       title={t('account.requestDialogTitle')}
       description={t('account.requestDialogDescription')}
       confirmLabel={busy ? tCommon('saving') : t('account.requestSubmit')}
@@ -108,7 +98,7 @@ function ProvisioningRequestDialogInner({
       onCancel={onClose}
     >
       <fieldset className="mt-3 flex flex-col gap-2">
-        <legend className="text-xs font-medium text-[var(--color-muted)]">
+        <legend className="text-sm font-medium text-[var(--color-fg)]">
           {t('account.modulesLabel')}
         </legend>
         {modules.map((module) => (
@@ -116,14 +106,13 @@ function ProvisioningRequestDialogInner({
             <input
               type="checkbox"
               checked={selectedModules.includes(module)}
+              disabled={busy || !open}
               onChange={() => toggleModule(module)}
-              disabled={busy}
             />
             {t(`modules.${module}`)}
           </label>
         ))}
       </fieldset>
-      <p className="mt-2 text-xs text-[var(--color-muted)]">{t(`companyType.${companyType}`)}</p>
     </Dialog>
   );
 }

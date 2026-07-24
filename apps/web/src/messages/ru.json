@@ -8,7 +8,15 @@
     "edit": "Изменить",
     "delete": "Удалить",
     "logout": "Выйти",
-    "unexpectedError": "Что-то пошло не так. Попробуйте ещё раз."
+    "unexpectedError": "Что-то пошло не так. Попробуйте ещё раз.",
+    "datePicker": {
+      "title": "Выбор даты",
+      "placeholder": "ДД.ММ.ГГГГ",
+      "clear": "Очистить",
+      "today": "Сегодня",
+      "prevMonth": "Предыдущий месяц",
+      "nextMonth": "Следующий месяц"
+    }
   },
   "languageSwitcher": {
     "label": "Язык"
@@ -46,6 +54,14 @@
     "createTitle": "Создать цикл",
     "editTitle": "Редактировать цикл",
     "empty": "Циклов пока нет.",
+    "emptyFiltered": "Нет циклов по текущим фильтрам.",
+    "searchPlaceholder": "Поиск по названию или коду",
+    "statusFilter": "Статус",
+    "allStatuses": "Все статусы",
+    "toolbar": {
+      "kanban": "Доска",
+      "list": "Список"
+    },
     "columns": {
       "name": "Название",
       "code": "Код",
@@ -92,6 +108,13 @@
     "allTypes": "Все типы",
     "empty": "Организации не найдены.",
     "notFound": "Организация не найдена.",
+    "toolbar": {
+      "kanban": "Доска",
+      "list": "Список"
+    },
+    "card": {
+      "contacts": "{count, plural, one {# контакт} few {# контакта} many {# контактов} other {# контакта}}"
+    },
     "columns": {
       "name": "Название",
       "type": "Тип",
@@ -121,7 +144,7 @@
       "primary": "Основной",
       "makePrimary": "Основной",
       "deleteTitle": "Удалить контакт",
-      "deleteDescription": "Удалить «{name}»?",
+      "deleteDescription": "Вы уверены, что хотите удалить «{name}»? Это действие нельзя отменить.",
       "fields": {
         "name": "Имя",
         "phone": "Телефон",
@@ -153,6 +176,11 @@
       "confirmDisableDescription": "Отключить «{name}»? Вход будет недоступен.",
       "confirmReactivateTitle": "Восстановить пользователя",
       "confirmReactivateDescription": "Восстановить «{name}»?",
+      "toolbar": {
+        "view": "Вид",
+        "kanban": "Карточки",
+        "list": "Список"
+      },
       "columns": {
         "name": "Имя",
         "email": "Эл. почта",
@@ -204,7 +232,7 @@
     },
     "card": {
       "noContact": "Нет контакта",
-      "expectedSqm": "{value} м² ожидаемо",
+      "expectedSqm": "{value} м²",
       "amount": "{value}",
       "assignedAreas": "{sqm} м² · {labels}"
     },
@@ -359,7 +387,7 @@
       "releaseDescription": "Освободить эту площадь от назначения?",
       "delete": "Удалить площадь",
       "deleteTitle": "Удалить площадь",
-      "deleteDescription": "Удалить эту свободную площадь?"
+      "deleteDescription": "Вы уверены, что хотите удалить «{name}»? Это действие нельзя отменить."
     },
     "displayMode": {
       "ORGANIZATION": "Организация",
@@ -378,7 +406,7 @@
       "add": "Добавить",
       "empty": "Заметок пока нет.",
       "deleteTitle": "Удалить заметку",
-      "deleteDescription": "Удалить эту заметку?"
+      "deleteDescription": "Вы уверены, что хотите удалить эту заметку? Это действие нельзя отменить."
     },
     "attachments": {
       "title": "Вложения",
@@ -390,7 +418,7 @@
       "uploadSuccess": "Файл загружен.",
       "uploadFailed": "Не удалось загрузить файл.",
       "deleteTitle": "Удалить вложение",
-      "deleteDescription": "Удалить «{name}»?"
+      "deleteDescription": "Вы уверены, что хотите удалить «{name}»? Это действие нельзя отменить."
     }
   },
   "partners": {

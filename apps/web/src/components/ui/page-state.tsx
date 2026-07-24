@@ -10,7 +10,7 @@ type EmptyStateProps = PageStateProps & {
 
 export function LoadingState({ message }: PageStateProps) {
   return (
-    <div className="flex flex-col items-start gap-4 py-12">
+    <div className="flex flex-col items-center justify-center gap-4 py-12 text-center">
       <div className="flex gap-1.5">
         <span className="h-2 w-2 animate-[soft-pulse_1.2s_ease-in-out_infinite] rounded-full bg-[var(--color-accent)]" />
         <span className="h-2 w-2 animate-[soft-pulse_1.2s_ease-in-out_0.2s_infinite] rounded-full bg-[var(--color-accent-mid)]" />

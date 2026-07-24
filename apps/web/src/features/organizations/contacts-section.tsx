@@ -1,6 +1,17 @@
 'use client';
 
 import { FormEvent, useState } from 'react';
+import {
+  Briefcase,
+  Mail,
+  Pencil,
+  Phone,
+  Plus,
+  Star,
+  Trash2,
+  User,
+  type LucideIcon,
+} from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { ApiError } from '@/lib/api/client';
 import { createContact, deleteContact, updateContact } from '@/lib/api/organizations';
@@ -24,6 +35,15 @@ function applyPrimary(contacts: OrganizationContact[], primaryId: string): Organ
     ...item,
     isPrimary: item.id === primaryId,
   }));
+}
+
+function ContactInfoRow({ icon: Icon, children }: { icon: LucideIcon; children: string }) {
+  return (
+    <p className="flex items-center gap-1.5 text-xs text-[var(--color-muted)]">
+      <Icon className="size-3.5 shrink-0 opacity-70" aria-hidden />
+      <span className="truncate">{children}</span>
+    </p>
+  );
 }
 
 export function ContactsSection({ organizationId, contacts, onChange }: ContactsSectionProps) {
@@ -135,12 +155,89 @@ export function ContactsSection({ organizationId, contacts, onChange }: Contacts
 
   return (
     <section className="flex flex-col gap-3">
-      <div className="flex items-center justify-between gap-2">
-        <h3 className="text-sm font-semibold text-[var(--color-fg)]">{t('title')}</h3>
-        <Button variant="secondary" onClick={() => setShowAdd((value) => !value)}>
-          {showAdd ? tCommon('cancel') : t('add')}
-        </Button>
-      </div>
+      <h3 className="text-sm font-semibold text-[var(--color-fg)]">{t('title')}</h3>
+
+      {contacts.length === 0 && !showAdd ? (
+        <p className="text-sm text-[var(--color-muted)]">{t('empty')}</p>
+      ) : null}
+
+      <ul className="flex flex-col gap-2">
+        {contacts.map((contact) => (
+          <li
+            key={contact.id}
+            className="rounded-2xl border border-[var(--color-border)] bg-[var(--color-bg)] px-3.5 py-3"
+          >
+            {editingId === contact.id ? (
+              <ContactForm
+                draft={editDraft}
+                onChange={setEditDraft}
+                onSubmit={handleSaveEdit}
+                onCancel={() => setEditingId(null)}
+                busy={busy}
+                submitLabel={tCommon('save')}
+              />
+            ) : (
+              <div className="flex items-start justify-between gap-3">
+                <div className="min-w-0 flex-1 flex flex-col gap-1.5">
+                  <p className="flex min-w-0 items-center gap-1.5 text-sm font-semibold tracking-tight text-[var(--color-fg)]">
+                    <User className="size-3.5 shrink-0 opacity-70" aria-hidden />
+                    <span className="truncate">{contact.name}</span>
+                  </p>
+                  {contact.position ? (
+                    <ContactInfoRow icon={Briefcase}>{contact.position}</ContactInfoRow>
+                  ) : null}
+                  {contact.phone ? (
+                    <ContactInfoRow icon={Phone}>{contact.phone}</ContactInfoRow>
+                  ) : null}
+                  {contact.email ? (
+                    <ContactInfoRow icon={Mail}>{contact.email}</ContactInfoRow>
+                  ) : null}
+                  {!contact.position && !contact.phone && !contact.email ? (
+                    <p className="text-xs text-[var(--color-muted)]">—</p>
+                  ) : null}
+                </div>
+
+                <div className="flex shrink-0 flex-col items-end gap-1.5">
+                  {contact.isPrimary ? (
+                    <span className="rounded-md bg-[var(--color-accent-soft)] px-1.5 py-0.5 text-[11px] font-semibold text-[var(--color-accent)]">
+                      {t('primary')}
+                    </span>
+                  ) : (
+                    <button
+                      type="button"
+                      disabled={busy}
+                      aria-label={t('makePrimary')}
+                      title={t('makePrimary')}
+                      className="inline-flex size-8 items-center justify-center rounded-lg text-[var(--color-muted)] transition-colors hover:bg-[var(--color-accent-soft)] hover:text-[var(--color-accent)] disabled:opacity-50"
+                      onClick={() => void handleSetPrimary(contact)}
+                    >
+                      <Star className="size-4" aria-hidden />
+                    </button>
+                  )}
+                  <button
+                    type="button"
+                    aria-label={tCommon('edit')}
+                    title={tCommon('edit')}
+                    className="inline-flex size-8 items-center justify-center rounded-lg text-[var(--color-muted)] transition-colors hover:bg-white hover:text-[var(--color-fg)]"
+                    onClick={() => startEdit(contact)}
+                  >
+                    <Pencil className="size-4" aria-hidden />
+                  </button>
+                  <button
+                    type="button"
+                    aria-label={tCommon('delete')}
+                    title={tCommon('delete')}
+                    className="inline-flex size-8 items-center justify-center rounded-lg text-[var(--color-muted)] transition-colors hover:bg-[var(--color-danger)]/10 hover:text-[var(--color-danger)]"
+                    onClick={() => setDeleteTarget(contact)}
+                  >
+                    <Trash2 className="size-4" aria-hidden />
+                  </button>
+                </div>
+              </div>
+            )}
+          </li>
+        ))}
+      </ul>
 
       {showAdd ? (
         <ContactForm
@@ -152,75 +249,26 @@ export function ContactsSection({ organizationId, contacts, onChange }: Contacts
         />
       ) : null}
 
-      {contacts.length === 0 && !showAdd ? (
-        <p className="text-sm text-[var(--color-muted)]">{t('empty')}</p>
-      ) : null}
-
-      <ul className="flex flex-col gap-2">
-        {contacts.map((contact) => (
-          <li key={contact.id} className="rounded bg-[var(--color-bg)] px-3 py-2">
-            {editingId === contact.id ? (
-              <ContactForm
-                draft={editDraft}
-                onChange={setEditDraft}
-                onSubmit={handleSaveEdit}
-                onCancel={() => setEditingId(null)}
-                busy={busy}
-                submitLabel={tCommon('save')}
-              />
-            ) : (
-              <div className="flex items-start justify-between gap-2">
-                <div className="min-w-0">
-                  <p className="truncate text-sm font-medium text-[var(--color-fg)]">
-                    {contact.name}
-                    {contact.isPrimary ? (
-                      <span className="ml-2 text-xs text-[var(--color-accent)]">
-                        {t('primary')}
-                      </span>
-                    ) : null}
-                  </p>
-                  <p className="truncate text-xs text-[var(--color-muted)]">
-                    {[contact.position, contact.phone, contact.email].filter(Boolean).join(' · ') ||
-                      '—'}
-                  </p>
-                </div>
-                <div className="flex shrink-0 gap-1">
-                  {!contact.isPrimary ? (
-                    <Button
-                      variant="ghost"
-                      className="px-2 text-xs"
-                      disabled={busy}
-                      onClick={() => void handleSetPrimary(contact)}
-                    >
-                      {t('makePrimary')}
-                    </Button>
-                  ) : null}
-                  <Button
-                    variant="ghost"
-                    className="px-2 text-xs"
-                    onClick={() => startEdit(contact)}
-                  >
-                    {tCommon('edit')}
-                  </Button>
-                  <Button
-                    variant="ghost"
-                    className="px-2 text-xs"
-                    onClick={() => setDeleteTarget(contact)}
-                  >
-                    {tCommon('delete')}
-                  </Button>
-                </div>
-              </div>
-            )}
-          </li>
-        ))}
-      </ul>
-
       {error ? (
         <p role="alert" className="text-sm text-[var(--color-danger)]">
           {error}
         </p>
       ) : null}
+
+      <Button
+        variant="secondary"
+        onClick={() => setShowAdd((value) => !value)}
+        className="self-end"
+      >
+        {showAdd ? (
+          tCommon('cancel')
+        ) : (
+          <>
+            <Plus className="size-4" aria-hidden />
+            {t('add')}
+          </>
+        )}
+      </Button>
 
       <Dialog
         open={deleteTarget !== null}

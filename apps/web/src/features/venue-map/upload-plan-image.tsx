@@ -73,7 +73,7 @@ export function UploadPlanImage({ planId, onUploaded, compact = false }: UploadP
       className={
         compact
           ? 'flex items-center gap-2'
-          : 'flex flex-col items-start gap-3 rounded border border-dashed border-[var(--color-border)] bg-[var(--color-surface)] p-6'
+          : 'flex flex-col items-start gap-3 rounded-[15px] border border-dashed border-[var(--color-border)] bg-[var(--color-surface)] p-6'
       }
     >
       {!compact ? (

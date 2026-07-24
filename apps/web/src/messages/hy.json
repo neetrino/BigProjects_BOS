@@ -8,7 +8,15 @@
     "edit": "Խմբագրել",
     "delete": "Ջնջել",
     "logout": "Ելք",
-    "unexpectedError": "Ինչ-որ սխալ տեղի ունեցավ։ Փորձեք կրկին։"
+    "unexpectedError": "Ինչ-որ սխալ տեղի ունեցավ։ Փորձեք կրկին։",
+    "datePicker": {
+      "title": "Ընտրել ամսաթիվ",
+      "placeholder": "DD.MM.YYYY",
+      "clear": "Մաքրել",
+      "today": "Այսօր",
+      "prevMonth": "Նախորդ ամիս",
+      "nextMonth": "Հաջորդ ամիս"
+    }
   },
   "languageSwitcher": {
     "label": "Լեզու"
@@ -17,7 +25,7 @@
     "label": "Հիմնական նավիգացիա",
     "product": "Ներքին",
     "brand": "BigProjects BOS",
-    "builderSales": "Կառուցապատողների վաճառք",
+    "builderSales": "Կառուցապատողների\nվաճառք",
     "partners": "Գործընկերներ",
     "venueMap": "Տարածքի քարտեզ",
     "cycles": "Միջոցառման ցիկլեր",
@@ -46,6 +54,14 @@
     "createTitle": "Ստեղծել ցիկլ",
     "editTitle": "Խմբագրել ցիկլը",
     "empty": "Ցիկլեր դեռ չկան։",
+    "emptyFiltered": "Ընթացիկ ֆիլտրերով ցիկլեր չկան։",
+    "searchPlaceholder": "Որոնել ըստ անվան կամ կոդի",
+    "statusFilter": "Կարգավիճակ",
+    "allStatuses": "Բոլոր կարգավիճակները",
+    "toolbar": {
+      "kanban": "Տախտակ",
+      "list": "Ցանկ"
+    },
     "columns": {
       "name": "Անվանում",
       "code": "Կոդ",
@@ -92,6 +108,13 @@
     "allTypes": "Բոլոր տեսակները",
     "empty": "Կազմակերպություններ չեն գտնվել։",
     "notFound": "Կազմակերպությունը չի գտնվել։",
+    "toolbar": {
+      "kanban": "Տախտակ",
+      "list": "Ցանկ"
+    },
+    "card": {
+      "contacts": "{count} կոնտակտ"
+    },
     "columns": {
       "name": "Անվանում",
       "type": "Տեսակ",
@@ -121,7 +144,7 @@
       "primary": "Հիմնական",
       "makePrimary": "Հիմնական",
       "deleteTitle": "Ջնջել կոնտակտը",
-      "deleteDescription": "Ջնջե՞լ «{name}»-ը։",
+      "deleteDescription": "Վստա՞հ եք, որ ուզում եք ջնջել «{name}»-ը։ Այս գործողությունը հնարավոր չէ չեղարկել։",
       "fields": {
         "name": "Անուն",
         "phone": "Հեռախոս",
@@ -153,6 +176,11 @@
       "confirmDisableDescription": "Անջատե՞լ «{name}»-ին։ Մուտքը կարգելվի։",
       "confirmReactivateTitle": "Վերականգնել օգտատիրոջը",
       "confirmReactivateDescription": "Վերականգնե՞լ «{name}»-ին։",
+      "toolbar": {
+        "view": "Տեսք",
+        "kanban": "Քարտեր",
+        "list": "Ցուցակ"
+      },
       "columns": {
         "name": "Անուն",
         "email": "Էլ․ փոստ",
@@ -204,7 +232,7 @@
     },
     "card": {
       "noContact": "Կոնտակտ չկա",
-      "expectedSqm": "{value} մ² սպասվող",
+      "expectedSqm": "{value} մ²",
       "amount": "{value}",
       "assignedAreas": "{sqm} մ² · {labels}"
     },
@@ -359,7 +387,7 @@
       "releaseDescription": "Ազատե՞լ այս տարածքը նշանակումից։",
       "delete": "Ջնջել տարածքը",
       "deleteTitle": "Ջնջել տարածքը",
-      "deleteDescription": "Ջնջե՞լ այս ազատ տարածքը։"
+      "deleteDescription": "Վստա՞հ եք, որ ուզում եք ջնջել «{name}»-ը։ Այս գործողությունը հնարավոր չէ չեղարկել։"
     },
     "displayMode": {
       "ORGANIZATION": "Կազմակերպություն",
@@ -378,7 +406,7 @@
       "add": "Ավելացնել",
       "empty": "Նշումներ դեռ չկան։",
       "deleteTitle": "Ջնջել նշումը",
-      "deleteDescription": "Ջնջե՞լ այս նշումը։"
+      "deleteDescription": "Վստա՞հ եք, որ ուզում եք ջնջել այս նշումը։ Այս գործողությունը հնարավոր չէ չեղարկել։"
     },
     "attachments": {
       "title": "Կցորդներ",
@@ -390,7 +418,7 @@
       "uploadSuccess": "Ֆայլը վերբեռնվեց։",
       "uploadFailed": "Չհաջողվեց վերբեռնել ֆայլը։",
       "deleteTitle": "Ջնջել կցորդը",
-      "deleteDescription": "Ջնջե՞լ «{name}»-ը։"
+      "deleteDescription": "Վստա՞հ եք, որ ուզում եք ջնջել «{name}»-ը։ Այս գործողությունը հնարավոր չէ չեղարկել։"
     }
   },
   "partners": {

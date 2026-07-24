@@ -1,5 +1,6 @@
 'use client';
 
+import { User } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import type { PartnerListItem } from '@/lib/api/types';
 import { nameInitials } from '@/lib/format';
@@ -19,22 +20,29 @@ export function PartnerCard({ partner, isDragging }: PartnerCardProps) {
   return (
     <KanbanCardShell isDragging={isDragging}>
       <div className="flex items-start justify-between gap-2">
-        <p className="text-sm font-semibold tracking-tight text-[var(--color-fg)]">
+        <p className="min-w-0 text-sm font-semibold tracking-tight text-[var(--color-fg)]">
           {partner.organization.name}
         </p>
-        <StatusBadge label={t(`stages.${partner.stage}`)} tone={stageTone(partner.stage)} />
+        <div className="flex shrink-0 flex-col items-end gap-1.5">
+          <StatusBadge label={t(`stages.${partner.stage}`)} tone={stageTone(partner.stage)} />
+          {partner.partnerType ? (
+            <span className="inline-flex rounded-md bg-[var(--color-brass-soft)] px-1.5 py-0.5 text-[11px] font-semibold text-[#7a6239]">
+              {partner.partnerType}
+            </span>
+          ) : null}
+        </div>
       </div>
 
-      {partner.partnerType ? (
-        <span className="mt-1.5 inline-flex rounded-md bg-[var(--color-brass-soft)] px-1.5 py-0.5 text-[11px] font-semibold text-[#7a6239]">
-          {partner.partnerType}
-        </span>
-      ) : null}
-
       {partner.primaryContact ? (
-        <p className="mt-1.5 text-xs text-[var(--color-muted)]">{partner.primaryContact.name}</p>
+        <p className="mt-1.5 flex min-w-0 items-center gap-1.5 text-xs text-[var(--color-muted)]">
+          <User className="size-3.5 shrink-0 opacity-70" aria-hidden />
+          <span className="truncate">{partner.primaryContact.name}</span>
+        </p>
       ) : (
-        <p className="mt-1.5 text-xs text-[var(--color-muted)]/70">{t('card.noContact')}</p>
+        <p className="mt-1.5 flex min-w-0 items-center gap-1.5 text-xs text-[var(--color-muted)]/70">
+          <User className="size-3.5 shrink-0 opacity-70" aria-hidden />
+          <span className="truncate">{t('card.noContact')}</span>
+        </p>
       )}
 
       {hasAreas ? (

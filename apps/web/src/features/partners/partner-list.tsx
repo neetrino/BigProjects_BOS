@@ -15,16 +15,22 @@ export function PartnerList({ partners, onOpen }: PartnerListProps) {
   const t = useTranslations('partners');
 
   return (
-    <div className="panel min-h-0 flex-1 overflow-auto">
+    <div className="panel min-h-0 max-h-full overflow-auto">
       <table className="w-full min-w-[800px] text-left text-sm">
-        <thead className="sticky top-0 border-b border-[var(--color-border)] bg-[var(--color-bg-warm)]/90 text-xs text-[var(--color-muted)] backdrop-blur-sm">
+        <thead className="sticky top-0 border-b border-[var(--color-border)] bg-[var(--color-bg-warm)] text-xs text-[var(--color-muted)]">
           <tr>
             <th className="px-4 py-3 font-semibold tracking-wide">{t('list.organization')}</th>
-            <th className="px-4 py-3 font-semibold tracking-wide">{t('list.partnerType')}</th>
-            <th className="px-4 py-3 font-semibold tracking-wide">{t('list.contact')}</th>
-            <th className="px-4 py-3 font-semibold tracking-wide">{t('list.stage')}</th>
-            <th className="px-4 py-3 font-semibold tracking-wide">{t('list.staff')}</th>
-            <th className="px-4 py-3 font-semibold tracking-wide">{t('list.updated')}</th>
+            <th className="px-4 py-3 text-center font-semibold tracking-wide">
+              {t('list.partnerType')}
+            </th>
+            <th className="px-4 py-3 text-center font-semibold tracking-wide">
+              {t('list.contact')}
+            </th>
+            <th className="px-4 py-3 text-center font-semibold tracking-wide">{t('list.stage')}</th>
+            <th className="px-4 py-3 text-center font-semibold tracking-wide">{t('list.staff')}</th>
+            <th className="px-4 py-3 text-center font-semibold tracking-wide">
+              {t('list.updated')}
+            </th>
           </tr>
         </thead>
         <tbody>
@@ -37,17 +43,19 @@ export function PartnerList({ partners, onOpen }: PartnerListProps) {
               <td className="px-4 py-3 font-medium text-[var(--color-fg)]">
                 {partner.organization.name}
               </td>
-              <td className="px-4 py-3 text-[var(--color-muted)]">{partner.partnerType ?? '—'}</td>
-              <td className="px-4 py-3 text-[var(--color-muted)]">
+              <td className="px-4 py-3 text-center text-[var(--color-muted)]">
+                {partner.partnerType ?? '—'}
+              </td>
+              <td className="px-4 py-3 text-center text-[var(--color-muted)]">
                 {partner.primaryContact?.name ?? '—'}
               </td>
-              <td className="px-4 py-3">
+              <td className="px-4 py-3 text-center">
                 <StatusBadge label={t(`stages.${partner.stage}`)} tone={stageTone(partner.stage)} />
               </td>
-              <td className="px-4 py-3 text-[var(--color-muted)]">
+              <td className="px-4 py-3 text-center text-[var(--color-muted)]">
                 {partner.assignedStaff?.name ?? '—'}
               </td>
-              <td className="px-4 py-3 text-[var(--color-muted)]">
+              <td className="px-4 py-3 text-center text-[var(--color-muted)]">
                 {formatDate(partner.updatedAt) || '—'}
               </td>
             </tr>

@@ -1,13 +1,17 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { Plus } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { useAuth } from '@/components/auth/auth-provider';
 import { CreateUserSheet } from '@/features/settings/create-user-sheet';
+import { StaffAccountsBoard } from '@/features/settings/staff-accounts-board';
+import { StaffAccountsList } from '@/features/settings/staff-accounts-list';
+import type { BoardViewMode } from '@/components/kanban';
 import { Button } from '@/components/ui/button';
 import { Dialog } from '@/components/ui/dialog';
 import { EmptyState, ErrorState, LoadingState } from '@/components/ui/page-state';
-import { StatusBadge } from '@/components/ui/status-badge';
+import { ViewModeSwitcher } from '@/components/ui/view-mode-switcher';
 import { ApiError } from '@/lib/api/client';
 import { listUsers, updateUser } from '@/lib/api/users';
 import type { UserAccount } from '@/lib/api/types';
@@ -22,6 +26,7 @@ export function StaffAccountsSection() {
   const tCommon = useTranslations('common');
   const { user: currentUser } = useAuth();
   const [loadState, setLoadState] = useState<LoadState>({ status: 'loading' });
+  const [view, setView] = useState<BoardViewMode>('kanban');
   const [createOpen, setCreateOpen] = useState(false);
   const [target, setTarget] = useState<UserAccount | null>(null);
   const [busy, setBusy] = useState(false);
@@ -88,9 +93,20 @@ export function StaffAccountsSection() {
           </h2>
           <p className="page-subtitle">{t('subtitle')}</p>
         </div>
-        <Button variant="primary" onClick={() => setCreateOpen(true)}>
-          {t('create')}
-        </Button>
+        <div className="flex shrink-0 items-center gap-2">
+          <ViewModeSwitcher
+            value={view}
+            onChange={setView}
+            boardIcon="grid"
+            ariaLabel={t('toolbar.view')}
+            kanbanLabel={t('toolbar.kanban')}
+            listLabel={t('toolbar.list')}
+          />
+          <Button variant="primary" onClick={() => setCreateOpen(true)}>
+            <Plus className="size-4" aria-hidden />
+            {t('create')}
+          </Button>
+        </div>
       </div>
 
       {actionError ? (
@@ -105,49 +121,20 @@ export function StaffAccountsSection() {
         <EmptyState message={t('empty')} />
       ) : null}
 
-      {loadState.status === 'ready' && users.length > 0 ? (
-        <div className="panel overflow-x-auto">
-          <table className="w-full min-w-[640px] text-left text-sm">
-            <thead className="border-b border-[var(--color-border)] bg-[var(--color-bg-warm)]/70 text-xs text-[var(--color-muted)]">
-              <tr>
-                <th className="px-4 py-3 font-semibold tracking-wide">{t('columns.name')}</th>
-                <th className="px-4 py-3 font-semibold tracking-wide">{t('columns.email')}</th>
-                <th className="px-4 py-3 font-semibold tracking-wide">{t('columns.role')}</th>
-                <th className="px-4 py-3 font-semibold tracking-wide">{t('columns.status')}</th>
-                <th className="px-4 py-3 font-semibold tracking-wide">{t('columns.actions')}</th>
-              </tr>
-            </thead>
-            <tbody>
-              {users.map((account) => (
-                <tr
-                  key={account.id}
-                  className="border-b border-[var(--color-border)] last:border-0"
-                >
-                  <td className="px-3 py-2.5 font-medium">{account.name}</td>
-                  <td className="px-3 py-2.5 text-[var(--color-muted)]">{account.email}</td>
-                  <td className="px-3 py-2.5 text-[var(--color-muted)]">
-                    {t(`roles.${account.role}`)}
-                  </td>
-                  <td className="px-3 py-2.5">
-                    <StatusBadge
-                      label={t(`status.${account.status}`)}
-                      tone={account.status === 'ACTIVE' ? 'active' : 'disabled'}
-                    />
-                  </td>
-                  <td className="px-3 py-2.5">
-                    <Button
-                      variant="secondary"
-                      disabled={account.id === currentUser.id}
-                      onClick={() => setTarget(account)}
-                    >
-                      {account.status === 'ACTIVE' ? t('disable') : t('reactivate')}
-                    </Button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+      {loadState.status === 'ready' && users.length > 0 && view === 'kanban' ? (
+        <StaffAccountsBoard
+          users={users}
+          currentUserId={currentUser.id}
+          onToggleStatus={setTarget}
+        />
+      ) : null}
+
+      {loadState.status === 'ready' && users.length > 0 && view === 'list' ? (
+        <StaffAccountsList
+          users={users}
+          currentUserId={currentUser.id}
+          onToggleStatus={setTarget}
+        />
       ) : null}
 
       <CreateUserSheet

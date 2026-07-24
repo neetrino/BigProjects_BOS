@@ -2,15 +2,9 @@
 
 import { useTranslations } from 'next-intl';
 import { useAuth } from '@/components/auth/auth-provider';
-import { LanguageSwitcher } from '@/components/language-switcher';
 import { StaffAccountsSection } from '@/features/settings/staff-accounts-section';
-import type { Locale } from '@/i18n/config';
 
-type SettingsPageProps = {
-  currentLocale: Locale;
-};
-
-export function SettingsPage({ currentLocale }: SettingsPageProps) {
+export function SettingsPage() {
   const t = useTranslations('settings');
   const { user } = useAuth();
   const isAdmin = user.role === 'ADMIN';
@@ -40,12 +34,6 @@ export function SettingsPage({ currentLocale }: SettingsPageProps) {
             <dd className="font-medium">{t(`staff.roles.${user.role}`)}</dd>
           </div>
         </dl>
-        <div className="pt-1">
-          <p className="mb-2 text-xs font-semibold tracking-wide text-[var(--color-muted)]">
-            {t('profile.language')}
-          </p>
-          <LanguageSwitcher currentLocale={currentLocale} compact />
-        </div>
       </section>
 
       {isAdmin ? <StaffAccountsSection /> : null}

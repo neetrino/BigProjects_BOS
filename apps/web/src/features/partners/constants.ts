@@ -5,6 +5,8 @@ export const PARTNER_OWNER = 'PARTNER_PARTICIPATION' as const;
 
 export const ACTIVE_STAGES: PartnerStage[] = ['NEW', 'CONTACTED'];
 export const TERMINAL_STAGES: PartnerStage[] = ['CONFIRMED', 'DECLINED'];
+/** Sheet stage switcher order. */
+export const STAGE_SWITCHER_ORDER: PartnerStage[] = ['NEW', 'CONTACTED', 'DECLINED', 'CONFIRMED'];
 
 export { partnerStageTone as stageTone };
 

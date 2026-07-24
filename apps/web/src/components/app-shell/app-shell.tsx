@@ -6,6 +6,7 @@ import type { ReactNode } from 'react';
 import type { Locale } from '@/i18n/config';
 import { AppSidebar } from '@/components/app-shell/sidebar';
 import { ToastHost } from '@/components/ui/toast';
+import { APP_PORTAL_ROOT_ID } from '@/lib/portal-root';
 
 type AppShellProps = {
   currentLocale: Locale;
@@ -17,20 +18,27 @@ export function AppShell({ currentLocale, children }: AppShellProps) {
   const isFullHeightPage =
     pathname.startsWith('/builder-sales') ||
     pathname.startsWith('/partners') ||
-    pathname.startsWith('/venue-map');
+    pathname.startsWith('/venue-map') ||
+    pathname.startsWith('/cycles') ||
+    pathname.startsWith('/organizations');
 
   return (
-    <div className={clsx('flex', isFullHeightPage ? 'h-screen overflow-hidden' : 'min-h-screen')}>
-      <AppSidebar pathname={pathname} currentLocale={currentLocale} />
-      <main
-        className={clsx(
-          'page-enter min-w-0 flex-1 px-8 py-7',
-          isFullHeightPage ? 'flex min-h-0 flex-col overflow-hidden' : 'overflow-auto',
-        )}
-      >
-        {children}
-      </main>
-      <ToastHost />
+    <div className="desktop-fluid-frame">
+      <div className="desktop-fluid-stage">
+        <div className="flex h-fluid-screen overflow-hidden">
+          <AppSidebar pathname={pathname} currentLocale={currentLocale} />
+          <main
+            className={clsx(
+              'page-enter min-h-0 min-w-0 flex-1 px-8 py-7',
+              isFullHeightPage ? 'flex flex-col overflow-hidden' : 'overflow-auto',
+            )}
+          >
+            {children}
+          </main>
+          <ToastHost />
+        </div>
+        <div id={APP_PORTAL_ROOT_ID} />
+      </div>
     </div>
   );
 }

@@ -14,6 +14,7 @@ import type {
 import { Button } from '@/components/ui/button';
 import { ErrorState, LoadingState } from '@/components/ui/page-state';
 import { Sheet } from '@/components/ui/sheet';
+import { StatusBadge } from '@/components/ui/status-badge';
 import { showToast } from '@/components/ui/toast';
 import {
   DealDetailsSection,
@@ -22,7 +23,7 @@ import {
 import { DealStageSection } from '@/features/builder-crm/deal-stage-section';
 import { EntityAttachmentsSection } from '@/features/content/entity-attachments-section';
 import { EntityNotesSection } from '@/features/content/entity-notes-section';
-import { BUILDER_DEAL_OWNER } from '@/features/builder-crm/constants';
+import { BUILDER_DEAL_OWNER, stageTone } from '@/features/builder-crm/constants';
 import { ToonExpoAccountSection } from '@/features/toonexpo/toonexpo-account-section';
 import { EntityAreasSection } from '@/features/venue-map/entity-areas-section';
 
@@ -100,14 +101,21 @@ function buildDetailsPatch(draft: DealDetailsDraft, baseline: DealDetailsDraft):
 }
 
 export function DealSheet({ dealId, open, staffOptions, onClose, onUpdated }: DealSheetProps) {
-  if (!open || !dealId) {
+  const [activeId, setActiveId] = useState<string | null>(dealId);
+
+  if (open && dealId && dealId !== activeId) {
+    setActiveId(dealId);
+  }
+
+  if (!activeId) {
     return null;
   }
 
   return (
     <DealSheetInner
-      key={dealId}
-      dealId={dealId}
+      key={activeId}
+      open={open && dealId === activeId}
+      dealId={activeId}
       staffOptions={staffOptions}
       onClose={onClose}
       onUpdated={onUpdated}
@@ -116,13 +124,14 @@ export function DealSheet({ dealId, open, staffOptions, onClose, onUpdated }: De
 }
 
 type DealSheetInnerProps = {
+  open: boolean;
   dealId: string;
   staffOptions: StaffOption[];
   onClose: () => void;
   onUpdated: (deal: DealListItem) => void;
 };
 
-function DealSheetInner({ dealId, staffOptions, onClose, onUpdated }: DealSheetInnerProps) {
+function DealSheetInner({ open, dealId, staffOptions, onClose, onUpdated }: DealSheetInnerProps) {
   const t = useTranslations('builderSales');
   const tCommon = useTranslations('common');
   const [loadState, setLoadState] = useState<LoadState>({ status: 'loading' });
@@ -266,25 +275,41 @@ function DealSheetInner({ dealId, staffOptions, onClose, onUpdated }: DealSheetI
     }
   }
 
+  const sheetTitle =
+    loadState.status === 'ready' ? loadState.deal.organization.name : t('detailTitle');
+  const stageBadge =
+    loadState.status === 'ready' ? (
+      <StatusBadge
+        label={t(`stages.${loadState.deal.stage}`)}
+        tone={stageTone(loadState.deal.stage)}
+      />
+    ) : null;
+
   return (
     <Sheet
-      open
-      title={t('detailTitle')}
+      open={open}
+      title={sheetTitle}
+      headerActions={stageBadge}
       onClose={onClose}
-      widthClassName="w-full max-w-md"
       footer={
         isDirty ? (
-          <div className="flex items-center justify-between gap-2">
-            {saveError ? (
-              <p className="text-sm text-[var(--color-danger)]">{saveError}</p>
-            ) : (
-              <span />
-            )}
+          <div className="flex flex-col gap-2">
+            {saveError ? <p className="text-sm text-[var(--color-danger)]">{saveError}</p> : null}
             <div className="flex gap-2">
-              <Button variant="secondary" onClick={handleCancelDraft} disabled={busy}>
+              <Button
+                variant="secondary"
+                onClick={handleCancelDraft}
+                disabled={busy}
+                className="flex-1"
+              >
                 {tCommon('cancel')}
               </Button>
-              <Button variant="primary" onClick={() => void handleSave()} disabled={busy}>
+              <Button
+                variant="primary"
+                onClick={() => void handleSave()}
+                disabled={busy}
+                className="flex-1"
+              >
                 {busy ? tCommon('saving') : tCommon('save')}
               </Button>
             </div>
@@ -297,7 +322,6 @@ function DealSheetInner({ dealId, staffOptions, onClose, onUpdated }: DealSheetI
       {loadState.status === 'ready' && draft ? (
         <div className="flex flex-col gap-6">
           <DealDetailsSection
-            organizationName={loadState.deal.organization.name}
             draft={draft}
             contacts={loadState.contacts}
             staffOptions={staffOptions}

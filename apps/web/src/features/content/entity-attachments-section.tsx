@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
+import { Plus } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { ApiError } from '@/lib/api/client';
 import {
@@ -146,25 +147,7 @@ export function EntityAttachmentsSection({ ownerType, ownerId }: EntityAttachmen
 
   return (
     <section className="flex flex-col gap-3">
-      <div className="flex items-center justify-between gap-2">
-        <h3 className="text-sm font-semibold text-[var(--color-fg)]">{t('attachments.title')}</h3>
-        <div>
-          <input
-            ref={inputRef}
-            type="file"
-            className="sr-only"
-            onChange={(event) => void handleFileChange(event.target.files)}
-            disabled={uploadBusy}
-          />
-          <Button
-            variant="secondary"
-            disabled={uploadBusy}
-            onClick={() => inputRef.current?.click()}
-          >
-            {uploadBusy ? t('attachments.uploading') : t('attachments.upload')}
-          </Button>
-        </div>
-      </div>
+      <h3 className="text-sm font-semibold text-[var(--color-fg)]">{t('attachments.title')}</h3>
 
       {loadState.status === 'loading' ? <LoadingState message={tCommon('loading')} /> : null}
       {loadState.status === 'error' ? <ErrorState message={loadState.message} /> : null}
@@ -206,6 +189,26 @@ export function EntityAttachmentsSection({ ownerType, ownerId }: EntityAttachmen
           ))}
         </ul>
       ) : null}
+
+      <div className="self-end">
+        <input
+          ref={inputRef}
+          type="file"
+          className="sr-only"
+          onChange={(event) => void handleFileChange(event.target.files)}
+          disabled={uploadBusy}
+        />
+        <Button variant="secondary" disabled={uploadBusy} onClick={() => inputRef.current?.click()}>
+          {uploadBusy ? (
+            t('attachments.uploading')
+          ) : (
+            <>
+              <Plus className="size-4" aria-hidden />
+              {t('attachments.upload')}
+            </>
+          )}
+        </Button>
+      </div>
 
       <Dialog
         open={pendingDelete !== null}

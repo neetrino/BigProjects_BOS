@@ -25,6 +25,10 @@ const notoSerif = Noto_Serif({
 export const metadata: Metadata = {
   title: 'BigProjects BOS',
   description: 'BigProjects BOS internal operating tool',
+  icons: {
+    icon: [{ url: '/icon.webp', type: 'image/webp' }],
+    apple: [{ url: '/apple-icon.webp', type: 'image/webp' }],
+  },
 };
 
 export default async function RootLayout({
