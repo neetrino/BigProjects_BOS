@@ -94,7 +94,7 @@ export function AppSidebar({ pathname, currentLocale }: AppSidebarProps) {
         <div className="flex items-start gap-3.5">
           <div className="mt-0.5 flex size-11 shrink-0 items-center justify-center overflow-hidden rounded-2xl bg-white">
             <img
-              src="/brand-logo.png"
+              src="/brand-logo.webp"
               alt=""
               width={30}
               height={30}
