@@ -123,8 +123,9 @@ export function SelectInput({
 
     function handleKeyDown(event: KeyboardEvent): void {
       if (event.key === 'Escape') {
+        event.preventDefault();
         setOpen(false);
-        triggerRef.current?.focus();
+        triggerRef.current?.blur();
       }
     }
 
@@ -221,7 +222,7 @@ export function SelectInput({
           'border border-[var(--color-border)] bg-white px-3.5 py-2.5 text-left text-sm font-medium',
           'text-[var(--color-fg)] outline-none transition-colors duration-150',
           'hover:border-[var(--color-border-strong)]',
-          'focus-visible:border-[var(--color-brand)]',
+          'focus-visible:outline-none',
           'disabled:cursor-not-allowed disabled:opacity-50',
         )}
       >

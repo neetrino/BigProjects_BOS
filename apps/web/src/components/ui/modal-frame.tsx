@@ -65,6 +65,10 @@ export function ModalFrame({
       if (event.key === 'Escape' && !busy) {
         event.preventDefault();
         event.stopImmediatePropagation();
+        const active = document.activeElement;
+        if (active instanceof HTMLElement) {
+          active.blur();
+        }
         onClose();
       }
     }
@@ -101,7 +105,7 @@ export function ModalFrame({
         tabIndex={-1}
         aria-label="Dismiss overlay"
         className={clsx(
-          'absolute inset-0 cursor-default border-0 bg-[#0e0f14]/55',
+          'absolute inset-0 cursor-default border-0 bg-[#0e0f14]/55 outline-none',
           exiting ? 'animate-modal-backdrop-out' : 'animate-modal-backdrop-in',
         )}
         disabled={busy || exiting}

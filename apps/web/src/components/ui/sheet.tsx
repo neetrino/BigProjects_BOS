@@ -52,6 +52,11 @@ export function Sheet({
 
     function handleKeyDown(event: KeyboardEvent) {
       if (event.key === 'Escape') {
+        event.preventDefault();
+        const active = document.activeElement;
+        if (active instanceof HTMLElement) {
+          active.blur();
+        }
         onClose();
       }
     }
@@ -76,7 +81,7 @@ export function Sheet({
         type="button"
         aria-label="Dismiss overlay"
         className={clsx(
-          'absolute inset-0 border-0 bg-[#0e0f14]/55 transition-opacity',
+          'absolute inset-0 border-0 bg-[#0e0f14]/55 outline-none transition-opacity',
           'duration-[var(--side-sheet-backdrop-ms)] ease-[var(--ease-out-premium)]',
           entered ? 'opacity-100' : 'opacity-0',
         )}
@@ -103,7 +108,7 @@ export function Sheet({
             // Slightly tucked under the panel; hover slides it out further.
             'translate-x-1.5 transition-transform duration-200 ease-[var(--ease-out-premium)]',
             'hover:translate-x-0',
-            'focus-visible:translate-x-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/70',
+            'outline-none focus-visible:outline-none',
           )}
         >
           <X className="size-4 stroke-[2.5]" aria-hidden />

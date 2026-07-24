@@ -32,7 +32,7 @@ export function Button({
     <button
       type={type}
       className={clsx(
-        'inline-flex cursor-pointer items-center justify-center gap-1.5 rounded-[var(--radius-control)] border px-3.5 py-2 text-sm font-semibold tracking-tight transition-all duration-200 disabled:cursor-not-allowed',
+        'inline-flex cursor-pointer items-center justify-center gap-1.5 rounded-[var(--radius-control)] border px-3.5 py-2 text-sm font-semibold tracking-tight outline-none transition-all duration-200 focus-visible:outline-none disabled:cursor-not-allowed',
         VARIANT_CLASS[variant],
         className,
       )}
