@@ -20,12 +20,14 @@ export function DealList({ deals, onOpen }: DealListProps) {
         <thead className="sticky top-0 border-b border-[var(--color-border)] bg-[var(--color-bg-warm)] text-xs text-[var(--color-muted)]">
           <tr>
             <th className="px-4 py-3 font-semibold tracking-wide">{t('list.organization')}</th>
-            <th className="px-4 py-3 font-semibold tracking-wide">{t('list.contact')}</th>
-            <th className="px-4 py-3 font-semibold tracking-wide">{t('list.stage')}</th>
-            <th className="px-4 py-3 font-semibold tracking-wide">{t('list.expectedSqm')}</th>
-            <th className="px-4 py-3 font-semibold tracking-wide">{t('list.amount')}</th>
-            <th className="px-4 py-3 font-semibold tracking-wide">{t('list.staff')}</th>
-            <th className="px-4 py-3 font-semibold tracking-wide">{t('list.updated')}</th>
+            <th className="px-4 py-3 text-center font-semibold tracking-wide">{t('list.contact')}</th>
+            <th className="px-4 py-3 text-center font-semibold tracking-wide">{t('list.stage')}</th>
+            <th className="px-4 py-3 text-center font-semibold tracking-wide">
+              {t('list.expectedSqm')}
+            </th>
+            <th className="px-4 py-3 text-center font-semibold tracking-wide">{t('list.amount')}</th>
+            <th className="px-4 py-3 text-center font-semibold tracking-wide">{t('list.staff')}</th>
+            <th className="px-4 py-3 text-center font-semibold tracking-wide">{t('list.updated')}</th>
           </tr>
         </thead>
         <tbody>
@@ -38,24 +40,24 @@ export function DealList({ deals, onOpen }: DealListProps) {
               <td className="px-4 py-3 font-medium text-[var(--color-fg)]">
                 {deal.organization.name}
               </td>
-              <td className="px-4 py-3 text-[var(--color-muted)]">
+              <td className="px-4 py-3 text-center text-[var(--color-muted)]">
                 {deal.primaryContact?.name ?? '—'}
               </td>
-              <td className="px-4 py-3">
+              <td className="px-4 py-3 text-center">
                 <StatusBadge label={t(`stages.${deal.stage}`)} tone={stageTone(deal.stage)} />
               </td>
-              <td className="px-4 py-3 text-[var(--color-muted)]">
+              <td className="px-4 py-3 text-center text-[var(--color-muted)]">
                 {formatSqm(deal.expectedSqm) || '—'}
               </td>
-              <td className="px-4 py-3 text-[var(--color-muted)]">
+              <td className="px-4 py-3 text-center text-[var(--color-muted)]">
                 {deal.agreedAmount != null && String(deal.agreedAmount).length > 0
                   ? formatAmount(deal.agreedAmount)
                   : '—'}
               </td>
-              <td className="px-4 py-3 text-[var(--color-muted)]">
+              <td className="px-4 py-3 text-center text-[var(--color-muted)]">
                 {deal.assignedStaff?.name ?? '—'}
               </td>
-              <td className="px-4 py-3 text-[var(--color-muted)]">
+              <td className="px-4 py-3 text-center text-[var(--color-muted)]">
                 {formatDate(deal.updatedAt) || '—'}
               </td>
             </tr>
