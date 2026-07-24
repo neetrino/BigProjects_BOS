@@ -13,12 +13,6 @@
   "languageSwitcher": {
     "label": "Լեզու"
   },
-  "health": {
-    "checking": "API…",
-    "ok": "API-ն աշխատում է",
-    "dbDown": "API՝ տվյալների բազան անհասանելի է",
-    "unreachable": "API-ն անհասանելի է"
-  },
   "nav": {
     "label": "Հիմնական նավիգացիա",
     "product": "Ներքին",

@@ -13,12 +13,6 @@
   "languageSwitcher": {
     "label": "Язык"
   },
-  "health": {
-    "checking": "API…",
-    "ok": "API в порядке",
-    "dbDown": "API: база недоступна",
-    "unreachable": "API недоступен"
-  },
   "nav": {
     "label": "Основная навигация",
     "product": "Внутренний",

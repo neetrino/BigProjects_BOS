@@ -17,7 +17,6 @@ import { logout } from '@/lib/api/auth';
 import type { Locale } from '@/i18n/config';
 import { useAuth } from '@/components/auth/auth-provider';
 import { LanguageSwitcher } from '@/components/language-switcher';
-import { HealthIndicator } from '@/components/app-shell/health-indicator';
 import { Button } from '@/components/ui/button';
 
 type NavKey = 'builderSales' | 'partners' | 'venueMap' | 'cycles' | 'organizations' | 'settings';
@@ -142,7 +141,6 @@ export function AppSidebar({ pathname, currentLocale }: AppSidebarProps) {
         <Button variant="secondary" onClick={handleLogout} disabled={isPending}>
           {tCommon('logout')}
         </Button>
-        <HealthIndicator />
       </div>
     </aside>
   );

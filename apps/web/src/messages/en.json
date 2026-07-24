@@ -13,12 +13,6 @@
   "languageSwitcher": {
     "label": "Language"
   },
-  "health": {
-    "checking": "API…",
-    "ok": "API ok",
-    "dbDown": "API: database down",
-    "unreachable": "API unreachable"
-  },
   "nav": {
     "label": "Main navigation",
     "product": "Internal",
