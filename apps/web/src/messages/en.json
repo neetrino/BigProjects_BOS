@@ -13,12 +13,6 @@
   "languageSwitcher": {
     "label": "Language"
   },
-  "health": {
-    "checking": "API…",
-    "ok": "API ok",
-    "dbDown": "API: database down",
-    "unreachable": "API unreachable"
-  },
   "nav": {
     "label": "Main navigation",
     "product": "Internal",
@@ -36,7 +30,9 @@
     "title": "Sign in",
     "description": "Use your staff account to continue.",
     "email": "Email",
+    "emailPlaceholder": "john.doe@company.com",
     "password": "Password",
+    "passwordPlaceholder": "********",
     "submit": "Sign in",
     "submitting": "Signing in…",
     "invalidCredentials": "Invalid email or password.",
@@ -62,6 +58,11 @@
       "code": "Code",
       "startsAt": "Starts",
       "endsAt": "Ends"
+    },
+    "errors": {
+      "nameRequired": "Name is required.",
+      "codeRequired": "Code is required.",
+      "endsBeforeStarts": "End date must be on or after the start date."
     },
     "status": {
       "DRAFT": "Draft",

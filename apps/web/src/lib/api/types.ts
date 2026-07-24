@@ -131,12 +131,6 @@ export type ListOrganizationsQuery = {
   type?: OrganizationType;
 };
 
-export type HealthResponse = {
-  status: 'ok';
-  timestamp: string;
-  database: 'up' | 'down';
-};
-
 export type DealStage = 'NEW' | 'CONTACTED' | 'NEGOTIATION' | 'WON' | 'LOST';
 
 export type ContentOwnerType = 'ORGANIZATION' | 'BUILDER_DEAL' | 'PARTNER_PARTICIPATION';

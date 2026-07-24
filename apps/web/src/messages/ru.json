@@ -13,12 +13,6 @@
   "languageSwitcher": {
     "label": "Язык"
   },
-  "health": {
-    "checking": "API…",
-    "ok": "API в порядке",
-    "dbDown": "API: база недоступна",
-    "unreachable": "API недоступен"
-  },
   "nav": {
     "label": "Основная навигация",
     "product": "Внутренний",
@@ -36,7 +30,9 @@
     "title": "Вход",
     "description": "Войдите со своей учётной записью сотрудника.",
     "email": "Эл. почта",
+    "emailPlaceholder": "john.doe@company.com",
     "password": "Пароль",
+    "passwordPlaceholder": "********",
     "submit": "Войти",
     "submitting": "Вход…",
     "invalidCredentials": "Неверный email или пароль.",
@@ -62,6 +58,11 @@
       "code": "Код",
       "startsAt": "Начало",
       "endsAt": "Конец"
+    },
+    "errors": {
+      "nameRequired": "Название обязательно.",
+      "codeRequired": "Код обязателен.",
+      "endsBeforeStarts": "Дата окончания должна быть не раньше даты начала."
     },
     "status": {
       "DRAFT": "Черновик",

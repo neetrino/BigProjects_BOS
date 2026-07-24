@@ -19,7 +19,9 @@ export function DealCard({ deal, isDragging }: DealCardProps) {
   return (
     <KanbanCardShell isDragging={isDragging}>
       <div className="flex items-start justify-between gap-2">
-        <p className="text-sm font-semibold text-[var(--color-fg)]">{deal.organization.name}</p>
+        <p className="text-sm font-semibold tracking-tight text-[var(--color-fg)]">
+          {deal.organization.name}
+        </p>
         <StatusBadge label={t(`stages.${deal.stage}`)} tone={stageTone(deal.stage)} />
       </div>
 
@@ -51,7 +53,7 @@ export function DealCard({ deal, isDragging }: DealCardProps) {
         <div className="mt-2.5 flex items-center gap-1.5">
           <span
             aria-hidden
-            className="inline-flex size-5 items-center justify-center rounded-full bg-[var(--color-bg)] text-[10px] font-semibold text-[var(--color-muted)]"
+            className="inline-flex size-6 items-center justify-center rounded-md bg-[var(--color-accent-soft)] text-[10px] font-semibold text-[var(--color-accent)]"
           >
             {nameInitials(deal.assignedStaff.name)}
           </span>

@@ -1,5 +1,6 @@
 const DEFAULT_API_URL = 'http://localhost:4000';
 const LOGIN_PATH = '/login';
+const AUTH_ME_PATH = '/api/v1/auth/me';
 
 export class ApiError extends Error {
   readonly status: number;
@@ -17,6 +18,8 @@ type ApiFetchOptions = RequestInit & {
   /** When false, 401 does not redirect (used by login and server auth check). */
   redirectOn401?: boolean;
 };
+
+let sessionConfirmInFlight: Promise<boolean> | null = null;
 
 function resolveRequestUrl(path: string): string {
   if (typeof window !== 'undefined') {
@@ -47,6 +50,27 @@ function extractErrorMessage(body: unknown, fallback: string): string {
 }
 
 /**
+ * Confirms whether the session is truly gone before forcing login.
+ * Network / rate-limit errors must not log the user out.
+ */
+async function confirmSessionAlive(): Promise<boolean> {
+  if (!sessionConfirmInFlight) {
+    sessionConfirmInFlight = fetch(resolveRequestUrl(AUTH_ME_PATH), {
+      credentials: 'include',
+      cache: 'no-store',
+      headers: { Accept: 'application/json' },
+    })
+      .then((response) => response.status !== 401)
+      .catch(() => true)
+      .finally(() => {
+        sessionConfirmInFlight = null;
+      });
+  }
+
+  return sessionConfirmInFlight;
+}
+
+/**
  * Shared fetch wrapper for NestJS `/api/v1` routes.
  * Browser calls stay same-origin (rewritten by Next). Server calls use `API_URL`.
  */
@@ -63,7 +87,10 @@ export async function apiFetch<T>(path: string, options: ApiFetchOptions = {}): 
   });
 
   if (response.status === 401 && redirectOn401 && typeof window !== 'undefined') {
-    window.location.assign(LOGIN_PATH);
+    const sessionAlive = await confirmSessionAlive();
+    if (!sessionAlive) {
+      window.location.assign(LOGIN_PATH);
+    }
     throw new ApiError(401, 'Unauthorized');
   }
 

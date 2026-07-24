@@ -51,15 +51,15 @@ export function PartnersToolbar({
     <div className="flex flex-col gap-3">
       <header className="flex flex-wrap items-center justify-between gap-3">
         <div>
-          <h1 className="text-xl font-semibold text-[var(--color-fg)]">{t('title')}</h1>
-          <p className="mt-1 text-sm text-[var(--color-muted)]">{t('subtitle')}</p>
+          <h1 className="page-heading">{t('title')}</h1>
+          <p className="page-subtitle">{t('subtitle')}</p>
         </div>
         <Button variant="primary" onClick={onCreate}>
           {t('create')}
         </Button>
       </header>
 
-      <div className="flex flex-wrap items-center gap-2">
+      <div className="toolbar-shell">
         <SelectInput
           className="max-w-[220px]"
           value={cycleId}
@@ -78,14 +78,14 @@ export function PartnersToolbar({
         <div
           role="group"
           aria-label={t('toolbar.view')}
-          className="inline-flex rounded border border-[var(--color-border)] bg-[var(--color-surface)] p-0.5"
+          className="inline-flex rounded-[var(--radius-control)] border border-[var(--color-border)] bg-[var(--color-bg)]/80 p-0.5"
         >
           <button
             type="button"
             className={clsx(
-              'rounded px-2.5 py-1 text-xs font-medium transition-colors',
+              'rounded-[calc(var(--radius-control)-2px)] px-2.5 py-1.5 text-xs font-semibold transition-colors',
               view === 'kanban'
-                ? 'bg-[var(--color-bg)] text-[var(--color-fg)]'
+                ? 'bg-[var(--color-surface)] text-[var(--color-accent)] shadow-sm'
                 : 'text-[var(--color-muted)] hover:text-[var(--color-fg)]',
             )}
             onClick={() => onViewChange('kanban')}
@@ -95,9 +95,9 @@ export function PartnersToolbar({
           <button
             type="button"
             className={clsx(
-              'rounded px-2.5 py-1 text-xs font-medium transition-colors',
+              'rounded-[calc(var(--radius-control)-2px)] px-2.5 py-1.5 text-xs font-semibold transition-colors',
               view === 'list'
-                ? 'bg-[var(--color-bg)] text-[var(--color-fg)]'
+                ? 'bg-[var(--color-surface)] text-[var(--color-accent)] shadow-sm'
                 : 'text-[var(--color-muted)] hover:text-[var(--color-fg)]',
             )}
             onClick={() => onViewChange('list')}

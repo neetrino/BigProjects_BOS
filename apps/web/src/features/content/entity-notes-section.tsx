@@ -125,7 +125,7 @@ export function EntityNotesSection({ ownerType, ownerId }: EntityNotesSectionPro
           </Button>
         </div>
         {formError ? (
-          <p role="alert" className="text-sm text-red-700">
+          <p role="alert" className="text-sm text-[var(--color-danger)]">
             {formError}
           </p>
         ) : null}

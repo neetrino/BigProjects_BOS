@@ -72,15 +72,15 @@ export function OrganizationsPage() {
     <div className="flex flex-col gap-4">
       <header className="flex items-center justify-between gap-3">
         <div>
-          <h1 className="text-xl font-semibold text-[var(--color-fg)]">{t('title')}</h1>
-          <p className="mt-1 text-sm text-[var(--color-muted)]">{t('subtitle')}</p>
+          <h1 className="page-heading">{t('title')}</h1>
+          <p className="page-subtitle">{t('subtitle')}</p>
         </div>
         <Button variant="primary" onClick={() => setCreateOpen(true)}>
           {t('create')}
         </Button>
       </header>
 
-      <div className="flex flex-wrap gap-3">
+      <div className="toolbar-shell">
         <TextInput
           className="max-w-xs"
           placeholder={t('searchPlaceholder')}
@@ -110,31 +110,29 @@ export function OrganizationsPage() {
       ) : null}
 
       {loadState.status === 'ready' && items.length > 0 ? (
-        <div className="overflow-x-auto rounded border border-[var(--color-border)] bg-[var(--color-surface)]">
+        <div className="panel overflow-x-auto">
           <table className="w-full min-w-[720px] text-left text-sm">
-            <thead className="border-b border-[var(--color-border)] text-xs text-[var(--color-muted)]">
+            <thead className="border-b border-[var(--color-border)] bg-[var(--color-bg-warm)]/70 text-xs text-[var(--color-muted)]">
               <tr>
-                <th className="px-3 py-2 font-medium">{t('columns.name')}</th>
-                <th className="px-3 py-2 font-medium">{t('columns.type')}</th>
-                <th className="px-3 py-2 font-medium">{t('columns.contacts')}</th>
-                <th className="px-3 py-2 font-medium">{t('columns.phone')}</th>
-                <th className="px-3 py-2 font-medium">{t('columns.email')}</th>
+                <th className="px-4 py-3 font-semibold tracking-wide">{t('columns.name')}</th>
+                <th className="px-4 py-3 font-semibold tracking-wide">{t('columns.type')}</th>
+                <th className="px-4 py-3 font-semibold tracking-wide">{t('columns.contacts')}</th>
+                <th className="px-4 py-3 font-semibold tracking-wide">{t('columns.phone')}</th>
+                <th className="px-4 py-3 font-semibold tracking-wide">{t('columns.email')}</th>
               </tr>
             </thead>
             <tbody>
               {items.map((item) => (
                 <tr
                   key={item.id}
-                  className="cursor-pointer border-b border-[var(--color-border)] last:border-0 hover:bg-[var(--color-bg)]"
+                  className="cursor-pointer border-b border-[var(--color-border)] last:border-0 hover:bg-[var(--color-accent-soft)]/35"
                   onClick={() => setSelectedId(item.id)}
                 >
-                  <td className="px-3 py-2.5 font-medium text-[var(--color-fg)]">{item.name}</td>
-                  <td className="px-3 py-2.5 text-[var(--color-muted)]">
-                    {t(`types.${item.type}`)}
-                  </td>
-                  <td className="px-3 py-2.5 text-[var(--color-muted)]">{item.contactCount}</td>
-                  <td className="px-3 py-2.5 text-[var(--color-muted)]">{item.phone || '—'}</td>
-                  <td className="px-3 py-2.5 text-[var(--color-muted)]">{item.email || '—'}</td>
+                  <td className="px-4 py-3 font-medium text-[var(--color-fg)]">{item.name}</td>
+                  <td className="px-4 py-3 text-[var(--color-muted)]">{t(`types.${item.type}`)}</td>
+                  <td className="px-4 py-3 text-[var(--color-muted)]">{item.contactCount}</td>
+                  <td className="px-4 py-3 text-[var(--color-muted)]">{item.phone || '—'}</td>
+                  <td className="px-4 py-3 text-[var(--color-muted)]">{item.email || '—'}</td>
                 </tr>
               ))}
             </tbody>

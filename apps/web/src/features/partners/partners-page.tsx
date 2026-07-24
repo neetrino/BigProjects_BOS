@@ -1,7 +1,6 @@
 'use client';
 
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { useTranslations } from 'next-intl';
 import { ApiError } from '@/lib/api/client';
 import { listCycles } from '@/lib/api/cycles';
@@ -14,13 +13,13 @@ import { Button } from '@/components/ui/button';
 import { EmptyState, ErrorState, LoadingState } from '@/components/ui/page-state';
 import { showToast } from '@/components/ui/toast';
 import { SEARCH_DEBOUNCE_MS } from '@/lib/constants';
+import { useCycleQueryParam } from '@/hooks/use-cycle-query-param';
 import { PartnerCreateSheet } from '@/features/partners/partner-create-sheet';
 import { PartnerKanban } from '@/features/partners/partner-kanban';
 import { PartnerList } from '@/features/partners/partner-list';
 import { PartnerSheet } from '@/features/partners/partner-sheet';
 import {
   mergePartnerTypes,
-  pickDefaultCycleId,
   staffFromPartners,
   type CyclesLoad,
   type PartnersLoad,
@@ -34,13 +33,9 @@ export function PartnersPage() {
   const { user } = useAuth();
   const isAdmin = user.role === 'ADMIN';
 
-  const router = useRouter();
-  const pathname = usePathname();
-  const searchParams = useSearchParams();
-  const cycleFromUrl = searchParams.get('cycle');
-
   const [cyclesLoad, setCyclesLoad] = useState<CyclesLoad>({ status: 'loading' });
-  const [cycleId, setCycleId] = useState('');
+  const cyclesReady = cyclesLoad.status === 'ready' ? cyclesLoad.cycles : null;
+  const { cycleId, setCycleId } = useCycleQueryParam(cyclesReady);
   const [view, setView] = useState<BoardViewMode>('kanban');
   const [searchInput, setSearchInput] = useState('');
   const [search, setSearch] = useState('');
@@ -67,7 +62,6 @@ export function PartnersPage() {
         }
         setCyclesLoad({ status: 'ready', cycles });
         setPartnersLoad({ status: 'loading' });
-        setCycleId(pickDefaultCycleId(cycles, cycleFromUrl));
       })
       .catch((err: unknown) => {
         if (!cancelled) {
@@ -80,7 +74,6 @@ export function PartnersPage() {
     return () => {
       cancelled = true;
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps -- intentional mount-only seed
   }, [tCommon]);
 
   useEffect(() => {
@@ -103,18 +96,6 @@ export function PartnersPage() {
       cancelled = true;
     };
   }, [isAdmin]);
-
-  useEffect(() => {
-    if (!cycleId) {
-      return;
-    }
-    const params = new URLSearchParams(searchParams.toString());
-    if (params.get('cycle') === cycleId) {
-      return;
-    }
-    params.set('cycle', cycleId);
-    router.replace(`${pathname}?${params.toString()}`);
-  }, [cycleId, pathname, router, searchParams]);
 
   useEffect(() => {
     if (!cycleId) {

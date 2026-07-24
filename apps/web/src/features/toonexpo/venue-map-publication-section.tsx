@@ -158,7 +158,7 @@ export function VenueMapPublicationSection({
   ) as PlanPublishStatus;
 
   return (
-    <section className="rounded border border-[var(--color-border)] bg-[var(--color-surface)] p-3">
+    <section className="panel p-4">
       <div className="flex flex-wrap items-center justify-between gap-2">
         <div className="flex flex-col gap-1">
           <h2 className="text-sm font-semibold text-[var(--color-fg)]">{t('publication.title')}</h2>
@@ -213,7 +213,7 @@ export function VenueMapPublicationSection({
                   />
                   <span className="text-[var(--color-muted)]">{formatDate(row.createdAt)}</span>
                   {row.errorMessage ? (
-                    <span className="w-full text-red-700">{row.errorMessage}</span>
+                    <span className="w-full text-[var(--color-danger)]">{row.errorMessage}</span>
                   ) : null}
                 </li>
               ))}

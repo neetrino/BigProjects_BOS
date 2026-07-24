@@ -271,7 +271,11 @@ function PartnerSheetInner({
       footer={
         isDirty ? (
           <div className="flex items-center justify-between gap-2">
-            {saveError ? <p className="text-sm text-red-700">{saveError}</p> : <span />}
+            {saveError ? (
+              <p className="text-sm text-[var(--color-danger)]">{saveError}</p>
+            ) : (
+              <span />
+            )}
             <div className="flex gap-2">
               <Button variant="secondary" onClick={handleCancelDraft} disabled={busy}>
                 {tCommon('cancel')}

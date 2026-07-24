@@ -1,6 +1,6 @@
 import { Body, Controller, Get, HttpCode, HttpStatus, Post, Req, Res } from '@nestjs/common';
 import { ApiCookieAuth, ApiOkResponse, ApiTags, ApiUnauthorizedResponse } from '@nestjs/swagger';
-import { Throttle } from '@nestjs/throttler';
+import { SkipThrottle, Throttle } from '@nestjs/throttler';
 import { Response } from 'express';
 import {
   LOGIN_RATE_LIMIT_MAX_ATTEMPTS,
@@ -48,11 +48,23 @@ export class AuthController {
     response.clearCookie(SESSION_COOKIE_NAME, { path: '/' });
   }
 
+  /** Session probe used on every Next.js page render — must not share the global quota. */
+  @SkipThrottle()
   @ApiCookieAuth()
   @Get('me')
   @ApiOkResponse({ type: CurrentUserResponseDto })
   @ApiUnauthorizedResponse()
-  me(@CurrentUser() user: AuthenticatedUser): CurrentUserResponseDto {
+  me(
+    @Req() request: AuthenticatedRequest,
+    @Res({ passthrough: true }) response: Response,
+    @CurrentUser() user: AuthenticatedUser,
+  ): CurrentUserResponseDto {
+    // Sliding browser cookie: keep maxAge refreshed while the user is actively using the app,
+    // so a short idle gap cannot drop a still-valid server session.
+    const token = request.cookies?.[SESSION_COOKIE_NAME];
+    if (typeof token === 'string' && token.length > 0) {
+      this.setSessionCookie(response, token);
+    }
     return user;
   }
 

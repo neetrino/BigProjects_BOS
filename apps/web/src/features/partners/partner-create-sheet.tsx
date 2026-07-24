@@ -142,8 +142,8 @@ function PartnerCreateSheetInner({
         partnerType: partnerType.trim() || undefined,
         description: description.trim() || undefined,
       });
-      onCreated(created);
       onClose();
+      onCreated(created);
     } catch (err) {
       setError(err instanceof ApiError ? err.message : tCommon('unexpectedError'));
     } finally {
@@ -242,7 +242,7 @@ function PartnerCreateSheetInner({
           />
         </Field>
         {error ? (
-          <p role="alert" className="text-sm text-red-700">
+          <p role="alert" className="text-sm text-[var(--color-danger)]">
             {error}
           </p>
         ) : null}

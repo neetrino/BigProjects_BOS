@@ -54,9 +54,9 @@ export function showToast(message: string, tone: ToastTone = 'error'): void {
 }
 
 const TONE_CLASS: Record<ToastTone, string> = {
-  error: 'border-red-200 bg-red-50 text-red-800',
+  error: 'border-red-200 bg-[var(--color-danger-soft)] text-[var(--color-danger)]',
   info: 'border-[var(--color-border)] bg-[var(--color-surface)] text-[var(--color-fg)]',
-  success: 'border-emerald-200 bg-emerald-50 text-emerald-900',
+  success: 'border-emerald-200 bg-[var(--color-success-soft)] text-[var(--color-success)]',
 };
 
 export function ToastHost() {
@@ -69,14 +69,14 @@ export function ToastHost() {
   return (
     <div
       aria-live="polite"
-      className="pointer-events-none fixed inset-x-0 top-3 z-[60] flex flex-col items-center gap-2 px-4"
+      className="pointer-events-none fixed inset-x-0 top-4 z-[60] flex flex-col items-center gap-2 px-4"
     >
       {items.map((item) => (
         <div
           key={item.id}
           role="status"
           className={clsx(
-            'pointer-events-auto max-w-md rounded-lg border px-3 py-2 text-sm shadow-md',
+            'pointer-events-auto max-w-md rounded-[var(--radius-control)] border px-4 py-2.5 text-sm shadow-[var(--shadow-lift)] backdrop-blur-sm',
             TONE_CLASS[item.tone],
           )}
         >

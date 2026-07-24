@@ -18,23 +18,23 @@ function rgba(hex: string, alpha: number): string {
   return `rgba(${r}, ${g}, ${b}, ${alpha})`;
 }
 
-const GREY = '#71717a';
-const BLUE = '#2563eb';
+const SLATE = '#64748b';
+const OCEAN = '#0284c7';
 const AMBER = '#d97706';
-const GREEN = '#2e7d50';
-const RED = '#e11d48';
-const VIOLET = '#7c3aed';
+const TEAL = '#1a6b72';
+const ROSE = '#e11d48';
+const BRASS = '#9a7b4f';
 
 export const DEAL_STAGE_COLORS: Record<DealStage, StageColorTokens> = {
   NEW: {
-    badgeClass: 'bg-zinc-100 text-zinc-700',
-    fillRgba: rgba(GREY, MAP_FILL_ALPHA),
-    strokeRgba: rgba(GREY, MAP_STROKE_ALPHA),
+    badgeClass: 'bg-slate-100 text-slate-700',
+    fillRgba: rgba(SLATE, MAP_FILL_ALPHA),
+    strokeRgba: rgba(SLATE, MAP_STROKE_ALPHA),
   },
   CONTACTED: {
     badgeClass: 'bg-sky-50 text-sky-800',
-    fillRgba: rgba(BLUE, MAP_FILL_ALPHA),
-    strokeRgba: rgba(BLUE, MAP_STROKE_ALPHA),
+    fillRgba: rgba(OCEAN, MAP_FILL_ALPHA),
+    strokeRgba: rgba(OCEAN, MAP_STROKE_ALPHA),
   },
   NEGOTIATION: {
     badgeClass: 'bg-amber-50 text-amber-900',
@@ -42,48 +42,48 @@ export const DEAL_STAGE_COLORS: Record<DealStage, StageColorTokens> = {
     strokeRgba: rgba(AMBER, MAP_STROKE_ALPHA),
   },
   WON: {
-    badgeClass: 'bg-emerald-100 text-emerald-900',
-    fillRgba: rgba(GREEN, MAP_FILL_ALPHA),
-    strokeRgba: rgba(GREEN, MAP_STROKE_ALPHA),
+    badgeClass: 'bg-teal-50 text-teal-900',
+    fillRgba: rgba(TEAL, MAP_FILL_ALPHA),
+    strokeRgba: rgba(TEAL, MAP_STROKE_ALPHA),
   },
   LOST: {
     badgeClass: 'bg-rose-50 text-rose-800',
-    fillRgba: rgba(RED, MAP_FILL_ALPHA),
-    strokeRgba: rgba(RED, MAP_STROKE_ALPHA),
+    fillRgba: rgba(ROSE, MAP_FILL_ALPHA),
+    strokeRgba: rgba(ROSE, MAP_STROKE_ALPHA),
   },
 };
 
 export const PARTNER_STAGE_COLORS: Record<PartnerStage, StageColorTokens> = {
   NEW: {
-    badgeClass: 'bg-zinc-100 text-zinc-700',
-    fillRgba: rgba(GREY, MAP_FILL_ALPHA),
-    strokeRgba: rgba(GREY, MAP_STROKE_ALPHA),
+    badgeClass: 'bg-slate-100 text-slate-700',
+    fillRgba: rgba(SLATE, MAP_FILL_ALPHA),
+    strokeRgba: rgba(SLATE, MAP_STROKE_ALPHA),
   },
   CONTACTED: {
     badgeClass: 'bg-sky-50 text-sky-800',
-    fillRgba: rgba(BLUE, MAP_FILL_ALPHA),
-    strokeRgba: rgba(BLUE, MAP_STROKE_ALPHA),
+    fillRgba: rgba(OCEAN, MAP_FILL_ALPHA),
+    strokeRgba: rgba(OCEAN, MAP_STROKE_ALPHA),
   },
   CONFIRMED: {
-    badgeClass: 'bg-violet-50 text-violet-800',
-    fillRgba: rgba(VIOLET, MAP_FILL_ALPHA),
-    strokeRgba: rgba(VIOLET, MAP_STROKE_ALPHA),
+    badgeClass: 'bg-[var(--color-brass-soft)] text-[#7a6239]',
+    fillRgba: rgba(BRASS, MAP_FILL_ALPHA),
+    strokeRgba: rgba(BRASS, MAP_STROKE_ALPHA),
   },
   DECLINED: {
     badgeClass: 'bg-rose-50 text-rose-800',
-    fillRgba: rgba(RED, MAP_FILL_ALPHA),
-    strokeRgba: rgba(RED, MAP_STROKE_ALPHA),
+    fillRgba: rgba(ROSE, MAP_FILL_ALPHA),
+    strokeRgba: rgba(ROSE, MAP_STROKE_ALPHA),
   },
 };
 
 export const FREE_AREA_MAP_COLORS = {
-  fillRgba: 'rgba(46, 125, 80, 0.18)',
-  strokeRgba: 'rgba(46, 125, 80, 0.75)',
+  fillRgba: 'rgba(26, 107, 114, 0.18)',
+  strokeRgba: 'rgba(26, 107, 114, 0.75)',
 } as const;
 
 export const SELECTED_AREA_MAP_COLORS = {
-  fillRgba: 'rgba(47, 111, 78, 0.35)',
-  strokeRgba: '#2f6f4e',
+  fillRgba: 'rgba(26, 107, 114, 0.35)',
+  strokeRgba: '#1a6b72',
 } as const;
 
 /** Tailwind badge classes for a builder deal stage. */

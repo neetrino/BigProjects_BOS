@@ -5,7 +5,7 @@
   "scripts": {
     "format": "prettier --write .",
     "format:check": "prettier --check .",
-    "lint": "pnpm -r --if-present lint",
+    "lint": "pnpm -r --if-present --no-bail --reporter-hide-prefix lint",
     "typecheck": "pnpm -r --if-present typecheck",
     "test": "pnpm -r --if-present test",
     "test:e2e": "pnpm --filter @bos/web test:e2e",

@@ -40,8 +40,10 @@ export function VenueMapPanel({
 
   if (!area) {
     return (
-      <aside className="flex w-72 shrink-0 flex-col gap-3 border-l border-[var(--color-border)] bg-[var(--color-surface)] p-3">
-        <h2 className="text-sm font-semibold text-[var(--color-fg)]">{t('panel.title')}</h2>
+      <aside className="flex w-80 shrink-0 flex-col gap-3 border-l border-[var(--color-border)] bg-[var(--color-bg-warm)]/40 p-4">
+        <h2 className="font-[family-name:var(--font-display)] text-lg font-medium tracking-tight text-[var(--color-fg)]">
+          {t('panel.title')}
+        </h2>
         <p className="text-sm text-[var(--color-muted)]">{t('panel.selectHint')}</p>
         <AreaList areas={areas} selectedAreaId={selectedAreaId} onSelectArea={onSelectArea} />
       </aside>
@@ -49,7 +51,7 @@ export function VenueMapPanel({
   }
 
   return (
-    <aside className="flex w-72 shrink-0 flex-col gap-3 overflow-y-auto border-l border-[var(--color-border)] bg-[var(--color-surface)] p-3">
+    <aside className="flex w-80 shrink-0 flex-col gap-3 overflow-y-auto border-l border-[var(--color-border)] bg-[var(--color-bg-warm)]/40 p-4">
       <div className="flex items-center justify-between gap-2">
         <h2 className="text-sm font-semibold text-[var(--color-fg)]">{t('panel.detail')}</h2>
         <Button variant="ghost" onClick={() => onSelectArea(null)}>

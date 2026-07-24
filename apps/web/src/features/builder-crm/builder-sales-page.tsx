@@ -1,7 +1,6 @@
 'use client';
 
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { useTranslations } from 'next-intl';
 import { ApiError } from '@/lib/api/client';
 import { listCycles } from '@/lib/api/cycles';
@@ -15,6 +14,7 @@ import { showToast } from '@/components/ui/toast';
 import { BuilderSalesToolbar } from '@/features/builder-crm/builder-sales-toolbar';
 import type { BoardViewMode } from '@/features/builder-crm/constants';
 import { SEARCH_DEBOUNCE_MS } from '@/lib/constants';
+import { useCycleQueryParam } from '@/hooks/use-cycle-query-param';
 import { DealCreateSheet } from '@/features/builder-crm/deal-create-sheet';
 import { DealKanban } from '@/features/builder-crm/deal-kanban';
 import { DealList } from '@/features/builder-crm/deal-list';
@@ -32,14 +32,6 @@ type DealsLoad =
   | { status: 'ready'; deals: DealListItem[] };
 
 type StaffOption = { id: string; name: string };
-
-function pickDefaultCycleId(cycles: EventCycle[], requested: string | null): string {
-  if (requested && cycles.some((cycle) => cycle.id === requested)) {
-    return requested;
-  }
-  const active = cycles.find((cycle) => cycle.status === 'ACTIVE');
-  return active?.id ?? cycles[0]?.id ?? '';
-}
 
 function staffFromDeals(deals: DealListItem[]): StaffOption[] {
   const map = new Map<string, string>();
@@ -59,13 +51,9 @@ export function BuilderSalesPage() {
   const { user } = useAuth();
   const isAdmin = user.role === 'ADMIN';
 
-  const router = useRouter();
-  const pathname = usePathname();
-  const searchParams = useSearchParams();
-  const cycleFromUrl = searchParams.get('cycle');
-
   const [cyclesLoad, setCyclesLoad] = useState<CyclesLoad>({ status: 'loading' });
-  const [cycleId, setCycleId] = useState('');
+  const cycles = cyclesLoad.status === 'ready' ? cyclesLoad.cycles : null;
+  const { cycleId, setCycleId } = useCycleQueryParam(cycles);
   const [view, setView] = useState<BoardViewMode>('kanban');
   const [searchInput, setSearchInput] = useState('');
   const [search, setSearch] = useState('');
@@ -84,13 +72,12 @@ export function BuilderSalesPage() {
   useEffect(() => {
     let cancelled = false;
     void listCycles()
-      .then((cycles) => {
+      .then((loaded) => {
         if (cancelled) {
           return;
         }
-        setCyclesLoad({ status: 'ready', cycles });
+        setCyclesLoad({ status: 'ready', cycles: loaded });
         setDealsLoad({ status: 'loading' });
-        setCycleId(pickDefaultCycleId(cycles, cycleFromUrl));
       })
       .catch((err: unknown) => {
         if (!cancelled) {
@@ -103,8 +90,6 @@ export function BuilderSalesPage() {
     return () => {
       cancelled = true;
     };
-    // Initial cycle from the URL only — do not re-run when we write ?cycle= back.
-    // eslint-disable-next-line react-hooks/exhaustive-deps -- intentional mount-only seed
   }, [tCommon]);
 
   useEffect(() => {
@@ -127,18 +112,6 @@ export function BuilderSalesPage() {
       cancelled = true;
     };
   }, [isAdmin]);
-
-  useEffect(() => {
-    if (!cycleId) {
-      return;
-    }
-    const params = new URLSearchParams(searchParams.toString());
-    if (params.get('cycle') === cycleId) {
-      return;
-    }
-    params.set('cycle', cycleId);
-    router.replace(`${pathname}?${params.toString()}`);
-  }, [cycleId, pathname, router, searchParams]);
 
   useEffect(() => {
     if (!cycleId) {
@@ -213,12 +186,12 @@ export function BuilderSalesPage() {
     }
   }
 
-  const cycles = cyclesLoad.status === 'ready' ? cyclesLoad.cycles : [];
+  const cycleList = cyclesLoad.status === 'ready' ? cyclesLoad.cycles : [];
 
   return (
     <div className="flex min-h-0 flex-1 flex-col gap-4">
       <BuilderSalesToolbar
-        cycles={cycles}
+        cycles={cycleList}
         cycleId={cycleId}
         onCycleChange={(nextCycleId) => {
           setDealsLoad({ status: 'loading' });
@@ -240,7 +213,7 @@ export function BuilderSalesPage() {
       {cyclesLoad.status === 'loading' ? <LoadingState message={tCommon('loading')} /> : null}
       {cyclesLoad.status === 'error' ? <ErrorState message={cyclesLoad.message} /> : null}
 
-      {cyclesLoad.status === 'ready' && cycles.length === 0 ? (
+      {cyclesLoad.status === 'ready' && cycleList.length === 0 ? (
         <EmptyState message={t('emptyNoCycles')} />
       ) : null}
 

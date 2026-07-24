@@ -20,16 +20,11 @@ export function AppShell({ currentLocale, children }: AppShellProps) {
     pathname.startsWith('/venue-map');
 
   return (
-    <div
-      className={clsx(
-        'flex bg-[var(--color-bg)]',
-        isFullHeightPage ? 'h-screen overflow-hidden' : 'min-h-screen',
-      )}
-    >
+    <div className={clsx('flex', isFullHeightPage ? 'h-screen overflow-hidden' : 'min-h-screen')}>
       <AppSidebar pathname={pathname} currentLocale={currentLocale} />
       <main
         className={clsx(
-          'min-w-0 flex-1 px-6 py-5',
+          'page-enter min-w-0 flex-1 px-8 py-7',
           isFullHeightPage ? 'flex min-h-0 flex-col overflow-hidden' : 'overflow-auto',
         )}
       >

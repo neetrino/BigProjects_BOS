@@ -133,13 +133,13 @@ function AssignAreaDialogInner({
       <button
         type="button"
         aria-label="Close"
-        className="absolute inset-0 bg-black/35"
+        className="absolute inset-0 bg-[#152033]/30 backdrop-blur-[2px]"
         onClick={onClose}
       />
       <div
         role="dialog"
         aria-modal="true"
-        className="relative z-10 flex max-h-[80vh] w-full max-w-md flex-col rounded border border-[var(--color-border)] bg-[var(--color-surface)] shadow-lg"
+        className="relative z-10 flex max-h-[80vh] w-full max-w-md flex-col rounded-[var(--radius-panel)] border border-[var(--color-border)] bg-[var(--color-surface-elevated)] shadow-[var(--shadow-lift)]"
       >
         <div className="border-b border-[var(--color-border)] px-4 py-3">
           <h2 className="text-base font-semibold text-[var(--color-fg)]">{t('assign.title')}</h2>

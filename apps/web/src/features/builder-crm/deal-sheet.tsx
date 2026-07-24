@@ -69,20 +69,25 @@ function draftsEqual(a: DealDetailsDraft, b: DealDetailsDraft): boolean {
   );
 }
 
-/** Build a PATCH body with only dirty fields. Never send null relation ids (API connect fails). */
+/** Build a PATCH body with only dirty fields. Explicit null clears relations/scalars. */
 function buildDetailsPatch(draft: DealDetailsDraft, baseline: DealDetailsDraft): UpdateDealInput {
   const payload: UpdateDealInput = {};
 
-  if (draft.primaryContactId !== baseline.primaryContactId && draft.primaryContactId) {
-    payload.primaryContactId = draft.primaryContactId;
+  if (draft.primaryContactId !== baseline.primaryContactId) {
+    payload.primaryContactId = draft.primaryContactId || null;
   }
-  if (draft.assignedStaffId !== baseline.assignedStaffId && draft.assignedStaffId) {
-    payload.assignedStaffId = draft.assignedStaffId;
+  if (draft.assignedStaffId !== baseline.assignedStaffId) {
+    payload.assignedStaffId = draft.assignedStaffId || null;
   }
   if (draft.expectedSqm !== baseline.expectedSqm) {
     const raw = draft.expectedSqm.trim();
-    const parsed = raw ? Number(raw) : null;
-    payload.expectedSqm = parsed != null && !Number.isNaN(parsed) ? parsed : null;
+    if (!raw) {
+      payload.expectedSqm = null;
+    } else {
+      const parsed = Number(raw);
+      payload.expectedSqm =
+        Number.isFinite(parsed) && Number.isInteger(parsed) && parsed >= 0 ? parsed : null;
+    }
   }
   if (draft.agreedAmount !== baseline.agreedAmount) {
     payload.agreedAmount = draft.agreedAmount.trim() || null;
@@ -270,7 +275,11 @@ function DealSheetInner({ dealId, staffOptions, onClose, onUpdated }: DealSheetI
       footer={
         isDirty ? (
           <div className="flex items-center justify-between gap-2">
-            {saveError ? <p className="text-sm text-red-700">{saveError}</p> : <span />}
+            {saveError ? (
+              <p className="text-sm text-[var(--color-danger)]">{saveError}</p>
+            ) : (
+              <span />
+            )}
             <div className="flex gap-2">
               <Button variant="secondary" onClick={handleCancelDraft} disabled={busy}>
                 {tCommon('cancel')}

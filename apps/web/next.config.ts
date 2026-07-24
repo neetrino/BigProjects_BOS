@@ -24,10 +24,10 @@ function resolveS3Origin(): string {
 const S3_ORIGIN = resolveS3Origin();
 
 /**
- * Baseline CSP for BOS web.
+ * Baseline CSP for BOS web (production / `next start` only).
  * script-src / style-src keep 'unsafe-inline' for Next.js inline bootstrapping.
- * No 'unsafe-eval' — production `next start` (e2e) works without it; do not add
- * unless a future Next.js / Turbopack requirement forces a documented exception.
+ * No 'unsafe-eval'. Skipped in `next dev` so React debug tooling does not spam
+ * the terminal with CSP eval warnings.
  */
 const CONTENT_SECURITY_POLICY = [
   "default-src 'self'",
@@ -40,6 +40,8 @@ const CONTENT_SECURITY_POLICY = [
   "base-uri 'self'",
   "form-action 'self'",
 ].join('; ');
+
+const isDev = process.env.NODE_ENV === 'development';
 
 const nextConfig: NextConfig = {
   reactStrictMode: true,
@@ -63,7 +65,14 @@ const nextConfig: NextConfig = {
             key: 'Permissions-Policy',
             value: 'camera=(), microphone=(), geolocation=()',
           },
-          { key: 'Content-Security-Policy', value: CONTENT_SECURITY_POLICY },
+          ...(isDev
+            ? []
+            : [
+                {
+                  key: 'Content-Security-Policy',
+                  value: CONTENT_SECURITY_POLICY,
+                },
+              ]),
         ],
       },
     ];

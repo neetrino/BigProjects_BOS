@@ -10,7 +10,8 @@ export const SESSION_COOKIE_NAME = 'bos_session';
 
 /** Session lifetime, and the sliding-renewal window, expressed in days. */
 export const SESSION_TTL_DAYS = 7;
-export const SESSION_RENEWAL_THRESHOLD_DAYS = 6;
+/** Renew when remaining lifetime falls below this many days (half of TTL). */
+export const SESSION_RENEWAL_THRESHOLD_DAYS = 3.5;
 
 /** Same values in milliseconds, for use with `Date` arithmetic. */
 export const SESSION_TTL_MS = SESSION_TTL_DAYS * MS_PER_DAY;
@@ -23,9 +24,9 @@ export const SESSION_TOKEN_BYTES = 32;
 export const LOGIN_RATE_LIMIT_TTL_MS = MS_PER_MINUTE;
 export const LOGIN_RATE_LIMIT_MAX_ATTEMPTS = 5;
 
-/** Generous default rate limit applied to every other route via the global throttler. */
+/** Default rate limit for API routes (Size B: ~20 staff; Next SSR fans out several calls per page). */
 export const DEFAULT_RATE_LIMIT_TTL_MS = MS_PER_MINUTE;
-export const DEFAULT_RATE_LIMIT_MAX_REQUESTS = 60;
+export const DEFAULT_RATE_LIMIT_MAX_REQUESTS = 300;
 
 /** Single, generic message for all login failures so responses do not reveal account existence or status. */
 export const INVALID_CREDENTIALS_MESSAGE = 'Invalid email or password.';

@@ -83,8 +83,10 @@ export function StaffAccountsSection() {
     <section className="flex flex-col gap-3">
       <div className="flex items-center justify-between gap-3">
         <div>
-          <h2 className="text-base font-semibold text-[var(--color-fg)]">{t('title')}</h2>
-          <p className="mt-1 text-sm text-[var(--color-muted)]">{t('subtitle')}</p>
+          <h2 className="font-[family-name:var(--font-display)] text-xl font-medium tracking-tight text-[var(--color-fg)]">
+            {t('title')}
+          </h2>
+          <p className="page-subtitle">{t('subtitle')}</p>
         </div>
         <Button variant="primary" onClick={() => setCreateOpen(true)}>
           {t('create')}
@@ -92,7 +94,7 @@ export function StaffAccountsSection() {
       </div>
 
       {actionError ? (
-        <p role="alert" className="text-sm text-red-700">
+        <p role="alert" className="text-sm text-[var(--color-danger)]">
           {actionError}
         </p>
       ) : null}
@@ -104,15 +106,15 @@ export function StaffAccountsSection() {
       ) : null}
 
       {loadState.status === 'ready' && users.length > 0 ? (
-        <div className="overflow-x-auto rounded border border-[var(--color-border)] bg-[var(--color-surface)]">
+        <div className="panel overflow-x-auto">
           <table className="w-full min-w-[640px] text-left text-sm">
-            <thead className="border-b border-[var(--color-border)] text-xs text-[var(--color-muted)]">
+            <thead className="border-b border-[var(--color-border)] bg-[var(--color-bg-warm)]/70 text-xs text-[var(--color-muted)]">
               <tr>
-                <th className="px-3 py-2 font-medium">{t('columns.name')}</th>
-                <th className="px-3 py-2 font-medium">{t('columns.email')}</th>
-                <th className="px-3 py-2 font-medium">{t('columns.role')}</th>
-                <th className="px-3 py-2 font-medium">{t('columns.status')}</th>
-                <th className="px-3 py-2 font-medium">{t('columns.actions')}</th>
+                <th className="px-4 py-3 font-semibold tracking-wide">{t('columns.name')}</th>
+                <th className="px-4 py-3 font-semibold tracking-wide">{t('columns.email')}</th>
+                <th className="px-4 py-3 font-semibold tracking-wide">{t('columns.role')}</th>
+                <th className="px-4 py-3 font-semibold tracking-wide">{t('columns.status')}</th>
+                <th className="px-4 py-3 font-semibold tracking-wide">{t('columns.actions')}</th>
               </tr>
             </thead>
             <tbody>

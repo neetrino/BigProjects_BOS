@@ -69,14 +69,16 @@ export async function selectCycleInToolbar(page: Page, cycleName: string): Promi
 }
 
 export async function closeSheet(page: Page, title: string): Promise<void> {
-  await page.getByRole('dialog', { name: title }).getByLabel('Close').click();
+  const dialog = page.getByRole('dialog', { name: title });
+  await dialog.getByRole('button', { name: 'Close' }).click();
+  await expect(dialog).toBeHidden();
 }
 
 export async function createDealForOrganization(
   page: Page,
   organizationName: string,
 ): Promise<void> {
-  await page.getByRole('button', { name: 'New deal' }).click();
+  await page.getByRole('button', { name: 'New deal' }).first().click();
   const sheet = page.getByRole('dialog', { name: 'Create deal' });
   await sheet.getByPlaceholder('Search organizations').fill(organizationName);
   await expect(
@@ -84,6 +86,7 @@ export async function createDealForOrganization(
   ).toHaveCount(1);
   await sheet.getByLabel('Select organization').selectOption({ label: organizationName });
   await sheet.getByRole('button', { name: 'Save' }).click();
+  await expect(sheet).toBeHidden({ timeout: 15_000 });
   await expect(page.getByRole('dialog', { name: 'Deal' })).toBeVisible({ timeout: 15_000 });
 }
 
@@ -91,7 +94,7 @@ export async function createPartnerForOrganization(
   page: Page,
   organizationName: string,
 ): Promise<void> {
-  await page.getByRole('button', { name: 'New partner' }).click();
+  await page.getByRole('button', { name: 'New partner' }).first().click();
   const sheet = page.getByRole('dialog', { name: 'Create partner' });
   await sheet.getByPlaceholder('Search organizations').fill(organizationName);
   await expect(
@@ -99,6 +102,7 @@ export async function createPartnerForOrganization(
   ).toHaveCount(1);
   await sheet.getByLabel('Select organization').selectOption({ label: organizationName });
   await sheet.getByRole('button', { name: 'Save' }).click();
+  await expect(sheet).toBeHidden({ timeout: 15_000 });
   await expect(page.getByRole('dialog', { name: 'Partner' })).toBeVisible({ timeout: 15_000 });
 }
 

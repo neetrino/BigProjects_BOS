@@ -1,7 +1,6 @@
 'use client';
 
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { useTranslations } from 'next-intl';
 import { ApiError } from '@/lib/api/client';
 import { listCycles } from '@/lib/api/cycles';
@@ -11,6 +10,7 @@ import { useAuth } from '@/components/auth/auth-provider';
 import { Button } from '@/components/ui/button';
 import { EmptyState, ErrorState, LoadingState } from '@/components/ui/page-state';
 import { SelectInput } from '@/components/ui/field';
+import { useCycleQueryParam } from '@/hooks/use-cycle-query-param';
 import { CalibrationControls } from './calibration-controls';
 import { CreateAreaDialog } from './create-area-dialog';
 import { CreatePlanForm } from './create-plan-form';
@@ -32,27 +32,15 @@ type PlanLoad =
   | { status: 'error'; message: string }
   | { status: 'ready'; plan: VenuePlan | null };
 
-function pickDefaultCycleId(cycles: EventCycle[], requested: string | null): string {
-  if (requested && cycles.some((cycle) => cycle.id === requested)) {
-    return requested;
-  }
-  const active = cycles.find((cycle) => cycle.status === 'ACTIVE');
-  return active?.id ?? cycles[0]?.id ?? '';
-}
-
 export function VenueMapPage() {
   const t = useTranslations('venueMap');
   const tCommon = useTranslations('common');
   const { user } = useAuth();
   const isAdmin = user.role === 'ADMIN';
 
-  const router = useRouter();
-  const pathname = usePathname();
-  const searchParams = useSearchParams();
-  const cycleFromUrl = searchParams.get('cycle');
-
   const [cyclesLoad, setCyclesLoad] = useState<CyclesLoad>({ status: 'loading' });
-  const [cycleId, setCycleId] = useState('');
+  const cyclesReady = cyclesLoad.status === 'ready' ? cyclesLoad.cycles : null;
+  const { cycleId, setCycleId } = useCycleQueryParam(cyclesReady);
   const [planLoad, setPlanLoad] = useState<PlanLoad>({ status: 'idle' });
   const [reloadToken, setReloadToken] = useState(0);
   const [selectedAreaId, setSelectedAreaId] = useState<string | null>(null);
@@ -69,7 +57,6 @@ export function VenueMapPage() {
           return;
         }
         setCyclesLoad({ status: 'ready', cycles });
-        setCycleId(pickDefaultCycleId(cycles, cycleFromUrl));
         if (cycles.length > 0) {
           setPlanLoad({ status: 'loading' });
         }
@@ -85,20 +72,7 @@ export function VenueMapPage() {
     return () => {
       cancelled = true;
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps -- mount-only seed from URL
   }, [tCommon]);
-
-  useEffect(() => {
-    if (!cycleId) {
-      return;
-    }
-    const params = new URLSearchParams(searchParams.toString());
-    if (params.get('cycle') === cycleId) {
-      return;
-    }
-    params.set('cycle', cycleId);
-    router.replace(`${pathname}?${params.toString()}`);
-  }, [cycleId, pathname, router, searchParams]);
 
   function handleCycleChange(nextId: string) {
     setCycleId(nextId);
@@ -166,8 +140,8 @@ export function VenueMapPage() {
     <div className="flex min-h-0 flex-1 flex-col gap-3">
       <header className="flex flex-wrap items-end justify-between gap-3">
         <div>
-          <h1 className="text-lg font-semibold text-[var(--color-fg)]">{t('title')}</h1>
-          <p className="text-sm text-[var(--color-muted)]">{t('subtitle')}</p>
+          <h1 className="page-heading">{t('title')}</h1>
+          <p className="page-subtitle">{t('subtitle')}</p>
         </div>
         <div className="flex flex-wrap items-end gap-2">
           <label className="flex flex-col gap-1 text-xs text-[var(--color-muted)]">
@@ -263,7 +237,7 @@ export function VenueMapPage() {
           ) : (
             <p className="text-xs text-[var(--color-muted)]">{t('selectHint')}</p>
           )}
-          <div className="flex min-h-0 flex-1 overflow-hidden rounded border border-[var(--color-border)]">
+          <div className="panel flex min-h-0 flex-1 overflow-hidden">
             <div className="min-h-0 min-w-0 flex-1">
               <VenueMapStageClient
                 plan={plan}

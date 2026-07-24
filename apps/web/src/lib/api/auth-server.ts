@@ -1,5 +1,5 @@
 import { cookies } from 'next/headers';
-import { apiFetch } from './client';
+import { ApiError, apiFetch } from './client';
 import type { CurrentUser } from './types';
 
 /** Server-side session check: forwards cookies to the API. Returns null when unauthenticated. */
@@ -17,7 +17,12 @@ export async function fetchCurrentUserServer(): Promise<CurrentUser | null> {
       cache: 'no-store',
       redirectOn401: false,
     });
-  } catch {
-    return null;
+  } catch (error) {
+    // Only a real 401 means "logged out". 429/5xx must not bounce the user to /login
+    // (that creates a redirect loop that burns the rate limit further).
+    if (error instanceof ApiError && error.status === 401) {
+      return null;
+    }
+    throw error;
   }
 }

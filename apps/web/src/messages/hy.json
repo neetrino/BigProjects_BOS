@@ -13,12 +13,6 @@
   "languageSwitcher": {
     "label": "Լեզու"
   },
-  "health": {
-    "checking": "API…",
-    "ok": "API-ն աշխատում է",
-    "dbDown": "API՝ տվյալների բազան անհասանելի է",
-    "unreachable": "API-ն անհասանելի է"
-  },
   "nav": {
     "label": "Հիմնական նավիգացիա",
     "product": "Ներքին",
@@ -36,7 +30,9 @@
     "title": "Մուտք",
     "description": "Շարունակելու համար մուտք գործեք աշխատակցի հաշվով։",
     "email": "Էլ․ փոստ",
+    "emailPlaceholder": "john.doe@company.com",
     "password": "Գաղտնաբառ",
+    "passwordPlaceholder": "********",
     "submit": "Մուտք",
     "submitting": "Մուտք…",
     "invalidCredentials": "Սխալ էլ․ փոստ կամ գաղտնաբառ։",
@@ -62,6 +58,11 @@
       "code": "Կոդ",
       "startsAt": "Սկիզբ",
       "endsAt": "Ավարտ"
+    },
+    "errors": {
+      "nameRequired": "Անվանումը պարտադիր է։",
+      "codeRequired": "Կոդը պարտադիր է։",
+      "endsBeforeStarts": "Ավարտի ամսաթիվը պետք է լինի սկզբից ոչ շուտ։"
     },
     "status": {
       "DRAFT": "Սևագիր",

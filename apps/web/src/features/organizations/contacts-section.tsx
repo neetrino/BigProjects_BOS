@@ -217,7 +217,7 @@ export function ContactsSection({ organizationId, contacts, onChange }: Contacts
       </ul>
 
       {error ? (
-        <p role="alert" className="text-sm text-red-700">
+        <p role="alert" className="text-sm text-[var(--color-danger)]">
           {error}
         </p>
       ) : null}

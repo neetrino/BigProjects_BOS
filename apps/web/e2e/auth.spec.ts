@@ -12,9 +12,9 @@ test.describe('auth', () => {
     await page.getByLabel('Password').fill(password);
     await page.getByRole('button', { name: 'Sign in' }).click();
 
-    await expect(page).toHaveURL(/\/cycles/);
+    await expect(page).toHaveURL(/\/builder-sales/);
     await expect(page.getByRole('navigation', { name: 'Main navigation' })).toBeVisible();
-    await expect(page.getByRole('link', { name: 'Event Cycles' })).toBeVisible();
+    await expect(page.getByRole('link', { name: 'Builder Sales' })).toBeVisible();
 
     await logout(page);
     await expect(page.getByRole('heading', { name: 'Sign in' })).toBeVisible();

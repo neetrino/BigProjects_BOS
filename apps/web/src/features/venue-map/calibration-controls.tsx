@@ -84,7 +84,7 @@ export function CalibrationControls({
   }
 
   return (
-    <div className="flex flex-wrap items-end gap-2 rounded border border-[var(--color-border)] bg-[var(--color-surface)] px-3 py-2">
+    <div className="flex flex-wrap items-end gap-2 rounded-[var(--radius-panel)] border border-[var(--color-border)] bg-[var(--color-surface)] px-4 py-3 shadow-[var(--shadow-soft)]">
       <p className="w-full text-xs text-[var(--color-muted)]">
         {t('calibration.hint', { count: points.length })}
       </p>
