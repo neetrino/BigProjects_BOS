@@ -164,7 +164,9 @@ export function AppSidebar({ pathname, currentLocale }: AppSidebarProps) {
               >
                 <Icon className="size-4" aria-hidden />
               </span>
-              <span className="truncate tracking-tight">{t(item.key)}</span>
+              <span className="min-w-0 whitespace-pre-line text-left text-sm leading-snug tracking-tight">
+                {t(item.key)}
+              </span>
             </Link>
           );
         })}
