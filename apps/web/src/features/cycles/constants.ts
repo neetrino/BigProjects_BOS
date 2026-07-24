@@ -5,6 +5,7 @@ import type { KanbanColumnTone } from '@/components/kanban';
 
 export const WORKFLOW_STATUSES: EventCycleStatus[] = ['DRAFT', 'ACTIVE'];
 export const TERMINAL_STATUSES: EventCycleStatus[] = ['CLOSED'];
+export const ALL_STATUSES: EventCycleStatus[] = ['DRAFT', 'ACTIVE', 'CLOSED'];
 
 export function statusTone(status: EventCycleStatus): 'draft' | 'active' | 'closed' {
   if (status === 'ACTIVE') {

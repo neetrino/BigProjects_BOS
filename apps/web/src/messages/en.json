@@ -46,6 +46,10 @@
     "createTitle": "Create cycle",
     "editTitle": "Edit cycle",
     "empty": "No event cycles yet.",
+    "emptyFiltered": "No cycles match the current filters.",
+    "searchPlaceholder": "Search by name or code",
+    "statusFilter": "Status",
+    "allStatuses": "All statuses",
     "toolbar": {
       "kanban": "Board",
       "list": "List"

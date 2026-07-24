@@ -17,7 +17,7 @@ export function DealList({ deals, onOpen }: DealListProps) {
   return (
     <div className="panel min-h-0 max-h-full overflow-auto">
       <table className="w-full min-w-[880px] text-left text-sm">
-        <thead className="sticky top-0 border-b border-[var(--color-border)] bg-[var(--color-bg-warm)]/90 text-xs text-[var(--color-muted)] backdrop-blur-sm">
+        <thead className="sticky top-0 border-b border-[var(--color-border)] bg-[var(--color-bg-warm)] text-xs text-[var(--color-muted)]">
           <tr>
             <th className="px-4 py-3 font-semibold tracking-wide">{t('list.organization')}</th>
             <th className="px-4 py-3 font-semibold tracking-wide">{t('list.contact')}</th>

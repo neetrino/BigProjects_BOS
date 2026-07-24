@@ -23,14 +23,20 @@ export function CycleList({ cycles, isAdmin, onOpen, onRequestStatus }: CycleLis
   return (
     <div className="panel min-h-0 max-h-full overflow-auto">
       <table className="w-full min-w-[640px] text-left text-sm">
-        <thead className="sticky top-0 border-b border-[var(--color-border)] bg-[var(--color-bg-warm)]/90 text-xs text-[var(--color-muted)] backdrop-blur-sm">
+        <thead className="sticky top-0 border-b border-[var(--color-border)] bg-[var(--color-bg-warm)] text-xs text-[var(--color-muted)]">
           <tr>
             <th className="px-4 py-3 font-semibold tracking-wide">{t('columns.name')}</th>
             <th className="px-4 py-3 font-semibold tracking-wide">{t('columns.code')}</th>
-            <th className="px-4 py-3 font-semibold tracking-wide">{t('columns.status')}</th>
-            <th className="px-4 py-3 font-semibold tracking-wide">{t('columns.dates')}</th>
+            <th className="px-4 py-3 text-center font-semibold tracking-wide">
+              {t('columns.status')}
+            </th>
+            <th className="px-4 py-3 text-center font-semibold tracking-wide">
+              {t('columns.dates')}
+            </th>
             {isAdmin ? (
-              <th className="px-4 py-3 font-semibold tracking-wide">{t('columns.actions')}</th>
+              <th className="px-4 py-3 text-center font-semibold tracking-wide">
+                {t('columns.actions')}
+              </th>
             ) : null}
           </tr>
         </thead>
@@ -47,17 +53,20 @@ export function CycleList({ cycles, isAdmin, onOpen, onRequestStatus }: CycleLis
             >
               <td className="px-4 py-3 font-medium text-[var(--color-fg)]">{cycle.name}</td>
               <td className="px-4 py-3 text-[var(--color-muted)]">{cycle.code}</td>
-              <td className="px-4 py-3">
+              <td className="px-4 py-3 text-center">
                 <StatusBadge label={t(`status.${cycle.status}`)} tone={statusTone(cycle.status)} />
               </td>
-              <td className="px-4 py-3 text-[var(--color-muted)]">
+              <td className="px-4 py-3 text-center text-[var(--color-muted)]">
                 {[formatDate(cycle.startsAt), formatDate(cycle.endsAt)]
                   .filter(Boolean)
                   .join(' – ') || '—'}
               </td>
               {isAdmin ? (
                 <td className="px-4 py-3">
-                  <div className="flex gap-2" onClick={(event) => event.stopPropagation()}>
+                  <div
+                    className="flex justify-center gap-2"
+                    onClick={(event) => event.stopPropagation()}
+                  >
                     {cycle.status === 'DRAFT' ? (
                       <Button
                         variant="secondary"

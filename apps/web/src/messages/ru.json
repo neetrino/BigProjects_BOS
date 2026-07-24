@@ -46,6 +46,10 @@
     "createTitle": "Создать цикл",
     "editTitle": "Редактировать цикл",
     "empty": "Циклов пока нет.",
+    "emptyFiltered": "Нет циклов по текущим фильтрам.",
+    "searchPlaceholder": "Поиск по названию или коду",
+    "statusFilter": "Статус",
+    "allStatuses": "Все статусы",
     "toolbar": {
       "kanban": "Доска",
       "list": "Список"

@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { Plus } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { ApiError } from '@/lib/api/client';
@@ -10,10 +10,12 @@ import type { BoardViewMode } from '@/components/kanban';
 import { useAuth } from '@/components/auth/auth-provider';
 import { Button } from '@/components/ui/button';
 import { Dialog } from '@/components/ui/dialog';
+import { SearchInput, SelectInput } from '@/components/ui/field';
 import { EmptyState, ErrorState, LoadingState } from '@/components/ui/page-state';
 import { ViewModeSwitcher } from '@/components/ui/view-mode-switcher';
 import { showToast } from '@/components/ui/toast';
-import { canTransitionTo } from '@/features/cycles/constants';
+import { SEARCH_DEBOUNCE_MS } from '@/lib/constants';
+import { ALL_STATUSES, canTransitionTo } from '@/features/cycles/constants';
 import { CycleFormSheet } from '@/features/cycles/cycle-form-sheet';
 import { CycleKanban } from '@/features/cycles/cycle-kanban';
 import { CycleList } from '@/features/cycles/cycle-list';
@@ -36,10 +38,18 @@ export function CyclesPage() {
 
   const [loadState, setLoadState] = useState<LoadState>({ status: 'loading' });
   const [view, setView] = useState<BoardViewMode>('kanban');
+  const [searchInput, setSearchInput] = useState('');
+  const [search, setSearch] = useState('');
+  const [statusFilter, setStatusFilter] = useState<EventCycleStatus | ''>('');
   const [sheetOpen, setSheetOpen] = useState(false);
   const [editing, setEditing] = useState<EventCycle | null>(null);
   const [confirm, setConfirm] = useState<ConfirmAction | null>(null);
   const [confirmBusy, setConfirmBusy] = useState(false);
+
+  useEffect(() => {
+    const timer = window.setTimeout(() => setSearch(searchInput.trim()), SEARCH_DEBOUNCE_MS);
+    return () => window.clearTimeout(timer);
+  }, [searchInput]);
 
   useEffect(() => {
     let cancelled = false;
@@ -93,7 +103,7 @@ export function CyclesPage() {
   }
 
   function openEditById(cycleId: string) {
-    const cycle = cycles.find((item) => item.id === cycleId);
+    const cycle = allCycles.find((item) => item.id === cycleId);
     if (cycle) {
       openEdit(cycle);
     }
@@ -110,7 +120,7 @@ export function CyclesPage() {
   }
 
   function handleBoardStatusChange(cycleId: string, nextStatus: EventCycleStatus) {
-    const cycle = cycles.find((item) => item.id === cycleId);
+    const cycle = allCycles.find((item) => item.id === cycleId);
     if (!cycle || !canTransitionTo(cycle.status, nextStatus)) {
       return;
     }
@@ -135,7 +145,25 @@ export function CyclesPage() {
     }
   }
 
-  const cycles = loadState.status === 'ready' ? loadState.cycles : [];
+  const allCycles = loadState.status === 'ready' ? loadState.cycles : [];
+
+  const cycles = useMemo(() => {
+    const query = search.toLowerCase();
+    return allCycles.filter((cycle) => {
+      if (statusFilter && cycle.status !== statusFilter) {
+        return false;
+      }
+      if (!query) {
+        return true;
+      }
+      return (
+        cycle.name.toLowerCase().includes(query) || cycle.code.toLowerCase().includes(query)
+      );
+    });
+  }, [allCycles, search, statusFilter]);
+
+  const hasAnyCycles = allCycles.length > 0;
+  const hasFilteredCycles = cycles.length > 0;
 
   return (
     <div className="flex min-h-0 flex-1 flex-col gap-4">
@@ -147,6 +175,26 @@ export function CyclesPage() {
       </header>
 
       <div className="toolbar-shell shrink-0">
+        <SearchInput
+          className="min-w-[12rem] flex-1"
+          placeholder={t('searchPlaceholder')}
+          value={searchInput}
+          onChange={(event) => setSearchInput(event.target.value)}
+          aria-label={t('searchPlaceholder')}
+        />
+        <SelectInput
+          fitContent
+          value={statusFilter}
+          onChange={(event) => setStatusFilter(event.target.value as EventCycleStatus | '')}
+          aria-label={t('statusFilter')}
+        >
+          <option value="">{t('allStatuses')}</option>
+          {ALL_STATUSES.map((status) => (
+            <option key={status} value={status}>
+              {t(`status.${status}`)}
+            </option>
+          ))}
+        </SelectInput>
         <ViewModeSwitcher
           className="ml-auto shrink-0"
           value={view}
@@ -164,7 +212,7 @@ export function CyclesPage() {
 
       {loadState.status === 'loading' ? <LoadingState message={tCommon('loading')} /> : null}
       {loadState.status === 'error' ? <ErrorState message={loadState.message} /> : null}
-      {loadState.status === 'ready' && cycles.length === 0 ? (
+      {loadState.status === 'ready' && !hasAnyCycles ? (
         <EmptyState
           message={t('empty')}
           action={
@@ -177,8 +225,11 @@ export function CyclesPage() {
           }
         />
       ) : null}
+      {loadState.status === 'ready' && hasAnyCycles && !hasFilteredCycles ? (
+        <EmptyState message={t('emptyFiltered')} />
+      ) : null}
 
-      {loadState.status === 'ready' && cycles.length > 0 && view === 'kanban' ? (
+      {loadState.status === 'ready' && hasFilteredCycles && view === 'kanban' ? (
         <CycleKanban
           cycles={cycles}
           onOpen={openEditById}
@@ -186,7 +237,7 @@ export function CyclesPage() {
         />
       ) : null}
 
-      {loadState.status === 'ready' && cycles.length > 0 && view === 'list' ? (
+      {loadState.status === 'ready' && hasFilteredCycles && view === 'list' ? (
         <CycleList
           cycles={cycles}
           isAdmin={isAdmin}

@@ -46,6 +46,10 @@
     "createTitle": "Ստեղծել ցիկլ",
     "editTitle": "Խմբագրել ցիկլը",
     "empty": "Ցիկլեր դեռ չկան։",
+    "emptyFiltered": "Ընթացիկ ֆիլտրերով ցիկլեր չկան։",
+    "searchPlaceholder": "Որոնել ըստ անվան կամ կոդի",
+    "statusFilter": "Կարգավիճակ",
+    "allStatuses": "Բոլոր կարգավիճակները",
     "toolbar": {
       "kanban": "Տախտակ",
       "list": "Ցանկ"
