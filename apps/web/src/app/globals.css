@@ -145,24 +145,6 @@ body {
   color: var(--color-fg);
   font-family: var(--font-sans);
   background-color: var(--color-bg);
-  background-image:
-    radial-gradient(ellipse 1100px 560px at 0% -8%, rgb(213 238 240 / 70%), transparent 58%),
-    radial-gradient(ellipse 900px 520px at 100% 0%, rgb(245 237 225 / 80%), transparent 52%),
-    radial-gradient(ellipse 700px 400px at 70% 100%, rgb(220 230 242 / 55%), transparent 55%),
-    linear-gradient(160deg, #f8f5f1 0%, var(--color-bg) 42%, #eaf0f6 100%);
-  background-attachment: fixed;
-}
-
-body::before {
-  content: '';
-  pointer-events: none;
-  position: fixed;
-  inset: 0;
-  z-index: 0;
-  opacity: 0.35;
-  background-image: radial-gradient(rgb(18 32 51 / 8%) 0.6px, transparent 0.6px);
-  background-size: 18px 18px;
-  mask-image: linear-gradient(180deg, rgb(0 0 0 / 55%), transparent 85%);
 }
 
 body > *:not([data-portal]) {
