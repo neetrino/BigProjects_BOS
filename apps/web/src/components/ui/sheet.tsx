@@ -34,16 +34,19 @@ export function Sheet({
 
   useEffect(() => {
     if (open) {
-      setMounted(true);
-      const frame = window.requestAnimationFrame(() => {
+      const outer = window.requestAnimationFrame(() => {
+        setMounted(true);
         window.requestAnimationFrame(() => setEntered(true));
       });
-      return () => window.cancelAnimationFrame(frame);
+      return () => window.cancelAnimationFrame(outer);
     }
 
-    setEntered(false);
+    const exitFrame = window.requestAnimationFrame(() => setEntered(false));
     const timer = window.setTimeout(() => setMounted(false), PANEL_EXIT_MS);
-    return () => window.clearTimeout(timer);
+    return () => {
+      window.cancelAnimationFrame(exitFrame);
+      window.clearTimeout(timer);
+    };
   }, [open]);
 
   useEffect(() => {

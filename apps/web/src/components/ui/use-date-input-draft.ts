@@ -1,7 +1,6 @@
 'use client';
 
 import {
-  useEffect,
   useRef,
   useState,
   type FormEvent,
@@ -44,12 +43,7 @@ export function useDateInputDraft({
   const inputRef = useRef<HTMLInputElement>(null);
   const [focused, setFocused] = useState(false);
   const [draft, setDraft] = useState(() => isoToDisplayInput(value));
-
-  useEffect(() => {
-    if (!focused) {
-      setDraft(isoToDisplayInput(value));
-    }
-  }, [value, focused]);
+  const display = focused ? draft : isoToDisplayInput(value);
 
   function setDraftWithCaret(next: { display: string; caret: number }): void {
     setDraft(next.display);
@@ -64,7 +58,7 @@ export function useDateInputDraft({
   }
 
   function applyDigitsAtSelection(digits: string, start: number, end: number): void {
-    let display = draft;
+    let nextDisplay = draft;
     let selStart = start;
     let selEnd = end;
     let caret = end;
@@ -72,13 +66,13 @@ export function useDateInputDraft({
       if (!/^\d$/.test(digit)) {
         continue;
       }
-      const applied = applyDateDigitInput(display, selStart, selEnd, digit);
-      display = applied.display;
+      const applied = applyDateDigitInput(nextDisplay, selStart, selEnd, digit);
+      nextDisplay = applied.display;
       caret = applied.caret;
       selStart = caret;
       selEnd = caret;
     }
-    setDraftWithCaret({ display, caret });
+    setDraftWithCaret({ display: nextDisplay, caret });
   }
 
   function commitDraft(raw: string, options?: { revertOnInvalid?: boolean }): void {
@@ -124,14 +118,14 @@ export function useDateInputDraft({
       return;
     }
     const digits = raw.replace(/\D/g, '').slice(0, 8);
-    let display = '';
+    let nextDisplay = '';
     let caret = 0;
     for (const digit of digits) {
-      const applied = applyDateDigitInput(display, caret, caret, digit);
-      display = applied.display;
+      const applied = applyDateDigitInput(nextDisplay, caret, caret, digit);
+      nextDisplay = applied.display;
       caret = applied.caret;
     }
-    setDraft(display);
+    setDraft(nextDisplay);
   }
 
   function handleKeyDown(event: KeyboardEvent<HTMLInputElement>): void {
@@ -169,16 +163,21 @@ export function useDateInputDraft({
     }
   }
 
+  function handleFocus(): void {
+    setDraft(isoToDisplayInput(value));
+    setFocused(true);
+  }
+
   function handleBlur(): void {
     setFocused(false);
     commitDraft(draft, { revertOnInvalid: true });
   }
 
   return {
-    draft,
+    draft: display,
     setDraft,
     inputRef,
-    setFocused,
+    setFocused: handleFocus,
     clearDraft,
     handleBeforeInput,
     handleChange,

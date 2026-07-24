@@ -20,6 +20,8 @@ import { CycleFormSheet } from '@/features/cycles/cycle-form-sheet';
 import { CycleKanban } from '@/features/cycles/cycle-kanban';
 import { CycleList } from '@/features/cycles/cycle-list';
 
+const EMPTY_CYCLES: EventCycle[] = [];
+
 type ConfirmAction = {
   cycle: EventCycle;
   nextStatus: Extract<EventCycleStatus, 'ACTIVE' | 'CLOSED'>;
@@ -145,7 +147,7 @@ export function CyclesPage() {
     }
   }
 
-  const allCycles = loadState.status === 'ready' ? loadState.cycles : [];
+  const allCycles = loadState.status === 'ready' ? loadState.cycles : EMPTY_CYCLES;
 
   const cycles = useMemo(() => {
     const query = search.toLowerCase();

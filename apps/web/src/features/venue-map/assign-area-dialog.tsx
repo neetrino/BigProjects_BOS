@@ -29,8 +29,19 @@ export function AssignAreaDialog({
   onAssigned,
   onClose,
 }: AssignAreaDialogProps) {
+  const [sessionKey, setSessionKey] = useState(0);
+  const [wasOpen, setWasOpen] = useState(open);
+
+  if (open !== wasOpen) {
+    setWasOpen(open);
+    if (open) {
+      setSessionKey((key) => key + 1);
+    }
+  }
+
   return (
     <AssignAreaDialogInner
+      key={sessionKey}
       open={open}
       areaId={areaId}
       cycleId={cycleId}
@@ -68,10 +79,6 @@ function AssignAreaDialogInner({
     if (!open) {
       return;
     }
-    setTab('builders');
-    setSearch('');
-    setLoading(true);
-    setBusyId(null);
     let cancelled = false;
     void Promise.all([listDeals({ cycleId }), listPartners({ cycleId })])
       .then(([dealItems, partnerItems]) => {

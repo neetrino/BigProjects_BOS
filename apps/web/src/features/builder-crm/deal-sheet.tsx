@@ -103,11 +103,9 @@ function buildDetailsPatch(draft: DealDetailsDraft, baseline: DealDetailsDraft):
 export function DealSheet({ dealId, open, staffOptions, onClose, onUpdated }: DealSheetProps) {
   const [activeId, setActiveId] = useState<string | null>(dealId);
 
-  useEffect(() => {
-    if (open && dealId) {
-      setActiveId(dealId);
-    }
-  }, [open, dealId]);
+  if (open && dealId && dealId !== activeId) {
+    setActiveId(dealId);
+  }
 
   if (!activeId) {
     return null;

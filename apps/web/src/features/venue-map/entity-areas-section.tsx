@@ -119,8 +119,19 @@ function AssignFreeAreaDialog({
   onAssigned,
   onClose,
 }: AssignFreeAreaDialogProps) {
+  const [sessionKey, setSessionKey] = useState(0);
+  const [wasOpen, setWasOpen] = useState(open);
+
+  if (open !== wasOpen) {
+    setWasOpen(open);
+    if (open) {
+      setSessionKey((key) => key + 1);
+    }
+  }
+
   return (
     <AssignFreeAreaDialogInner
+      key={sessionKey}
       open={open}
       cycleId={cycleId}
       target={target}
@@ -156,9 +167,6 @@ function AssignFreeAreaDialogInner({
     if (!open) {
       return;
     }
-    setSearch('');
-    setLoading(true);
-    setBusyId(null);
     let cancelled = false;
     void getVenuePlan(cycleId)
       .then((response) => {

@@ -1,6 +1,6 @@
 'use client';
 
-import type { EventCycle, EventCycleStatus } from '@/lib/api/types';
+import type { EventCycleStatus } from '@/lib/api/types';
 import type { KanbanColumnTone } from '@/components/kanban';
 
 export const WORKFLOW_STATUSES: EventCycleStatus[] = ['DRAFT', 'ACTIVE'];

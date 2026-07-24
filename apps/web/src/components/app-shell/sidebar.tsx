@@ -11,6 +11,7 @@ import {
   Store,
   type LucideIcon,
 } from 'lucide-react';
+import Image from 'next/image';
 import { useTransition } from 'react';
 import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
@@ -93,7 +94,7 @@ export function AppSidebar({ pathname, currentLocale }: AppSidebarProps) {
       <div className="relative px-5 pb-5 pt-7">
         <div className="flex items-start gap-3.5">
           <div className="mt-0.5 flex size-11 shrink-0 items-center justify-center overflow-hidden rounded-2xl bg-white">
-            <img
+            <Image
               src="/brand-logo.webp"
               alt=""
               width={30}

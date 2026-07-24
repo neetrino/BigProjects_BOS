@@ -50,6 +50,7 @@ export function DateInput({
   const rootRef = useRef<HTMLDivElement>(null);
   const panelRef = useRef<HTMLDivElement>(null);
   const [open, setOpen] = useState(false);
+  const [wasOpen, setWasOpen] = useState(false);
   const [menuPosition, setMenuPosition] = useState<MenuPosition | null>(null);
 
   const selected = parseIsoDate(value);
@@ -58,7 +59,25 @@ export function DateInput({
   const [viewYear, setViewYear] = useState(seed.year);
   const [viewMonth, setViewMonth] = useState(seed.monthIndex);
 
-  const draftApi = useDateInputDraft({
+  if (open !== wasOpen) {
+    setWasOpen(open);
+    if (open && selected) {
+      setViewYear(selected.year);
+      setViewMonth(selected.monthIndex);
+    }
+  }
+
+  const {
+    draft,
+    setDraft,
+    inputRef,
+    setFocused,
+    clearDraft,
+    handleBeforeInput,
+    handleChange,
+    handleKeyDown,
+    handleBlur,
+  } = useDateInputDraft({
     value,
     onChange,
     onCommitView: (year, monthIndex) => {
@@ -69,9 +88,9 @@ export function DateInput({
   });
 
   function clearValue(): void {
-    draftApi.clearDraft();
+    clearDraft();
     setOpen(false);
-    draftApi.inputRef.current?.focus();
+    inputRef.current?.focus();
   }
 
   function updateMenuPosition(): void {
@@ -114,14 +133,6 @@ export function DateInput({
   }, [open]);
 
   useEffect(() => {
-    if (!open || !selected) {
-      return;
-    }
-    setViewYear(selected.year);
-    setViewMonth(selected.monthIndex);
-  }, [open, selected]);
-
-  useEffect(() => {
     if (!open) {
       return;
     }
@@ -132,17 +143,17 @@ export function DateInput({
       }
       setOpen(false);
     }
-    function handleKeyDown(event: globalThis.KeyboardEvent) {
+    function handleKeyDownEscape(event: globalThis.KeyboardEvent) {
       if (event.key === 'Escape') {
         event.preventDefault();
         setOpen(false);
       }
     }
     document.addEventListener('mousedown', handlePointerDown);
-    document.addEventListener('keydown', handleKeyDown, true);
+    document.addEventListener('keydown', handleKeyDownEscape, true);
     return () => {
       document.removeEventListener('mousedown', handlePointerDown);
-      document.removeEventListener('keydown', handleKeyDown, true);
+      document.removeEventListener('keydown', handleKeyDownEscape, true);
     };
   }, [open]);
 
@@ -159,7 +170,7 @@ export function DateInput({
       }
     : undefined;
 
-  const showClear = Boolean(value || draftApi.draft);
+  const showClear = Boolean(value || draft);
 
   return (
     <div ref={rootRef} className={clsx('relative', className)}>
@@ -171,23 +182,20 @@ export function DateInput({
         )}
       >
         <input
-          ref={draftApi.inputRef}
+          ref={inputRef}
           id={id}
           type="text"
           inputMode="numeric"
           autoComplete="off"
           disabled={disabled}
           aria-label={ariaLabel}
-          aria-haspopup="dialog"
-          aria-expanded={open}
-          aria-controls={open ? panelId : undefined}
           placeholder={t('placeholder')}
-          value={draftApi.draft}
-          onBeforeInput={draftApi.handleBeforeInput}
-          onChange={(event) => draftApi.handleChange(event.target.value)}
-          onFocus={() => draftApi.setFocused(true)}
-          onBlur={draftApi.handleBlur}
-          onKeyDown={draftApi.handleKeyDown}
+          value={draft}
+          onBeforeInput={handleBeforeInput}
+          onChange={(event) => handleChange(event.target.value)}
+          onFocus={() => setFocused(true)}
+          onBlur={handleBlur}
+          onKeyDown={handleKeyDown}
           className="min-w-0 flex-1 bg-transparent py-2.5 pl-1 text-sm font-medium text-[var(--color-fg)] outline-none placeholder:font-medium placeholder:text-[var(--color-muted)]/60"
         />
         {showClear && !disabled ? (
@@ -207,6 +215,9 @@ export function DateInput({
           tabIndex={-1}
           disabled={disabled}
           aria-label={t('title')}
+          aria-haspopup="dialog"
+          aria-expanded={open}
+          aria-controls={open ? panelId : undefined}
           className="inline-flex size-7 shrink-0 items-center justify-center rounded-lg text-[var(--color-muted)] transition-colors hover:bg-white hover:text-[var(--color-fg)] disabled:opacity-50"
           onMouseDown={(event) => event.preventDefault()}
           onClick={() => {
@@ -240,7 +251,7 @@ export function DateInput({
                 }}
                 onSelect={(iso) => {
                   onChange(iso);
-                  draftApi.setDraft(isoToDisplayInput(iso));
+                  setDraft(isoToDisplayInput(iso));
                   setOpen(false);
                 }}
                 onClear={clearValue}

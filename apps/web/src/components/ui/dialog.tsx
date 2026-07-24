@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState, type ReactNode } from 'react';
+import { useState, type ReactNode } from 'react';
 import { Button } from './button';
 import { ModalFrame } from './modal-frame';
 
@@ -41,32 +41,36 @@ export function Dialog({
   onCancel,
   children,
 }: DialogProps) {
-  const [snapshot, setSnapshot] = useState<DialogSnapshot>({
+  const live: DialogSnapshot = {
     title,
     description,
     confirmLabel,
     cancelLabel,
     confirmVariant,
     children,
-  });
+  };
+  const [snapshot, setSnapshot] = useState<DialogSnapshot>(live);
+  const [wasOpen, setWasOpen] = useState(open);
 
-  useEffect(() => {
-    if (!open) {
-      return;
+  if (open !== wasOpen) {
+    setWasOpen(open);
+    if (open) {
+      setSnapshot(live);
     }
-    setSnapshot({
-      title,
-      description,
-      confirmLabel,
-      cancelLabel,
-      confirmVariant,
-      children,
-    });
-  }, [open, title, description, confirmLabel, cancelLabel, confirmVariant, children]);
+  } else if (open) {
+    if (
+      snapshot.title !== title ||
+      snapshot.description !== description ||
+      snapshot.confirmLabel !== confirmLabel ||
+      snapshot.cancelLabel !== cancelLabel ||
+      snapshot.confirmVariant !== confirmVariant ||
+      snapshot.children !== children
+    ) {
+      setSnapshot(live);
+    }
+  }
 
-  const shown = open
-    ? { title, description, confirmLabel, cancelLabel, confirmVariant, children }
-    : snapshot;
+  const shown = open ? live : snapshot;
   const actionsDisabled = busy || !open;
 
   return (

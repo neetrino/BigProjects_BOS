@@ -37,14 +37,18 @@ export function ModalFrame({
 
   useEffect(() => {
     if (open) {
-      setVisible(true);
-      setExiting(false);
-      return;
+      const frame = window.requestAnimationFrame(() => {
+        setVisible(true);
+        setExiting(false);
+      });
+      return () => window.cancelAnimationFrame(frame);
     }
-    if (visible) {
+
+    const frame = window.requestAnimationFrame(() => {
       setExiting(true);
-    }
-  }, [open, visible]);
+    });
+    return () => window.cancelAnimationFrame(frame);
+  }, [open]);
 
   useEffect(() => {
     if (!exiting) {

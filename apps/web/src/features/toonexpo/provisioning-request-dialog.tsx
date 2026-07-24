@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useTranslations } from 'next-intl';
 import { ApiError } from '@/lib/api/client';
 import {
@@ -39,14 +39,21 @@ export function ProvisioningRequestDialog({
     defaultModulesForCompanyType(companyType),
   );
   const [busy, setBusy] = useState(false);
+  const [wasOpen, setWasOpen] = useState(open);
+  const [prevCompanyType, setPrevCompanyType] = useState(companyType);
 
-  useEffect(() => {
-    if (!open) {
-      return;
+  if (open !== wasOpen) {
+    setWasOpen(open);
+    if (open) {
+      setSelectedModules(defaultModulesForCompanyType(companyType));
+      setBusy(false);
+      setPrevCompanyType(companyType);
     }
+  } else if (open && companyType !== prevCompanyType) {
+    setPrevCompanyType(companyType);
     setSelectedModules(defaultModulesForCompanyType(companyType));
     setBusy(false);
-  }, [open, companyType]);
+  }
 
   function toggleModule(module: ToonExpoModule) {
     setSelectedModules((prev) =>

@@ -1,4 +1,5 @@
 import { getTranslations } from 'next-intl/server';
+import Image from 'next/image';
 import { redirect } from 'next/navigation';
 import { LoginForm } from '@/app/login/login-form';
 import { fetchCurrentUserServer } from '@/lib/api/auth-server';
@@ -21,7 +22,7 @@ export default async function LoginPage() {
             <div className="mb-7 flex justify-center">
               <div className="inline-flex items-center gap-3.5">
                 <div className="-translate-x-0.5 flex size-14 shrink-0 items-center justify-center overflow-hidden rounded-2xl border border-[var(--color-border)] bg-white">
-                  <img
+                  <Image
                     src="/brand-logo.webp"
                     alt=""
                     width={38}

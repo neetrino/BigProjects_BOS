@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState, useTransition } from 'react';
+import { useState, useTransition } from 'react';
 import { useRouter } from 'next/navigation';
 import { useTranslations } from 'next-intl';
 import { clsx } from 'clsx';
@@ -30,19 +30,21 @@ export function LanguageSwitcher({
   const t = useTranslations('languageSwitcher');
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
-  const [selected, setSelected] = useState<Locale>(currentLocale);
-  const activeIndex = Math.max(0, locales.indexOf(selected));
+  const [optimisticLocale, setOptimisticLocale] = useState<Locale | null>(null);
 
-  useEffect(() => {
-    setSelected(currentLocale);
-  }, [currentLocale]);
+  if (optimisticLocale !== null && optimisticLocale === currentLocale) {
+    setOptimisticLocale(null);
+  }
+
+  const selected = optimisticLocale ?? currentLocale;
+  const activeIndex = Math.max(0, locales.indexOf(selected));
 
   function handleSelect(locale: Locale) {
     if (locale === selected || isPending) {
       return;
     }
 
-    setSelected(locale);
+    setOptimisticLocale(locale);
     startTransition(() => {
       void (async () => {
         await setLocale(locale);

@@ -53,11 +53,9 @@ export function OrganizationDetailSheet({
 }: OrganizationDetailSheetProps) {
   const [activeId, setActiveId] = useState<string | null>(organizationId);
 
-  useEffect(() => {
-    if (open && organizationId) {
-      setActiveId(organizationId);
-    }
-  }, [open, organizationId]);
+  if (open && organizationId && organizationId !== activeId) {
+    setActiveId(organizationId);
+  }
 
   if (!activeId) {
     return null;

@@ -100,11 +100,9 @@ export function PartnerSheet({
 }: PartnerSheetProps) {
   const [activeId, setActiveId] = useState<string | null>(partnerId);
 
-  useEffect(() => {
-    if (open && partnerId) {
-      setActiveId(partnerId);
-    }
-  }, [open, partnerId]);
+  if (open && partnerId && partnerId !== activeId) {
+    setActiveId(partnerId);
+  }
 
   if (!activeId) {
     return null;

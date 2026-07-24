@@ -73,9 +73,7 @@ export function SelectInput({
   const [options, setOptions] = useState<SelectOption[]>([]);
 
   const selectedValue = value == null ? undefined : String(value);
-  const selectedLabel =
-    options.find((option) => option.value === (selectedValue ?? selectRef.current?.value))?.label ??
-    '';
+  const selectedLabel = options.find((option) => option.value === selectedValue)?.label ?? '';
 
   function syncOptions(): void {
     setOptions(readOptions(selectRef.current));
@@ -268,7 +266,7 @@ export function SelectInput({
                 <li className="px-3 py-2.5 text-sm text-[var(--color-muted)]">—</li>
               ) : (
                 options.map((option) => {
-                  const isSelected = option.value === (selectedValue ?? selectRef.current?.value);
+                  const isSelected = option.value === selectedValue;
 
                   return (
                     <li key={`${option.value}::${option.label}`} role="none">
