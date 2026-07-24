@@ -25,10 +25,13 @@ type MenuPosition = {
   left: number;
   width: number;
   openUpward: boolean;
+  maxHeight: number;
 };
 
 const MENU_MAX_HEIGHT_PX = 280;
+const MENU_MIN_HEIGHT_PX = 120;
 const MENU_GAP_PX = 8;
+const MENU_FLIP_THRESHOLD_PX = 160;
 
 function readOptions(select: HTMLSelectElement | null): SelectOption[] {
   if (!select) {
@@ -86,13 +89,21 @@ export function SelectInput({
 
     const rect = trigger.getBoundingClientRect();
     const spaceBelow = window.innerHeight - rect.bottom - MENU_GAP_PX;
-    const openUpward = spaceBelow < Math.min(MENU_MAX_HEIGHT_PX, 160) && rect.top > spaceBelow;
+    const spaceAbove = rect.top - MENU_GAP_PX;
+    const openUpward =
+      spaceBelow < Math.min(MENU_MAX_HEIGHT_PX, MENU_FLIP_THRESHOLD_PX) && spaceAbove > spaceBelow;
+    const availableSpace = openUpward ? spaceAbove : spaceBelow;
+    const maxHeight = Math.max(
+      MENU_MIN_HEIGHT_PX,
+      Math.min(MENU_MAX_HEIGHT_PX, Math.floor(availableSpace)),
+    );
 
     setMenuPosition({
       top: openUpward ? rect.top - MENU_GAP_PX : rect.bottom + MENU_GAP_PX,
       left: rect.left,
       width: rect.width,
       openUpward,
+      maxHeight,
     });
   }
 
@@ -168,7 +179,7 @@ export function SelectInput({
         minWidth: Math.max(menuPosition.width, 160),
         width: 'max-content',
         maxWidth: 'min(24rem, calc(100vw - 1.5rem))',
-        maxHeight: MENU_MAX_HEIGHT_PX,
+        maxHeight: menuPosition.maxHeight,
         ...(menuPosition.openUpward
           ? { bottom: window.innerHeight - menuPosition.top }
           : { top: menuPosition.top }),

@@ -23,12 +23,14 @@ type MenuPosition = {
   left: number;
   width: number;
   openUpward: boolean;
+  maxHeight: number;
 };
 
 const MENU_GAP_PX = 8;
 const PANEL_HEIGHT_PX = 340;
+const PANEL_MIN_HEIGHT_PX = 240;
 const PANEL_MIN_WIDTH_PX = 288;
-const PANEL_Z_INDEX = 220;
+const PANEL_Z_INDEX = 1000;
 
 /**
  * Site-styled date field: type manually (`YYYY-MM-DD` / `DD.MM.YYYY`) or pick from calendar.
@@ -79,12 +81,19 @@ export function DateInput({
     }
     const rect = trigger.getBoundingClientRect();
     const spaceBelow = window.innerHeight - rect.bottom - MENU_GAP_PX;
-    const openUpward = spaceBelow < PANEL_HEIGHT_PX && rect.top > spaceBelow;
+    const spaceAbove = rect.top - MENU_GAP_PX;
+    const openUpward = spaceBelow < PANEL_HEIGHT_PX && spaceAbove > spaceBelow;
+    const availableSpace = openUpward ? spaceAbove : spaceBelow;
+    const maxHeight = Math.max(
+      PANEL_MIN_HEIGHT_PX,
+      Math.min(PANEL_HEIGHT_PX, Math.floor(availableSpace)),
+    );
     setMenuPosition({
       top: openUpward ? rect.top - MENU_GAP_PX : rect.bottom + MENU_GAP_PX,
       left: rect.left,
       width: Math.max(rect.width, PANEL_MIN_WIDTH_PX),
       openUpward,
+      maxHeight,
     });
   }
 
@@ -144,6 +153,8 @@ export function DateInput({
         bottom: menuPosition.openUpward ? window.innerHeight - menuPosition.top : undefined,
         left: menuPosition.left,
         width: menuPosition.width,
+        maxHeight: menuPosition.maxHeight,
+        overflowY: 'auto',
         zIndex: PANEL_Z_INDEX,
       }
     : undefined;
