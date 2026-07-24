@@ -232,7 +232,7 @@
     },
     "card": {
       "noContact": "No contact",
-      "expectedSqm": "{value} m² expected",
+      "expectedSqm": "{value} m²",
       "amount": "{value}",
       "assignedAreas": "{sqm} m² · {labels}"
     },

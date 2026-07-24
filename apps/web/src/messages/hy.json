@@ -232,7 +232,7 @@
     },
     "card": {
       "noContact": "Կոնտակտ չկա",
-      "expectedSqm": "{value} մ² սպասվող",
+      "expectedSqm": "{value} մ²",
       "amount": "{value}",
       "assignedAreas": "{sqm} մ² · {labels}"
     },

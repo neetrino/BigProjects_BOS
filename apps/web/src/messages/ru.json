@@ -232,7 +232,7 @@
     },
     "card": {
       "noContact": "Нет контакта",
-      "expectedSqm": "{value} м² ожидаемо",
+      "expectedSqm": "{value} м²",
       "amount": "{value}",
       "assignedAreas": "{sqm} м² · {labels}"
     },
