@@ -19,8 +19,8 @@ export function SearchInput({ className, ...props }: SearchInputProps) {
         type="search"
         {...props}
         className={clsx(
-          'w-full rounded-[var(--radius-control)] border border-[var(--color-border)] bg-white',
-          'py-2.5 pl-10 pr-3.5 text-sm font-medium tracking-tight text-[var(--color-fg)]',
+          'w-full h-9 rounded-[var(--radius-control)] border border-[var(--color-border)] bg-white',
+          'pl-10 pr-3.5 text-sm font-medium tracking-tight text-[var(--color-fg)]',
           'outline-none transition-colors duration-150',
           'placeholder:font-medium placeholder:text-[var(--color-muted)]/65',
           'hover:border-[var(--color-border-strong)]',

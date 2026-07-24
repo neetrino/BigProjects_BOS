@@ -36,7 +36,7 @@ export function ViewModeSwitcher({
       role="group"
       aria-label={ariaLabel}
       className={clsx(
-        'relative inline-grid shrink-0 grid-cols-2 rounded-xl border border-[var(--color-border)] bg-[var(--color-bg)]/80 p-0.5',
+        'relative inline-grid h-9 shrink-0 grid-cols-2 rounded-[var(--radius-control)] border border-[var(--color-border)] bg-[var(--color-bg)]/80 p-0.5',
         className,
       )}
     >
@@ -52,7 +52,7 @@ export function ViewModeSwitcher({
         aria-pressed={value === 'kanban'}
         onClick={() => onChange('kanban')}
         className={clsx(
-          'relative z-[1] flex size-9 items-center justify-center rounded-[10px] transition-colors duration-200',
+          'relative z-[1] flex h-full items-center justify-center rounded-[10px] px-2.5 transition-colors duration-200',
           value === 'kanban'
             ? 'text-[var(--color-brand)]'
             : 'text-[var(--color-muted)] hover:text-[var(--color-fg)]',
@@ -67,7 +67,7 @@ export function ViewModeSwitcher({
         aria-pressed={value === 'list'}
         onClick={() => onChange('list')}
         className={clsx(
-          'relative z-[1] flex size-9 items-center justify-center rounded-[10px] transition-colors duration-200',
+          'relative z-[1] flex h-full items-center justify-center rounded-[10px] px-2.5 transition-colors duration-200',
           value === 'list'
             ? 'text-[var(--color-brand)]'
             : 'text-[var(--color-muted)] hover:text-[var(--color-fg)]',

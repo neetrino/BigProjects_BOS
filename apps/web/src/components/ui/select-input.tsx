@@ -217,9 +217,9 @@ export function SelectInput({
           setOpen(true);
         }}
         className={clsx(
-          'relative z-[1] flex items-center justify-between gap-2 rounded-xl',
+          'relative z-[1] flex h-9 items-center justify-between gap-2 rounded-[var(--radius-control)]',
           fitContent ? 'w-auto' : 'w-full min-w-0',
-          'border border-[var(--color-border)] bg-white px-3.5 py-2.5 text-left text-sm font-medium',
+          'border border-[var(--color-border)] bg-white px-3.5 text-left text-sm font-medium',
           'text-[var(--color-fg)] outline-none transition-colors duration-150',
           'hover:border-[var(--color-border-strong)]',
           'focus-visible:outline-none',
