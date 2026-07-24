@@ -218,10 +218,10 @@ export function SelectInput({
         className={clsx(
           'relative z-[1] flex items-center justify-between gap-2 rounded-xl',
           fitContent ? 'w-auto' : 'w-full min-w-0',
-          'border border-[var(--color-border)] bg-[#f3f2ee] px-3.5 py-2.5 text-left text-sm font-medium',
+          'border border-[var(--color-border)] bg-white px-3.5 py-2.5 text-left text-sm font-medium',
           'text-[var(--color-fg)] outline-none transition-colors duration-150',
           'hover:border-[var(--color-border-strong)]',
-          'focus-visible:border-[var(--color-brand)] focus-visible:bg-white',
+          'focus-visible:border-[var(--color-brand)]',
           'disabled:cursor-not-allowed disabled:opacity-50',
         )}
       >
