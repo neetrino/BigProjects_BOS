@@ -186,19 +186,20 @@ export function AppSidebar({ pathname, currentLocale }: AppSidebarProps) {
           </div>
         </div>
 
-        <div className="mb-3">
-          <LanguageSwitcher currentLocale={currentLocale} compact />
+        <div className="flex items-stretch gap-2">
+          <div className="min-w-0 flex-1">
+            <LanguageSwitcher currentLocale={currentLocale} compact onBrand />
+          </div>
+          <Button
+            variant="onBrand"
+            onClick={handleLogout}
+            disabled={isPending}
+            className="h-auto shrink-0 self-stretch rounded-xl px-3 py-0 text-xs font-semibold tracking-wide"
+          >
+            <LogOut className="size-3.5" aria-hidden />
+            {tCommon('logout')}
+          </Button>
         </div>
-
-        <Button
-          variant="onBrand"
-          onClick={handleLogout}
-          disabled={isPending}
-          className="w-full justify-center gap-2"
-        >
-          <LogOut className="size-3.5" aria-hidden />
-          {tCommon('logout')}
-        </Button>
       </div>
     </aside>
   );
