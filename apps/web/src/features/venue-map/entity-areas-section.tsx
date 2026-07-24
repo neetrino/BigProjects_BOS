@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useMemo, useState } from 'react';
+import { Plus } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { ApiError } from '@/lib/api/client';
 import type { EntityAreaRef } from '@/lib/api/types';
@@ -74,6 +75,7 @@ export function EntityAreasSection({ cycleId, areas, target, onChanged }: Entity
         </ul>
       )}
       <Button variant="secondary" onClick={() => setAssignOpen(true)} className="self-end">
+        <Plus className="size-4" aria-hidden />
         {t('assign')}
       </Button>
 

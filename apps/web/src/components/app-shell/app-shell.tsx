@@ -17,15 +17,17 @@ export function AppShell({ currentLocale, children }: AppShellProps) {
   const isFullHeightPage =
     pathname.startsWith('/builder-sales') ||
     pathname.startsWith('/partners') ||
-    pathname.startsWith('/venue-map');
+    pathname.startsWith('/venue-map') ||
+    pathname.startsWith('/cycles') ||
+    pathname.startsWith('/organizations');
 
   return (
-    <div className={clsx('flex', isFullHeightPage ? 'h-screen overflow-hidden' : 'min-h-screen')}>
+    <div className="flex h-screen overflow-hidden">
       <AppSidebar pathname={pathname} currentLocale={currentLocale} />
       <main
         className={clsx(
-          'page-enter min-w-0 flex-1 px-8 py-7',
-          isFullHeightPage ? 'flex min-h-0 flex-col overflow-hidden' : 'overflow-auto',
+          'page-enter min-h-0 min-w-0 flex-1 px-8 py-7',
+          isFullHeightPage ? 'flex flex-col overflow-hidden' : 'overflow-auto',
         )}
       >
         {children}

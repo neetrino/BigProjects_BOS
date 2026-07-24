@@ -93,6 +93,7 @@ function CycleFormSheetInner({ open, cycle, onClose, onSaved }: CycleFormSheetIn
       open={open}
       title={isEdit ? t('editTitle') : t('createTitle')}
       onClose={onClose}
+      widthClassName="w-full sm:w-[min(100%,24rem)]"
       footer={
         <div className="flex justify-end gap-2">
           <Button variant="secondary" onClick={onClose} disabled={busy}>

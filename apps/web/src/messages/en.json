@@ -46,6 +46,10 @@
     "createTitle": "Create cycle",
     "editTitle": "Edit cycle",
     "empty": "No event cycles yet.",
+    "toolbar": {
+      "kanban": "Board",
+      "list": "List"
+    },
     "columns": {
       "name": "Name",
       "code": "Code",
@@ -92,6 +96,13 @@
     "allTypes": "All types",
     "empty": "No organizations found.",
     "notFound": "Organization not found.",
+    "toolbar": {
+      "kanban": "Board",
+      "list": "List"
+    },
+    "card": {
+      "contacts": "{count, plural, one {# contact} other {# contacts}}"
+    },
     "columns": {
       "name": "Name",
       "type": "Type",
@@ -115,7 +126,7 @@
     },
     "contacts": {
       "title": "Contacts",
-      "add": "Add contact",
+      "add": "Add Contact",
       "saveNew": "Add",
       "empty": "No contacts yet.",
       "primary": "Primary",
@@ -260,7 +271,7 @@
   "entityAreas": {
     "title": "Areas",
     "empty": "No areas assigned yet.",
-    "assign": "Assign area",
+    "assign": "Assign Area",
     "assignTitle": "Assign free area",
     "release": "Release",
     "releaseTitle": "Release area",
@@ -375,14 +386,14 @@
     "notes": {
       "title": "Notes",
       "placeholder": "Add a note…",
-      "add": "Add note",
+      "add": "Add Note",
       "empty": "No notes yet.",
       "deleteTitle": "Delete note",
       "deleteDescription": "Are you sure you want to delete this note? This cannot be undone."
     },
     "attachments": {
       "title": "Attachments",
-      "upload": "Upload file",
+      "upload": "Upload File",
       "uploading": "Uploading…",
       "download": "Download",
       "empty": "No attachments yet.",

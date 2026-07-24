@@ -1,19 +1,22 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Plus } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { ApiError } from '@/lib/api/client';
 import { listCycles, updateCycle } from '@/lib/api/cycles';
 import type { EventCycle, EventCycleStatus } from '@/lib/api/types';
-import { formatDate } from '@/lib/format';
+import type { BoardViewMode } from '@/components/kanban';
 import { useAuth } from '@/components/auth/auth-provider';
 import { Button } from '@/components/ui/button';
 import { Dialog } from '@/components/ui/dialog';
 import { EmptyState, ErrorState, LoadingState } from '@/components/ui/page-state';
+import { ViewModeSwitcher } from '@/components/ui/view-mode-switcher';
 import { showToast } from '@/components/ui/toast';
-import { StatusBadge } from '@/components/ui/status-badge';
+import { canTransitionTo } from '@/features/cycles/constants';
 import { CycleFormSheet } from '@/features/cycles/cycle-form-sheet';
+import { CycleKanban } from '@/features/cycles/cycle-kanban';
+import { CycleList } from '@/features/cycles/cycle-list';
 
 type ConfirmAction = {
   cycle: EventCycle;
@@ -25,16 +28,6 @@ type LoadState =
   | { status: 'error'; message: string }
   | { status: 'ready'; cycles: EventCycle[] };
 
-function statusTone(status: EventCycleStatus): 'draft' | 'active' | 'closed' {
-  if (status === 'ACTIVE') {
-    return 'active';
-  }
-  if (status === 'CLOSED') {
-    return 'closed';
-  }
-  return 'draft';
-}
-
 export function CyclesPage() {
   const t = useTranslations('cycles');
   const tCommon = useTranslations('common');
@@ -42,6 +35,7 @@ export function CyclesPage() {
   const isAdmin = user.role === 'ADMIN';
 
   const [loadState, setLoadState] = useState<LoadState>({ status: 'loading' });
+  const [view, setView] = useState<BoardViewMode>('kanban');
   const [sheetOpen, setSheetOpen] = useState(false);
   const [editing, setEditing] = useState<EventCycle | null>(null);
   const [confirm, setConfirm] = useState<ConfirmAction | null>(null);
@@ -98,6 +92,31 @@ export function CyclesPage() {
     setSheetOpen(true);
   }
 
+  function openEditById(cycleId: string) {
+    const cycle = cycles.find((item) => item.id === cycleId);
+    if (cycle) {
+      openEdit(cycle);
+    }
+  }
+
+  function requestStatus(
+    cycle: EventCycle,
+    nextStatus: Extract<EventCycleStatus, 'ACTIVE' | 'CLOSED'>,
+  ) {
+    if (!isAdmin || !canTransitionTo(cycle.status, nextStatus)) {
+      return;
+    }
+    setConfirm({ cycle, nextStatus });
+  }
+
+  function handleBoardStatusChange(cycleId: string, nextStatus: EventCycleStatus) {
+    const cycle = cycles.find((item) => item.id === cycleId);
+    if (!cycle || !canTransitionTo(cycle.status, nextStatus)) {
+      return;
+    }
+    requestStatus(cycle, nextStatus);
+  }
+
   async function handleConfirm() {
     if (!confirm) {
       return;
@@ -119,91 +138,61 @@ export function CyclesPage() {
   const cycles = loadState.status === 'ready' ? loadState.cycles : [];
 
   return (
-    <div className="flex flex-col gap-4">
-      <header className="flex items-center justify-between gap-3">
+    <div className="flex min-h-0 flex-1 flex-col gap-4">
+      <header className="flex shrink-0 items-start justify-between gap-3">
         <div>
           <h1 className="page-heading">{t('title')}</h1>
           <p className="page-subtitle">{t('subtitle')}</p>
         </div>
+      </header>
+
+      <div className="toolbar-shell shrink-0">
+        <ViewModeSwitcher
+          className="ml-auto shrink-0"
+          value={view}
+          onChange={setView}
+          kanbanLabel={t('toolbar.kanban')}
+          listLabel={t('toolbar.list')}
+        />
         {isAdmin ? (
-          <Button variant="primary" onClick={openCreate}>
+          <Button variant="primary" onClick={openCreate} className="shrink-0">
             <Plus className="size-4" aria-hidden />
             {t('create')}
           </Button>
         ) : null}
-      </header>
+      </div>
 
       {loadState.status === 'loading' ? <LoadingState message={tCommon('loading')} /> : null}
       {loadState.status === 'error' ? <ErrorState message={loadState.message} /> : null}
       {loadState.status === 'ready' && cycles.length === 0 ? (
-        <EmptyState message={t('empty')} />
+        <EmptyState
+          message={t('empty')}
+          action={
+            isAdmin ? (
+              <Button variant="primary" onClick={openCreate}>
+                <Plus className="size-4" aria-hidden />
+                {t('create')}
+              </Button>
+            ) : undefined
+          }
+        />
       ) : null}
 
-      {loadState.status === 'ready' && cycles.length > 0 ? (
-        <div className="panel overflow-x-auto">
-          <table className="w-full min-w-[640px] text-left text-sm">
-            <thead className="border-b border-[var(--color-border)] bg-[var(--color-bg-warm)]/70 text-xs text-[var(--color-muted)]">
-              <tr>
-                <th className="px-4 py-3 font-semibold tracking-wide">{t('columns.name')}</th>
-                <th className="px-4 py-3 font-semibold tracking-wide">{t('columns.code')}</th>
-                <th className="px-4 py-3 font-semibold tracking-wide">{t('columns.status')}</th>
-                <th className="px-4 py-3 font-semibold tracking-wide">{t('columns.dates')}</th>
-                {isAdmin ? (
-                  <th className="px-4 py-3 font-semibold tracking-wide">{t('columns.actions')}</th>
-                ) : null}
-              </tr>
-            </thead>
-            <tbody>
-              {cycles.map((cycle) => (
-                <tr
-                  key={cycle.id}
-                  className={
-                    isAdmin
-                      ? 'cursor-pointer border-b border-[var(--color-border)] last:border-0 hover:bg-[var(--color-accent-soft)]/35'
-                      : 'border-b border-[var(--color-border)] last:border-0'
-                  }
-                  onClick={() => openEdit(cycle)}
-                >
-                  <td className="px-4 py-3 font-medium text-[var(--color-fg)]">{cycle.name}</td>
-                  <td className="px-4 py-3 text-[var(--color-muted)]">{cycle.code}</td>
-                  <td className="px-4 py-3">
-                    <StatusBadge
-                      label={t(`status.${cycle.status}`)}
-                      tone={statusTone(cycle.status)}
-                    />
-                  </td>
-                  <td className="px-4 py-3 text-[var(--color-muted)]">
-                    {[formatDate(cycle.startsAt), formatDate(cycle.endsAt)]
-                      .filter(Boolean)
-                      .join(' – ') || '—'}
-                  </td>
-                  {isAdmin ? (
-                    <td className="px-4 py-3">
-                      <div className="flex gap-2" onClick={(event) => event.stopPropagation()}>
-                        {cycle.status === 'DRAFT' ? (
-                          <Button
-                            variant="secondary"
-                            onClick={() => setConfirm({ cycle, nextStatus: 'ACTIVE' })}
-                          >
-                            {t('actions.activate')}
-                          </Button>
-                        ) : null}
-                        {cycle.status === 'ACTIVE' ? (
-                          <Button
-                            variant="secondary"
-                            onClick={() => setConfirm({ cycle, nextStatus: 'CLOSED' })}
-                          >
-                            {t('actions.close')}
-                          </Button>
-                        ) : null}
-                      </div>
-                    </td>
-                  ) : null}
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+      {loadState.status === 'ready' && cycles.length > 0 && view === 'kanban' ? (
+        <CycleKanban
+          cycles={cycles}
+          onOpen={openEditById}
+          onStatusChange={handleBoardStatusChange}
+        />
+      ) : null}
+
+      {loadState.status === 'ready' && cycles.length > 0 && view === 'list' ? (
+        <CycleList
+          cycles={cycles}
+          isAdmin={isAdmin}
+          onOpen={openEdit}
+          onRequestStatus={requestStatus}
+        />
       ) : null}
 
       {isAdmin ? (

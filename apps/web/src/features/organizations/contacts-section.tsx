@@ -1,6 +1,7 @@
 'use client';
 
 import { FormEvent, useState } from 'react';
+import { Plus } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { ApiError } from '@/lib/api/client';
 import { createContact, deleteContact, updateContact } from '@/lib/api/organizations';
@@ -135,22 +136,7 @@ export function ContactsSection({ organizationId, contacts, onChange }: Contacts
 
   return (
     <section className="flex flex-col gap-3">
-      <div className="flex items-center justify-between gap-2">
-        <h3 className="text-sm font-semibold text-[var(--color-fg)]">{t('title')}</h3>
-        <Button variant="secondary" onClick={() => setShowAdd((value) => !value)}>
-          {showAdd ? tCommon('cancel') : t('add')}
-        </Button>
-      </div>
-
-      {showAdd ? (
-        <ContactForm
-          draft={draft}
-          onChange={setDraft}
-          onSubmit={handleAdd}
-          busy={busy}
-          submitLabel={t('saveNew')}
-        />
-      ) : null}
+      <h3 className="text-sm font-semibold text-[var(--color-fg)]">{t('title')}</h3>
 
       {contacts.length === 0 && !showAdd ? (
         <p className="text-sm text-[var(--color-muted)]">{t('empty')}</p>
@@ -216,11 +202,36 @@ export function ContactsSection({ organizationId, contacts, onChange }: Contacts
         ))}
       </ul>
 
+      {showAdd ? (
+        <ContactForm
+          draft={draft}
+          onChange={setDraft}
+          onSubmit={handleAdd}
+          busy={busy}
+          submitLabel={t('saveNew')}
+        />
+      ) : null}
+
       {error ? (
         <p role="alert" className="text-sm text-[var(--color-danger)]">
           {error}
         </p>
       ) : null}
+
+      <Button
+        variant="secondary"
+        onClick={() => setShowAdd((value) => !value)}
+        className="self-end"
+      >
+        {showAdd ? (
+          tCommon('cancel')
+        ) : (
+          <>
+            <Plus className="size-4" aria-hidden />
+            {t('add')}
+          </>
+        )}
+      </Button>
 
       <Dialog
         open={deleteTarget !== null}

@@ -1,6 +1,7 @@
 'use client';
 
 import { FormEvent, useEffect, useState } from 'react';
+import { Plus } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { ApiError } from '@/lib/api/client';
 import { createNote, deleteNote, listNotes } from '@/lib/api/notes';
@@ -121,7 +122,14 @@ export function EntityNotesSection({ ownerType, ownerId }: EntityNotesSectionPro
         />
         <div className="flex justify-end">
           <Button type="submit" variant="secondary" disabled={busy || body.trim().length === 0}>
-            {busy ? tCommon('saving') : t('notes.add')}
+            {busy ? (
+              tCommon('saving')
+            ) : (
+              <>
+                <Plus className="size-4" aria-hidden />
+                {t('notes.add')}
+              </>
+            )}
           </Button>
         </div>
         {formError ? (

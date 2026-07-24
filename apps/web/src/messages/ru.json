@@ -46,6 +46,10 @@
     "createTitle": "Создать цикл",
     "editTitle": "Редактировать цикл",
     "empty": "Циклов пока нет.",
+    "toolbar": {
+      "kanban": "Доска",
+      "list": "Список"
+    },
     "columns": {
       "name": "Название",
       "code": "Код",
@@ -92,6 +96,13 @@
     "allTypes": "Все типы",
     "empty": "Организации не найдены.",
     "notFound": "Организация не найдена.",
+    "toolbar": {
+      "kanban": "Доска",
+      "list": "Список"
+    },
+    "card": {
+      "contacts": "{count, plural, one {# контакт} few {# контакта} many {# контактов} other {# контакта}}"
+    },
     "columns": {
       "name": "Название",
       "type": "Тип",

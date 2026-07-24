@@ -205,6 +205,7 @@ function OrganizationDetailSheetInner({
       title={sheetTitle}
       subtitle={sheetSubtitle}
       onClose={onClose}
+      widthClassName="w-full sm:w-[min(100%,24rem)]"
       footer={
         isDirty ? (
           <div className="flex flex-col gap-2">

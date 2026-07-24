@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
+import { Plus } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { ApiError } from '@/lib/api/client';
 import {
@@ -198,7 +199,14 @@ export function EntityAttachmentsSection({ ownerType, ownerId }: EntityAttachmen
           disabled={uploadBusy}
         />
         <Button variant="secondary" disabled={uploadBusy} onClick={() => inputRef.current?.click()}>
-          {uploadBusy ? t('attachments.uploading') : t('attachments.upload')}
+          {uploadBusy ? (
+            t('attachments.uploading')
+          ) : (
+            <>
+              <Plus className="size-4" aria-hidden />
+              {t('attachments.upload')}
+            </>
+          )}
         </Button>
       </div>
 
