@@ -18,7 +18,6 @@ export type DealDetailsDraft = {
 };
 
 type DealDetailsSectionProps = {
-  organizationName: string;
   draft: DealDetailsDraft;
   contacts: OrganizationContact[];
   staffOptions: StaffOption[];
@@ -26,7 +25,6 @@ type DealDetailsSectionProps = {
 };
 
 export function DealDetailsSection({
-  organizationName,
   draft,
   contacts,
   staffOptions,
@@ -37,12 +35,6 @@ export function DealDetailsSection({
   return (
     <section className="flex flex-col gap-3">
       <h3 className="text-sm font-semibold text-[var(--color-fg)]">{t('sheet.details')}</h3>
-      <div>
-        <p className="text-xs text-[var(--color-muted)]">{t('fields.organization')}</p>
-        <p className="mt-0.5 text-sm font-medium text-[var(--color-accent)] underline-offset-2 hover:underline">
-          {organizationName}
-        </p>
-      </div>
       <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
         <Field label={t('fields.contact')} htmlFor="deal-contact">
           <SelectInput

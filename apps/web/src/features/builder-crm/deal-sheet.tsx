@@ -322,7 +322,6 @@ function DealSheetInner({
       {loadState.status === 'ready' && draft ? (
         <div className="flex flex-col gap-6">
           <DealDetailsSection
-            organizationName={loadState.deal.organization.name}
             draft={draft}
             contacts={loadState.contacts}
             staffOptions={staffOptions}

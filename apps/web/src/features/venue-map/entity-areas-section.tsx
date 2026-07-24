@@ -48,12 +48,7 @@ export function EntityAreasSection({ cycleId, areas, target, onChanged }: Entity
 
   return (
     <section className="flex flex-col gap-2">
-      <div className="flex items-center justify-between gap-2">
-        <h3 className="text-sm font-semibold text-[var(--color-fg)]">{t('title')}</h3>
-        <Button variant="secondary" onClick={() => setAssignOpen(true)}>
-          {t('assign')}
-        </Button>
-      </div>
+      <h3 className="text-sm font-semibold text-[var(--color-fg)]">{t('title')}</h3>
       {areas.length === 0 ? (
         <p className="text-sm text-[var(--color-muted)]">{t('empty')}</p>
       ) : (
@@ -77,6 +72,9 @@ export function EntityAreasSection({ cycleId, areas, target, onChanged }: Entity
           ))}
         </ul>
       )}
+      <Button variant="secondary" onClick={() => setAssignOpen(true)} className="self-end">
+        {t('assign')}
+      </Button>
 
       <AssignFreeAreaDialog
         open={assignOpen}
