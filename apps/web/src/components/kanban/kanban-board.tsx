@@ -151,10 +151,7 @@ export function KanbanBoard<TItem extends { id: string }, TStage extends string>
 
       {typeof document !== 'undefined'
         ? createPortal(
-            <DragOverlay
-              dropAnimation={null}
-              style={{ width: 'auto', height: 'auto' }}
-            >
+            <DragOverlay dropAnimation={null} style={{ width: 'auto', height: 'auto' }}>
               {activeItem ? (
                 <div className="desktop-drag-overlay-card cursor-grabbing">
                   {renderCard(activeItem, { isDragging: true })}

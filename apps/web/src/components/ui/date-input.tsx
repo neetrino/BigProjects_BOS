@@ -115,10 +115,7 @@ export function DateInput({
     const spaceAbove = stageRect.top - gap;
     const openUpward = spaceBelow < panelHeight && spaceAbove > spaceBelow;
     const availableSpace = openUpward ? spaceAbove : spaceBelow;
-    const maxHeight = Math.max(
-      panelMinHeight,
-      Math.min(panelHeight, Math.floor(availableSpace)),
-    );
+    const maxHeight = Math.max(panelMinHeight, Math.min(panelHeight, Math.floor(availableSpace)));
     setMenuPosition({
       top: openUpward ? stageRect.top - gap : stageRect.top + stageRect.height + gap,
       left: stageRect.left,
@@ -173,9 +170,7 @@ export function DateInput({
     ? {
         position: 'absolute',
         top: menuPosition.openUpward ? undefined : menuPosition.top,
-        bottom: menuPosition.openUpward
-          ? getStageLayoutHeight() - menuPosition.top
-          : undefined,
+        bottom: menuPosition.openUpward ? getStageLayoutHeight() - menuPosition.top : undefined,
         left: menuPosition.left,
         width: menuPosition.width,
         maxHeight: menuPosition.maxHeight,

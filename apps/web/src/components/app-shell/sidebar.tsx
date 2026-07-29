@@ -68,7 +68,9 @@ export function AppSidebar({ pathname }: AppSidebarProps) {
           </div>
           <div className="min-w-0 pt-0.5">
             <p className="brand-eyebrow">{t('product')}</p>
-            <p className="brand-mark mt-1.5 text-[calc(1.2rem+0.5px)] leading-[1.15]">{t('brand')}</p>
+            <p className="brand-mark mt-1.5 text-[calc(1.2rem+0.5px)] leading-[1.15]">
+              {t('brand')}
+            </p>
           </div>
         </div>
         <div
