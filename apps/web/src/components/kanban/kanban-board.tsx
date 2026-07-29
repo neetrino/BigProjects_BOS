@@ -217,10 +217,10 @@ function KanbanColumn<TItem extends { id: string }, TStage extends string>({
           TONE_HEADER_CLASS[tone],
         )}
       >
-        <h3 className="text-[12px] font-bold uppercase tracking-[0.14em] text-[var(--color-muted)]">
+        <h3 className="text-[11.5px] font-bold uppercase tracking-[0.14em] text-[var(--color-muted)]">
           {column.title}
         </h3>
-        <span className="rounded-lg bg-white px-2 py-0.5 text-[12px] font-semibold text-[var(--color-muted)]">
+        <span className="rounded-lg bg-white px-2 py-0.5 text-[11.5px] font-semibold text-[var(--color-muted)]">
           {items.length}
         </span>
       </header>

@@ -1,13 +1,13 @@
 @import 'tailwindcss';
 
-/* Body/UI chrome stays on layout scale; only type scale is +1px vs Tailwind defaults. */
+/* Body/UI chrome stays on layout scale; only type scale is +0.5px vs Tailwind defaults. */
 @theme {
-  --text-xs: 0.8125rem; /* 13px (was 12) */
-  --text-sm: 0.9375rem; /* 15px (was 14) */
-  --text-base: 1.0625rem; /* 17px (was 16) */
-  --text-lg: 1.1875rem; /* 19px (was 18) */
-  --text-xl: 1.3125rem; /* 21px (was 20) */
-  --text-2xl: 1.5625rem; /* 25px (was 24) */
+  --text-xs: 0.78125rem; /* 12.5px (was 12) */
+  --text-sm: 0.90625rem; /* 14.5px (was 14) */
+  --text-base: 1.03125rem; /* 16.5px (was 16) */
+  --text-lg: 1.15625rem; /* 18.5px (was 18) */
+  --text-xl: 1.28125rem; /* 20.5px (was 20) */
+  --text-2xl: 1.53125rem; /* 24.5px (was 24) */
 }
 
 :root {
@@ -250,7 +250,7 @@ input:disabled,
 
 .page-heading {
   font-family: var(--font-display);
-  font-size: clamp(calc(1.95rem + 1px), calc(2.4vw + 1px), calc(2.35rem + 1px));
+  font-size: clamp(calc(1.95rem + 0.5px), calc(2.4vw + 0.5px), calc(2.35rem + 0.5px));
   font-weight: 600;
   letter-spacing: -0.03em;
   line-height: 1.15;
@@ -260,7 +260,7 @@ input:disabled,
 .page-subtitle {
   margin-top: 0.45rem;
   max-width: 38rem;
-  font-size: calc(0.9rem + 1px);
+  font-size: calc(0.9rem + 0.5px);
   line-height: 1.5;
   color: var(--color-muted);
 }
@@ -296,7 +296,7 @@ input:disabled,
 }
 
 .brand-eyebrow {
-  font-size: calc(0.6875rem + 1px);
+  font-size: calc(0.6875rem + 0.5px);
   font-weight: 700;
   letter-spacing: 0.18em;
   text-transform: uppercase;

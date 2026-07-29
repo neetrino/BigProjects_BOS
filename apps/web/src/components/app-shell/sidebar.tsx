@@ -68,7 +68,7 @@ export function AppSidebar({ pathname }: AppSidebarProps) {
           </div>
           <div className="min-w-0 pt-0.5">
             <p className="brand-eyebrow">{t('product')}</p>
-            <p className="brand-mark mt-1.5 text-[calc(1.2rem+1px)] leading-[1.15]">{t('brand')}</p>
+            <p className="brand-mark mt-1.5 text-[calc(1.2rem+0.5px)] leading-[1.15]">{t('brand')}</p>
           </div>
         </div>
         <div
@@ -93,7 +93,7 @@ export function AppSidebar({ pathname }: AppSidebarProps) {
                   </span>
                   {t(item.key)}
                 </span>
-                <span className="rounded-md bg-white/15 px-1.5 py-0.5 text-[10px] font-bold uppercase tracking-[0.14em] text-white/70">
+                <span className="rounded-md bg-white/15 px-1.5 py-0.5 text-[9.5px] font-bold uppercase tracking-[0.14em] text-white/70">
                   {t('soon')}
                 </span>
               </span>

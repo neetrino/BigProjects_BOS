@@ -26,7 +26,7 @@ export function PartnerCard({ partner, isDragging }: PartnerCardProps) {
         <div className="flex shrink-0 flex-col items-end gap-1.5">
           <StatusBadge label={t(`stages.${partner.stage}`)} tone={stageTone(partner.stage)} />
           {partner.partnerType ? (
-            <span className="inline-flex rounded-md bg-[var(--color-brass-soft)] px-1.5 py-0.5 text-[12px] font-semibold text-[#7a6239]">
+            <span className="inline-flex rounded-md bg-[var(--color-brass-soft)] px-1.5 py-0.5 text-[11.5px] font-semibold text-[#7a6239]">
               {partner.partnerType}
             </span>
           ) : null}
@@ -57,7 +57,7 @@ export function PartnerCard({ partner, isDragging }: PartnerCardProps) {
         <div className="mt-2.5 flex items-center gap-1.5">
           <span
             aria-hidden
-            className="inline-flex size-6 items-center justify-center rounded-md bg-[var(--color-accent-soft)] text-[11px] font-semibold text-[var(--color-accent)]"
+            className="inline-flex size-6 items-center justify-center rounded-md bg-[var(--color-accent-soft)] text-[10.5px] font-semibold text-[var(--color-accent)]"
           >
             {nameInitials(partner.assignedStaff.name)}
           </span>

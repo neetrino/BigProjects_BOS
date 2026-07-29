@@ -199,7 +199,7 @@ export function ContactsSection({ organizationId, contacts, onChange }: Contacts
 
                 <div className="flex shrink-0 flex-col items-end gap-1.5">
                   {contact.isPrimary ? (
-                    <span className="rounded-md bg-[var(--color-accent-soft)] px-1.5 py-0.5 text-[12px] font-semibold text-[var(--color-accent)]">
+                    <span className="rounded-md bg-[var(--color-accent-soft)] px-1.5 py-0.5 text-[11.5px] font-semibold text-[var(--color-accent)]">
                       {t('primary')}
                     </span>
                   ) : (
