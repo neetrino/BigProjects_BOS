@@ -51,7 +51,7 @@ export function BuilderSalesToolbar({
 
       <div className="toolbar-shell">
         <SearchInput
-          className="min-w-[12rem] flex-1"
+          className="toolbar-search"
           placeholder={t('toolbar.searchPlaceholder')}
           value={searchInput}
           onChange={(event) => onSearchChange(event.target.value)}

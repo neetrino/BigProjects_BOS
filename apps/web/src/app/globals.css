@@ -34,9 +34,13 @@
   --radius-panel: 1.15rem;
   --font-sans: var(--font-manrope), var(--font-armenian), 'Segoe UI', sans-serif;
   --font-display: var(--font-fraunces), var(--font-armenian), Georgia, serif;
-  /* Same proportional desktop layout as ToonExpo: design at 1440px, scale to viewport. */
+  /*
+   * Scale keeps UI at 90% of a full-bleed 1440 layout.
+   * Stage width is expanded so the zoomed frame still fills 100vw
+   * (extra room goes to main content; sidebar stays left).
+   */
   --desktop-layout-design-width: 1440px;
-  --desktop-layout-scale: calc(100vw / var(--desktop-layout-design-width));
+  --desktop-layout-scale: calc(90vw / var(--desktop-layout-design-width));
 }
 
 @keyframes fade-rise {
@@ -156,7 +160,7 @@ body {
   overflow-x: clip;
 }
 
-/* Fixed design-width stage scaled with zoom so every viewport keeps the same layout. */
+/* Fixed 1440 stage; zoom = 90vw / 1440. */
 .desktop-fluid-frame {
   display: flex;
   width: 100%;
@@ -164,9 +168,15 @@ body {
   align-items: stretch;
 }
 
+/* App chrome: pin the scaled stage to the left so the sidebar stays flush. */
+.desktop-fluid-frame-start {
+  justify-content: flex-start;
+}
+
 .desktop-fluid-stage {
   position: relative;
-  width: var(--desktop-layout-design-width);
+  /* Fill the viewport after zoom: visual width = width * scale = 100vw */
+  width: calc(100vw / var(--desktop-layout-scale));
   min-width: 0;
   flex-shrink: 0;
   zoom: var(--desktop-layout-scale);
@@ -178,6 +188,14 @@ body {
 
 .h-fluid-screen {
   height: calc(100svh / var(--desktop-layout-scale));
+}
+
+/*
+ * Kanban DragOverlay is portaled to document.body (outside CSS zoom).
+ * Re-apply layout zoom so the floating card matches on-screen card size.
+ */
+.desktop-drag-overlay-card {
+  zoom: var(--desktop-layout-scale);
 }
 
 body > *:not([data-portal]) {
@@ -279,6 +297,7 @@ input:disabled,
   display: flex;
   flex-wrap: wrap;
   align-items: center;
+  width: 100%;
   gap: 0.5rem;
   border: 1px solid rgb(255 255 255 / 75%);
   border-radius: var(--radius-panel);
@@ -291,6 +310,11 @@ input:disabled,
 
 .toolbar-shell > * {
   min-width: 0;
+}
+
+.toolbar-shell .toolbar-search {
+  flex: 1 1 0;
+  min-width: 12rem;
 }
 
 .brand-tile {

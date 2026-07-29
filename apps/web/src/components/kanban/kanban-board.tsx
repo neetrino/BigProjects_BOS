@@ -14,6 +14,7 @@ import {
 } from '@dnd-kit/core';
 import { clsx } from 'clsx';
 import { useMemo, useRef, useState, type ReactNode } from 'react';
+import { createPortal } from 'react-dom';
 import type { KanbanColumnDef, KanbanColumnTone } from '@/components/kanban/types';
 
 const CLICK_MAX_DISTANCE_PX = 6;
@@ -148,11 +149,21 @@ export function KanbanBoard<TItem extends { id: string }, TStage extends string>
         </div>
       </div>
 
-      <DragOverlay dropAnimation={null}>
-        {activeItem ? (
-          <div className="cursor-grabbing">{renderCard(activeItem, { isDragging: true })}</div>
-        ) : null}
-      </DragOverlay>
+      {typeof document !== 'undefined'
+        ? createPortal(
+            <DragOverlay
+              dropAnimation={null}
+              style={{ width: 'auto', height: 'auto' }}
+            >
+              {activeItem ? (
+                <div className="desktop-drag-overlay-card cursor-grabbing">
+                  {renderCard(activeItem, { isDragging: true })}
+                </div>
+              ) : null}
+            </DragOverlay>,
+            document.body,
+          )
+        : null}
     </DndContext>
   );
 }

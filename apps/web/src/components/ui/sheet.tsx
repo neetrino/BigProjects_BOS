@@ -80,7 +80,7 @@ export function Sheet({
   }
 
   return createPortal(
-    <div data-portal className="fixed inset-0 z-[130] flex justify-end">
+    <div data-portal className="absolute inset-0 z-[130] flex justify-end">
       <button
         type="button"
         aria-label="Dismiss overlay"

@@ -8,6 +8,12 @@ import { createPortal } from 'react-dom';
 import { DateInputCalendar } from '@/components/ui/date-input-calendar';
 import { isoToDisplayInput, parseIsoDate, todayIso } from '@/components/ui/date-input-utils';
 import { useDateInputDraft } from '@/components/ui/use-date-input-draft';
+import {
+  getStageLayoutHeight,
+  viewportLengthToStage,
+  viewportRectToStage,
+} from '@/lib/desktop-layout-scale';
+import { getAppPortalRoot } from '@/lib/portal-root';
 
 type DateInputProps = {
   id?: string;
@@ -99,18 +105,24 @@ export function DateInput({
       return;
     }
     const rect = trigger.getBoundingClientRect();
-    const spaceBelow = window.innerHeight - rect.bottom - MENU_GAP_PX;
-    const spaceAbove = rect.top - MENU_GAP_PX;
-    const openUpward = spaceBelow < PANEL_HEIGHT_PX && spaceAbove > spaceBelow;
+    const stageRect = viewportRectToStage(rect);
+    const gap = viewportLengthToStage(MENU_GAP_PX);
+    const panelHeight = viewportLengthToStage(PANEL_HEIGHT_PX);
+    const panelMinHeight = viewportLengthToStage(PANEL_MIN_HEIGHT_PX);
+    const panelMinWidth = viewportLengthToStage(PANEL_MIN_WIDTH_PX);
+    const stageHeight = getStageLayoutHeight();
+    const spaceBelow = stageHeight - stageRect.top - stageRect.height - gap;
+    const spaceAbove = stageRect.top - gap;
+    const openUpward = spaceBelow < panelHeight && spaceAbove > spaceBelow;
     const availableSpace = openUpward ? spaceAbove : spaceBelow;
     const maxHeight = Math.max(
-      PANEL_MIN_HEIGHT_PX,
-      Math.min(PANEL_HEIGHT_PX, Math.floor(availableSpace)),
+      panelMinHeight,
+      Math.min(panelHeight, Math.floor(availableSpace)),
     );
     setMenuPosition({
-      top: openUpward ? rect.top - MENU_GAP_PX : rect.bottom + MENU_GAP_PX,
-      left: rect.left,
-      width: Math.max(rect.width, PANEL_MIN_WIDTH_PX),
+      top: openUpward ? stageRect.top - gap : stageRect.top + stageRect.height + gap,
+      left: stageRect.left,
+      width: Math.max(stageRect.width, panelMinWidth),
       openUpward,
       maxHeight,
     });
@@ -159,9 +171,11 @@ export function DateInput({
 
   const panelStyle: CSSProperties | undefined = menuPosition
     ? {
-        position: 'fixed',
+        position: 'absolute',
         top: menuPosition.openUpward ? undefined : menuPosition.top,
-        bottom: menuPosition.openUpward ? window.innerHeight - menuPosition.top : undefined,
+        bottom: menuPosition.openUpward
+          ? getStageLayoutHeight() - menuPosition.top
+          : undefined,
         left: menuPosition.left,
         width: menuPosition.width,
         maxHeight: menuPosition.maxHeight,
@@ -257,7 +271,7 @@ export function DateInput({
                 onClear={clearValue}
               />
             </div>,
-            document.body,
+            getAppPortalRoot(),
           )
         : null}
     </div>

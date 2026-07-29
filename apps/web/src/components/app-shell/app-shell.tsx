@@ -23,7 +23,7 @@ export function AppShell({ currentLocale, children }: AppShellProps) {
     pathname.startsWith('/organizations');
 
   return (
-    <div className="desktop-fluid-frame">
+    <div className="desktop-fluid-frame desktop-fluid-frame-start">
       <div className="desktop-fluid-stage">
         <div className="flex h-fluid-screen overflow-hidden">
           <AppSidebar pathname={pathname} currentLocale={currentLocale} />
@@ -35,8 +35,8 @@ export function AppShell({ currentLocale, children }: AppShellProps) {
           >
             {children}
           </main>
-          <ToastHost />
         </div>
+        <ToastHost />
         <div id={APP_PORTAL_ROOT_ID} />
       </div>
     </div>

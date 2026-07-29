@@ -176,7 +176,7 @@ export function CyclesPage() {
 
       <div className="toolbar-shell shrink-0">
         <SearchInput
-          className="min-w-[12rem] flex-1"
+          className="toolbar-search"
           placeholder={t('searchPlaceholder')}
           value={searchInput}
           onChange={(event) => setSearchInput(event.target.value)}
