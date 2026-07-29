@@ -5,23 +5,15 @@ import {
   Building2,
   CalendarDays,
   Handshake,
-  LogOut,
   Map,
   Settings,
   Store,
   type LucideIcon,
 } from 'lucide-react';
 import Image from 'next/image';
-import { useTransition } from 'react';
 import Link from 'next/link';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useSearchParams } from 'next/navigation';
 import { useTranslations } from 'next-intl';
-import { logout } from '@/lib/api/auth';
-import type { Locale } from '@/i18n/config';
-import { useAuth } from '@/components/auth/auth-provider';
-import { LanguageSwitcher } from '@/components/language-switcher';
-import { Button } from '@/components/ui/button';
-import { showToast } from '@/components/ui/toast';
 
 type NavKey = 'builderSales' | 'partners' | 'venueMap' | 'cycles' | 'organizations' | 'settings';
 
@@ -44,28 +36,12 @@ const NAV_ITEMS: NavItem[] = [
 
 type AppSidebarProps = {
   pathname: string;
-  currentLocale: Locale;
 };
 
-function userInitials(name: string): string {
-  const parts = name.trim().split(/\s+/).filter(Boolean);
-  if (parts.length === 0) {
-    return 'U';
-  }
-  if (parts.length === 1) {
-    return parts[0].slice(0, 1).toUpperCase();
-  }
-  return `${parts[0].slice(0, 1)}${parts[1].slice(0, 1)}`.toUpperCase();
-}
-
-export function AppSidebar({ pathname, currentLocale }: AppSidebarProps) {
+export function AppSidebar({ pathname }: AppSidebarProps) {
   const t = useTranslations('nav');
-  const tCommon = useTranslations('common');
-  const { user } = useAuth();
-  const router = useRouter();
   const searchParams = useSearchParams();
   const cycleId = searchParams.get('cycle');
-  const [isPending, startTransition] = useTransition();
 
   function navHref(item: NavItem): string {
     if (!item.href) {
@@ -75,18 +51,6 @@ export function AppSidebar({ pathname, currentLocale }: AppSidebarProps) {
       return `${item.href}?cycle=${encodeURIComponent(cycleId)}`;
     }
     return item.href;
-  }
-
-  function handleLogout() {
-    startTransition(async () => {
-      try {
-        await logout();
-        router.replace('/login');
-        router.refresh();
-      } catch {
-        showToast(tCommon('unexpectedError'), 'error');
-      }
-    });
   }
 
   return (
@@ -113,7 +77,7 @@ export function AppSidebar({ pathname, currentLocale }: AppSidebarProps) {
         />
       </div>
 
-      <nav aria-label={t('label')} className="relative flex flex-1 flex-col gap-1 px-3 pb-2">
+      <nav aria-label={t('label')} className="relative flex flex-1 flex-col gap-1 px-3 pb-6">
         {NAV_ITEMS.map((item) => {
           const Icon = item.icon;
 
@@ -172,36 +136,6 @@ export function AppSidebar({ pathname, currentLocale }: AppSidebarProps) {
           );
         })}
       </nav>
-
-      <div className="relative mt-auto border-t border-white/15 px-4 py-4">
-        <div className="mb-3 flex items-center gap-3 rounded-[var(--radius-control)] border border-white/15 bg-white/10 px-3 py-2.5">
-          <div
-            aria-hidden
-            className="flex size-9 shrink-0 items-center justify-center rounded-full bg-white text-[calc(0.7rem+1px)] font-bold tracking-wide text-[var(--color-brand)]"
-          >
-            {userInitials(user.name)}
-          </div>
-          <div className="min-w-0">
-            <p className="truncate text-sm font-semibold tracking-tight text-white">{user.name}</p>
-            <p className="truncate text-[12px] text-white/60">{user.email}</p>
-          </div>
-        </div>
-
-        <div className="flex items-stretch gap-2">
-          <div className="min-w-0 flex-1">
-            <LanguageSwitcher currentLocale={currentLocale} compact onBrand />
-          </div>
-          <Button
-            variant="onBrand"
-            onClick={handleLogout}
-            disabled={isPending}
-            className="h-auto shrink-0 self-stretch rounded-xl px-3 py-0 text-xs font-semibold tracking-wide"
-          >
-            <LogOut className="size-3.5" aria-hidden />
-            {tCommon('logout')}
-          </Button>
-        </div>
-      </div>
     </aside>
   );
 }

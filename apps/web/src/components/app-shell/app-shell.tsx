@@ -3,17 +3,15 @@
 import { clsx } from 'clsx';
 import { usePathname } from 'next/navigation';
 import type { ReactNode } from 'react';
-import type { Locale } from '@/i18n/config';
 import { AppSidebar } from '@/components/app-shell/sidebar';
 import { ToastHost } from '@/components/ui/toast';
 import { APP_PORTAL_ROOT_ID } from '@/lib/portal-root';
 
 type AppShellProps = {
-  currentLocale: Locale;
   children: ReactNode;
 };
 
-export function AppShell({ currentLocale, children }: AppShellProps) {
+export function AppShell({ children }: AppShellProps) {
   const pathname = usePathname();
   const isFullHeightPage =
     pathname.startsWith('/builder-sales') ||
@@ -26,7 +24,7 @@ export function AppShell({ currentLocale, children }: AppShellProps) {
     <div className="desktop-fluid-frame desktop-fluid-frame-start">
       <div className="desktop-fluid-stage">
         <div className="flex h-fluid-screen overflow-hidden">
-          <AppSidebar pathname={pathname} currentLocale={currentLocale} />
+          <AppSidebar pathname={pathname} />
           <main
             className={clsx(
               'page-enter min-h-0 min-w-0 flex-1 px-8 py-7',
