@@ -49,8 +49,9 @@ export function DateInputCalendar({
     <div
       role="dialog"
       aria-label={labels.title}
-      className="dropdown-panel-in overflow-hidden rounded-[1.15rem] border border-white/80 bg-[linear-gradient(180deg,#fffcf8,#ffffff)] p-3 shadow-[var(--shadow-lift)] outline outline-1 outline-[var(--color-border)]"
+      className="dropdown-panel-in rounded-[var(--radius-panel)] border border-[var(--color-accent-soft)] bg-[linear-gradient(180deg,#fbfcfe,#f6f8fc)]"
     >
+      <div className="overflow-hidden rounded-[inherit] p-3">
       <div className="mb-3 flex items-center justify-between gap-2">
         <button
           type="button"
@@ -138,6 +139,7 @@ export function DateInputCalendar({
         >
           {labels.today}
         </button>
+      </div>
       </div>
     </div>
   );
