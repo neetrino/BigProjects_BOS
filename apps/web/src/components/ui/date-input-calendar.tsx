@@ -83,7 +83,7 @@ export function DateInputCalendar({
         {weekdayLabels.map((label, index) => (
           <span
             key={`${label}-${index}`}
-            className="py-1 text-center text-[10px] font-bold uppercase tracking-[0.08em] text-[var(--color-muted)]"
+            className="py-1 text-center text-[11px] font-bold uppercase tracking-[0.08em] text-[var(--color-muted)]"
           >
             {label}
           </span>

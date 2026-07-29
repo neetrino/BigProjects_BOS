@@ -73,7 +73,7 @@ export function DealStageSection({ deal, busy, onStageChange }: DealStageSection
               disabled={disabled}
               onClick={() => void applyStage(stage)}
               className={clsx(
-                'relative z-[1] truncate rounded-[10px] px-1.5 py-2 text-center text-[11px] font-semibold leading-tight transition-colors duration-200',
+                'relative z-[1] truncate rounded-[10px] px-1.5 py-2 text-center text-[12px] font-semibold leading-tight transition-colors duration-200',
                 isCurrent
                   ? 'text-[var(--color-brand)]'
                   : disabled

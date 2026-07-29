@@ -104,7 +104,7 @@ export function AppSidebar({ pathname, currentLocale }: AppSidebarProps) {
           </div>
           <div className="min-w-0 pt-0.5">
             <p className="brand-eyebrow">{t('product')}</p>
-            <p className="brand-mark mt-1.5 text-[1.2rem] leading-[1.15]">{t('brand')}</p>
+            <p className="brand-mark mt-1.5 text-[calc(1.2rem+1px)] leading-[1.15]">{t('brand')}</p>
           </div>
         </div>
         <div
@@ -129,7 +129,7 @@ export function AppSidebar({ pathname, currentLocale }: AppSidebarProps) {
                   </span>
                   {t(item.key)}
                 </span>
-                <span className="rounded-md bg-white/15 px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-[0.14em] text-white/70">
+                <span className="rounded-md bg-white/15 px-1.5 py-0.5 text-[10px] font-bold uppercase tracking-[0.14em] text-white/70">
                   {t('soon')}
                 </span>
               </span>
@@ -177,13 +177,13 @@ export function AppSidebar({ pathname, currentLocale }: AppSidebarProps) {
         <div className="mb-3 flex items-center gap-3 rounded-[var(--radius-control)] border border-white/15 bg-white/10 px-3 py-2.5">
           <div
             aria-hidden
-            className="flex size-9 shrink-0 items-center justify-center rounded-full bg-white text-[0.7rem] font-bold tracking-wide text-[var(--color-brand)]"
+            className="flex size-9 shrink-0 items-center justify-center rounded-full bg-white text-[calc(0.7rem+1px)] font-bold tracking-wide text-[var(--color-brand)]"
           >
             {userInitials(user.name)}
           </div>
           <div className="min-w-0">
             <p className="truncate text-sm font-semibold tracking-tight text-white">{user.name}</p>
-            <p className="truncate text-[11px] text-white/60">{user.email}</p>
+            <p className="truncate text-[12px] text-white/60">{user.email}</p>
           </div>
         </div>
 

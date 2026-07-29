@@ -61,7 +61,7 @@ export function OrganizationCard({ organization }: OrganizationCardProps) {
           <p className="text-sm font-semibold tracking-tight text-[var(--color-fg)]">
             {organization.name}
           </p>
-          <span className="shrink-0 rounded-md bg-[var(--color-brass-soft)] px-1.5 py-0.5 text-[11px] font-semibold text-[#7a6239]">
+          <span className="shrink-0 rounded-md bg-[var(--color-brass-soft)] px-1.5 py-0.5 text-[12px] font-semibold text-[#7a6239]">
             {t(`types.${organization.type}`)}
           </span>
         </div>

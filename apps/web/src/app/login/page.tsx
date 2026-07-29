@@ -30,14 +30,14 @@ export default async function LoginPage() {
                     className="size-[38px] object-contain"
                   />
                 </div>
-                <p className="brand-mark m-0 text-[1.4rem] leading-none tracking-tight">
+                <p className="brand-mark m-0 text-[calc(1.4rem+1px)] leading-none tracking-tight">
                   {tNav('brand')}
                 </p>
               </div>
             </div>
 
             <div className="surface-card rounded-[1.4rem] p-8">
-              <h1 className="font-[family-name:var(--font-display)] text-[2.35rem] font-medium leading-none tracking-tight text-[var(--color-fg)]">
+              <h1 className="font-[family-name:var(--font-display)] text-[calc(2.35rem+1px)] font-medium leading-none tracking-tight text-[var(--color-fg)]">
                 {t('title')}
               </h1>
               <div className="mt-4 h-px w-14 bg-gradient-to-r from-[var(--color-brass)] to-transparent" />

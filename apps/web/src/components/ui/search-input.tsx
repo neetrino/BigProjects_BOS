@@ -1,6 +1,7 @@
 import { clsx } from 'clsx';
 import { Search } from 'lucide-react';
 import type { InputHTMLAttributes } from 'react';
+import { FIELD_CONTROL_CLASS } from '@/components/ui/field-control';
 
 type SearchInputProps = Omit<InputHTMLAttributes<HTMLInputElement>, 'type'>;
 
@@ -19,12 +20,9 @@ export function SearchInput({ className, ...props }: SearchInputProps) {
         type="search"
         {...props}
         className={clsx(
-          'w-full h-9 rounded-[var(--radius-control)] border border-[var(--color-border)] bg-white',
-          'pl-10 pr-3.5 text-sm font-medium tracking-tight text-[var(--color-fg)]',
-          'outline-none transition-colors duration-150',
-          'placeholder:font-medium placeholder:text-[var(--color-muted)]/65',
-          'hover:border-[var(--color-border-strong)]',
-          'focus:border-[var(--color-brand)]',
+          FIELD_CONTROL_CLASS,
+          'pl-10 pr-3.5 tracking-tight',
+          'placeholder:text-[var(--color-muted)]/65',
           'disabled:cursor-not-allowed disabled:opacity-50',
           '[&::-webkit-search-cancel-button]:appearance-none',
           '[&::-webkit-search-decoration]:appearance-none',
