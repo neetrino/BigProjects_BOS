@@ -190,16 +190,24 @@ function KanbanColumn<TItem extends { id: string }, TStage extends string>({
     <section
       ref={setNodeRef}
       className={clsx(
-        'flex w-72 shrink-0 flex-col overflow-hidden border transition-all duration-200',
+        'relative flex w-72 shrink-0 flex-col overflow-hidden border transition-all duration-200',
         terminal
           ? clsx(
               TERMINAL_COLUMN_RADIUS_CLASS,
               'border-dashed border-[var(--color-border-strong)] bg-[#ffffff]',
             )
           : 'rounded-[var(--radius-panel)] border-white/80 bg-[#ffffff] outline outline-1 outline-[var(--color-border)]',
-        isOver && 'ring-2 ring-[var(--color-accent)]/30',
       )}
     >
+      {isOver ? (
+        <div
+          aria-hidden
+          className={clsx(
+            'pointer-events-none absolute inset-0 z-20 ring-2 ring-inset ring-[var(--color-accent)]/50',
+            terminal ? TERMINAL_COLUMN_RADIUS_CLASS : 'rounded-[var(--radius-panel)]',
+          )}
+        />
+      ) : null}
       <header
         className={clsx(
           'flex items-center justify-between gap-2 border-b px-3.5 py-3',
