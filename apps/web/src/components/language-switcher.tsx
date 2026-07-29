@@ -8,8 +8,8 @@ import { locales, type Locale } from '@/i18n/config';
 import { setLocale } from '@/i18n/locale';
 
 const LOCALE_SHORT: Record<Locale, string> = {
-  en: 'EN',
-  ru: 'РУ',
+  en: 'ENG',
+  ru: 'РУС',
   hy: 'ՀԱՅ',
 };
 
@@ -17,8 +17,9 @@ const SLIDE_MS = 320;
 
 type LanguageSwitcherProps = {
   currentLocale: Locale;
+  /** Full-width segmented control (settings). Default is floating (login). */
   compact?: boolean;
-  /** Dark brand surfaces (sidebar). */
+  /** Dark brand surfaces. */
   onBrand?: boolean;
 };
 
@@ -57,8 +58,8 @@ export function LanguageSwitcher({
     <nav
       aria-label={t('label')}
       className={clsx(
-        'relative inline-grid grid-cols-3 rounded-xl border p-0.5',
-        compact ? 'w-full' : 'absolute right-6 top-6 z-10',
+        'relative grid w-full grid-cols-3 rounded-xl border p-0.5',
+        !compact && 'absolute right-6 top-6 z-10 max-w-[12rem]',
         onBrand
           ? 'border-white/15 bg-white/10'
           : 'border-[var(--color-border)] bg-[var(--color-bg)]/80',

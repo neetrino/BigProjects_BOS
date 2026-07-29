@@ -162,7 +162,8 @@
       "name": "Անուն",
       "email": "Էլ․ փոստ",
       "role": "Դեր",
-      "language": "Լեզու"
+      "language": "Լեզու",
+      "sessionTitle": "Սեսիա"
     },
     "staff": {
       "title": "Աշխատակիցների հաշիվներ",

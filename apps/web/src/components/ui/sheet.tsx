@@ -80,7 +80,7 @@ export function Sheet({
   }
 
   return createPortal(
-    <div data-portal className="fixed inset-0 z-[130] flex justify-end">
+    <div data-portal className="absolute inset-0 z-[130] flex justify-end">
       <button
         type="button"
         aria-label="Dismiss overlay"
@@ -130,7 +130,7 @@ export function Sheet({
         >
           <header className="flex shrink-0 items-center justify-between gap-4 px-7 pb-4 pt-6">
             <div className="min-w-0 flex-1">
-              <h2 className="truncate text-[1.5rem] font-bold leading-tight tracking-tight text-[var(--color-fg)]">
+              <h2 className="truncate text-[calc(1.5rem+0.5px)] font-bold leading-tight tracking-tight text-[var(--color-fg)]">
                 {title}
               </h2>
               {subtitle ? (

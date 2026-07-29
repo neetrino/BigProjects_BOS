@@ -162,7 +162,8 @@
       "name": "Имя",
       "email": "Эл. почта",
       "role": "Роль",
-      "language": "Язык"
+      "language": "Язык",
+      "sessionTitle": "Сессия"
     },
     "staff": {
       "title": "Учётные записи",

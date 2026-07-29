@@ -13,6 +13,13 @@ import {
   type SelectHTMLAttributes,
 } from 'react';
 import { createPortal } from 'react-dom';
+import { FIELD_CONTROL_CLASS } from '@/components/ui/field-control';
+import {
+  getStageLayoutHeight,
+  viewportLengthToStage,
+  viewportRectToStage,
+} from '@/lib/desktop-layout-scale';
+import { getAppPortalRoot } from '@/lib/portal-root';
 
 type SelectOption = {
   value: string;
@@ -86,20 +93,22 @@ export function SelectInput({
     }
 
     const rect = trigger.getBoundingClientRect();
-    const spaceBelow = window.innerHeight - rect.bottom - MENU_GAP_PX;
-    const spaceAbove = rect.top - MENU_GAP_PX;
-    const openUpward =
-      spaceBelow < Math.min(MENU_MAX_HEIGHT_PX, MENU_FLIP_THRESHOLD_PX) && spaceAbove > spaceBelow;
+    const stageRect = viewportRectToStage(rect);
+    const gap = viewportLengthToStage(MENU_GAP_PX);
+    const maxMenu = viewportLengthToStage(MENU_MAX_HEIGHT_PX);
+    const minMenu = viewportLengthToStage(MENU_MIN_HEIGHT_PX);
+    const flipAt = viewportLengthToStage(MENU_FLIP_THRESHOLD_PX);
+    const stageHeight = getStageLayoutHeight();
+    const spaceBelow = stageHeight - stageRect.top - stageRect.height - gap;
+    const spaceAbove = stageRect.top - gap;
+    const openUpward = spaceBelow < Math.min(maxMenu, flipAt) && spaceAbove > spaceBelow;
     const availableSpace = openUpward ? spaceAbove : spaceBelow;
-    const maxHeight = Math.max(
-      MENU_MIN_HEIGHT_PX,
-      Math.min(MENU_MAX_HEIGHT_PX, Math.floor(availableSpace)),
-    );
+    const maxHeight = Math.max(minMenu, Math.min(maxMenu, Math.floor(availableSpace)));
 
     setMenuPosition({
-      top: openUpward ? rect.top - MENU_GAP_PX : rect.bottom + MENU_GAP_PX,
-      left: rect.left,
-      width: rect.width,
+      top: openUpward ? stageRect.top - gap : stageRect.top + stageRect.height + gap,
+      left: stageRect.left,
+      width: stageRect.width,
       openUpward,
       maxHeight,
     });
@@ -171,15 +180,15 @@ export function SelectInput({
 
   const menuStyle: CSSProperties | undefined = menuPosition
     ? {
-        position: 'fixed',
+        position: 'absolute',
         zIndex: 1000,
         left: menuPosition.left,
-        minWidth: Math.max(menuPosition.width, 160),
+        minWidth: Math.max(menuPosition.width, viewportLengthToStage(160)),
         width: 'max-content',
-        maxWidth: 'min(24rem, calc(100vw - 1.5rem))',
+        maxWidth: `min(24rem, calc(100% - ${viewportLengthToStage(24)}px))`,
         maxHeight: menuPosition.maxHeight,
         ...(menuPosition.openUpward
-          ? { bottom: window.innerHeight - menuPosition.top }
+          ? { bottom: getStageLayoutHeight() - menuPosition.top }
           : { top: menuPosition.top }),
       }
     : undefined;
@@ -230,12 +239,9 @@ export function SelectInput({
           setOpen(true);
         }}
         className={clsx(
-          'relative z-[1] flex h-9 items-center justify-between gap-2 rounded-[var(--radius-control)]',
-          fitContent ? 'w-auto' : 'w-full min-w-0',
-          'border border-[var(--color-border)] bg-white px-3.5 text-left text-sm font-medium',
-          'text-[var(--color-fg)] outline-none transition-colors duration-150',
-          'hover:border-[var(--color-border-strong)]',
-          'focus-visible:outline-none',
+          FIELD_CONTROL_CLASS,
+          'relative z-[1] flex items-center justify-between gap-2 text-left',
+          fitContent ? 'w-auto' : 'min-w-0',
           'disabled:cursor-not-allowed disabled:opacity-50',
         )}
       >
@@ -306,7 +312,7 @@ export function SelectInput({
                 })
               )}
             </ul>,
-            document.body,
+            getAppPortalRoot(),
           )
         : null}
     </div>

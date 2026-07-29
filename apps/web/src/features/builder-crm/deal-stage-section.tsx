@@ -49,13 +49,13 @@ export function DealStageSection({ deal, busy, onStageChange }: DealStageSection
       <div
         role="group"
         aria-label={t('sheet.stage')}
-        className="relative grid w-full grid-cols-5 rounded-xl border border-[var(--color-border)] bg-[var(--color-bg)]/80 p-0.5"
+        className="relative grid w-full grid-cols-5 rounded-2xl border border-[var(--color-border)] bg-[var(--color-bg)]/80 p-1"
       >
         <span
           aria-hidden
-          className="pointer-events-none absolute inset-y-0.5 left-0.5 rounded-[10px] bg-[var(--color-surface)] shadow-sm transition-transform duration-300 ease-[var(--ease-out-premium)]"
+          className="pointer-events-none absolute inset-y-1 left-1 rounded-xl bg-[var(--color-surface)] shadow-sm transition-transform duration-300 ease-[var(--ease-out-premium)]"
           style={{
-            width: `calc((100% - 4px) / ${segmentCount})`,
+            width: `calc((100% - 8px) / ${segmentCount})`,
             transform: `translateX(${activeIndex * 100}%)`,
           }}
         />
@@ -73,7 +73,7 @@ export function DealStageSection({ deal, busy, onStageChange }: DealStageSection
               disabled={disabled}
               onClick={() => void applyStage(stage)}
               className={clsx(
-                'relative z-[1] truncate rounded-[10px] px-1.5 py-2 text-center text-[11px] font-semibold leading-tight transition-colors duration-200',
+                'relative z-[1] truncate rounded-xl px-2 py-2.5 text-center text-[12.5px] font-semibold leading-tight transition-colors duration-200',
                 isCurrent
                   ? 'text-[var(--color-brand)]'
                   : disabled

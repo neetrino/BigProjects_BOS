@@ -1,5 +1,15 @@
 @import 'tailwindcss';
 
+/* Body/UI chrome stays on layout scale; only type scale is +0.5px vs Tailwind defaults. */
+@theme {
+  --text-xs: 0.78125rem; /* 12.5px (was 12) */
+  --text-sm: 0.90625rem; /* 14.5px (was 14) */
+  --text-base: 1.03125rem; /* 16.5px (was 16) */
+  --text-lg: 1.15625rem; /* 18.5px (was 18) */
+  --text-xl: 1.28125rem; /* 20.5px (was 20) */
+  --text-2xl: 1.53125rem; /* 24.5px (was 24) */
+}
+
 :root {
   --color-bg: #f0f4f8;
   --color-bg-warm: #f7f3ee;
@@ -34,9 +44,13 @@
   --radius-panel: 1.15rem;
   --font-sans: var(--font-manrope), var(--font-armenian), 'Segoe UI', sans-serif;
   --font-display: var(--font-fraunces), var(--font-armenian), Georgia, serif;
-  /* Same proportional desktop layout as ToonExpo: design at 1440px, scale to viewport. */
+  /*
+   * Scale keeps UI at 90% of a full-bleed 1440 layout.
+   * Stage width is expanded so the zoomed frame still fills 100vw
+   * (extra room goes to main content; sidebar stays left).
+   */
   --desktop-layout-design-width: 1440px;
-  --desktop-layout-scale: calc(100vw / var(--desktop-layout-design-width));
+  --desktop-layout-scale: calc(90vw / var(--desktop-layout-design-width));
 }
 
 @keyframes fade-rise {
@@ -156,7 +170,7 @@ body {
   overflow-x: clip;
 }
 
-/* Fixed design-width stage scaled with zoom so every viewport keeps the same layout. */
+/* Fixed 1440 stage; zoom = 90vw / 1440. */
 .desktop-fluid-frame {
   display: flex;
   width: 100%;
@@ -164,9 +178,15 @@ body {
   align-items: stretch;
 }
 
+/* App chrome: pin the scaled stage to the left so the sidebar stays flush. */
+.desktop-fluid-frame-start {
+  justify-content: flex-start;
+}
+
 .desktop-fluid-stage {
   position: relative;
-  width: var(--desktop-layout-design-width);
+  /* Fill the viewport after zoom: visual width = width * scale = 100vw */
+  width: calc(100vw / var(--desktop-layout-scale));
   min-width: 0;
   flex-shrink: 0;
   zoom: var(--desktop-layout-scale);
@@ -178,6 +198,14 @@ body {
 
 .h-fluid-screen {
   height: calc(100svh / var(--desktop-layout-scale));
+}
+
+/*
+ * Kanban DragOverlay is portaled to document.body (outside CSS zoom).
+ * Re-apply layout zoom so the floating card matches on-screen card size.
+ */
+.desktop-drag-overlay-card {
+  zoom: var(--desktop-layout-scale);
 }
 
 body > *:not([data-portal]) {
@@ -222,7 +250,7 @@ input:disabled,
 
 .page-heading {
   font-family: var(--font-display);
-  font-size: clamp(1.95rem, 2.4vw, 2.35rem);
+  font-size: clamp(calc(1.95rem + 0.5px), calc(2.4vw + 0.5px), calc(2.35rem + 0.5px));
   font-weight: 600;
   letter-spacing: -0.03em;
   line-height: 1.15;
@@ -232,7 +260,7 @@ input:disabled,
 .page-subtitle {
   margin-top: 0.45rem;
   max-width: 38rem;
-  font-size: 0.9rem;
+  font-size: calc(0.9rem + 0.5px);
   line-height: 1.5;
   color: var(--color-muted);
 }
@@ -268,7 +296,7 @@ input:disabled,
 }
 
 .brand-eyebrow {
-  font-size: 0.6875rem;
+  font-size: calc(0.6875rem + 0.5px);
   font-weight: 700;
   letter-spacing: 0.18em;
   text-transform: uppercase;
@@ -279,6 +307,7 @@ input:disabled,
   display: flex;
   flex-wrap: wrap;
   align-items: center;
+  width: 100%;
   gap: 0.5rem;
   border: 1px solid rgb(255 255 255 / 75%);
   border-radius: var(--radius-panel);
@@ -291,6 +320,11 @@ input:disabled,
 
 .toolbar-shell > * {
   min-width: 0;
+}
+
+.toolbar-shell .toolbar-search {
+  flex: 1 1 0;
+  min-width: 12rem;
 }
 
 .brand-tile {

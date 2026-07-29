@@ -54,7 +54,7 @@ export function DealCard({ deal, isDragging }: DealCardProps) {
         <div className="mt-2.5 flex items-center gap-1.5">
           <span
             aria-hidden
-            className="inline-flex size-6 items-center justify-center rounded-md bg-[var(--color-accent-soft)] text-[10px] font-semibold text-[var(--color-accent)]"
+            className="inline-flex size-6 items-center justify-center rounded-md bg-[var(--color-accent-soft)] text-[10.5px] font-semibold text-[var(--color-accent)]"
           >
             {nameInitials(deal.assignedStaff.name)}
           </span>

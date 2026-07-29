@@ -1,5 +1,6 @@
 import { clsx } from 'clsx';
 import type { InputHTMLAttributes, ReactNode, TextareaHTMLAttributes } from 'react';
+import { FIELD_CONTROL_CLASS } from '@/components/ui/field-control';
 
 export { SelectInput } from '@/components/ui/select-input';
 export { SearchInput } from '@/components/ui/search-input';
@@ -28,13 +29,10 @@ export function Field({ label, htmlFor, error, children, className }: FieldProps
   );
 }
 
-const CONTROL_CLASS =
-  'w-full rounded-xl border border-[var(--color-border)] bg-white px-3.5 py-2.5 text-sm font-medium text-[var(--color-fg)] outline-none transition-colors duration-150 placeholder:font-medium placeholder:text-[var(--color-muted)]/60 hover:border-[var(--color-border-strong)] focus:border-[var(--color-brand)]';
-
 export function TextInput(props: InputHTMLAttributes<HTMLInputElement>) {
-  return <input className={clsx(CONTROL_CLASS, props.className)} {...props} />;
+  return <input className={clsx(FIELD_CONTROL_CLASS, props.className)} {...props} />;
 }
 
 export function TextArea(props: TextareaHTMLAttributes<HTMLTextAreaElement>) {
-  return <textarea className={clsx(CONTROL_CLASS, props.className)} {...props} />;
+  return <textarea className={clsx(FIELD_CONTROL_CLASS, props.className)} {...props} />;
 }

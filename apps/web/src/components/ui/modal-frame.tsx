@@ -104,7 +104,7 @@ export function ModalFrame({
   }
 
   return createPortal(
-    <div data-portal className="fixed inset-0 z-[200] flex items-center justify-center p-4">
+    <div data-portal className="absolute inset-0 z-[200] flex items-center justify-center p-4">
       <button
         type="button"
         tabIndex={-1}

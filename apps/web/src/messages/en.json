@@ -162,7 +162,8 @@
       "name": "Name",
       "email": "Email",
       "role": "Role",
-      "language": "Language"
+      "language": "Language",
+      "sessionTitle": "Session"
     },
     "staff": {
       "title": "Staff accounts",

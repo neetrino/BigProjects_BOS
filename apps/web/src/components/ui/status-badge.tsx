@@ -37,7 +37,7 @@ export function StatusBadge({ label, tone }: StatusBadgeProps) {
   return (
     <span
       className={clsx(
-        'inline-flex items-center rounded-lg border border-black/[0.04] px-2.5 py-0.5 text-[11px] font-semibold tracking-wide shadow-sm',
+        'inline-flex items-center rounded-lg border border-black/[0.04] px-2.5 py-0.5 text-[11.5px] font-semibold tracking-wide shadow-sm',
         TONE_CLASS[tone],
       )}
     >

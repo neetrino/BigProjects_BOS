@@ -14,6 +14,7 @@ import {
 } from '@dnd-kit/core';
 import { clsx } from 'clsx';
 import { useMemo, useRef, useState, type ReactNode } from 'react';
+import { createPortal } from 'react-dom';
 import type { KanbanColumnDef, KanbanColumnTone } from '@/components/kanban/types';
 
 const CLICK_MAX_DISTANCE_PX = 6;
@@ -148,11 +149,18 @@ export function KanbanBoard<TItem extends { id: string }, TStage extends string>
         </div>
       </div>
 
-      <DragOverlay dropAnimation={null}>
-        {activeItem ? (
-          <div className="cursor-grabbing">{renderCard(activeItem, { isDragging: true })}</div>
-        ) : null}
-      </DragOverlay>
+      {typeof document !== 'undefined'
+        ? createPortal(
+            <DragOverlay dropAnimation={null} style={{ width: 'auto', height: 'auto' }}>
+              {activeItem ? (
+                <div className="desktop-drag-overlay-card cursor-grabbing">
+                  {renderCard(activeItem, { isDragging: true })}
+                </div>
+              ) : null}
+            </DragOverlay>,
+            document.body,
+          )
+        : null}
     </DndContext>
   );
 }
@@ -179,16 +187,24 @@ function KanbanColumn<TItem extends { id: string }, TStage extends string>({
     <section
       ref={setNodeRef}
       className={clsx(
-        'flex w-72 shrink-0 flex-col overflow-hidden border transition-all duration-200',
+        'relative flex w-72 shrink-0 flex-col overflow-hidden border transition-all duration-200',
         terminal
           ? clsx(
               TERMINAL_COLUMN_RADIUS_CLASS,
               'border-dashed border-[var(--color-border-strong)] bg-[#ffffff]',
             )
           : 'rounded-[var(--radius-panel)] border-white/80 bg-[#ffffff] outline outline-1 outline-[var(--color-border)]',
-        isOver && 'ring-2 ring-[var(--color-accent)]/30',
       )}
     >
+      {isOver ? (
+        <div
+          aria-hidden
+          className={clsx(
+            'pointer-events-none absolute inset-0 z-20 ring-2 ring-inset ring-[var(--color-accent)]/50',
+            terminal ? TERMINAL_COLUMN_RADIUS_CLASS : 'rounded-[var(--radius-panel)]',
+          )}
+        />
+      ) : null}
       <header
         className={clsx(
           'flex items-center justify-between gap-2 border-b px-3.5 py-3',
@@ -198,10 +214,10 @@ function KanbanColumn<TItem extends { id: string }, TStage extends string>({
           TONE_HEADER_CLASS[tone],
         )}
       >
-        <h3 className="text-[11px] font-bold uppercase tracking-[0.14em] text-[var(--color-muted)]">
+        <h3 className="text-[11.5px] font-bold uppercase tracking-[0.14em] text-[var(--color-muted)]">
           {column.title}
         </h3>
-        <span className="rounded-lg bg-white px-2 py-0.5 text-[11px] font-semibold text-[var(--color-muted)]">
+        <span className="rounded-lg bg-white px-2 py-0.5 text-[11.5px] font-semibold text-[var(--color-muted)]">
           {items.length}
         </span>
       </header>
