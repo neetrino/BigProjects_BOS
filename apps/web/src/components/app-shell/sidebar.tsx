@@ -90,7 +90,7 @@ export function AppSidebar({ pathname, currentLocale }: AppSidebarProps) {
   }
 
   return (
-    <aside className="app-sidebar relative flex h-fluid-screen w-[17.5rem] shrink-0 flex-col overflow-hidden">
+    <aside className="app-sidebar relative flex h-fluid-screen w-[16rem] shrink-0 flex-col overflow-hidden">
       <div className="relative px-5 pb-5 pt-7">
         <div className="flex items-start gap-3.5">
           <div className="mt-0.5 flex size-11 shrink-0 items-center justify-center overflow-hidden rounded-2xl bg-white">
