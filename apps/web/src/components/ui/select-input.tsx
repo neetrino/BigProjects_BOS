@@ -187,6 +187,7 @@ export function SelectInput({
         width: 'max-content',
         maxWidth: `min(24rem, calc(100% - ${viewportLengthToStage(24)}px))`,
         maxHeight: menuPosition.maxHeight,
+        boxSizing: 'border-box',
         ...(menuPosition.openUpward
           ? { bottom: getStageLayoutHeight() - menuPosition.top }
           : { top: menuPosition.top }),

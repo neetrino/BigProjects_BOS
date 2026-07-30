@@ -4,18 +4,31 @@ import { clsx } from 'clsx';
 import {
   Building2,
   CalendarDays,
+  ChevronDown,
   Handshake,
   Map,
   Settings,
   Store,
+  Users,
   type LucideIcon,
 } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
 import { useTranslations } from 'next-intl';
+import { useState } from 'react';
+import { useAuth } from '@/components/auth/auth-provider';
 
 type NavKey = 'builderSales' | 'partners' | 'venueMap' | 'cycles' | 'organizations' | 'settings';
+
+type SettingsChildKey = 'settingsStaff';
+
+type NavChild = {
+  key: SettingsChildKey;
+  href: string;
+  icon: LucideIcon;
+  adminOnly?: boolean;
+};
 
 type NavItem = {
   key: NavKey;
@@ -23,6 +36,7 @@ type NavItem = {
   soon?: boolean;
   icon: LucideIcon;
   preserveCycle?: boolean;
+  children?: NavChild[];
 };
 
 const NAV_ITEMS: NavItem[] = [
@@ -31,8 +45,19 @@ const NAV_ITEMS: NavItem[] = [
   { key: 'venueMap', href: '/venue-map', icon: Map, preserveCycle: true },
   { key: 'cycles', href: '/cycles', icon: CalendarDays },
   { key: 'organizations', href: '/organizations', icon: Building2 },
-  { key: 'settings', href: '/settings', icon: Settings },
+  {
+    key: 'settings',
+    href: '/settings',
+    icon: Settings,
+    children: [{ key: 'settingsStaff', href: '/settings/staff', icon: Users, adminOnly: true }],
+  },
 ];
+
+const NAV_ROW_CLASS =
+  'group relative flex min-h-11 items-center gap-2.5 rounded-[var(--radius-control)] px-2.5 py-2 text-sm transition-colors duration-200';
+
+const NAV_ACTIVE_BAR_CLASS =
+  'absolute left-0 top-1/2 h-7 w-[3px] -translate-y-1/2 rounded-full bg-white';
 
 type AppSidebarProps = {
   pathname: string;
@@ -40,8 +65,20 @@ type AppSidebarProps = {
 
 export function AppSidebar({ pathname }: AppSidebarProps) {
   const t = useTranslations('nav');
+  const { user } = useAuth();
+  const isAdmin = user.role === 'ADMIN';
   const searchParams = useSearchParams();
   const cycleId = searchParams.get('cycle');
+  const settingsOpenByRoute = pathname === '/settings' || pathname.startsWith('/settings/');
+  const [settingsOpen, setSettingsOpen] = useState(settingsOpenByRoute);
+  const [wasSettingsRoute, setWasSettingsRoute] = useState(settingsOpenByRoute);
+
+  if (settingsOpenByRoute !== wasSettingsRoute) {
+    setWasSettingsRoute(settingsOpenByRoute);
+    if (settingsOpenByRoute) {
+      setSettingsOpen(true);
+    }
+  }
 
   function navHref(item: NavItem): string {
     if (!item.href) {
@@ -53,8 +90,17 @@ export function AppSidebar({ pathname }: AppSidebarProps) {
     return item.href;
   }
 
+  function iconBoxClass(active: boolean): string {
+    return clsx(
+      'flex size-8 shrink-0 items-center justify-center rounded-xl transition-colors duration-200',
+      active
+        ? 'bg-white text-[var(--color-brand)]'
+        : 'bg-white/10 text-white/80 group-hover:bg-white/15 group-hover:text-white',
+    );
+  }
+
   return (
-    <aside className="app-sidebar relative flex h-fluid-screen w-[16rem] shrink-0 flex-col overflow-hidden">
+    <aside className="app-sidebar relative flex h-fluid-screen shrink-0 flex-col overflow-hidden">
       <div className="relative px-5 pb-5 pt-7">
         <div className="flex items-start gap-3.5">
           <div className="mt-0.5 flex size-11 shrink-0 items-center justify-center overflow-hidden rounded-2xl bg-white">
@@ -82,12 +128,13 @@ export function AppSidebar({ pathname }: AppSidebarProps) {
       <nav aria-label={t('label')} className="relative flex flex-1 flex-col gap-1 px-3 pb-6">
         {NAV_ITEMS.map((item) => {
           const Icon = item.icon;
+          const children = (item.children ?? []).filter((child) => !child.adminOnly || isAdmin);
 
           if (item.soon || !item.href) {
             return (
               <span
                 key={item.key}
-                className="flex items-center justify-between rounded-[var(--radius-control)] px-2.5 py-2.5 text-sm text-white/40"
+                className="flex min-h-11 items-center justify-between rounded-[var(--radius-control)] px-2.5 py-2.5 text-sm text-white/40"
               >
                 <span className="flex items-center gap-2.5">
                   <span className="flex size-8 items-center justify-center rounded-xl bg-white/10">
@@ -102,36 +149,105 @@ export function AppSidebar({ pathname }: AppSidebarProps) {
             );
           }
 
-          const isActive = pathname === item.href || pathname.startsWith(`${item.href}/`);
+          const isExactActive = pathname === item.href;
+
+          if (children.length > 0) {
+            const expanded = settingsOpen;
+
+            return (
+              <div key={item.key} className="flex flex-col gap-1">
+                <div
+                  className={clsx(
+                    NAV_ROW_CLASS,
+                    'pr-1.5',
+                    isExactActive
+                      ? 'bg-white/15 font-semibold text-white'
+                      : 'text-white/70 hover:bg-white/10 hover:text-white',
+                  )}
+                >
+                  {isExactActive ? <span aria-hidden className={NAV_ACTIVE_BAR_CLASS} /> : null}
+                  <Link
+                    href={navHref(item)}
+                    className="flex min-w-0 flex-1 items-center gap-2.5 text-inherit"
+                  >
+                    <span className={iconBoxClass(isExactActive)}>
+                      <Icon className="size-4" aria-hidden />
+                    </span>
+                    <span className="app-sidebar-nav-label min-w-0 whitespace-pre-line text-left leading-snug">
+                      {t(item.key)}
+                    </span>
+                  </Link>
+                  <button
+                    type="button"
+                    aria-label={expanded ? t('collapseSection') : t('expandSection')}
+                    aria-expanded={expanded}
+                    onClick={() => setSettingsOpen((prev) => !prev)}
+                    className="flex size-8 shrink-0 items-center justify-center rounded-xl bg-white/10 text-white transition-colors duration-200 hover:bg-white/20"
+                  >
+                    <ChevronDown
+                      className={clsx(
+                        'size-4 transition-transform duration-200',
+                        expanded && 'rotate-180',
+                      )}
+                      aria-hidden
+                    />
+                  </button>
+                </div>
+
+                {expanded ? (
+                  <div className="flex flex-col gap-1 pl-11">
+                    {children.map((child) => {
+                      const ChildIcon = child.icon;
+                      const isChildActive =
+                        pathname === child.href || pathname.startsWith(`${child.href}/`);
+
+                      return (
+                        <Link
+                          key={child.key}
+                          href={child.href}
+                          className={clsx(
+                            NAV_ROW_CLASS,
+                            isChildActive
+                              ? 'bg-white/15 font-semibold text-white'
+                              : 'font-medium text-white/70 hover:bg-white/10 hover:text-white',
+                          )}
+                        >
+                          {isChildActive ? (
+                            <span aria-hidden className={NAV_ACTIVE_BAR_CLASS} />
+                          ) : null}
+                          <span className={iconBoxClass(isChildActive)}>
+                            <ChildIcon className="size-4" aria-hidden />
+                          </span>
+                          <span className="app-sidebar-nav-label min-w-0 whitespace-pre-line text-left leading-snug">
+                            {t(child.key)}
+                          </span>
+                        </Link>
+                      );
+                    })}
+                  </div>
+                ) : null}
+              </div>
+            );
+          }
+
+          const isSectionActive = isExactActive || pathname.startsWith(`${item.href}/`);
 
           return (
             <Link
               key={item.key}
               href={navHref(item)}
               className={clsx(
-                'group relative flex items-center gap-2.5 rounded-[var(--radius-control)] px-2.5 py-2 text-sm transition-colors duration-200',
-                isActive
+                NAV_ROW_CLASS,
+                isSectionActive
                   ? 'bg-white/15 font-semibold text-white'
                   : 'text-white/70 hover:bg-white/10 hover:text-white',
               )}
             >
-              {isActive ? (
-                <span
-                  aria-hidden
-                  className="absolute inset-y-2.5 left-0 w-[3px] rounded-full bg-white"
-                />
-              ) : null}
-              <span
-                className={clsx(
-                  'flex size-8 shrink-0 items-center justify-center rounded-xl transition-colors duration-200',
-                  isActive
-                    ? 'bg-white text-[var(--color-brand)]'
-                    : 'bg-white/10 text-white/80 group-hover:bg-white/15 group-hover:text-white',
-                )}
-              >
+              {isSectionActive ? <span aria-hidden className={NAV_ACTIVE_BAR_CLASS} /> : null}
+              <span className={iconBoxClass(isSectionActive)}>
                 <Icon className="size-4" aria-hidden />
               </span>
-              <span className="min-w-0 whitespace-pre-line text-left text-sm leading-snug tracking-tight">
+              <span className="app-sidebar-nav-label min-w-0 whitespace-pre-line text-left text-sm leading-snug">
                 {t(item.key)}
               </span>
             </Link>

@@ -31,6 +31,9 @@
     "cycles": "Միջոցառման ցիկլեր",
     "organizations": "Կազմակերպություններ",
     "settings": "Կարգավորումներ",
+    "settingsStaff": "Staff",
+    "expandSection": "Ծավալել բաժինը",
+    "collapseSection": "Ծալել բաժինը",
     "soon": "շուտով"
   },
   "login": {
@@ -159,6 +162,7 @@
     "subtitle": "Պրոֆիլ և աշխատակիցների հաշիվներ։",
     "profile": {
       "title": "Պրոֆիլ",
+      "subtitle": "Ձեր հաշիվը և սեսիան։",
       "name": "Անուն",
       "email": "Էլ․ փոստ",
       "role": "Դեր",
@@ -168,6 +172,9 @@
     "staff": {
       "title": "Աշխատակիցների հաշիվներ",
       "subtitle": "Ստեղծեք և անջատեք ներքին օգտատերերին։",
+      "searchPlaceholder": "Որոնել անունով կամ email-ով",
+      "roleFilter": "Դեր",
+      "allRoles": "Բոլոր դերերը",
       "create": "Նոր օգտատեր",
       "createTitle": "Ստեղծել օգտատեր",
       "empty": "Օգտատերեր չեն գտնվել։",

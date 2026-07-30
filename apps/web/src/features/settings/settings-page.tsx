@@ -8,7 +8,6 @@ import { useAuth } from '@/components/auth/auth-provider';
 import { LanguageSwitcher } from '@/components/language-switcher';
 import { Button } from '@/components/ui/button';
 import { showToast } from '@/components/ui/toast';
-import { StaffAccountsSection } from '@/features/settings/staff-accounts-section';
 import { resolveLocale } from '@/i18n/config';
 import { logout } from '@/lib/api/auth';
 
@@ -16,7 +15,6 @@ export function SettingsPage() {
   const t = useTranslations('settings');
   const tCommon = useTranslations('common');
   const { user } = useAuth();
-  const isAdmin = user.role === 'ADMIN';
   const currentLocale = resolveLocale(useLocale());
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
@@ -36,8 +34,8 @@ export function SettingsPage() {
   return (
     <div className="flex flex-col gap-8">
       <header>
-        <h1 className="page-heading">{t('title')}</h1>
-        <p className="page-subtitle">{t('subtitle')}</p>
+        <h1 className="page-heading">{t('profile.title')}</h1>
+        <p className="page-subtitle">{t('profile.subtitle')}</p>
       </header>
 
       <div className="flex flex-wrap items-stretch gap-4">
@@ -79,8 +77,6 @@ export function SettingsPage() {
           </div>
         </section>
       </div>
-
-      {isAdmin ? <StaffAccountsSection /> : null}
     </div>
   );
 }

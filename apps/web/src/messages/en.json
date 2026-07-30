@@ -31,6 +31,9 @@
     "cycles": "Event Cycles",
     "organizations": "Organizations",
     "settings": "Settings",
+    "settingsStaff": "Staff",
+    "expandSection": "Expand section",
+    "collapseSection": "Collapse section",
     "soon": "soon"
   },
   "login": {
@@ -159,6 +162,7 @@
     "subtitle": "Profile and staff accounts.",
     "profile": {
       "title": "Profile",
+      "subtitle": "Your account and session.",
       "name": "Name",
       "email": "Email",
       "role": "Role",
@@ -168,6 +172,9 @@
     "staff": {
       "title": "Staff accounts",
       "subtitle": "Create and disable internal users.",
+      "searchPlaceholder": "Search by name or email",
+      "roleFilter": "Role",
+      "allRoles": "All roles",
       "create": "New User",
       "createTitle": "Create user",
       "empty": "No users found.",

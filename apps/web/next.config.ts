@@ -1,11 +1,33 @@
+import { resolve } from 'node:path';
+import { config as loadEnv } from 'dotenv';
 import type { NextConfig } from 'next';
 import createNextIntlPlugin from 'next-intl/plugin';
+
+loadEnv({ path: resolve(__dirname, '../../.env') });
 
 const withNextIntl = createNextIntlPlugin();
 
 const DEFAULT_API_URL = 'http://localhost:4000';
 const DEFAULT_S3_ENDPOINT = 'http://localhost:9000';
 const API_URL = process.env.API_URL ?? DEFAULT_API_URL;
+
+/** Hostname from WEB_URL so LAN IP access works in `next dev` (HMR / client chunks). */
+function resolveAllowedDevOrigins(): string[] {
+  const webUrl = process.env.WEB_URL;
+  if (!webUrl) {
+    return [];
+  }
+
+  try {
+    const { hostname } = new URL(webUrl);
+    if (hostname === 'localhost' || hostname === '127.0.0.1') {
+      return [];
+    }
+    return [hostname];
+  } catch {
+    return [];
+  }
+}
 
 /**
  * Origin only (scheme + host + port) for CSP img-src / connect-src.
@@ -45,6 +67,7 @@ const isDev = process.env.NODE_ENV === 'development';
 
 const nextConfig: NextConfig = {
   reactStrictMode: true,
+  allowedDevOrigins: resolveAllowedDevOrigins(),
   async rewrites() {
     return [
       {

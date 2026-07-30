@@ -77,16 +77,30 @@
 @keyframes dropdown-panel-in {
   from {
     opacity: 0;
-    transform: translateY(-0.35rem);
   }
   to {
     opacity: 1;
-    transform: none;
   }
 }
 
 .dropdown-panel-in {
   animation: dropdown-panel-in 160ms ease-out;
+}
+
+/*
+ * Full-stage portal layer for selects/date pickers.
+ * Keeps absolute menus in the same zoomed coordinate space as triggers
+ * (Safari + CSS zoom otherwise drifts vs Chrome).
+ */
+#app-portal-root {
+  position: absolute;
+  inset: 0;
+  z-index: 1000;
+  pointer-events: none;
+}
+
+#app-portal-root > * {
+  pointer-events: auto;
 }
 
 /* Modal enter/exit — matches ToonExpo admin delete modal motion */
@@ -353,11 +367,16 @@ input:disabled,
 }
 
 .app-sidebar {
+  width: 16rem;
   border-right: 1px solid rgb(255 255 255 / 12%);
   background: var(--color-brand);
   border-top-right-radius: var(--radius-panel);
   border-bottom-right-radius: var(--radius-panel);
   color: #fff;
+}
+
+html[lang='hy'] .app-sidebar {
+  width: 18.5rem;
 }
 
 .app-sidebar .brand-eyebrow {
@@ -366,6 +385,16 @@ input:disabled,
 
 .app-sidebar .brand-mark {
   color: #fff;
+}
+
+/* Safari collapses Armenian glyphs with negative/tight tracking. */
+html[lang='hy'] .app-sidebar .brand-eyebrow {
+  letter-spacing: 0.04em;
+}
+
+html[lang='hy'] .app-sidebar .app-sidebar-nav-label {
+  letter-spacing: normal;
+  line-height: 1.45;
 }
 
 .no-scrollbar {

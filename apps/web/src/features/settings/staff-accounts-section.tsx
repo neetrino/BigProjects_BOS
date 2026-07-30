@@ -10,16 +10,32 @@ import { StaffAccountsList } from '@/features/settings/staff-accounts-list';
 import type { BoardViewMode } from '@/components/kanban';
 import { Button } from '@/components/ui/button';
 import { Dialog } from '@/components/ui/dialog';
+import { SearchInput, SelectInput } from '@/components/ui/field';
 import { EmptyState, ErrorState, LoadingState } from '@/components/ui/page-state';
 import { ViewModeSwitcher } from '@/components/ui/view-mode-switcher';
 import { ApiError } from '@/lib/api/client';
 import { listUsers, updateUser } from '@/lib/api/users';
-import type { UserAccount } from '@/lib/api/types';
+import type { UserAccount, UserRole } from '@/lib/api/types';
+
+const SEARCH_DEBOUNCE_MS = 300;
+const STAFF_ROLES: UserRole[] = ['ADMIN', 'STAFF'];
 
 type LoadState =
   | { status: 'loading' }
   | { status: 'error'; message: string }
   | { status: 'ready'; users: UserAccount[] };
+
+function matchesStaffSearch(user: UserAccount, query: string): boolean {
+  if (!query) {
+    return true;
+  }
+  const haystack = `${user.name} ${user.email}`.toLowerCase();
+  return haystack.includes(query.toLowerCase());
+}
+
+function matchesStaffRole(user: UserAccount, role: UserRole | ''): boolean {
+  return !role || user.role === role;
+}
 
 export function StaffAccountsSection() {
   const t = useTranslations('settings.staff');
@@ -27,10 +43,18 @@ export function StaffAccountsSection() {
   const { user: currentUser } = useAuth();
   const [loadState, setLoadState] = useState<LoadState>({ status: 'loading' });
   const [view, setView] = useState<BoardViewMode>('kanban');
+  const [searchInput, setSearchInput] = useState('');
+  const [search, setSearch] = useState('');
+  const [roleFilter, setRoleFilter] = useState<UserRole | ''>('');
   const [createOpen, setCreateOpen] = useState(false);
   const [target, setTarget] = useState<UserAccount | null>(null);
   const [busy, setBusy] = useState(false);
   const [actionError, setActionError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const timer = window.setTimeout(() => setSearch(searchInput.trim()), SEARCH_DEBOUNCE_MS);
+    return () => window.clearTimeout(timer);
+  }, [searchInput]);
 
   useEffect(() => {
     let cancelled = false;
@@ -83,30 +107,47 @@ export function StaffAccountsSection() {
   }
 
   const users = loadState.status === 'ready' ? loadState.users : [];
+  const filteredUsers = users.filter(
+    (user) => matchesStaffSearch(user, search) && matchesStaffRole(user, roleFilter),
+  );
 
   return (
     <section className="flex flex-col gap-3">
-      <div className="flex items-center justify-between gap-3">
-        <div>
-          <h2 className="font-[family-name:var(--font-display)] text-xl font-medium tracking-tight text-[var(--color-fg)]">
-            {t('title')}
-          </h2>
-          <p className="page-subtitle">{t('subtitle')}</p>
-        </div>
-        <div className="flex shrink-0 items-center gap-2">
-          <ViewModeSwitcher
-            value={view}
-            onChange={setView}
-            boardIcon="grid"
-            ariaLabel={t('toolbar.view')}
-            kanbanLabel={t('toolbar.kanban')}
-            listLabel={t('toolbar.list')}
-          />
-          <Button variant="primary" onClick={() => setCreateOpen(true)}>
-            <Plus className="size-4" aria-hidden />
-            {t('create')}
-          </Button>
-        </div>
+      <div className="toolbar-shell shrink-0">
+        <SearchInput
+          className="toolbar-search"
+          placeholder={t('searchPlaceholder')}
+          value={searchInput}
+          onChange={(event) => setSearchInput(event.target.value)}
+          aria-label={t('searchPlaceholder')}
+        />
+        <SelectInput
+          fitContent
+          className="ml-auto shrink-0"
+          value={roleFilter}
+          onChange={(event) => setRoleFilter(event.target.value as UserRole | '')}
+          aria-label={t('roleFilter')}
+        >
+          <option value="">{t('allRoles')}</option>
+          {STAFF_ROLES.map((role) => (
+            <option key={role} value={role}>
+              {t(`roles.${role}`)}
+            </option>
+          ))}
+        </SelectInput>
+        <ViewModeSwitcher
+          className="shrink-0"
+          value={view}
+          onChange={setView}
+          boardIcon="grid"
+          ariaLabel={t('toolbar.view')}
+          kanbanLabel={t('toolbar.kanban')}
+          listLabel={t('toolbar.list')}
+        />
+        <Button variant="primary" onClick={() => setCreateOpen(true)} className="shrink-0">
+          <Plus className="size-4" aria-hidden />
+          {t('create')}
+        </Button>
       </div>
 
       {actionError ? (
@@ -117,21 +158,21 @@ export function StaffAccountsSection() {
 
       {loadState.status === 'loading' ? <LoadingState message={tCommon('loading')} /> : null}
       {loadState.status === 'error' ? <ErrorState message={loadState.message} /> : null}
-      {loadState.status === 'ready' && users.length === 0 ? (
+      {loadState.status === 'ready' && filteredUsers.length === 0 ? (
         <EmptyState message={t('empty')} />
       ) : null}
 
-      {loadState.status === 'ready' && users.length > 0 && view === 'kanban' ? (
+      {loadState.status === 'ready' && filteredUsers.length > 0 && view === 'kanban' ? (
         <StaffAccountsBoard
-          users={users}
+          users={filteredUsers}
           currentUserId={currentUser.id}
           onToggleStatus={setTarget}
         />
       ) : null}
 
-      {loadState.status === 'ready' && users.length > 0 && view === 'list' ? (
+      {loadState.status === 'ready' && filteredUsers.length > 0 && view === 'list' ? (
         <StaffAccountsList
-          users={users}
+          users={filteredUsers}
           currentUserId={currentUser.id}
           onToggleStatus={setTarget}
         />
