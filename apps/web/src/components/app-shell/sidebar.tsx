@@ -63,7 +63,7 @@ const NAV_ROW_CLASS =
   'group relative flex min-h-11 items-center gap-2.5 rounded-[var(--radius-control)] px-2.5 py-2 text-sm transition-colors duration-200';
 
 const NAV_ACTIVE_BAR_CLASS =
-  'absolute left-0 top-1/2 h-5 w-[3px] -translate-y-1/2 rounded-full bg-white';
+  'absolute left-0 top-1/2 h-7 w-[3px] -translate-y-1/2 rounded-full bg-white';
 
 type AppSidebarProps = {
   pathname: string;
