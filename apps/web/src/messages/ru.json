@@ -31,6 +31,9 @@
     "cycles": "Циклы событий",
     "organizations": "Организации",
     "settings": "Настройки",
+    "settingsStaff": "Staff",
+    "expandSection": "Развернуть раздел",
+    "collapseSection": "Свернуть раздел",
     "soon": "скоро"
   },
   "login": {
@@ -159,6 +162,7 @@
     "subtitle": "Профиль и учётные записи сотрудников.",
     "profile": {
       "title": "Профиль",
+      "subtitle": "Ваш аккаунт и сессия.",
       "name": "Имя",
       "email": "Эл. почта",
       "role": "Роль",
@@ -168,6 +172,9 @@
     "staff": {
       "title": "Учётные записи",
       "subtitle": "Создание и отключение внутренних пользователей.",
+      "searchPlaceholder": "Поиск по имени или email",
+      "roleFilter": "Роль",
+      "allRoles": "Все роли",
       "create": "Новый пользователь",
       "createTitle": "Создать пользователя",
       "empty": "Пользователи не найдены.",

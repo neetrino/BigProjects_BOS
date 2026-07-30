@@ -9,7 +9,8 @@ Desktop sidebar:
 3. Venue Map
 4. Event Cycles
 5. Organizations
-6. Settings
+6. Settings (`/settings` — profile; expandable submenu)
+   - Staff (`/settings/staff`, admin only)
 
 There is no separate Dashboard in Release 1. After login, open Builder Sales for the active cycle.
 
@@ -134,8 +135,8 @@ Contacts are managed inside the organization sheet. A separate Contacts module i
 
 ## Settings
 
-- current user profile and language;
-- Admin-only staff account list;
+- current user profile and language (`/settings`);
+- Admin-only staff accounts (`/settings/staff`, sidebar submenu);
 - create, disable and reactivate staff.
 
 No MFA setup screen exists in Release 1.
