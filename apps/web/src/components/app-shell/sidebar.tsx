@@ -19,13 +19,7 @@ import { useTranslations } from 'next-intl';
 import { useEffect, useState } from 'react';
 import { useAuth } from '@/components/auth/auth-provider';
 
-type NavKey =
-  | 'builderSales'
-  | 'partners'
-  | 'venueMap'
-  | 'cycles'
-  | 'organizations'
-  | 'settings';
+type NavKey = 'builderSales' | 'partners' | 'venueMap' | 'cycles' | 'organizations' | 'settings';
 
 type SettingsChildKey = 'settingsStaff';
 
@@ -169,12 +163,7 @@ export function AppSidebar({ pathname }: AppSidebarProps) {
                       : 'text-white/70 hover:bg-white/10 hover:text-white',
                   )}
                 >
-                  {isExactActive ? (
-                    <span
-                      aria-hidden
-                      className={NAV_ACTIVE_BAR_CLASS}
-                    />
-                  ) : null}
+                  {isExactActive ? <span aria-hidden className={NAV_ACTIVE_BAR_CLASS} /> : null}
                   <Link
                     href={navHref(item)}
                     className="flex min-w-0 flex-1 items-center gap-2.5 text-inherit"
@@ -222,10 +211,7 @@ export function AppSidebar({ pathname }: AppSidebarProps) {
                           )}
                         >
                           {isChildActive ? (
-                            <span
-                              aria-hidden
-                              className={NAV_ACTIVE_BAR_CLASS}
-                            />
+                            <span aria-hidden className={NAV_ACTIVE_BAR_CLASS} />
                           ) : null}
                           <span className={iconBoxClass(isChildActive)}>
                             <ChildIcon className="size-4" aria-hidden />
@@ -255,12 +241,7 @@ export function AppSidebar({ pathname }: AppSidebarProps) {
                   : 'text-white/70 hover:bg-white/10 hover:text-white',
               )}
             >
-              {isSectionActive ? (
-                <span
-                  aria-hidden
-                  className={NAV_ACTIVE_BAR_CLASS}
-                />
-              ) : null}
+              {isSectionActive ? <span aria-hidden className={NAV_ACTIVE_BAR_CLASS} /> : null}
               <span className={iconBoxClass(isSectionActive)}>
                 <Icon className="size-4" aria-hidden />
               </span>
