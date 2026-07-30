@@ -16,7 +16,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
 import { useTranslations } from 'next-intl';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useAuth } from '@/components/auth/auth-provider';
 
 type NavKey = 'builderSales' | 'partners' | 'venueMap' | 'cycles' | 'organizations' | 'settings';
@@ -71,12 +71,14 @@ export function AppSidebar({ pathname }: AppSidebarProps) {
   const cycleId = searchParams.get('cycle');
   const settingsOpenByRoute = pathname === '/settings' || pathname.startsWith('/settings/');
   const [settingsOpen, setSettingsOpen] = useState(settingsOpenByRoute);
+  const [wasSettingsRoute, setWasSettingsRoute] = useState(settingsOpenByRoute);
 
-  useEffect(() => {
+  if (settingsOpenByRoute !== wasSettingsRoute) {
+    setWasSettingsRoute(settingsOpenByRoute);
     if (settingsOpenByRoute) {
       setSettingsOpen(true);
     }
-  }, [settingsOpenByRoute]);
+  }
 
   function navHref(item: NavItem): string {
     if (!item.href) {
