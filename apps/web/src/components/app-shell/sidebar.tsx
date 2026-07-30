@@ -54,7 +54,7 @@ export function AppSidebar({ pathname }: AppSidebarProps) {
   }
 
   return (
-    <aside className="app-sidebar relative flex h-fluid-screen w-[16rem] shrink-0 flex-col overflow-hidden">
+    <aside className="app-sidebar relative flex h-fluid-screen shrink-0 flex-col overflow-hidden">
       <div className="relative px-5 pb-5 pt-7">
         <div className="flex items-start gap-3.5">
           <div className="mt-0.5 flex size-11 shrink-0 items-center justify-center overflow-hidden rounded-2xl bg-white">
@@ -131,7 +131,7 @@ export function AppSidebar({ pathname }: AppSidebarProps) {
               >
                 <Icon className="size-4" aria-hidden />
               </span>
-              <span className="min-w-0 whitespace-pre-line text-left text-sm leading-snug tracking-tight">
+              <span className="app-sidebar-nav-label min-w-0 whitespace-pre-line text-left text-sm leading-snug">
                 {t(item.key)}
               </span>
             </Link>

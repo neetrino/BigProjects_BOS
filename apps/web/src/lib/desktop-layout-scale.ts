@@ -7,6 +7,27 @@ export function getDesktopLayoutScale(): number {
   if (!(stage instanceof HTMLElement)) {
     return 1;
   }
+
+  /*
+   * Prefer visual/layout ratio over getComputedStyle(zoom).
+   * Safari historically reports zoom inconsistently with getBoundingClientRect,
+   * which mis-positions portaled dropdowns. Ratio stays correct whether gBCR
+   * returns scaled or unscaled values.
+   */
+  const layoutWidth = stage.offsetWidth;
+  if (layoutWidth > 0) {
+    const visualWidth = stage.getBoundingClientRect().width;
+    const ratio = visualWidth / layoutWidth;
+    if (Number.isFinite(ratio) && ratio > 0) {
+      return ratio;
+    }
+  }
+
+  const currentCssZoom = (stage as HTMLElement & { currentCSSZoom?: number }).currentCSSZoom;
+  if (typeof currentCssZoom === 'number' && Number.isFinite(currentCssZoom) && currentCssZoom > 0) {
+    return currentCssZoom;
+  }
+
   const zoom = Number.parseFloat(getComputedStyle(stage).zoom);
   return Number.isFinite(zoom) && zoom > 0 ? zoom : 1;
 }
