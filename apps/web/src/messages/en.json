@@ -9,6 +9,8 @@
     "delete": "Delete",
     "logout": "Log out",
     "unexpectedError": "Something went wrong. Please try again.",
+    "scrollLeft": "Scroll left",
+    "scrollRight": "Scroll right",
     "datePicker": {
       "title": "Choose date",
       "placeholder": "DD.MM.YYYY",

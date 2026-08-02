@@ -9,6 +9,8 @@
     "delete": "Удалить",
     "logout": "Выйти",
     "unexpectedError": "Что-то пошло не так. Попробуйте ещё раз.",
+    "scrollLeft": "Прокрутить влево",
+    "scrollRight": "Прокрутить вправо",
     "datePicker": {
       "title": "Выбор даты",
       "placeholder": "ДД.ММ.ГГГГ",

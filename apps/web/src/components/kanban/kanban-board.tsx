@@ -15,6 +15,7 @@ import {
 import { clsx } from 'clsx';
 import { useMemo, useRef, useState, type ReactNode } from 'react';
 import { createPortal } from 'react-dom';
+import { KanbanScrollButtons } from '@/components/kanban/kanban-scroll-buttons';
 import type { KanbanColumnDef, KanbanColumnTone } from '@/components/kanban/types';
 
 const CLICK_MAX_DISTANCE_PX = 6;
@@ -46,6 +47,7 @@ export function KanbanBoard<TItem extends { id: string }, TStage extends string>
   onStageChange,
   renderCard,
 }: KanbanBoardProps<TItem, TStage>) {
+  const scrollerRef = useRef<HTMLDivElement | null>(null);
   const [activeId, setActiveId] = useState<string | null>(null);
   const sensors = useSensors(
     useSensor(PointerSensor, {
@@ -116,36 +118,46 @@ export function KanbanBoard<TItem extends { id: string }, TStage extends string>
       }}
       onDragCancel={() => setActiveId(null)}
     >
-      <div className="no-scrollbar flex min-h-0 flex-1 gap-4 overflow-x-auto pb-1">
-        <div className="flex min-h-0 min-w-max gap-3">
-          {activeColumns.map((column) => (
-            <KanbanColumn
-              key={column.id}
-              column={column}
-              items={grouped.get(column.id) ?? []}
-              terminal={false}
-              onOpen={onOpen}
-              renderCard={renderCard}
-            />
-          ))}
-        </div>
-
-        <div
-          aria-hidden
-          className="mx-1 w-px shrink-0 self-stretch bg-gradient-to-b from-transparent via-[var(--color-border)] to-transparent"
+      <div className="relative min-h-0 flex-1">
+        <KanbanScrollButtons
+          scrollerRef={scrollerRef}
+          layoutKey={`${activeColumns.length}:${terminalColumns.length}:${items.length}`}
         />
 
-        <div className="flex min-h-0 min-w-max gap-3 rounded-[var(--radius-panel)] border border-white/70 bg-[linear-gradient(180deg,rgb(255_255_255/0.72),rgb(247_243_238/0.55))] p-2.5 outline outline-1 outline-[var(--color-border)]">
-          {terminalColumns.map((column) => (
-            <KanbanColumn
-              key={column.id}
-              column={column}
-              items={grouped.get(column.id) ?? []}
-              terminal
-              onOpen={onOpen}
-              renderCard={renderCard}
-            />
-          ))}
+        <div
+          ref={scrollerRef}
+          className="no-scrollbar absolute inset-0 flex gap-4 overflow-x-auto pb-1"
+        >
+          <div className="flex min-h-0 min-w-max gap-3">
+            {activeColumns.map((column) => (
+              <KanbanColumn
+                key={column.id}
+                column={column}
+                items={grouped.get(column.id) ?? []}
+                terminal={false}
+                onOpen={onOpen}
+                renderCard={renderCard}
+              />
+            ))}
+          </div>
+
+          <div
+            aria-hidden
+            className="mx-1 w-px shrink-0 self-stretch bg-gradient-to-b from-transparent via-[var(--color-border)] to-transparent"
+          />
+
+          <div className="flex min-h-0 min-w-max gap-3 rounded-[var(--radius-panel)] border border-white/70 bg-[linear-gradient(180deg,rgb(255_255_255/0.72),rgb(247_243_238/0.55))] p-2.5 outline outline-1 outline-[var(--color-border)]">
+            {terminalColumns.map((column) => (
+              <KanbanColumn
+                key={column.id}
+                column={column}
+                items={grouped.get(column.id) ?? []}
+                terminal
+                onOpen={onOpen}
+                renderCard={renderCard}
+              />
+            ))}
+          </div>
         </div>
       </div>
 

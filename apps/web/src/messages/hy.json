@@ -9,6 +9,8 @@
     "delete": "Ջնջել",
     "logout": "Ելք",
     "unexpectedError": "Ինչ-որ սխալ տեղի ունեցավ։ Փորձեք կրկին։",
+    "scrollLeft": "Ոլորել ձախ",
+    "scrollRight": "Ոլորել աջ",
     "datePicker": {
       "title": "Ընտրել ամսաթիվ",
       "placeholder": "DD.MM.YYYY",
