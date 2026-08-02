@@ -9,6 +9,8 @@
     "delete": "Удалить",
     "logout": "Выйти",
     "unexpectedError": "Что-то пошло не так. Попробуйте ещё раз.",
+    "scrollLeft": "Прокрутить влево",
+    "scrollRight": "Прокрутить вправо",
     "datePicker": {
       "title": "Выбор даты",
       "placeholder": "ДД.ММ.ГГГГ",
@@ -32,8 +34,8 @@
     "organizations": "Организации",
     "settings": "Настройки",
     "settingsStaff": "Staff",
-    "expandSection": "Развернуть раздел",
-    "collapseSection": "Свернуть раздел",
+    "collapseSidebar": "Свернуть меню",
+    "expandSidebar": "Развернуть меню",
     "soon": "скоро"
   },
   "login": {

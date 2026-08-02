@@ -14,6 +14,8 @@ import { SearchInput, SelectInput } from '@/components/ui/field';
 import { EmptyState, ErrorState, LoadingState } from '@/components/ui/page-state';
 import { ViewModeSwitcher } from '@/components/ui/view-mode-switcher';
 import { showToast } from '@/components/ui/toast';
+import { useClientCachedState } from '@/hooks/use-client-cached-state';
+import { CLIENT_CACHE_KEYS } from '@/lib/client-cache';
 import { SEARCH_DEBOUNCE_MS } from '@/lib/constants';
 import { ALL_STATUSES, canTransitionTo } from '@/features/cycles/constants';
 import { CycleFormSheet } from '@/features/cycles/cycle-form-sheet';
@@ -38,7 +40,9 @@ export function CyclesPage() {
   const { user } = useAuth();
   const isAdmin = user.role === 'ADMIN';
 
-  const [loadState, setLoadState] = useState<LoadState>({ status: 'loading' });
+  const [loadState, setLoadState] = useClientCachedState<LoadState>(CLIENT_CACHE_KEYS.cycles, {
+    status: 'loading',
+  });
   const [view, setView] = useState<BoardViewMode>('kanban');
   const [searchInput, setSearchInput] = useState('');
   const [search, setSearch] = useState('');
@@ -74,7 +78,7 @@ export function CyclesPage() {
     return () => {
       cancelled = true;
     };
-  }, [tCommon]);
+  }, [setLoadState, tCommon]);
 
   function replaceCycle(saved: EventCycle) {
     setLoadState((prev) => {

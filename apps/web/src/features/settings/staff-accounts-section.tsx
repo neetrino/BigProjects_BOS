@@ -13,7 +13,9 @@ import { Dialog } from '@/components/ui/dialog';
 import { SearchInput, SelectInput } from '@/components/ui/field';
 import { EmptyState, ErrorState, LoadingState } from '@/components/ui/page-state';
 import { ViewModeSwitcher } from '@/components/ui/view-mode-switcher';
+import { useClientCachedState } from '@/hooks/use-client-cached-state';
 import { ApiError } from '@/lib/api/client';
+import { CLIENT_CACHE_KEYS } from '@/lib/client-cache';
 import { listUsers, updateUser } from '@/lib/api/users';
 import type { UserAccount, UserRole } from '@/lib/api/types';
 
@@ -41,7 +43,9 @@ export function StaffAccountsSection() {
   const t = useTranslations('settings.staff');
   const tCommon = useTranslations('common');
   const { user: currentUser } = useAuth();
-  const [loadState, setLoadState] = useState<LoadState>({ status: 'loading' });
+  const [loadState, setLoadState] = useClientCachedState<LoadState>(CLIENT_CACHE_KEYS.staffUsers, {
+    status: 'loading',
+  });
   const [view, setView] = useState<BoardViewMode>('kanban');
   const [searchInput, setSearchInput] = useState('');
   const [search, setSearch] = useState('');
@@ -77,7 +81,7 @@ export function StaffAccountsSection() {
     return () => {
       cancelled = true;
     };
-  }, [tCommon]);
+  }, [setLoadState, tCommon]);
 
   async function handleToggleStatus() {
     if (!target) {

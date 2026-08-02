@@ -27,11 +27,16 @@ export function AppShell({ children }: AppShellProps) {
           <AppSidebar pathname={pathname} />
           <main
             className={clsx(
-              'page-enter min-h-0 min-w-0 flex-1 px-8 py-7',
+              'min-h-0 min-w-0 flex-1 px-8 py-7',
               isFullHeightPage ? 'flex flex-col overflow-hidden' : 'overflow-auto',
             )}
           >
-            {children}
+            <div
+              key={pathname}
+              className={clsx('page-enter', isFullHeightPage && 'flex min-h-0 flex-1 flex-col')}
+            >
+              {children}
+            </div>
           </main>
         </div>
         <ToastHost />

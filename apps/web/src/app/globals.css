@@ -56,7 +56,7 @@
 @keyframes fade-rise {
   from {
     opacity: 0;
-    transform: translateY(8px);
+    transform: translateY(10px);
   }
   to {
     opacity: 1;
@@ -282,7 +282,13 @@ input:disabled,
 .page-enter {
   /* Do not use fill-mode `both`/`forwards` with transform — a lingering
      transform creates a containing block and offsets dnd-kit DragOverlay. */
-  animation: fade-rise 0.45s ease-out;
+  animation: fade-rise 0.4s var(--ease-out-premium);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .page-enter {
+    animation: none;
+  }
 }
 
 .panel {
@@ -367,34 +373,121 @@ input:disabled,
 }
 
 .app-sidebar {
-  width: 16rem;
+  --app-sidebar-width: 17rem;
+  width: var(--app-sidebar-width);
   border-right: 1px solid rgb(255 255 255 / 12%);
   background: var(--color-brand);
   border-top-right-radius: var(--radius-panel);
   border-bottom-right-radius: var(--radius-panel);
   color: #fff;
+  font-family: var(--font-sans);
+  transition: width 300ms var(--ease-out-premium);
+}
+
+html[lang='ru'] .app-sidebar,
+html[lang='hy'] .app-sidebar {
+  --app-sidebar-width: 19rem;
 }
 
 html[lang='hy'] .app-sidebar {
-  width: 18.5rem;
+  font-family: var(--font-armenian), var(--font-sans);
+}
+
+.app-sidebar.is-collapsed {
+  width: 4.75rem;
 }
 
 .app-sidebar .brand-eyebrow {
   color: rgb(255 255 255 / 72%);
+  letter-spacing: 0.06em;
+  line-height: 1.3;
 }
 
 .app-sidebar .brand-mark {
   color: #fff;
-}
-
-/* Safari collapses Armenian glyphs with negative/tight tracking. */
-html[lang='hy'] .app-sidebar .brand-eyebrow {
-  letter-spacing: 0.04em;
-}
-
-html[lang='hy'] .app-sidebar .app-sidebar-nav-label {
+  font-family: inherit;
   letter-spacing: normal;
-  line-height: 1.45;
+  line-height: 1.25;
+}
+
+.app-sidebar-nav-label {
+  min-width: 0;
+  flex: 1 1 auto;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  line-height: 1.35;
+  letter-spacing: normal;
+}
+
+.app-sidebar-nav-row {
+  box-sizing: border-box;
+}
+
+.app-sidebar-nav-row:hover {
+  background: rgb(255 255 255 / 8%);
+}
+
+.app-sidebar.is-collapsed .app-sidebar-brand-copy,
+.app-sidebar.is-collapsed .app-sidebar-brand-rule,
+.app-sidebar.is-collapsed .app-sidebar-nav-label {
+  display: none;
+}
+
+.app-sidebar.is-collapsed .app-sidebar-brand {
+  padding-inline: 0.75rem;
+}
+
+.app-sidebar.is-collapsed .app-sidebar-brand > div,
+.app-sidebar.is-collapsed .app-sidebar-brand > div > div {
+  justify-content: center;
+  padding-inline: 0;
+}
+
+.app-sidebar.is-collapsed .app-sidebar-nav-row {
+  justify-content: center;
+  gap: 0;
+  padding-inline: 0.5rem;
+}
+
+.app-sidebar-active-indicator {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 0;
+  box-sizing: border-box;
+  border-radius: var(--radius-control);
+  background: rgb(255 255 255 / 15%);
+  pointer-events: none;
+  transition: none;
+}
+
+.app-sidebar-active-indicator.is-moving {
+  transition:
+    transform 280ms var(--ease-out-premium),
+    width 280ms var(--ease-out-premium),
+    height 280ms var(--ease-out-premium),
+    opacity 180ms var(--ease-out-premium);
+}
+
+.app-sidebar-active-indicator::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 0;
+  width: 3px;
+  height: 1.75rem;
+  border-radius: 9999px;
+  background: #fff;
+  transform: translateY(-50%);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .app-sidebar,
+  .app-sidebar-active-indicator,
+  .app-sidebar-active-indicator.is-moving {
+    transition: none !important;
+  }
 }
 
 .no-scrollbar {

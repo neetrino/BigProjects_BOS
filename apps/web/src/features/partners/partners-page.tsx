@@ -13,8 +13,10 @@ import { useAuth } from '@/components/auth/auth-provider';
 import { Button } from '@/components/ui/button';
 import { EmptyState, ErrorState, LoadingState } from '@/components/ui/page-state';
 import { showToast } from '@/components/ui/toast';
-import { SEARCH_DEBOUNCE_MS } from '@/lib/constants';
+import { useClientCachedState } from '@/hooks/use-client-cached-state';
 import { useCycleQueryParam } from '@/hooks/use-cycle-query-param';
+import { CLIENT_CACHE_KEYS } from '@/lib/client-cache';
+import { SEARCH_DEBOUNCE_MS } from '@/lib/constants';
 import { PartnerCreateSheet } from '@/features/partners/partner-create-sheet';
 import { PartnerKanban } from '@/features/partners/partner-kanban';
 import { PartnerList } from '@/features/partners/partner-list';
@@ -34,7 +36,9 @@ export function PartnersPage() {
   const { user } = useAuth();
   const isAdmin = user.role === 'ADMIN';
 
-  const [cyclesLoad, setCyclesLoad] = useState<CyclesLoad>({ status: 'loading' });
+  const [cyclesLoad, setCyclesLoad] = useClientCachedState<CyclesLoad>(CLIENT_CACHE_KEYS.cycles, {
+    status: 'loading',
+  });
   const cyclesReady = cyclesLoad.status === 'ready' ? cyclesLoad.cycles : null;
   const { cycleId, setCycleId } = useCycleQueryParam(cyclesReady);
   const [view, setView] = useState<BoardViewMode>('kanban');
@@ -43,7 +47,12 @@ export function PartnersPage() {
   const [partnerType, setPartnerType] = useState('');
   const [assignedStaffId, setAssignedStaffId] = useState('');
   const [adminUsers, setAdminUsers] = useState<UserAccount[]>([]);
-  const [partnersLoad, setPartnersLoad] = useState<PartnersLoad>({ status: 'idle' });
+  const partnersCacheKey = cycleId
+    ? CLIENT_CACHE_KEYS.partners(cycleId, search, assignedStaffId, partnerType)
+    : 'partners:idle';
+  const [partnersLoad, setPartnersLoad] = useClientCachedState<PartnersLoad>(partnersCacheKey, {
+    status: cycleId ? 'loading' : 'idle',
+  });
   const [knownPartnerTypes, setKnownPartnerTypes] = useState<string[]>([]);
   const [createOpen, setCreateOpen] = useState(false);
   const [selectedPartnerId, setSelectedPartnerId] = useState<string | null>(null);
@@ -62,7 +71,6 @@ export function PartnersPage() {
           return;
         }
         setCyclesLoad({ status: 'ready', cycles });
-        setPartnersLoad({ status: 'loading' });
       })
       .catch((err: unknown) => {
         if (!cancelled) {
@@ -75,7 +83,7 @@ export function PartnersPage() {
     return () => {
       cancelled = true;
     };
-  }, [tCommon]);
+  }, [setCyclesLoad, tCommon]);
 
   useEffect(() => {
     if (!isAdmin) {
@@ -129,7 +137,7 @@ export function PartnersPage() {
     return () => {
       cancelled = true;
     };
-  }, [cycleId, search, assignedStaffId, partnerType, reloadToken, tCommon]);
+  }, [cycleId, search, assignedStaffId, partnerType, reloadToken, setPartnersLoad, tCommon]);
 
   const partners = useMemo(
     () => (partnersLoad.status === 'ready' ? partnersLoad.partners : []),
@@ -153,20 +161,23 @@ export function PartnersPage() {
     return [...set].sort((a, b) => a.localeCompare(b));
   }, [knownPartnerTypes, partnerType]);
 
-  const replacePartner = useCallback((saved: PartnerListItem) => {
-    setPartnersLoad((prev) => {
-      if (prev.status !== 'ready') {
-        return prev;
-      }
-      const index = prev.partners.findIndex((item) => item.id === saved.id);
-      if (index === -1) {
-        return { status: 'ready', partners: [saved, ...prev.partners] };
-      }
-      const next = [...prev.partners];
-      next[index] = saved;
-      return { status: 'ready', partners: next };
-    });
-  }, []);
+  const replacePartner = useCallback(
+    (saved: PartnerListItem) => {
+      setPartnersLoad((prev) => {
+        if (prev.status !== 'ready') {
+          return prev;
+        }
+        const index = prev.partners.findIndex((item) => item.id === saved.id);
+        if (index === -1) {
+          return { status: 'ready', partners: [saved, ...prev.partners] };
+        }
+        const next = [...prev.partners];
+        next[index] = saved;
+        return { status: 'ready', partners: next };
+      });
+    },
+    [setPartnersLoad],
+  );
 
   async function handleStageChange(partnerId: string, stage: PartnerStage) {
     const previous = partners.find((item) => item.id === partnerId);
@@ -192,7 +203,6 @@ export function PartnersPage() {
         cycles={cycles}
         cycleId={cycleId}
         onCycleChange={(nextCycleId) => {
-          setPartnersLoad({ status: 'loading' });
           setKnownPartnerTypes([]);
           setPartnerType('');
           setCycleId(nextCycleId);
@@ -203,16 +213,10 @@ export function PartnersPage() {
         onSearchChange={setSearchInput}
         partnerTypeOptions={partnerTypeOptions}
         partnerType={partnerType}
-        onPartnerTypeChange={(nextType) => {
-          setPartnersLoad({ status: 'loading' });
-          setPartnerType(nextType);
-        }}
+        onPartnerTypeChange={setPartnerType}
         staffOptions={staffOptions}
         assignedStaffId={assignedStaffId}
-        onAssignedStaffChange={(nextStaffId) => {
-          setPartnersLoad({ status: 'loading' });
-          setAssignedStaffId(nextStaffId);
-        }}
+        onAssignedStaffChange={setAssignedStaffId}
         onCreate={() => setCreateOpen(true)}
       />
 

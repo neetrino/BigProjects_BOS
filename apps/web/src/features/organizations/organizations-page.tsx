@@ -15,6 +15,8 @@ import { Button } from '@/components/ui/button';
 import { EmptyState, ErrorState, LoadingState } from '@/components/ui/page-state';
 import { SearchInput, SelectInput } from '@/components/ui/field';
 import { ViewModeSwitcher } from '@/components/ui/view-mode-switcher';
+import { useClientCachedState } from '@/hooks/use-client-cached-state';
+import { CLIENT_CACHE_KEYS } from '@/lib/client-cache';
 
 const SEARCH_DEBOUNCE_MS = 300;
 const ORGANIZATION_TYPES: OrganizationType[] = ['BUILDER', 'BANK', 'PARTNER', 'OTHER'];
@@ -27,11 +29,16 @@ type LoadState =
 export function OrganizationsPage() {
   const t = useTranslations('organizations');
   const tCommon = useTranslations('common');
-  const [loadState, setLoadState] = useState<LoadState>({ status: 'loading' });
   const [view, setView] = useState<BoardViewMode>('kanban');
   const [searchInput, setSearchInput] = useState('');
   const [search, setSearch] = useState('');
   const [typeFilter, setTypeFilter] = useState<OrganizationType | ''>('');
+  const [loadState, setLoadState] = useClientCachedState<LoadState>(
+    CLIENT_CACHE_KEYS.organizations,
+    {
+      status: 'loading',
+    },
+  );
   const [createOpen, setCreateOpen] = useState(false);
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [reloadToken, setReloadToken] = useState(0);
@@ -65,10 +72,9 @@ export function OrganizationsPage() {
     return () => {
       cancelled = true;
     };
-  }, [search, typeFilter, reloadToken, tCommon]);
+  }, [search, typeFilter, reloadToken, setLoadState, tCommon]);
 
   function reload() {
-    setLoadState({ status: 'loading' });
     setReloadToken((value) => value + 1);
   }
 

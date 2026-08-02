@@ -9,6 +9,8 @@
     "delete": "Delete",
     "logout": "Log out",
     "unexpectedError": "Something went wrong. Please try again.",
+    "scrollLeft": "Scroll left",
+    "scrollRight": "Scroll right",
     "datePicker": {
       "title": "Choose date",
       "placeholder": "DD.MM.YYYY",
@@ -32,8 +34,8 @@
     "organizations": "Organizations",
     "settings": "Settings",
     "settingsStaff": "Staff",
-    "expandSection": "Expand section",
-    "collapseSection": "Collapse section",
+    "collapseSidebar": "Collapse sidebar",
+    "expandSidebar": "Expand sidebar",
     "soon": "soon"
   },
   "login": {

@@ -2,7 +2,6 @@
 
 import { useTranslations } from 'next-intl';
 import type { OrganizationListItem } from '@/lib/api/types';
-
 type OrganizationListProps = {
   organizations: OrganizationListItem[];
   onOpen: (organizationId: string) => void;

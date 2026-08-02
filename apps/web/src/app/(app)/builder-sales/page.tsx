@@ -1,12 +1,10 @@
 import { Suspense } from 'react';
-import { getTranslations } from 'next-intl/server';
 import { BuilderSalesPage } from '@/features/builder-crm/builder-sales-page';
+import { RouteFallback } from '@/components/ui/route-fallback';
 
-export default async function BuilderSalesRoutePage() {
-  const t = await getTranslations('common');
-
+export default function BuilderSalesRoutePage() {
   return (
-    <Suspense fallback={<p className="py-8 text-sm text-[var(--color-muted)]">{t('loading')}</p>}>
+    <Suspense fallback={<RouteFallback />}>
       <BuilderSalesPage />
     </Suspense>
   );
