@@ -17,6 +17,7 @@ import { useMemo, useRef, useState, type ReactNode } from 'react';
 import { createPortal } from 'react-dom';
 import { KanbanScrollButtons } from '@/components/kanban/kanban-scroll-buttons';
 import type { KanbanColumnDef, KanbanColumnTone } from '@/components/kanban/types';
+import { useKanbanHorizontalWheel } from '@/components/kanban/use-kanban-horizontal-wheel';
 
 const CLICK_MAX_DISTANCE_PX = 6;
 /** Terminal group uses `p-2.5` (0.625rem); nested column radius stays concentric. */
@@ -49,6 +50,7 @@ export function KanbanBoard<TItem extends { id: string }, TStage extends string>
 }: KanbanBoardProps<TItem, TStage>) {
   const scrollerRef = useRef<HTMLDivElement | null>(null);
   const [activeId, setActiveId] = useState<string | null>(null);
+  useKanbanHorizontalWheel(scrollerRef);
   const sensors = useSensors(
     useSensor(PointerSensor, {
       activationConstraint: { distance: CLICK_MAX_DISTANCE_PX },
