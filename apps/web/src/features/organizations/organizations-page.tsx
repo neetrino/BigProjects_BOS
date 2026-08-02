@@ -33,9 +33,12 @@ export function OrganizationsPage() {
   const [searchInput, setSearchInput] = useState('');
   const [search, setSearch] = useState('');
   const [typeFilter, setTypeFilter] = useState<OrganizationType | ''>('');
-  const [loadState, setLoadState] = useClientCachedState<LoadState>(CLIENT_CACHE_KEYS.organizations, {
-    status: 'loading',
-  });
+  const [loadState, setLoadState] = useClientCachedState<LoadState>(
+    CLIENT_CACHE_KEYS.organizations,
+    {
+      status: 'loading',
+    },
+  );
   const [createOpen, setCreateOpen] = useState(false);
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [reloadToken, setReloadToken] = useState(0);
