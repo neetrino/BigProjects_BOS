@@ -2,8 +2,7 @@
 
 import { useLayoutEffect, useRef, useState, type CSSProperties, type RefObject } from 'react';
 
-const INDICATOR_TRANSITION_MS = 300;
-const ACCORDION_SETTLE_MS = 320;
+const INDICATOR_TRANSITION_MS = 280;
 
 type IndicatorMetrics = {
   top: number;
@@ -21,25 +20,29 @@ const INITIAL_METRICS: IndicatorMetrics = {
   visible: false,
 };
 
-function offsetRelativeTo(
+/**
+ * Map a target's viewport box into the ancestor's local CSS pixels.
+ * Works with CSS zoom because both rects share the same visual scale.
+ */
+function measureInAncestor(
   element: HTMLElement,
   ancestor: HTMLElement,
 ): { top: number; left: number; width: number; height: number } {
   const ancestorRect = ancestor.getBoundingClientRect();
   const elementRect = element.getBoundingClientRect();
-  const scaleX = ancestorRect.width / ancestor.offsetWidth || 1;
-  const scaleY = ancestorRect.height / ancestor.offsetHeight || 1;
+  const scaleX = ancestorRect.width > 0 ? ancestor.offsetWidth / ancestorRect.width : 1;
+  const scaleY = ancestorRect.height > 0 ? ancestor.offsetHeight / ancestorRect.height : 1;
 
   return {
-    top: (elementRect.top - ancestorRect.top) / scaleY + ancestor.scrollTop,
-    left: (elementRect.left - ancestorRect.left) / scaleX + ancestor.scrollLeft,
-    width: elementRect.width / scaleX,
-    height: elementRect.height / scaleY,
+    top: (elementRect.top - ancestorRect.top) * scaleY + ancestor.scrollTop,
+    left: (elementRect.left - ancestorRect.left) * scaleX + ancestor.scrollLeft,
+    width: elementRect.width * scaleX,
+    height: elementRect.height * scaleY,
   };
 }
 
 type UseSidebarActiveIndicatorResult = {
-  navRef: RefObject<HTMLElement | null>;
+  navRef: RefObject<HTMLDivElement | null>;
   indicatorStyle: CSSProperties;
   isMoving: boolean;
 };
@@ -48,7 +51,7 @@ export function useSidebarActiveIndicator(
   activeId: string | null,
   layoutKey: string,
 ): UseSidebarActiveIndicatorResult {
-  const navRef = useRef<HTMLElement | null>(null);
+  const navRef = useRef<HTMLDivElement | null>(null);
   const hasMeasuredRef = useRef(false);
   const prevActiveIdRef = useRef<string | null | undefined>(undefined);
   const [metrics, setMetrics] = useState<IndicatorMetrics>(INITIAL_METRICS);
@@ -67,18 +70,18 @@ export function useSidebarActiveIndicator(
       }
 
       const target = nav.querySelector<HTMLElement>(`[data-sidebar-nav="${activeId}"]`);
-      if (!target) {
+      if (!target || target.getClientRects().length === 0) {
         setMetrics((prev) => ({ ...prev, visible: false }));
         return;
       }
 
-      const next = offsetRelativeTo(target, nav);
+      const next = measureInAncestor(target, nav);
       setMetrics({
         top: next.top,
         left: next.left,
         width: next.width,
         height: next.height,
-        visible: next.height > 0 && next.width > 0,
+        visible: next.width > 0 && next.height > 0,
       });
     };
 
@@ -88,40 +91,47 @@ export function useSidebarActiveIndicator(
     hasMeasuredRef.current = true;
 
     let rafId = 0;
-    let settleTimer = 0;
+    let moveTimer = 0;
 
     if (shouldAnimate) {
       setIsMoving(true);
       rafId = window.requestAnimationFrame(() => {
         measure();
       });
-      settleTimer = window.setTimeout(() => {
+      moveTimer = window.setTimeout(() => {
         setIsMoving(false);
+        measure();
       }, INDICATOR_TRANSITION_MS);
     } else {
       measure();
       setIsMoving(false);
-      settleTimer = window.setTimeout(() => {
-        measure();
-      }, ACCORDION_SETTLE_MS);
     }
 
-    const onResize = (): void => {
+    const observer = new ResizeObserver(() => {
       measure();
-    };
-    window.addEventListener('resize', onResize);
+    });
+    observer.observe(nav);
+    const target = activeId
+      ? nav.querySelector<HTMLElement>(`[data-sidebar-nav="${activeId}"]`)
+      : null;
+    if (target) {
+      observer.observe(target);
+    }
+
+    window.addEventListener('resize', measure);
 
     return () => {
       window.cancelAnimationFrame(rafId);
-      window.clearTimeout(settleTimer);
-      window.removeEventListener('resize', onResize);
+      window.clearTimeout(moveTimer);
+      observer.disconnect();
+      window.removeEventListener('resize', measure);
     };
   }, [activeId, layoutKey]);
 
   return {
     navRef,
     indicatorStyle: {
-      transform: `translate(${metrics.left}px, ${metrics.top}px)`,
+      transform: `translate3d(${metrics.left}px, ${metrics.top}px, 0)`,
       width: metrics.width,
       height: metrics.height,
       opacity: metrics.visible ? 1 : 0,

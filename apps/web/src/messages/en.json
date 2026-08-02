@@ -32,8 +32,8 @@
     "organizations": "Organizations",
     "settings": "Settings",
     "settingsStaff": "Staff",
-    "expandSection": "Expand section",
-    "collapseSection": "Collapse section",
+    "collapseSidebar": "Collapse sidebar",
+    "expandSidebar": "Expand sidebar",
     "soon": "soon"
   },
   "login": {

@@ -32,8 +32,8 @@
     "organizations": "Организации",
     "settings": "Настройки",
     "settingsStaff": "Staff",
-    "expandSection": "Развернуть раздел",
-    "collapseSection": "Свернуть раздел",
+    "collapseSidebar": "Свернуть меню",
+    "expandSidebar": "Развернуть меню",
     "soon": "скоро"
   },
   "login": {
