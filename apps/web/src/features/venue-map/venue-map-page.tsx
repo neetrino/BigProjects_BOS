@@ -10,7 +10,9 @@ import { useAuth } from '@/components/auth/auth-provider';
 import { Button } from '@/components/ui/button';
 import { EmptyState, ErrorState, LoadingState } from '@/components/ui/page-state';
 import { SelectInput } from '@/components/ui/field';
+import { useClientCachedState } from '@/hooks/use-client-cached-state';
 import { useCycleQueryParam } from '@/hooks/use-cycle-query-param';
+import { CLIENT_CACHE_KEYS } from '@/lib/client-cache';
 import { CalibrationControls } from './calibration-controls';
 import { CreateAreaDialog } from './create-area-dialog';
 import { CreatePlanForm } from './create-plan-form';
@@ -38,10 +40,15 @@ export function VenueMapPage() {
   const { user } = useAuth();
   const isAdmin = user.role === 'ADMIN';
 
-  const [cyclesLoad, setCyclesLoad] = useState<CyclesLoad>({ status: 'loading' });
+  const [cyclesLoad, setCyclesLoad] = useClientCachedState<CyclesLoad>(CLIENT_CACHE_KEYS.cycles, {
+    status: 'loading',
+  });
   const cyclesReady = cyclesLoad.status === 'ready' ? cyclesLoad.cycles : null;
   const { cycleId, setCycleId } = useCycleQueryParam(cyclesReady);
-  const [planLoad, setPlanLoad] = useState<PlanLoad>({ status: 'idle' });
+  const planCacheKey = cycleId ? CLIENT_CACHE_KEYS.venuePlan(cycleId) : 'venue-plan:idle';
+  const [planLoad, setPlanLoad] = useClientCachedState<PlanLoad>(planCacheKey, {
+    status: cycleId ? 'loading' : 'idle',
+  });
   const [reloadToken, setReloadToken] = useState(0);
   const [selectedAreaId, setSelectedAreaId] = useState<string | null>(null);
   const [interactionMode, setInteractionMode] = useState<EditorInteractionMode>('select');
@@ -57,9 +64,6 @@ export function VenueMapPage() {
           return;
         }
         setCyclesLoad({ status: 'ready', cycles });
-        if (cycles.length > 0) {
-          setPlanLoad({ status: 'loading' });
-        }
       })
       .catch((err: unknown) => {
         if (!cancelled) {
@@ -72,11 +76,10 @@ export function VenueMapPage() {
     return () => {
       cancelled = true;
     };
-  }, [tCommon]);
+  }, [setCyclesLoad, tCommon]);
 
   function handleCycleChange(nextId: string) {
     setCycleId(nextId);
-    setPlanLoad({ status: 'loading' });
     setSelectedAreaId(null);
     setPendingSelection([]);
     setCalibrationPoints([]);
@@ -84,7 +87,6 @@ export function VenueMapPage() {
   }
 
   const refreshPlan = useCallback(() => {
-    setPlanLoad({ status: 'loading' });
     setReloadToken((token) => token + 1);
   }, []);
 
@@ -116,7 +118,7 @@ export function VenueMapPage() {
     return () => {
       cancelled = true;
     };
-  }, [cycleId, reloadToken, tCommon]);
+  }, [cycleId, reloadToken, setPlanLoad, tCommon]);
 
   const plan = planLoad.status === 'ready' ? planLoad.plan : null;
   const selectedArea = useMemo(

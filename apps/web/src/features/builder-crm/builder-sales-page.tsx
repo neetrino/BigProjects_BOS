@@ -14,8 +14,10 @@ import { EmptyState, ErrorState, LoadingState } from '@/components/ui/page-state
 import { showToast } from '@/components/ui/toast';
 import { BuilderSalesToolbar } from '@/features/builder-crm/builder-sales-toolbar';
 import type { BoardViewMode } from '@/features/builder-crm/constants';
-import { SEARCH_DEBOUNCE_MS } from '@/lib/constants';
+import { useClientCachedState } from '@/hooks/use-client-cached-state';
 import { useCycleQueryParam } from '@/hooks/use-cycle-query-param';
+import { CLIENT_CACHE_KEYS } from '@/lib/client-cache';
+import { SEARCH_DEBOUNCE_MS } from '@/lib/constants';
 import { DealCreateSheet } from '@/features/builder-crm/deal-create-sheet';
 import { DealKanban } from '@/features/builder-crm/deal-kanban';
 import { DealList } from '@/features/builder-crm/deal-list';
@@ -52,7 +54,9 @@ export function BuilderSalesPage() {
   const { user } = useAuth();
   const isAdmin = user.role === 'ADMIN';
 
-  const [cyclesLoad, setCyclesLoad] = useState<CyclesLoad>({ status: 'loading' });
+  const [cyclesLoad, setCyclesLoad] = useClientCachedState<CyclesLoad>(CLIENT_CACHE_KEYS.cycles, {
+    status: 'loading',
+  });
   const cycles = cyclesLoad.status === 'ready' ? cyclesLoad.cycles : null;
   const { cycleId, setCycleId } = useCycleQueryParam(cycles);
   const [view, setView] = useState<BoardViewMode>('kanban');
@@ -60,7 +64,12 @@ export function BuilderSalesPage() {
   const [search, setSearch] = useState('');
   const [assignedStaffId, setAssignedStaffId] = useState('');
   const [adminUsers, setAdminUsers] = useState<UserAccount[]>([]);
-  const [dealsLoad, setDealsLoad] = useState<DealsLoad>({ status: 'idle' });
+  const dealsCacheKey = cycleId
+    ? CLIENT_CACHE_KEYS.deals(cycleId, search, assignedStaffId)
+    : 'deals:idle';
+  const [dealsLoad, setDealsLoad] = useClientCachedState<DealsLoad>(dealsCacheKey, {
+    status: cycleId ? 'loading' : 'idle',
+  });
   const [createOpen, setCreateOpen] = useState(false);
   const [selectedDealId, setSelectedDealId] = useState<string | null>(null);
   const [reloadToken, setReloadToken] = useState(0);
@@ -78,7 +87,6 @@ export function BuilderSalesPage() {
           return;
         }
         setCyclesLoad({ status: 'ready', cycles: loaded });
-        setDealsLoad({ status: 'loading' });
       })
       .catch((err: unknown) => {
         if (!cancelled) {
@@ -91,7 +99,7 @@ export function BuilderSalesPage() {
     return () => {
       cancelled = true;
     };
-  }, [tCommon]);
+  }, [setCyclesLoad, tCommon]);
 
   useEffect(() => {
     if (!isAdmin) {
@@ -143,7 +151,7 @@ export function BuilderSalesPage() {
     return () => {
       cancelled = true;
     };
-  }, [cycleId, search, assignedStaffId, reloadToken, tCommon]);
+  }, [cycleId, search, assignedStaffId, reloadToken, setDealsLoad, tCommon]);
 
   const deals = useMemo(() => (dealsLoad.status === 'ready' ? dealsLoad.deals : []), [dealsLoad]);
 
@@ -156,20 +164,23 @@ export function BuilderSalesPage() {
     return staffFromDeals(deals);
   }, [adminUsers, deals, isAdmin]);
 
-  const replaceDeal = useCallback((saved: DealListItem) => {
-    setDealsLoad((prev) => {
-      if (prev.status !== 'ready') {
-        return prev;
-      }
-      const index = prev.deals.findIndex((item) => item.id === saved.id);
-      if (index === -1) {
-        return { status: 'ready', deals: [saved, ...prev.deals] };
-      }
-      const next = [...prev.deals];
-      next[index] = saved;
-      return { status: 'ready', deals: next };
-    });
-  }, []);
+  const replaceDeal = useCallback(
+    (saved: DealListItem) => {
+      setDealsLoad((prev) => {
+        if (prev.status !== 'ready') {
+          return prev;
+        }
+        const index = prev.deals.findIndex((item) => item.id === saved.id);
+        if (index === -1) {
+          return { status: 'ready', deals: [saved, ...prev.deals] };
+        }
+        const next = [...prev.deals];
+        next[index] = saved;
+        return { status: 'ready', deals: next };
+      });
+    },
+    [setDealsLoad],
+  );
 
   async function handleStageChange(dealId: string, stage: DealStage) {
     const previous = deals.find((item) => item.id === dealId);
@@ -194,20 +205,14 @@ export function BuilderSalesPage() {
       <BuilderSalesToolbar
         cycles={cycleList}
         cycleId={cycleId}
-        onCycleChange={(nextCycleId) => {
-          setDealsLoad({ status: 'loading' });
-          setCycleId(nextCycleId);
-        }}
+        onCycleChange={setCycleId}
         view={view}
         onViewChange={setView}
         searchInput={searchInput}
         onSearchChange={setSearchInput}
         staffOptions={staffOptions}
         assignedStaffId={assignedStaffId}
-        onAssignedStaffChange={(nextStaffId) => {
-          setDealsLoad({ status: 'loading' });
-          setAssignedStaffId(nextStaffId);
-        }}
+        onAssignedStaffChange={setAssignedStaffId}
         onCreate={() => setCreateOpen(true)}
       />
 
