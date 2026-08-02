@@ -18,6 +18,7 @@ import { useSearchParams } from 'next/navigation';
 import { useTranslations } from 'next-intl';
 import { useState } from 'react';
 import { useAuth } from '@/components/auth/auth-provider';
+import { useSidebarActiveIndicator } from '@/components/app-shell/use-sidebar-active-indicator';
 
 type NavKey = 'builderSales' | 'partners' | 'venueMap' | 'cycles' | 'organizations' | 'settings';
 
@@ -54,10 +55,25 @@ const NAV_ITEMS: NavItem[] = [
 ];
 
 const NAV_ROW_CLASS =
-  'group relative flex min-h-11 items-center gap-2.5 rounded-[var(--radius-control)] px-2.5 py-2 text-sm transition-colors duration-200';
+  'app-sidebar-nav-row group relative flex min-h-11 items-center gap-2.5 rounded-[var(--radius-control)] px-2.5 py-2 text-sm transition-colors duration-200';
 
-const NAV_ACTIVE_BAR_CLASS =
-  'absolute left-0 top-1/2 h-7 w-[3px] -translate-y-1/2 rounded-full bg-white';
+function resolveActiveNavId(pathname: string, isAdmin: boolean): string | null {
+  for (const item of NAV_ITEMS) {
+    const children = (item.children ?? []).filter((child) => !child.adminOnly || isAdmin);
+    for (const child of children) {
+      if (pathname === child.href || pathname.startsWith(`${child.href}/`)) {
+        return child.key;
+      }
+    }
+    if (!item.href || item.soon) {
+      continue;
+    }
+    if (pathname === item.href || pathname.startsWith(`${item.href}/`)) {
+      return item.key;
+    }
+  }
+  return null;
+}
 
 type AppSidebarProps = {
   pathname: string;
@@ -80,6 +96,12 @@ export function AppSidebar({ pathname }: AppSidebarProps) {
     }
   }
 
+  const activeNavId = resolveActiveNavId(pathname, isAdmin);
+  const { navRef, indicatorStyle, isMoving } = useSidebarActiveIndicator(
+    activeNavId,
+    `${settingsOpen ? 'open' : 'closed'}:${activeNavId ?? 'none'}`,
+  );
+
   function navHref(item: NavItem): string {
     if (!item.href) {
       return '#';
@@ -97,6 +119,12 @@ export function AppSidebar({ pathname }: AppSidebarProps) {
         ? 'bg-white text-[var(--color-brand)]'
         : 'bg-white/10 text-white/80 group-hover:bg-white/15 group-hover:text-white',
     );
+  }
+
+  function rowToneClass(active: boolean): string {
+    return active
+      ? 'font-semibold text-white'
+      : 'text-white/70 hover:bg-white/10 hover:text-white';
   }
 
   return (
@@ -125,7 +153,17 @@ export function AppSidebar({ pathname }: AppSidebarProps) {
         />
       </div>
 
-      <nav aria-label={t('label')} className="relative flex flex-1 flex-col gap-1 px-3 pb-6">
+      <nav
+        ref={navRef}
+        aria-label={t('label')}
+        className="relative flex flex-1 flex-col gap-1 px-3 pb-6"
+      >
+        <span
+          aria-hidden
+          className={clsx('app-sidebar-active-indicator', isMoving && 'is-moving')}
+          style={indicatorStyle}
+        />
+
         {NAV_ITEMS.map((item) => {
           const Icon = item.icon;
           const children = (item.children ?? []).filter((child) => !child.adminOnly || isAdmin);
@@ -155,17 +193,11 @@ export function AppSidebar({ pathname }: AppSidebarProps) {
             const expanded = settingsOpen;
 
             return (
-              <div key={item.key} className="flex flex-col gap-1">
+              <div key={item.key} className="flex flex-col">
                 <div
-                  className={clsx(
-                    NAV_ROW_CLASS,
-                    'pr-1.5',
-                    isExactActive
-                      ? 'bg-white/15 font-semibold text-white'
-                      : 'text-white/70 hover:bg-white/10 hover:text-white',
-                  )}
+                  data-sidebar-nav={item.key}
+                  className={clsx(NAV_ROW_CLASS, 'pr-1.5', rowToneClass(isExactActive))}
                 >
-                  {isExactActive ? <span aria-hidden className={NAV_ACTIVE_BAR_CLASS} /> : null}
                   <Link
                     href={navHref(item)}
                     className="flex min-w-0 flex-1 items-center gap-2.5 text-inherit"
@@ -186,7 +218,7 @@ export function AppSidebar({ pathname }: AppSidebarProps) {
                   >
                     <ChevronDown
                       className={clsx(
-                        'size-4 transition-transform duration-200',
+                        'size-4 transition-transform duration-300 ease-[var(--ease-out-premium)]',
                         expanded && 'rotate-180',
                       )}
                       aria-hidden
@@ -194,38 +226,40 @@ export function AppSidebar({ pathname }: AppSidebarProps) {
                   </button>
                 </div>
 
-                {expanded ? (
-                  <div className="flex flex-col gap-1 pl-11">
-                    {children.map((child) => {
-                      const ChildIcon = child.icon;
-                      const isChildActive =
-                        pathname === child.href || pathname.startsWith(`${child.href}/`);
+                <div
+                  className={clsx(
+                    'app-sidebar-accordion',
+                    expanded && 'app-sidebar-accordion-open',
+                  )}
+                  aria-hidden={!expanded}
+                >
+                  <div className="app-sidebar-accordion-panel">
+                    <div className="flex flex-col gap-1 pl-11 pt-1">
+                      {children.map((child) => {
+                        const ChildIcon = child.icon;
+                        const isChildActive =
+                          pathname === child.href || pathname.startsWith(`${child.href}/`);
 
-                      return (
-                        <Link
-                          key={child.key}
-                          href={child.href}
-                          className={clsx(
-                            NAV_ROW_CLASS,
-                            isChildActive
-                              ? 'bg-white/15 font-semibold text-white'
-                              : 'font-medium text-white/70 hover:bg-white/10 hover:text-white',
-                          )}
-                        >
-                          {isChildActive ? (
-                            <span aria-hidden className={NAV_ACTIVE_BAR_CLASS} />
-                          ) : null}
-                          <span className={iconBoxClass(isChildActive)}>
-                            <ChildIcon className="size-4" aria-hidden />
-                          </span>
-                          <span className="app-sidebar-nav-label min-w-0 whitespace-pre-line text-left leading-snug">
-                            {t(child.key)}
-                          </span>
-                        </Link>
-                      );
-                    })}
+                        return (
+                          <Link
+                            key={child.key}
+                            href={child.href}
+                            data-sidebar-nav={child.key}
+                            tabIndex={expanded ? undefined : -1}
+                            className={clsx(NAV_ROW_CLASS, rowToneClass(isChildActive))}
+                          >
+                            <span className={iconBoxClass(isChildActive)}>
+                              <ChildIcon className="size-4" aria-hidden />
+                            </span>
+                            <span className="app-sidebar-nav-label min-w-0 whitespace-pre-line text-left leading-snug">
+                              {t(child.key)}
+                            </span>
+                          </Link>
+                        );
+                      })}
+                    </div>
                   </div>
-                ) : null}
+                </div>
               </div>
             );
           }
@@ -236,14 +270,9 @@ export function AppSidebar({ pathname }: AppSidebarProps) {
             <Link
               key={item.key}
               href={navHref(item)}
-              className={clsx(
-                NAV_ROW_CLASS,
-                isSectionActive
-                  ? 'bg-white/15 font-semibold text-white'
-                  : 'text-white/70 hover:bg-white/10 hover:text-white',
-              )}
+              data-sidebar-nav={item.key}
+              className={clsx(NAV_ROW_CLASS, rowToneClass(isSectionActive))}
             >
-              {isSectionActive ? <span aria-hidden className={NAV_ACTIVE_BAR_CLASS} /> : null}
               <span className={iconBoxClass(isSectionActive)}>
                 <Icon className="size-4" aria-hidden />
               </span>

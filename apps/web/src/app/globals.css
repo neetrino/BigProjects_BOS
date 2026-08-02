@@ -397,6 +397,69 @@ html[lang='hy'] .app-sidebar .app-sidebar-nav-label {
   line-height: 1.45;
 }
 
+.app-sidebar-nav-row {
+  z-index: 1;
+}
+
+.app-sidebar-active-indicator {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 0;
+  border-radius: var(--radius-control);
+  background: rgb(255 255 255 / 15%);
+  pointer-events: none;
+  transition: none;
+  will-change: transform, width, height;
+}
+
+.app-sidebar-active-indicator.is-moving {
+  transition:
+    transform 300ms var(--ease-out-premium),
+    width 300ms var(--ease-out-premium),
+    height 300ms var(--ease-out-premium),
+    opacity 200ms var(--ease-out-premium);
+}
+
+.app-sidebar-active-indicator::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 0;
+  width: 3px;
+  height: 1.75rem;
+  border-radius: 9999px;
+  background: #fff;
+  transform: translateY(-50%);
+}
+
+.app-sidebar-accordion {
+  display: grid;
+  grid-template-rows: 0fr;
+  opacity: 0;
+  transition:
+    grid-template-rows 300ms var(--ease-out-premium),
+    opacity 220ms var(--ease-out-premium);
+}
+
+.app-sidebar-accordion-open {
+  grid-template-rows: 1fr;
+  opacity: 1;
+}
+
+.app-sidebar-accordion-panel {
+  min-height: 0;
+  overflow: hidden;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .app-sidebar-accordion,
+  .app-sidebar-active-indicator,
+  .app-sidebar-active-indicator.is-moving {
+    transition: none !important;
+  }
+}
+
 .no-scrollbar {
   -ms-overflow-style: none;
   scrollbar-width: none;
