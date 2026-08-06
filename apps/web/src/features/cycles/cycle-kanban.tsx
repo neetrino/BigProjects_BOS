@@ -21,7 +21,12 @@ export function CycleKanban({ cycles, onOpen, onStatusChange }: CycleKanbanProps
   const t = useTranslations('cycles');
 
   const activeColumns = useMemo<KanbanColumnDef<EventCycleStatus>[]>(
-    () => WORKFLOW_STATUSES.map((status) => ({ id: status, title: t(`status.${status}`) })),
+    () =>
+      WORKFLOW_STATUSES.map((status) => ({
+        id: status,
+        title: t(`status.${status}`),
+        tone: status === 'ACTIVE' ? 'positive' : 'default',
+      })),
     [t],
   );
 

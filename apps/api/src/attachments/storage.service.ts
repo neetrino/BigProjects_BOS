@@ -13,6 +13,21 @@ const PRESIGN_EXPIRY_SECONDS = 10 * 60;
 const HTTP_STATUS_NOT_FOUND = 404;
 const S3_FORCE_PATH_STYLE_TRUE = 'true';
 
+/**
+ * AWS SDK v3 defaults to flexible checksums that break Cloudflare R2 / MinIO
+ * presigned URLs. Only calculate when the API operation requires it.
+ */
+const S3_CHECKSUM_WHEN_REQUIRED = 'WHEN_REQUIRED' as const;
+
+/** Checksum headers that must not be hoisted into R2/MinIO signed query strings. */
+const PRESIGN_UNHOISTABLE_HEADERS = new Set([
+  'x-amz-checksum-crc32',
+  'x-amz-checksum-crc32c',
+  'x-amz-checksum-sha1',
+  'x-amz-checksum-sha256',
+  'x-amz-sdk-checksum-algorithm',
+]);
+
 @Injectable()
 export class StorageService implements OnModuleInit {
   private readonly logger = new Logger(StorageService.name);
@@ -31,6 +46,8 @@ export class StorageService implements OnModuleInit {
       region,
       credentials: { accessKeyId, secretAccessKey },
       forcePathStyle: process.env.S3_FORCE_PATH_STYLE === S3_FORCE_PATH_STYLE_TRUE,
+      requestChecksumCalculation: S3_CHECKSUM_WHEN_REQUIRED,
+      responseChecksumValidation: S3_CHECKSUM_WHEN_REQUIRED,
     });
   }
 
@@ -45,7 +62,10 @@ export class StorageService implements OnModuleInit {
       ContentType: contentType,
     });
 
-    return getSignedUrl(this.client, command, { expiresIn: PRESIGN_EXPIRY_SECONDS });
+    return getSignedUrl(this.client, command, {
+      expiresIn: PRESIGN_EXPIRY_SECONDS,
+      unhoistableHeaders: PRESIGN_UNHOISTABLE_HEADERS,
+    });
   }
 
   async createPresignedGetUrl(
@@ -57,7 +77,10 @@ export class StorageService implements OnModuleInit {
       Key: objectKey,
     });
 
-    return getSignedUrl(this.client, command, { expiresIn: expiresInSeconds });
+    return getSignedUrl(this.client, command, {
+      expiresIn: expiresInSeconds,
+      unhoistableHeaders: PRESIGN_UNHOISTABLE_HEADERS,
+    });
   }
 
   async deleteObject(objectKey: string): Promise<void> {

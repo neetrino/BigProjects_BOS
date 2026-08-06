@@ -8,7 +8,7 @@ const SCROLL_STEP_PX = 280;
 const HOVER_SCROLL_PX_PER_SECOND = 360;
 
 const BUTTON_CLASS =
-  'absolute top-1/2 z-20 flex size-8 -translate-y-1/2 items-center justify-center rounded-full bg-white text-[var(--color-fg)] shadow-sm outline outline-1 outline-[var(--color-border)] transition-colors hover:bg-[var(--color-accent-soft)] disabled:cursor-not-allowed disabled:opacity-35';
+  'absolute top-1/2 z-20 flex size-9 -translate-y-1/2 items-center justify-center rounded-full bg-white/95 text-[var(--color-fg)] shadow-[var(--shadow-soft)] outline outline-1 outline-[var(--color-border)] backdrop-blur-sm transition-[background-color,box-shadow,transform] duration-[var(--duration-base)] ease-[var(--ease-out-premium)] hover:bg-[var(--color-accent-soft)] hover:shadow-[var(--shadow-lift)] hover:outline-[var(--color-accent)]/25 active:scale-95 disabled:cursor-not-allowed disabled:opacity-35 disabled:hover:bg-white/95 disabled:hover:shadow-[var(--shadow-soft)] disabled:active:scale-100';
 
 /** Center of the circle sits on the board edge (half outside). */
 const LEFT_BUTTON_CLASS = `${BUTTON_CLASS} left-0 -translate-x-1/2`;
