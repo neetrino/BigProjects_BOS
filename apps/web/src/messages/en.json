@@ -11,6 +11,7 @@
     "unexpectedError": "Something went wrong. Please try again.",
     "scrollLeft": "Scroll left",
     "scrollRight": "Scroll right",
+    "kanbanEmptyColumn": "Drop cards here",
     "datePicker": {
       "title": "Choose date",
       "placeholder": "DD.MM.YYYY",
