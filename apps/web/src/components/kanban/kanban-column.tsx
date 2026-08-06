@@ -118,7 +118,9 @@ export function KanbanColumn<TItem extends { id: string }, TStage extends string
                 : 'border-[var(--color-border)] bg-white/40',
             )}
           >
-            <p className="text-xs font-medium text-[var(--color-muted)]">{t('kanbanEmptyColumn')}</p>
+            <p className="text-xs font-medium text-[var(--color-muted)]">
+              {t('kanbanEmptyColumn')}
+            </p>
           </div>
         ) : (
           items.map((item) => (
