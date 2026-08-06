@@ -72,6 +72,7 @@ export function KanbanBoard<TItem extends { id: string }, TStage extends string>
   }, [activeColumns, getStage, items, terminalColumns]);
 
   const activeItem = activeId ? (items.find((item) => item.id === activeId) ?? null) : null;
+  const hasTerminalColumns = terminalColumns.length > 0;
 
   function handleDragStart(event: DragStartEvent) {
     setActiveId(String(event.active.id));
@@ -116,38 +117,34 @@ export function KanbanBoard<TItem extends { id: string }, TStage extends string>
 
         <div
           ref={scrollerRef}
-          className="no-scrollbar absolute inset-0 flex gap-4 overflow-x-auto pb-1"
+          className="no-scrollbar absolute inset-0 flex items-stretch gap-3.5 overflow-x-auto pb-1"
         >
-          <div className="flex min-h-0 min-w-max gap-3.5">
-            {activeColumns.map((column) => (
-              <KanbanColumn
-                key={column.id}
-                column={column}
-                items={grouped.get(column.id) ?? []}
-                terminal={false}
-                onOpen={onOpen}
-                renderCard={renderCard}
-              />
-            ))}
-          </div>
+          {activeColumns.map((column) => (
+            <KanbanColumn
+              key={column.id}
+              column={column}
+              items={grouped.get(column.id) ?? []}
+              onOpen={onOpen}
+              renderCard={renderCard}
+            />
+          ))}
 
-          <div
-            aria-hidden
-            className="mx-1 w-px shrink-0 self-stretch bg-gradient-to-b from-transparent via-[var(--color-border-strong)] to-transparent opacity-70"
-          />
+          {hasTerminalColumns ? (
+            <div
+              aria-hidden
+              className="mx-0.5 w-px shrink-0 self-stretch bg-gradient-to-b from-transparent via-[var(--color-border-strong)] to-transparent opacity-70"
+            />
+          ) : null}
 
-          <div className="flex min-h-0 min-w-max gap-3 rounded-[var(--radius-panel)] border border-white/80 bg-[linear-gradient(165deg,rgb(255_255_255/0.82),rgb(247_243_238/0.62))] p-2.5 shadow-[inset_0_1px_0_rgb(255_255_255/0.7)] outline outline-1 outline-[var(--color-border)]">
-            {terminalColumns.map((column) => (
-              <KanbanColumn
-                key={column.id}
-                column={column}
-                items={grouped.get(column.id) ?? []}
-                terminal
-                onOpen={onOpen}
-                renderCard={renderCard}
-              />
-            ))}
-          </div>
+          {terminalColumns.map((column) => (
+            <KanbanColumn
+              key={column.id}
+              column={column}
+              items={grouped.get(column.id) ?? []}
+              onOpen={onOpen}
+              renderCard={renderCard}
+            />
+          ))}
         </div>
       </div>
 

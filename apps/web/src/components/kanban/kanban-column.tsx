@@ -7,8 +7,6 @@ import { useRef, type ReactNode } from 'react';
 import type { KanbanColumnDef, KanbanColumnTone } from '@/components/kanban/types';
 
 const CLICK_MAX_DISTANCE_PX = 6;
-/** Terminal group uses `p-2.5` (0.625rem); nested column radius stays concentric. */
-const TERMINAL_COLUMN_RADIUS_CLASS = 'rounded-[calc(var(--radius-panel)-0.625rem)]';
 
 const TONE_DOT_CLASS: Record<KanbanColumnTone, string> = {
   default: 'bg-[var(--color-accent)]',
@@ -43,7 +41,6 @@ const TONE_OVER_CLASS: Record<KanbanColumnTone, string> = {
 type KanbanColumnProps<TItem extends { id: string }, TStage extends string> = {
   column: KanbanColumnDef<TStage>;
   items: TItem[];
-  terminal: boolean;
   onOpen: (id: string) => void;
   renderCard: (item: TItem, options: { isDragging: boolean }) => ReactNode;
 };
@@ -51,7 +48,6 @@ type KanbanColumnProps<TItem extends { id: string }, TStage extends string> = {
 export function KanbanColumn<TItem extends { id: string }, TStage extends string>({
   column,
   items,
-  terminal,
   onOpen,
   renderCard,
 }: KanbanColumnProps<TItem, TStage>) {
@@ -64,44 +60,30 @@ export function KanbanColumn<TItem extends { id: string }, TStage extends string
     <section
       ref={setNodeRef}
       className={clsx(
-        'relative flex w-[18.5rem] shrink-0 flex-col overflow-hidden border transition-[box-shadow,transform,border-color] duration-[var(--duration-base)] ease-[var(--ease-out-premium)]',
-        terminal
-          ? clsx(
-              TERMINAL_COLUMN_RADIUS_CLASS,
-              'border-dashed border-[var(--color-border-strong)] bg-[linear-gradient(180deg,#ffffff_0%,#fbfcfe_100%)]',
-            )
-          : clsx(
-              'rounded-[var(--radius-panel)] border-white/90 bg-[linear-gradient(180deg,#ffffff_0%,#f8fafc_100%)]',
-              'outline outline-1 outline-[var(--color-border)]',
-              'shadow-[var(--shadow-soft)]',
-            ),
+        'relative flex h-full w-[18.5rem] shrink-0 flex-col overflow-hidden',
+        'rounded-[var(--radius-panel)] border border-white/90',
+        'bg-[linear-gradient(180deg,#ffffff_0%,#f8fafc_100%)]',
+        'outline outline-1 outline-[var(--color-border)] shadow-[var(--shadow-soft)]',
+        'transition-[box-shadow,transform,border-color] duration-[var(--duration-base)] ease-[var(--ease-out-premium)]',
         isOver && 'scale-[1.01]',
       )}
     >
       <div
         aria-hidden
-        className={clsx('h-1 w-full bg-gradient-to-r', TONE_ACCENT_CLASS[tone])}
+        className={clsx('h-1 w-full shrink-0 bg-gradient-to-r', TONE_ACCENT_CLASS[tone])}
       />
 
       {isOver ? (
         <div
           aria-hidden
           className={clsx(
-            'pointer-events-none absolute inset-0 z-20 ring-2 ring-inset',
-            terminal ? TERMINAL_COLUMN_RADIUS_CLASS : 'rounded-[var(--radius-panel)]',
+            'pointer-events-none absolute inset-0 z-20 rounded-[var(--radius-panel)] ring-2 ring-inset',
             TONE_OVER_CLASS[tone],
           )}
         />
       ) : null}
 
-      <header
-        className={clsx(
-          'flex items-center justify-between gap-2 border-b px-3.5 py-3',
-          terminal
-            ? 'border-[var(--color-border)]/70 bg-[var(--color-brass-soft)]/40'
-            : 'border-[var(--color-border)]/80 bg-white/55',
-        )}
-      >
+      <header className="flex shrink-0 items-center justify-between gap-2 border-b border-[var(--color-border)]/80 bg-white/55 px-3.5 py-3">
         <div className="flex min-w-0 items-center gap-2">
           <span
             aria-hidden
@@ -172,10 +154,7 @@ function DraggableKanbanCard<TItem extends { id: string }>({
   return (
     <div
       ref={setNodeRef}
-      className={clsx(
-        'cursor-grab active:cursor-grabbing',
-        isDragging && 'opacity-35',
-      )}
+      className={clsx('cursor-grab active:cursor-grabbing', isDragging && 'opacity-35')}
       {...listeners}
       {...attributes}
       onPointerDown={(event) => {
