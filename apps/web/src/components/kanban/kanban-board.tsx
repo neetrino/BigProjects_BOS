@@ -233,7 +233,7 @@ function KanbanColumn<TItem extends { id: string }, TStage extends string>({
           {items.length}
         </span>
       </header>
-      <div className="flex min-h-0 flex-1 flex-col gap-2.5 overflow-y-auto p-2.5">
+      <div className="soft-scrollbar flex min-h-0 flex-1 flex-col gap-2.5 overflow-y-auto p-2.5">
         {items.map((item) => (
           <DraggableKanbanCard key={item.id} item={item} onOpen={onOpen} renderCard={renderCard} />
         ))}
