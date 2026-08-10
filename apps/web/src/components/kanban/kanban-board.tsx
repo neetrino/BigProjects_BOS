@@ -163,3 +163,5 @@ export function KanbanBoard<TItem extends { id: string }, TStage extends string>
     </DndContext>
   );
 }
+
+console.log('KanbanBoard');
