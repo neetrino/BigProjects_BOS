@@ -8,6 +8,7 @@ import {
   useLayoutEffect,
   useRef,
   useState,
+  type AnimationEvent,
   type ChangeEvent,
   type CSSProperties,
   type SelectHTMLAttributes,
@@ -39,6 +40,8 @@ const MENU_MAX_HEIGHT_PX = 280;
 const MENU_MIN_HEIGHT_PX = 120;
 const MENU_GAP_PX = 8;
 const MENU_FLIP_THRESHOLD_PX = 160;
+const DROPDOWN_OUT_ANIMATION_NAME = 'dropdown-panel-out';
+const DROPDOWN_EXIT_FALLBACK_MS = 180;
 
 function readOptions(select: HTMLSelectElement | null): SelectOption[] {
   if (!select) {
@@ -76,6 +79,8 @@ export function SelectInput({
   const selectRef = useRef<HTMLSelectElement>(null);
   const menuRef = useRef<HTMLUListElement>(null);
   const [open, setOpen] = useState(false);
+  const [menuVisible, setMenuVisible] = useState(false);
+  const [exiting, setExiting] = useState(false);
   const [menuPosition, setMenuPosition] = useState<MenuPosition | null>(null);
   const [options, setOptions] = useState<SelectOption[]>([]);
 
@@ -114,6 +119,25 @@ export function SelectInput({
     });
   }
 
+  function closeMenu(): void {
+    setOpen(false);
+  }
+
+  function finishExit(): void {
+    setMenuVisible(false);
+    setExiting(false);
+  }
+
+  function handleMenuAnimationEnd(event: AnimationEvent<HTMLUListElement>): void {
+    if (event.target !== event.currentTarget) {
+      return;
+    }
+    if (!event.animationName.includes(DROPDOWN_OUT_ANIMATION_NAME)) {
+      return;
+    }
+    finishExit();
+  }
+
   useLayoutEffect(() => {
     syncOptions();
   }, [children, value]);
@@ -127,6 +151,31 @@ export function SelectInput({
   }, [open]);
 
   useEffect(() => {
+    if (open) {
+      setMenuVisible(true);
+      setExiting(false);
+      return;
+    }
+
+    if (!menuVisible) {
+      return;
+    }
+
+    const frame = window.requestAnimationFrame(() => {
+      setExiting(true);
+    });
+    return () => window.cancelAnimationFrame(frame);
+  }, [open, menuVisible]);
+
+  useEffect(() => {
+    if (!exiting) {
+      return;
+    }
+    const timer = window.setTimeout(finishExit, DROPDOWN_EXIT_FALLBACK_MS);
+    return () => window.clearTimeout(timer);
+  }, [exiting]);
+
+  useEffect(() => {
     if (!open) {
       return;
     }
@@ -136,13 +185,13 @@ export function SelectInput({
       if (rootRef.current?.contains(target) || menuRef.current?.contains(target)) {
         return;
       }
-      setOpen(false);
+      closeMenu();
     }
 
     function handleKeyDown(event: KeyboardEvent): void {
       if (event.key === 'Escape') {
         event.preventDefault();
-        setOpen(false);
+        closeMenu();
         triggerRef.current?.blur();
       }
     }
@@ -165,6 +214,10 @@ export function SelectInput({
   }, [open]);
 
   function handleSelect(nextValue: string): void {
+    if (exiting) {
+      return;
+    }
+
     const select = selectRef.current;
     if (select) {
       select.value = nextValue;
@@ -174,7 +227,7 @@ export function SelectInput({
       target: { value: nextValue, name: name ?? '' },
       currentTarget: { value: nextValue, name: name ?? '' },
     } as ChangeEvent<HTMLSelectElement>);
-    setOpen(false);
+    closeMenu();
     triggerRef.current?.focus();
   }
 
@@ -188,6 +241,7 @@ export function SelectInput({
         maxWidth: `min(24rem, calc(100% - ${viewportLengthToStage(24)}px))`,
         maxHeight: menuPosition.maxHeight,
         boxSizing: 'border-box',
+        transformOrigin: menuPosition.openUpward ? 'bottom center' : 'top center',
         ...(menuPosition.openUpward
           ? { bottom: getStageLayoutHeight() - menuPosition.top }
           : { top: menuPosition.top }),
@@ -232,7 +286,7 @@ export function SelectInput({
             return;
           }
           if (open) {
-            setOpen(false);
+            closeMenu();
             return;
           }
           syncOptions();
@@ -258,7 +312,7 @@ export function SelectInput({
         />
       </button>
 
-      {open && menuPosition && typeof document !== 'undefined'
+      {menuVisible && menuPosition && typeof document !== 'undefined'
         ? createPortal(
             <ul
               ref={menuRef}
@@ -267,17 +321,21 @@ export function SelectInput({
               aria-label={ariaLabel}
               data-portal
               style={menuStyle}
+              onAnimationEnd={handleMenuAnimationEnd}
               className={clsx(
-                'overflow-y-auto rounded-[12px] border border-[var(--color-border)]',
-                'bg-[var(--color-surface-elevated)] py-1.5 text-[var(--color-fg)] shadow-md',
-                'dropdown-panel-in',
+                'overflow-y-auto overflow-x-hidden rounded-[12px] border border-[var(--color-border)]',
+                'bg-[var(--color-surface-elevated)] text-[var(--color-fg)] shadow-md',
+                'will-change-transform',
+                exiting ? 'pointer-events-none dropdown-panel-out' : 'dropdown-panel-in',
               )}
             >
               {options.length === 0 ? (
                 <li className="px-3 py-2.5 text-sm text-[var(--color-muted)]">—</li>
               ) : (
-                options.map((option) => {
+                options.map((option, index) => {
                   const isSelected = option.value === selectedValue;
+                  const isFirst = index === 0;
+                  const isLast = index === options.length - 1;
 
                   return (
                     <li key={`${option.value}::${option.label}`} role="none">
@@ -295,6 +353,8 @@ export function SelectInput({
                           'flex w-full items-center justify-between gap-3 px-3 py-2.5 text-left text-sm',
                           'whitespace-nowrap transition-colors duration-150',
                           'disabled:cursor-not-allowed disabled:opacity-40',
+                          isFirst && 'rounded-t-[11px]',
+                          isLast && 'rounded-b-[11px]',
                           isSelected
                             ? 'bg-[var(--color-accent-soft)] font-semibold text-[var(--color-brand)]'
                             : 'font-medium text-[var(--color-fg)] hover:bg-[var(--color-bg)]',
