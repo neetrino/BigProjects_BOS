@@ -1,0 +1,85 @@
+steps:
+  # 1. Build production API image
+  - id: build-api
+    name: gcr.io/cloud-builders/docker
+    args:
+      - build
+      - -f
+      - Dockerfile.api
+      - -t
+      - ${_REGION}-docker.pkg.dev/$PROJECT_ID/${_REPOSITORY}/api:$SHORT_SHA
+      - .
+
+  # 2. Push production API image
+  - id: push-api
+    name: gcr.io/cloud-builders/docker
+    args:
+      - push
+      - ${_REGION}-docker.pkg.dev/$PROJECT_ID/${_REPOSITORY}/api:$SHORT_SHA
+
+  # 3. Build Prisma migration image
+  - id: build-migrate
+    name: gcr.io/cloud-builders/docker
+    args:
+      - build
+      - --target
+      - builder
+      - -f
+      - Dockerfile.api
+      - -t
+      - ${_REGION}-docker.pkg.dev/$PROJECT_ID/${_REPOSITORY}/api-migrate:$SHORT_SHA
+      - .
+
+  # 4. Push migration image
+  - id: push-migrate
+    name: gcr.io/cloud-builders/docker
+    args:
+      - push
+      - ${_REGION}-docker.pkg.dev/$PROJECT_ID/${_REPOSITORY}/api-migrate:$SHORT_SHA
+
+  # 5. Point existing migration Job to the new image
+  - id: update-migration-job
+    name: gcr.io/google.com/cloudsdktool/cloud-sdk
+    entrypoint: gcloud
+    args:
+      - run
+      - jobs
+      - update
+      - ${_MIGRATION_JOB}
+      - --image=${_REGION}-docker.pkg.dev/$PROJECT_ID/${_REPOSITORY}/api-migrate:$SHORT_SHA
+      - --region=${_REGION}
+      - --quiet
+
+  # 6. Run DB migrations before deploying API
+  - id: run-migrations
+    name: gcr.io/google.com/cloudsdktool/cloud-sdk
+    entrypoint: gcloud
+    args:
+      - run
+      - jobs
+      - execute
+      - ${_MIGRATION_JOB}
+      - --region=${_REGION}
+      - --wait
+
+  # 7. Deploy new API revision only if migrations succeeded
+  - id: deploy-api
+    name: gcr.io/google.com/cloudsdktool/cloud-sdk
+    entrypoint: gcloud
+    args:
+      - run
+      - services
+      - update
+      - ${_SERVICE}
+      - --image=${_REGION}-docker.pkg.dev/$PROJECT_ID/${_REPOSITORY}/api:$SHORT_SHA
+      - --region=${_REGION}
+      - --quiet
+
+substitutions:
+  _REGION: europe-west1
+  _REPOSITORY: bigprojects-bos
+  _SERVICE: bos-api
+  _MIGRATION_JOB: bos-db-migrate
+
+options:
+  logging: CLOUD_LOGGING_ONLY
