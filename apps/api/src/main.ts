@@ -55,8 +55,8 @@ async function bootstrap(): Promise<void> {
     setupSwagger(app);
   }
 
-  const port = Number(process.env.API_PORT ?? DEFAULT_API_PORT);
-  await app.listen(port);
+  const port = Number(process.env.PORT ?? process.env.API_PORT ?? DEFAULT_API_PORT);
+  await app.listen(port, '0.0.0.0');
 }
 
 function isSwaggerEnabled(): boolean {
