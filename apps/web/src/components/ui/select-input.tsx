@@ -43,6 +43,8 @@ const MENU_FLIP_THRESHOLD_PX = 160;
 const DROPDOWN_OUT_ANIMATION_NAME = 'dropdown-panel-out';
 const DROPDOWN_EXIT_FALLBACK_MS = 180;
 
+type MenuPhase = 'closed' | 'open' | 'exiting';
+
 function readOptions(select: HTMLSelectElement | null): SelectOption[] {
   if (!select) {
     return [];
@@ -78,12 +80,13 @@ export function SelectInput({
   const triggerRef = useRef<HTMLButtonElement>(null);
   const selectRef = useRef<HTMLSelectElement>(null);
   const menuRef = useRef<HTMLUListElement>(null);
-  const [open, setOpen] = useState(false);
-  const [menuVisible, setMenuVisible] = useState(false);
-  const [exiting, setExiting] = useState(false);
+  const [phase, setPhase] = useState<MenuPhase>('closed');
   const [menuPosition, setMenuPosition] = useState<MenuPosition | null>(null);
   const [options, setOptions] = useState<SelectOption[]>([]);
 
+  const isOpen = phase === 'open';
+  const isExiting = phase === 'exiting';
+  const menuVisible = phase !== 'closed';
   const selectedValue = value == null ? undefined : String(value);
   const selectedLabel = options.find((option) => option.value === selectedValue)?.label ?? '';
 
@@ -119,13 +122,18 @@ export function SelectInput({
     });
   }
 
+  function openMenu(): void {
+    syncOptions();
+    updateMenuPosition();
+    setPhase('open');
+  }
+
   function closeMenu(): void {
-    setOpen(false);
+    setPhase((current) => (current === 'closed' ? 'closed' : 'exiting'));
   }
 
   function finishExit(): void {
-    setMenuVisible(false);
-    setExiting(false);
+    setPhase('closed');
   }
 
   function handleMenuAnimationEnd(event: AnimationEvent<HTMLUListElement>): void {
@@ -143,40 +151,23 @@ export function SelectInput({
   }, [children, value]);
 
   useLayoutEffect(() => {
-    if (!open) {
+    if (!isOpen) {
       return;
     }
     syncOptions();
     updateMenuPosition();
-  }, [open]);
+  }, [isOpen]);
 
   useEffect(() => {
-    if (open) {
-      setMenuVisible(true);
-      setExiting(false);
-      return;
-    }
-
-    if (!menuVisible) {
-      return;
-    }
-
-    const frame = window.requestAnimationFrame(() => {
-      setExiting(true);
-    });
-    return () => window.cancelAnimationFrame(frame);
-  }, [open, menuVisible]);
-
-  useEffect(() => {
-    if (!exiting) {
+    if (!isExiting) {
       return;
     }
     const timer = window.setTimeout(finishExit, DROPDOWN_EXIT_FALLBACK_MS);
     return () => window.clearTimeout(timer);
-  }, [exiting]);
+  }, [isExiting]);
 
   useEffect(() => {
-    if (!open) {
+    if (!isOpen) {
       return;
     }
 
@@ -211,10 +202,10 @@ export function SelectInput({
       window.removeEventListener('resize', handleReposition);
       window.removeEventListener('scroll', handleReposition, true);
     };
-  }, [open]);
+  }, [isOpen]);
 
   function handleSelect(nextValue: string): void {
-    if (exiting) {
+    if (isExiting) {
       return;
     }
 
@@ -279,19 +270,17 @@ export function SelectInput({
         disabled={disabled}
         aria-label={ariaLabel}
         aria-haspopup="listbox"
-        aria-expanded={open}
+        aria-expanded={isOpen}
         aria-controls={listboxId}
         onClick={() => {
           if (disabled) {
             return;
           }
-          if (open) {
+          if (isOpen) {
             closeMenu();
             return;
           }
-          syncOptions();
-          updateMenuPosition();
-          setOpen(true);
+          openMenu();
         }}
         className={clsx(
           FIELD_CONTROL_CLASS,
@@ -306,7 +295,7 @@ export function SelectInput({
         <ChevronDown
           className={clsx(
             'size-4 shrink-0 text-[var(--color-muted)] transition-transform duration-200',
-            open && 'rotate-180',
+            isOpen && 'rotate-180',
           )}
           aria-hidden
         />
@@ -326,7 +315,7 @@ export function SelectInput({
                 'overflow-y-auto overflow-x-hidden rounded-[12px] border border-[var(--color-border)]',
                 'bg-[var(--color-surface-elevated)] text-[var(--color-fg)] shadow-md',
                 'will-change-transform',
-                exiting ? 'pointer-events-none dropdown-panel-out' : 'dropdown-panel-in',
+                isExiting ? 'pointer-events-none dropdown-panel-out' : 'dropdown-panel-in',
               )}
             >
               {options.length === 0 ? (
