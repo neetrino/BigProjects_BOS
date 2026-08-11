@@ -112,6 +112,13 @@
     "searchPlaceholder": "Search by name",
     "typeFilter": "Type",
     "allTypes": "All types",
+    "tabs": {
+      "all": "All",
+      "BUILDER": "Builders",
+      "BANK": "Banks",
+      "PARTNER": "Partners",
+      "OTHER": "Other"
+    },
     "empty": "No organizations found.",
     "notFound": "Organization not found.",
     "toolbar": {

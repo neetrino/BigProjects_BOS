@@ -13,13 +13,15 @@ import { OrganizationFormSheet } from '@/features/organizations/organization-for
 import { OrganizationList } from '@/features/organizations/organization-list';
 import { Button } from '@/components/ui/button';
 import { EmptyState, ErrorState, LoadingState } from '@/components/ui/page-state';
-import { SearchInput, SelectInput } from '@/components/ui/field';
+import { SearchInput } from '@/components/ui/field';
+import { UnderlineTabs } from '@/components/ui/underline-tabs';
 import { ViewModeSwitcher } from '@/components/ui/view-mode-switcher';
 import { useClientCachedState } from '@/hooks/use-client-cached-state';
 import { CLIENT_CACHE_KEYS } from '@/lib/client-cache';
 
 const SEARCH_DEBOUNCE_MS = 300;
 const ORGANIZATION_TYPES: OrganizationType[] = ['BUILDER', 'BANK', 'PARTNER', 'OTHER'];
+type TypeTab = OrganizationType | '';
 
 type LoadState =
   | { status: 'loading' }
@@ -32,7 +34,7 @@ export function OrganizationsPage() {
   const [view, setView] = useState<BoardViewMode>('kanban');
   const [searchInput, setSearchInput] = useState('');
   const [search, setSearch] = useState('');
-  const [typeFilter, setTypeFilter] = useState<OrganizationType | ''>('');
+  const [typeFilter, setTypeFilter] = useState<TypeTab>('');
   const [loadState, setLoadState] = useClientCachedState<LoadState>(
     CLIENT_CACHE_KEYS.organizations,
     {
@@ -42,6 +44,14 @@ export function OrganizationsPage() {
   const [createOpen, setCreateOpen] = useState(false);
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [reloadToken, setReloadToken] = useState(0);
+
+  const typeTabs = [
+    { value: '' as const, label: t('tabs.all') },
+    ...ORGANIZATION_TYPES.map((item) => ({
+      value: item,
+      label: t(`tabs.${item}`),
+    })),
+  ];
 
   useEffect(() => {
     const timer = window.setTimeout(() => setSearch(searchInput.trim()), SEARCH_DEBOUNCE_MS);
@@ -87,6 +97,14 @@ export function OrganizationsPage() {
         <p className="page-subtitle">{t('subtitle')}</p>
       </header>
 
+      <UnderlineTabs
+        className="shrink-0"
+        value={typeFilter}
+        options={typeTabs}
+        onChange={setTypeFilter}
+        ariaLabel={t('typeFilter')}
+      />
+
       <div className="toolbar-shell shrink-0">
         <SearchInput
           className="toolbar-search"
@@ -95,19 +113,6 @@ export function OrganizationsPage() {
           onChange={(event) => setSearchInput(event.target.value)}
           aria-label={t('searchPlaceholder')}
         />
-        <SelectInput
-          fitContent
-          value={typeFilter}
-          onChange={(event) => setTypeFilter(event.target.value as OrganizationType | '')}
-          aria-label={t('typeFilter')}
-        >
-          <option value="">{t('allTypes')}</option>
-          {ORGANIZATION_TYPES.map((item) => (
-            <option key={item} value={item}>
-              {t(`types.${item}`)}
-            </option>
-          ))}
-        </SelectInput>
         <ViewModeSwitcher
           className="ml-auto shrink-0"
           value={view}

@@ -111,6 +111,13 @@
     "searchPlaceholder": "Поиск по названию",
     "typeFilter": "Тип",
     "allTypes": "Все типы",
+    "tabs": {
+      "all": "Все",
+      "BUILDER": "Застройщики",
+      "BANK": "Банки",
+      "PARTNER": "Партнёры",
+      "OTHER": "Другое"
+    },
     "empty": "Организации не найдены.",
     "notFound": "Организация не найдена.",
     "toolbar": {
