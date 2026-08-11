@@ -35,7 +35,11 @@ export function PartnerKanban({ partners, onOpen, onStageChange }: PartnerKanban
 
   const renderCard = useCallback(
     (partner: PartnerListItem, options: { isDragging: boolean }) => (
-      <PartnerCard partner={partner} isDragging={options.isDragging} />
+      <PartnerCard
+        partner={partner}
+        isDragging={options.isDragging}
+        enterIndex={options.enterIndex}
+      />
     ),
     [],
   );

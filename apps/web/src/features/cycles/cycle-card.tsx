@@ -11,15 +11,16 @@ import { statusTone } from '@/features/cycles/constants';
 type CycleCardProps = {
   cycle: EventCycle;
   isDragging?: boolean;
+  enterIndex?: number;
 };
 
-export function CycleCard({ cycle, isDragging }: CycleCardProps) {
+export function CycleCard({ cycle, isDragging, enterIndex }: CycleCardProps) {
   const t = useTranslations('cycles');
   const dates =
     [formatDate(cycle.startsAt), formatDate(cycle.endsAt)].filter(Boolean).join(' – ') || '—';
 
   return (
-    <KanbanCardShell isDragging={isDragging}>
+    <KanbanCardShell isDragging={isDragging} enterIndex={enterIndex}>
       <div className="flex items-start justify-between gap-2">
         <p className="min-w-0 text-sm font-semibold tracking-tight text-[var(--color-fg)]">
           {cycle.name}

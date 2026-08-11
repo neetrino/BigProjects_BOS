@@ -11,14 +11,15 @@ import { stageTone } from '@/features/builder-crm/constants';
 type DealCardProps = {
   deal: DealListItem;
   isDragging?: boolean;
+  enterIndex?: number;
 };
 
-export function DealCard({ deal, isDragging }: DealCardProps) {
+export function DealCard({ deal, isDragging, enterIndex }: DealCardProps) {
   const t = useTranslations('builderSales');
   const hasAreas = deal.areasSummary.count > 0;
 
   return (
-    <KanbanCardShell isDragging={isDragging}>
+    <KanbanCardShell isDragging={isDragging} enterIndex={enterIndex}>
       <div className="flex items-start justify-between gap-2">
         <p className="min-w-0 text-sm font-semibold tracking-tight text-[var(--color-fg)]">
           {deal.organization.name}

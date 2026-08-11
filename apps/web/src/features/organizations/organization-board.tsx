@@ -13,7 +13,7 @@ export function OrganizationBoard({ organizations, onOpen }: OrganizationBoardPr
   return (
     <div className="min-h-0 flex-1 overflow-auto">
       <ul className="grid grid-cols-1 items-stretch gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-        {organizations.map((organization) => (
+        {organizations.map((organization, index) => (
           <li key={organization.id} className="min-h-0">
             <div
               role="button"
@@ -27,7 +27,7 @@ export function OrganizationBoard({ organizations, onOpen }: OrganizationBoardPr
                 }
               }}
             >
-              <OrganizationCard organization={organization} />
+              <OrganizationCard organization={organization} enterIndex={index} />
             </div>
           </li>
         ))}

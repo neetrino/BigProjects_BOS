@@ -11,14 +11,15 @@ import { stageTone } from '@/features/partners/constants';
 type PartnerCardProps = {
   partner: PartnerListItem;
   isDragging?: boolean;
+  enterIndex?: number;
 };
 
-export function PartnerCard({ partner, isDragging }: PartnerCardProps) {
+export function PartnerCard({ partner, isDragging, enterIndex }: PartnerCardProps) {
   const t = useTranslations('partners');
   const hasAreas = partner.areasSummary.count > 0;
 
   return (
-    <KanbanCardShell isDragging={isDragging}>
+    <KanbanCardShell isDragging={isDragging} enterIndex={enterIndex}>
       <div className="flex items-start justify-between gap-2">
         <p className="min-w-0 text-sm font-semibold tracking-tight text-[var(--color-fg)]">
           {partner.organization.name}

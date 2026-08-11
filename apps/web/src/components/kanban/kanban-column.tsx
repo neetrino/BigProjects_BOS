@@ -42,7 +42,10 @@ type KanbanColumnProps<TItem extends { id: string }, TStage extends string> = {
   column: KanbanColumnDef<TStage>;
   items: TItem[];
   onOpen: (id: string) => void;
-  renderCard: (item: TItem, options: { isDragging: boolean }) => ReactNode;
+  renderCard: (
+    item: TItem,
+    options: { isDragging: boolean; enterIndex: number },
+  ) => ReactNode;
 };
 
 export function KanbanColumn<TItem extends { id: string }, TStage extends string>({
@@ -123,10 +126,11 @@ export function KanbanColumn<TItem extends { id: string }, TStage extends string
             </p>
           </div>
         ) : (
-          items.map((item) => (
+          items.map((item, index) => (
             <DraggableKanbanCard
               key={item.id}
               item={item}
+              enterIndex={index}
               onOpen={onOpen}
               renderCard={renderCard}
             />
@@ -139,12 +143,17 @@ export function KanbanColumn<TItem extends { id: string }, TStage extends string
 
 type DraggableKanbanCardProps<TItem extends { id: string }> = {
   item: TItem;
+  enterIndex: number;
   onOpen: (id: string) => void;
-  renderCard: (item: TItem, options: { isDragging: boolean }) => ReactNode;
+  renderCard: (
+    item: TItem,
+    options: { isDragging: boolean; enterIndex: number },
+  ) => ReactNode;
 };
 
 function DraggableKanbanCard<TItem extends { id: string }>({
   item,
+  enterIndex,
   onOpen,
   renderCard,
 }: DraggableKanbanCardProps<TItem>) {
@@ -180,7 +189,7 @@ function DraggableKanbanCard<TItem extends { id: string }>({
         }
       }}
     >
-      {renderCard(item, { isDragging })}
+      {renderCard(item, { isDragging, enterIndex })}
     </div>
   );
 }

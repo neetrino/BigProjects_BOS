@@ -7,6 +7,7 @@ import { KanbanCardShell } from '@/components/kanban';
 
 type OrganizationCardProps = {
   organization: OrganizationListItem;
+  enterIndex?: number;
 };
 
 function websiteHref(raw: string): string {
@@ -48,7 +49,7 @@ function InfoRow({ icon: Icon, children, href }: InfoRowProps) {
   return <p className="flex items-center gap-1.5 text-xs text-[var(--color-muted)]">{content}</p>;
 }
 
-export function OrganizationCard({ organization }: OrganizationCardProps) {
+export function OrganizationCard({ organization, enterIndex }: OrganizationCardProps) {
   const t = useTranslations('organizations');
   const phone = organization.phone?.trim() || null;
   const email = organization.email?.trim() || null;
@@ -56,7 +57,7 @@ export function OrganizationCard({ organization }: OrganizationCardProps) {
 
   return (
     <div className="h-full w-full [&>article]:flex [&>article]:h-full [&>article]:flex-col">
-      <KanbanCardShell>
+      <KanbanCardShell enterIndex={enterIndex}>
         <div className="flex items-start justify-between gap-2">
           <p className="text-sm font-semibold tracking-tight text-[var(--color-fg)]">
             {organization.name}

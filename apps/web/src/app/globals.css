@@ -64,6 +64,19 @@
   }
 }
 
+.card-enter {
+  /* `backwards` covers stagger delay only — do not use `forwards`/`both`
+     (lingering transform breaks dnd-kit DragOverlay positioning). */
+  animation: fade-rise 0.38s var(--ease-out-premium) backwards;
+  animation-delay: calc(min(var(--card-stagger, 0), 12) * 40ms);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .card-enter {
+    animation: none;
+  }
+}
+
 @keyframes soft-pulse {
   0%,
   100% {

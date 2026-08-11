@@ -25,7 +25,10 @@ type KanbanBoardProps<TItem extends { id: string }, TStage extends string> = {
   terminalColumns: readonly KanbanColumnDef<TStage>[];
   onOpen: (id: string) => void;
   onStageChange: (id: string, stage: TStage) => void | Promise<void>;
-  renderCard: (item: TItem, options: { isDragging: boolean }) => ReactNode;
+  renderCard: (
+    item: TItem,
+    options: { isDragging: boolean; enterIndex: number },
+  ) => ReactNode;
 };
 
 export function KanbanBoard<TItem extends { id: string }, TStage extends string>({
@@ -153,7 +156,7 @@ export function KanbanBoard<TItem extends { id: string }, TStage extends string>
             <DragOverlay dropAnimation={null} style={{ width: 'auto', height: 'auto' }}>
               {activeItem ? (
                 <div className="desktop-drag-overlay-card cursor-grabbing">
-                  {renderCard(activeItem, { isDragging: true })}
+                  {renderCard(activeItem, { isDragging: true, enterIndex: 0 })}
                 </div>
               ) : null}
             </DragOverlay>,
