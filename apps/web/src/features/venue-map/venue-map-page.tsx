@@ -1,6 +1,8 @@
 'use client';
 
 import { useCallback, useEffect, useMemo, useState } from 'react';
+import { clsx } from 'clsx';
+import { Maximize2, Minimize2 } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { ApiError } from '@/lib/api/client';
 import { listCycles } from '@/lib/api/cycles';
@@ -56,6 +58,30 @@ export function VenueMapPage() {
   const [calibrationPoints, setCalibrationPoints] = useState<ImagePoint[]>([]);
   const [pendingSelection, setPendingSelection] = useState<GridCell[]>([]);
   const [fitRequestId, setFitRequestId] = useState(0);
+  const [mapFullscreen, setMapFullscreen] = useState(false);
+
+  useEffect(() => {
+    if (!mapFullscreen) {
+      return;
+    }
+    function onKeyDown(event: KeyboardEvent) {
+      if (event.key === 'Escape') {
+        setMapFullscreen(false);
+      }
+    }
+    window.addEventListener('keydown', onKeyDown);
+    return () => window.removeEventListener('keydown', onKeyDown);
+  }, [mapFullscreen]);
+
+  useEffect(() => {
+    if (!mapFullscreen) {
+      return;
+    }
+    const timerId = window.setTimeout(() => {
+      setFitRequestId((id) => id + 1);
+    }, 80);
+    return () => window.clearTimeout(timerId);
+  }, [mapFullscreen]);
 
   useEffect(() => {
     let cancelled = false;
@@ -140,13 +166,17 @@ export function VenueMapPage() {
   }
 
   return (
-    <div className="flex min-h-0 flex-1 flex-col gap-3">
-      <header className="flex flex-wrap items-end justify-between gap-3">
-        <div>
+    <div
+      className={clsx(
+        'flex min-h-0 flex-1 flex-col gap-5',
+        mapFullscreen && 'fixed inset-0 z-[60] bg-[var(--color-bg)] p-4',
+      )}
+    >
+      <header className="mb-1 flex flex-wrap items-center justify-between gap-3">
+        <div className="min-w-0">
           <h1 className="page-heading">{t('title')}</h1>
-          <p className="page-subtitle">{t('subtitle')}</p>
         </div>
-        <div className="flex flex-wrap items-end gap-2">
+        <div className="ml-auto flex flex-wrap items-end justify-end gap-2">
           <label className="flex flex-col gap-1 text-xs text-[var(--color-muted)]">
             {t('toolbar.cycle')}
             <SelectInput
@@ -198,6 +228,20 @@ export function VenueMapPage() {
               {isAdmin && plan ? (
                 <UploadPlanImage planId={plan.id} onUploaded={refreshPlan} compact />
               ) : null}
+              <Button
+                variant={mapFullscreen ? 'primary' : 'secondary'}
+                className={TOOLBAR_CONTROL_CLASS}
+                onClick={() => setMapFullscreen((open) => !open)}
+                aria-pressed={mapFullscreen}
+                title={mapFullscreen ? t('toolbar.exitFullscreen') : t('toolbar.fullscreen')}
+              >
+                {mapFullscreen ? (
+                  <Minimize2 className="size-4" aria-hidden />
+                ) : (
+                  <Maximize2 className="size-4" aria-hidden />
+                )}
+                {mapFullscreen ? t('toolbar.exitFullscreen') : t('toolbar.fullscreen')}
+              </Button>
             </>
           ) : null}
         </div>
@@ -228,7 +272,7 @@ export function VenueMapPage() {
 
       {cycleId && plan && hasImage ? (
         <>
-          {isAdmin ? (
+          {!mapFullscreen && isAdmin ? (
             <VenueMapPublicationSection
               planId={plan.id}
               publishStatus={plan.publishStatus}
@@ -243,11 +287,13 @@ export function VenueMapPage() {
               onSaved={refreshPlan}
             />
           ) : null}
-          {!isCalibrated ? (
-            <p className="text-sm text-[var(--color-muted)]">{t('uncalibratedHint')}</p>
-          ) : (
-            <p className="text-xs text-[var(--color-muted)]">{t('selectHint')}</p>
-          )}
+          {!mapFullscreen ? (
+            !isCalibrated ? (
+              <p className="text-sm text-[var(--color-muted)]">{t('uncalibratedHint')}</p>
+            ) : (
+              <p className="text-xs text-[var(--color-muted)]">{t('selectHint')}</p>
+            )
+          ) : null}
           <div className="panel flex min-h-0 flex-1 overflow-hidden">
             <div className="min-h-0 min-w-0 flex-1">
               <VenueMapStageClient

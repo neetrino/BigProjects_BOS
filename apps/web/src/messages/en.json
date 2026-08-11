@@ -346,7 +346,9 @@
       "select": "Select",
       "pan": "Pan",
       "calibrate": "Calibrate",
-      "fit": "Fit"
+      "fit": "Fit",
+      "fullscreen": "Fullscreen",
+      "exitFullscreen": "Exit fullscreen"
     },
     "createPlan": {
       "title": "Create venue plan",
