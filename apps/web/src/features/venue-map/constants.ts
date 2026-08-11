@@ -40,10 +40,7 @@ const AREA_FILL_ALPHA = 0.28;
 const AREA_STROKE_ALPHA = 0.95;
 const SELECTED_AREA_FILL_ALPHA = 0.42;
 
-function generatedAreaColors(
-  index: number,
-  fillAlpha: number,
-): { fill: string; stroke: string } {
+function generatedAreaColors(index: number, fillAlpha: number): { fill: string; stroke: string } {
   const hue = Math.round((index * GOLDEN_ANGLE_DEG) % 360);
   const base = `${hue} ${GENERATED_SATURATION_PCT}% ${GENERATED_LIGHTNESS_PCT}%`;
   return {
@@ -63,10 +60,7 @@ function withFillAlpha(fill: string, alpha: number): string {
  * Color for the N-th area (0-based list/creation order).
  * Uses the fixed palette first, then generates a new distinct hue each time.
  */
-export function areaMapColors(
-  index: number,
-  selected = false,
-): { fill: string; stroke: string } {
+export function areaMapColors(index: number, selected = false): { fill: string; stroke: string } {
   const safeIndex = Math.max(0, Math.floor(index));
   const fillAlpha = selected ? SELECTED_AREA_FILL_ALPHA : AREA_FILL_ALPHA;
 

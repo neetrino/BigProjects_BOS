@@ -25,10 +25,7 @@ type KanbanBoardProps<TItem extends { id: string }, TStage extends string> = {
   terminalColumns: readonly KanbanColumnDef<TStage>[];
   onOpen: (id: string) => void;
   onStageChange: (id: string, stage: TStage) => void | Promise<void>;
-  renderCard: (
-    item: TItem,
-    options: { isDragging: boolean; enterIndex: number },
-  ) => ReactNode;
+  renderCard: (item: TItem, options: { isDragging: boolean; enterIndex: number }) => ReactNode;
 };
 
 export function KanbanBoard<TItem extends { id: string }, TStage extends string>({

@@ -116,9 +116,7 @@ async function resolveHasExpoAccount(
   }
   const rows = await listProvisioningRequests({ organizationId, cycleId: eventCycleId });
   const latest = rows[0];
-  return (
-    latest != null && (latest.status === 'SUCCESS' || latest.status === 'LINKED_EXISTING')
-  );
+  return latest != null && (latest.status === 'SUCCESS' || latest.status === 'LINKED_EXISTING');
 }
 
 export function DealSheet({
@@ -475,8 +473,7 @@ function DealSheetInner({
           companyType="BUILDER"
           onClose={() => setAccountDialogOpen(false)}
           onCreated={(request) => {
-            const linked =
-              request.status === 'SUCCESS' || request.status === 'LINKED_EXISTING';
+            const linked = request.status === 'SUCCESS' || request.status === 'LINKED_EXISTING';
             setLoadState((prev) =>
               prev.status === 'ready'
                 ? {

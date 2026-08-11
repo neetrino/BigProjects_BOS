@@ -24,7 +24,9 @@ export function ContactsList({ contacts, onOpenOrganization }: ContactsListProps
         </colgroup>
         <thead className="sticky top-0 border-b border-[var(--color-border)] bg-[var(--color-bg-warm)] text-xs text-[var(--color-muted)]">
           <tr>
-            <th className="px-4 py-3 font-semibold tracking-wide">{t('contactsPage.columns.name')}</th>
+            <th className="px-4 py-3 font-semibold tracking-wide">
+              {t('contactsPage.columns.name')}
+            </th>
             <th className="px-2 py-3 font-semibold tracking-wide">
               {t('contactsPage.columns.organization')}
             </th>

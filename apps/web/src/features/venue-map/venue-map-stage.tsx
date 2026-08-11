@@ -29,7 +29,12 @@ import {
 } from './domain/grid-transform';
 import { usePlanImage } from './hooks/use-plan-image';
 import { useSpacePressed, useStageSize } from './hooks/use-stage-interaction';
-import { AreasLayer, CalibrationOverlay, SelectionPreview, type AreaHoverTip } from './layers/areas-layer';
+import {
+  AreasLayer,
+  CalibrationOverlay,
+  SelectionPreview,
+  type AreaHoverTip,
+} from './layers/areas-layer';
 import { BackgroundLayer } from './layers/background-layer';
 import { GridLayer } from './layers/grid-layer';
 import { occupiedCellKeys } from './occupied-cells';

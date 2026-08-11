@@ -61,7 +61,5 @@ export function CardMetaRow({ icon, tone, children, href, onLinkClick }: CardMet
     );
   }
 
-  return (
-    <p className="flex items-center gap-2.5 text-xs text-[var(--color-muted)]">{body}</p>
-  );
+  return <p className="flex items-center gap-2.5 text-xs text-[var(--color-muted)]">{body}</p>;
 }

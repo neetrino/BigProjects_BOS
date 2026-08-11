@@ -230,9 +230,7 @@ export function AppSidebar({ pathname }: AppSidebarProps) {
             style={indicatorStyle}
           />
 
-          {visibleItems.map((item) =>
-            item.children ? renderGroup(item) : renderLeafLink(item),
-          )}
+          {visibleItems.map((item) => (item.children ? renderGroup(item) : renderLeafLink(item)))}
         </div>
       </nav>
 

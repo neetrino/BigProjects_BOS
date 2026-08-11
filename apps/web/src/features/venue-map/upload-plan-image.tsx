@@ -6,7 +6,11 @@ import { ApiError } from '@/lib/api/client';
 import { uploadVenuePlanImage } from '@/lib/api/venue-map';
 import { Button } from '@/components/ui/button';
 import { showToast } from '@/components/ui/toast';
-import { ACCEPTED_PLAN_IMAGE_TYPES, MAX_PLAN_IMAGE_BYTES, TOOLBAR_CONTROL_CLASS } from './constants';
+import {
+  ACCEPTED_PLAN_IMAGE_TYPES,
+  MAX_PLAN_IMAGE_BYTES,
+  TOOLBAR_CONTROL_CLASS,
+} from './constants';
 
 type UploadPlanImageProps = {
   planId: string;

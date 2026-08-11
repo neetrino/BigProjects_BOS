@@ -134,11 +134,7 @@ export function OrganizationsPage() {
       ) : null}
 
       {loadState.status === 'ready' && items.length > 0 && view === 'kanban' ? (
-        <OrganizationBoard
-          key={typeFilter || 'all'}
-          organizations={items}
-          onOpen={setSelectedId}
-        />
+        <OrganizationBoard key={typeFilter || 'all'} organizations={items} onOpen={setSelectedId} />
       ) : null}
 
       {loadState.status === 'ready' && items.length > 0 && view === 'list' ? (

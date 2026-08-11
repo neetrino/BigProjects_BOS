@@ -155,9 +155,7 @@ export function OrganizationSearchSelect({
     }
   }
 
-  const createLabel = search.trim()
-    ? t('createNamed', { name: search.trim() })
-    : t('create');
+  const createLabel = search.trim() ? t('createNamed', { name: search.trim() }) : t('create');
 
   return (
     <Field label={label} htmlFor={id}>
