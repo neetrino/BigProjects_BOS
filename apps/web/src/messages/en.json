@@ -124,6 +124,13 @@
     },
     "empty": "No organizations found.",
     "notFound": "Organization not found.",
+    "picker": {
+      "searchPlaceholder": "Search organizations",
+      "noResults": "No organizations found",
+      "create": "Create organization",
+      "createNamed": "Create \"{name}\"",
+      "clear": "Clear selection"
+    },
     "contactsPage": {
       "title": "Contacts",
       "subtitle": "People linked to companies across cycles.",
@@ -285,7 +292,6 @@
     },
     "fields": {
       "organization": "Organization",
-      "organizationSelect": "Select organization",
       "contact": "Primary contact",
       "staff": "Assigned staff",
       "expectedSqm": "Expected m²",
@@ -293,8 +299,6 @@
       "description": "Description"
     },
     "createForm": {
-      "orgSearchPlaceholder": "Search organizations",
-      "pickOrganization": "Choose an organization",
       "noContact": "No contact",
       "unassigned": "Unassigned",
       "organizationRequired": "Organization is required."
@@ -502,15 +506,12 @@
     },
     "fields": {
       "organization": "Organization",
-      "organizationSelect": "Select organization",
       "contact": "Primary contact",
       "staff": "Assigned staff",
       "partnerType": "Partner type",
       "description": "Description"
     },
     "createForm": {
-      "orgSearchPlaceholder": "Search organizations",
-      "pickOrganization": "Choose an organization",
       "noContact": "No contact",
       "unassigned": "Unassigned",
       "partnerTypePlaceholder": "e.g. Bank, Media",

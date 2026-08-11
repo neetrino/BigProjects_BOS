@@ -19,6 +19,41 @@ type SheetProps = {
 
 const PANEL_EXIT_MS = 300;
 
+/** Nested sheets: only the topmost open sheet handles Escape. */
+const sheetEscapeStack: Array<() => void> = [];
+
+function pushSheetEscapeHandler(onClose: () => void): () => void {
+  sheetEscapeStack.push(onClose);
+  return () => {
+    const index = sheetEscapeStack.lastIndexOf(onClose);
+    if (index !== -1) {
+      sheetEscapeStack.splice(index, 1);
+    }
+  };
+}
+
+function ensureSheetEscapeListener(): void {
+  if (typeof document === 'undefined' || document.documentElement.dataset.sheetEscapeBound) {
+    return;
+  }
+  document.documentElement.dataset.sheetEscapeBound = 'true';
+  document.addEventListener('keydown', (event) => {
+    if (event.key !== 'Escape') {
+      return;
+    }
+    const top = sheetEscapeStack[sheetEscapeStack.length - 1];
+    if (!top) {
+      return;
+    }
+    event.preventDefault();
+    const active = document.activeElement;
+    if (active instanceof HTMLElement) {
+      active.blur();
+    }
+    top();
+  });
+}
+
 export function Sheet({
   open,
   title,
@@ -54,24 +89,16 @@ export function Sheet({
       return;
     }
 
-    function handleKeyDown(event: KeyboardEvent) {
-      if (event.key === 'Escape') {
-        event.preventDefault();
-        const active = document.activeElement;
-        if (active instanceof HTMLElement) {
-          active.blur();
-        }
-        onClose();
-      }
-    }
-
+    ensureSheetEscapeListener();
+    const unregister = pushSheetEscapeHandler(onClose);
     const previousOverflow = document.body.style.overflow;
     document.body.style.overflow = 'hidden';
-    document.addEventListener('keydown', handleKeyDown);
 
     return () => {
-      document.body.style.overflow = previousOverflow;
-      document.removeEventListener('keydown', handleKeyDown);
+      unregister();
+      if (sheetEscapeStack.length === 0) {
+        document.body.style.overflow = previousOverflow;
+      }
     };
   }, [mounted, onClose]);
 

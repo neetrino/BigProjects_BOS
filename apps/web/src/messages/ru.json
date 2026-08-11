@@ -123,6 +123,13 @@
     },
     "empty": "Организации не найдены.",
     "notFound": "Организация не найдена.",
+    "picker": {
+      "searchPlaceholder": "Поиск организаций",
+      "noResults": "Организации не найдены",
+      "create": "Создать организацию",
+      "createNamed": "Создать «{name}»",
+      "clear": "Очистить выбор"
+    },
     "contactsPage": {
       "title": "Контакты",
       "subtitle": "Люди, связанные с компаниями по всем циклам.",
@@ -284,7 +291,6 @@
     },
     "fields": {
       "organization": "Организация",
-      "organizationSelect": "Выберите организацию",
       "contact": "Основной контакт",
       "staff": "Ответственный",
       "expectedSqm": "Ожидаемые м²",
@@ -292,8 +298,6 @@
       "description": "Описание"
     },
     "createForm": {
-      "orgSearchPlaceholder": "Поиск организаций",
-      "pickOrganization": "Выберите организацию",
       "noContact": "Без контакта",
       "unassigned": "Не назначен",
       "organizationRequired": "Организация обязательна."
@@ -501,15 +505,12 @@
     },
     "fields": {
       "organization": "Организация",
-      "organizationSelect": "Выберите организацию",
       "contact": "Основной контакт",
       "staff": "Ответственный",
       "partnerType": "Тип партнёра",
       "description": "Описание"
     },
     "createForm": {
-      "orgSearchPlaceholder": "Поиск организаций",
-      "pickOrganization": "Выберите организацию",
       "noContact": "Без контакта",
       "unassigned": "Не назначен",
       "partnerTypePlaceholder": "напр. Банк, Медиа",

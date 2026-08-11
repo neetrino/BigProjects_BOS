@@ -4,12 +4,13 @@ import { FormEvent, useEffect, useState } from 'react';
 import { useTranslations } from 'next-intl';
 import { ApiError } from '@/lib/api/client';
 import { createPartner } from '@/lib/api/partners';
-import { getOrganization, listOrganizations } from '@/lib/api/organizations';
+import { getOrganization } from '@/lib/api/organizations';
 import type { OrganizationContact, OrganizationListItem, PartnerListItem } from '@/lib/api/types';
 import { Button } from '@/components/ui/button';
-import { Field, SearchInput, SelectInput, TextArea, TextInput } from '@/components/ui/field';
+import { Field, SelectInput, TextArea, TextInput } from '@/components/ui/field';
 import { Sheet } from '@/components/ui/sheet';
-import { SEARCH_DEBOUNCE_MS } from '@/lib/constants';
+import { OrganizationFormSheet } from '@/features/organizations/organization-form-sheet';
+import { OrganizationSearchSelect } from '@/features/organizations/organization-search-select';
 
 type StaffOption = {
   id: string;
@@ -61,10 +62,9 @@ function PartnerCreateSheetInner({
   const t = useTranslations('partners');
   const tCommon = useTranslations('common');
 
-  const [orgSearch, setOrgSearch] = useState('');
-  const [orgQuery, setOrgQuery] = useState('');
-  const [organizations, setOrganizations] = useState<OrganizationListItem[]>([]);
-  const [organizationId, setOrganizationId] = useState('');
+  const [organization, setOrganization] = useState<OrganizationListItem | null>(null);
+  const [createOrgOpen, setCreateOrgOpen] = useState(false);
+  const [createOrgName, setCreateOrgName] = useState('');
   const [contacts, setContacts] = useState<OrganizationContact[]>([]);
   const [primaryContactId, setPrimaryContactId] = useState('');
   const [assignedStaffId, setAssignedStaffId] = useState('');
@@ -74,35 +74,14 @@ function PartnerCreateSheetInner({
   const [busy, setBusy] = useState(false);
 
   useEffect(() => {
-    const timer = window.setTimeout(() => setOrgQuery(orgSearch.trim()), SEARCH_DEBOUNCE_MS);
-    return () => window.clearTimeout(timer);
-  }, [orgSearch]);
-
-  useEffect(() => {
-    let cancelled = false;
-    void listOrganizations({ search: orgQuery || undefined })
-      .then((items) => {
-        if (!cancelled) {
-          setOrganizations(items);
-        }
-      })
-      .catch(() => {
-        if (!cancelled) {
-          setOrganizations([]);
-        }
-      });
-    return () => {
-      cancelled = true;
-    };
-  }, [orgQuery]);
-
-  useEffect(() => {
-    if (!organizationId) {
+    if (!organization) {
+      setContacts([]);
+      setPrimaryContactId('');
       return;
     }
 
     let cancelled = false;
-    void getOrganization(organizationId)
+    void getOrganization(organization.id)
       .then((detail) => {
         if (cancelled) {
           return;
@@ -121,11 +100,17 @@ function PartnerCreateSheetInner({
     return () => {
       cancelled = true;
     };
-  }, [organizationId]);
+  }, [organization]);
+
+  function handleOrganizationChange(next: OrganizationListItem | null) {
+    setOrganization(next);
+    setContacts([]);
+    setPrimaryContactId('');
+  }
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    if (!organizationId) {
+    if (!organization) {
       setError(t('createForm.organizationRequired'));
       return;
     }
@@ -135,7 +120,7 @@ function PartnerCreateSheetInner({
     try {
       const created = await createPartner({
         eventCycleId,
-        organizationId,
+        organizationId: organization.id,
         primaryContactId: primaryContactId || undefined,
         assignedStaffId: assignedStaffId || undefined,
         partnerType: partnerType.trim() || undefined,
@@ -151,100 +136,95 @@ function PartnerCreateSheetInner({
   }
 
   return (
-    <Sheet
-      open={open}
-      title={t('createTitle')}
-      onClose={onClose}
-      footer={
-        <div className="flex justify-end gap-2">
-          <Button variant="secondary" onClick={onClose} disabled={busy}>
-            {tCommon('cancel')}
-          </Button>
-          <Button type="submit" form="partner-create-form" variant="primary" disabled={busy}>
-            {busy ? tCommon('saving') : tCommon('save')}
-          </Button>
-        </div>
-      }
-    >
-      <form id="partner-create-form" onSubmit={handleSubmit} className="flex flex-col gap-3">
-        <Field label={t('fields.organization')} htmlFor="partner-create-org-search">
-          <SearchInput
+    <>
+      <Sheet
+        open={open}
+        title={t('createTitle')}
+        onClose={onClose}
+        footer={
+          <div className="flex justify-end gap-2">
+            <Button variant="secondary" onClick={onClose} disabled={busy}>
+              {tCommon('cancel')}
+            </Button>
+            <Button type="submit" form="partner-create-form" variant="primary" disabled={busy}>
+              {busy ? tCommon('saving') : tCommon('save')}
+            </Button>
+          </div>
+        }
+      >
+        <form id="partner-create-form" onSubmit={handleSubmit} className="flex flex-col gap-3">
+          <OrganizationSearchSelect
             id="partner-create-org-search"
-            value={orgSearch}
-            onChange={(event) => setOrgSearch(event.target.value)}
-            placeholder={t('createForm.orgSearchPlaceholder')}
-          />
-        </Field>
-        <Field label={t('fields.organizationSelect')} htmlFor="partner-create-org">
-          <SelectInput
-            id="partner-create-org"
-            required
-            value={organizationId}
-            onChange={(event) => {
-              setOrganizationId(event.target.value);
-              setContacts([]);
-              setPrimaryContactId('');
+            label={t('fields.organization')}
+            value={organization}
+            onChange={handleOrganizationChange}
+            onCreateClick={(suggestedName) => {
+              setCreateOrgName(suggestedName);
+              setCreateOrgOpen(true);
             }}
-          >
-            <option value="">{t('createForm.pickOrganization')}</option>
-            {organizations.map((org) => (
-              <option key={org.id} value={org.id}>
-                {org.name}
-              </option>
-            ))}
-          </SelectInput>
-        </Field>
-        <Field label={t('fields.contact')} htmlFor="partner-create-contact">
-          <SelectInput
-            id="partner-create-contact"
-            value={primaryContactId}
-            onChange={(event) => setPrimaryContactId(event.target.value)}
-            disabled={!organizationId}
-          >
-            <option value="">{t('createForm.noContact')}</option>
-            {contacts.map((contact) => (
-              <option key={contact.id} value={contact.id}>
-                {contact.name}
-              </option>
-            ))}
-          </SelectInput>
-        </Field>
-        <Field label={t('fields.partnerType')} htmlFor="partner-create-type">
-          <TextInput
-            id="partner-create-type"
-            value={partnerType}
-            onChange={(event) => setPartnerType(event.target.value)}
-            placeholder={t('createForm.partnerTypePlaceholder')}
           />
-        </Field>
-        <Field label={t('fields.staff')} htmlFor="partner-create-staff">
-          <SelectInput
-            id="partner-create-staff"
-            value={assignedStaffId}
-            onChange={(event) => setAssignedStaffId(event.target.value)}
-          >
-            <option value="">{t('createForm.unassigned')}</option>
-            {staffOptions.map((staff) => (
-              <option key={staff.id} value={staff.id}>
-                {staff.name}
-              </option>
-            ))}
-          </SelectInput>
-        </Field>
-        <Field label={t('fields.description')} htmlFor="partner-create-description">
-          <TextArea
-            id="partner-create-description"
-            rows={3}
-            value={description}
-            onChange={(event) => setDescription(event.target.value)}
-          />
-        </Field>
-        {error ? (
-          <p role="alert" className="text-sm text-[var(--color-danger)]">
-            {error}
-          </p>
-        ) : null}
-      </form>
-    </Sheet>
+          <Field label={t('fields.contact')} htmlFor="partner-create-contact">
+            <SelectInput
+              id="partner-create-contact"
+              value={primaryContactId}
+              onChange={(event) => setPrimaryContactId(event.target.value)}
+              disabled={!organization}
+            >
+              <option value="">{t('createForm.noContact')}</option>
+              {contacts.map((contact) => (
+                <option key={contact.id} value={contact.id}>
+                  {contact.name}
+                </option>
+              ))}
+            </SelectInput>
+          </Field>
+          <Field label={t('fields.partnerType')} htmlFor="partner-create-type">
+            <TextInput
+              id="partner-create-type"
+              value={partnerType}
+              onChange={(event) => setPartnerType(event.target.value)}
+              placeholder={t('createForm.partnerTypePlaceholder')}
+            />
+          </Field>
+          <Field label={t('fields.staff')} htmlFor="partner-create-staff">
+            <SelectInput
+              id="partner-create-staff"
+              value={assignedStaffId}
+              onChange={(event) => setAssignedStaffId(event.target.value)}
+            >
+              <option value="">{t('createForm.unassigned')}</option>
+              {staffOptions.map((staff) => (
+                <option key={staff.id} value={staff.id}>
+                  {staff.name}
+                </option>
+              ))}
+            </SelectInput>
+          </Field>
+          <Field label={t('fields.description')} htmlFor="partner-create-description">
+            <TextArea
+              id="partner-create-description"
+              rows={3}
+              value={description}
+              onChange={(event) => setDescription(event.target.value)}
+            />
+          </Field>
+          {error ? (
+            <p role="alert" className="text-sm text-[var(--color-danger)]">
+              {error}
+            </p>
+          ) : null}
+        </form>
+      </Sheet>
+
+      <OrganizationFormSheet
+        open={createOrgOpen}
+        initialName={createOrgName}
+        onClose={() => setCreateOrgOpen(false)}
+        onCreated={(created) => {
+          handleOrganizationChange(created);
+          setCreateOrgOpen(false);
+        }}
+      />
+    </>
   );
 }

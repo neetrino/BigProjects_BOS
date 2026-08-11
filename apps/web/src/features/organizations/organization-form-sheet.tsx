@@ -1,6 +1,6 @@
 'use client';
 
-import { FormEvent, useState } from 'react';
+import { FormEvent, useEffect, useState } from 'react';
 import { useTranslations } from 'next-intl';
 import { ApiError } from '@/lib/api/client';
 import { createOrganization } from '@/lib/api/organizations';
@@ -15,22 +15,41 @@ type OrganizationFormSheetProps = {
   open: boolean;
   onClose: () => void;
   onCreated: (organization: OrganizationListItem) => void;
+  initialName?: string;
 };
 
-export function OrganizationFormSheet({ open, onClose, onCreated }: OrganizationFormSheetProps) {
-  return <OrganizationFormSheetInner open={open} onClose={onClose} onCreated={onCreated} />;
+export function OrganizationFormSheet({
+  open,
+  onClose,
+  onCreated,
+  initialName = '',
+}: OrganizationFormSheetProps) {
+  return (
+    <OrganizationFormSheetInner
+      open={open}
+      onClose={onClose}
+      onCreated={onCreated}
+      initialName={initialName}
+    />
+  );
 }
 
 type OrganizationFormSheetInnerProps = {
   open: boolean;
   onClose: () => void;
   onCreated: (organization: OrganizationListItem) => void;
+  initialName: string;
 };
 
-function OrganizationFormSheetInner({ open, onClose, onCreated }: OrganizationFormSheetInnerProps) {
+function OrganizationFormSheetInner({
+  open,
+  onClose,
+  onCreated,
+  initialName,
+}: OrganizationFormSheetInnerProps) {
   const t = useTranslations('organizations');
   const tCommon = useTranslations('common');
-  const [name, setName] = useState('');
+  const [name, setName] = useState(initialName);
   const [type, setType] = useState<OrganizationType>('BUILDER');
   const [phone, setPhone] = useState('');
   const [email, setEmail] = useState('');
@@ -38,6 +57,20 @@ function OrganizationFormSheetInner({ open, onClose, onCreated }: OrganizationFo
   const [registrationId, setRegistrationId] = useState('');
   const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
+
+  useEffect(() => {
+    if (!open) {
+      return;
+    }
+    setName(initialName);
+    setType('BUILDER');
+    setPhone('');
+    setEmail('');
+    setWebsite('');
+    setRegistrationId('');
+    setError(null);
+    setBusy(false);
+  }, [open, initialName]);
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();

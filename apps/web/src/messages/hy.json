@@ -124,6 +124,13 @@
     },
     "empty": "Կազմակերպություններ չեն գտնվել։",
     "notFound": "Կազմակերպությունը չի գտնվել։",
+    "picker": {
+      "searchPlaceholder": "Որոնել կազմակերպություններ",
+      "noResults": "Կազմակերպություններ չեն գտնվել",
+      "create": "Ստեղծել կազմակերպություն",
+      "createNamed": "Ստեղծել «{name}»",
+      "clear": "Մաքրել ընտրությունը"
+    },
     "contactsPage": {
       "title": "Կոնտակտներ",
       "subtitle": "Ընկերություններին կապված մարդիկ բոլոր ցիկլերում։",
@@ -285,7 +292,6 @@
     },
     "fields": {
       "organization": "Կազմակերպություն",
-      "organizationSelect": "Ընտրել կազմակերպություն",
       "contact": "Հիմնական կոնտակտ",
       "staff": "Պատասխանատու",
       "expectedSqm": "Սպասվող մ²",
@@ -293,8 +299,6 @@
       "description": "Նկարագրություն"
     },
     "createForm": {
-      "orgSearchPlaceholder": "Որոնել կազմակերպություններ",
-      "pickOrganization": "Ընտրեք կազմակերպություն",
       "noContact": "Առանց կոնտակտի",
       "unassigned": "Չնշանակված",
       "organizationRequired": "Կազմակերպությունը պարտադիր է։"
@@ -502,15 +506,12 @@
     },
     "fields": {
       "organization": "Կազմակերպություն",
-      "organizationSelect": "Ընտրել կազմակերպություն",
       "contact": "Հիմնական կոնտակտ",
       "staff": "Պատասխանատու",
       "partnerType": "Գործընկերոջ տեսակ",
       "description": "Նկարագրություն"
     },
     "createForm": {
-      "orgSearchPlaceholder": "Որոնել կազմակերպություններ",
-      "pickOrganization": "Ընտրեք կազմակերպություն",
       "noContact": "Առանց կոնտակտի",
       "unassigned": "Չնշանակված",
       "partnerTypePlaceholder": "օր. Բանկ, Մեդիա",
