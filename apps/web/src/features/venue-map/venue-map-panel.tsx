@@ -1,6 +1,8 @@
 'use client';
 
 import { useState } from 'react';
+import { clsx } from 'clsx';
+import { MapPin } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { ApiError } from '@/lib/api/client';
 import {
@@ -40,27 +42,29 @@ export function VenueMapPanel({
 
   if (!area) {
     return (
-      <aside className="flex w-80 shrink-0 flex-col gap-3 border-l border-[var(--color-border)] bg-[var(--color-bg-warm)]/40 p-4">
-        <h2 className="font-[family-name:var(--font-display)] text-lg font-medium tracking-tight text-[var(--color-fg)]">
+      <aside className="flex min-h-0 w-80 shrink-0 flex-col gap-3 border-l border-[var(--color-border)] bg-[var(--color-bg-warm)]/40 p-4">
+        <h2 className="shrink-0 font-[family-name:var(--font-display)] text-lg font-medium tracking-tight text-[var(--color-fg)]">
           {t('panel.title')}
         </h2>
-        <p className="text-sm text-[var(--color-muted)]">{t('panel.selectHint')}</p>
+        <p className="shrink-0 text-sm text-[var(--color-muted)]">{t('panel.selectHint')}</p>
         <AreaList areas={areas} selectedAreaId={selectedAreaId} onSelectArea={onSelectArea} />
       </aside>
     );
   }
 
   return (
-    <aside className="flex w-80 shrink-0 flex-col gap-3 overflow-y-auto border-l border-[var(--color-border)] bg-[var(--color-bg-warm)]/40 p-4">
-      <div className="flex items-center justify-between gap-2">
+    <aside className="flex min-h-0 w-80 shrink-0 flex-col gap-3 border-l border-[var(--color-border)] bg-[var(--color-bg-warm)]/40 p-4">
+      <div className="flex shrink-0 items-center justify-between gap-2">
         <h2 className="text-sm font-semibold text-[var(--color-fg)]">{t('panel.detail')}</h2>
         <Button variant="ghost" onClick={() => onSelectArea(null)}>
           {t('panel.back')}
         </Button>
       </div>
-      <AreaDetailForm key={area.id} area={area} cycleId={cycleId} onChanged={onChanged} />
-      <div className="border-t border-[var(--color-border)] pt-3">
-        <AreaList areas={areas} selectedAreaId={selectedAreaId} onSelectArea={onSelectArea} />
+      <div className="soft-scrollbar min-h-0 flex-1 overflow-y-auto">
+        <AreaDetailForm key={area.id} area={area} cycleId={cycleId} onChanged={onChanged} />
+        <div className="mt-3 border-t border-[var(--color-border)] pt-3">
+          <AreaList areas={areas} selectedAreaId={selectedAreaId} onSelectArea={onSelectArea} />
+        </div>
       </div>
     </aside>
   );
@@ -78,23 +82,42 @@ function AreaList({ areas, selectedAreaId, onSelectArea }: AreaListProps) {
     return <p className="text-sm text-[var(--color-muted)]">{t('panel.noAreas')}</p>;
   }
   return (
-    <ul className="flex flex-col gap-0.5">
-      {areas.map((item) => (
-        <li key={item.id}>
-          <button
-            type="button"
-            onClick={() => onSelectArea(item.id)}
-            className={
-              item.id === selectedAreaId
-                ? 'w-full rounded bg-[var(--color-bg)] px-2 py-1.5 text-left text-sm font-medium text-[var(--color-fg)]'
-                : 'w-full rounded px-2 py-1.5 text-left text-sm text-[var(--color-muted)] hover:bg-[var(--color-bg)] hover:text-[var(--color-fg)]'
-            }
-          >
-            <span className="block truncate">{item.name}</span>
-            <span className="text-xs">{item.squareMeters} m²</span>
-          </button>
-        </li>
-      ))}
+    <ul className="soft-scrollbar flex min-h-0 flex-1 flex-col gap-2 overflow-y-auto pr-0.5">
+      {areas.map((item) => {
+        const isSelected = item.id === selectedAreaId;
+
+        return (
+          <li key={item.id} className="shrink-0">
+            <button
+              type="button"
+              onClick={() => onSelectArea(item.id)}
+              className={clsx(
+                'flex w-full items-center gap-2.5 rounded-[var(--radius-control)] border px-2.5 py-2 text-left transition-colors duration-150',
+                isSelected
+                  ? 'border-[var(--color-brand)] bg-white shadow-[var(--shadow-soft)]'
+                  : 'border-[var(--color-border)] bg-white/80 hover:border-[var(--color-border-strong)] hover:bg-white',
+              )}
+            >
+              <span className="inline-flex size-8 shrink-0 items-center justify-center rounded-lg bg-[var(--color-accent-soft)] text-[var(--color-brand)]">
+                <MapPin className="size-4" aria-hidden strokeWidth={2.25} />
+              </span>
+              <span className="min-w-0 flex-1">
+                <span
+                  className={clsx(
+                    'block truncate text-sm',
+                    isSelected
+                      ? 'font-semibold text-[var(--color-fg)]'
+                      : 'font-medium text-[var(--color-fg)]',
+                  )}
+                >
+                  {item.name}
+                </span>
+                <span className="text-xs text-[var(--color-muted)]">{item.squareMeters} m²</span>
+              </span>
+            </button>
+          </li>
+        );
+      })}
     </ul>
   );
 }
