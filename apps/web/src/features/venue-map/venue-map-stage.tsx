@@ -29,11 +29,17 @@ import {
 } from './domain/grid-transform';
 import { usePlanImage } from './hooks/use-plan-image';
 import { useSpacePressed, useStageSize } from './hooks/use-stage-interaction';
-import { AreasLayer, CalibrationOverlay, SelectionPreview } from './layers/areas-layer';
+import {
+  AreasLayer,
+  CalibrationOverlay,
+  SelectionPreview,
+  type AreaHoverTip,
+} from './layers/areas-layer';
 import { BackgroundLayer } from './layers/background-layer';
 import { GridLayer } from './layers/grid-layer';
 import { occupiedCellKeys } from './occupied-cells';
 
+const AREA_HOVER_TIP_OFFSET_PX = 14;
 export type EditorInteractionMode = 'select' | 'calibrate' | 'pan';
 
 export type VenueMapStageProps = {
@@ -73,6 +79,7 @@ export function VenueMapStage({
   const [previewCells, setPreviewCells] = useState<GridCell[]>([]);
   const previewRef = useRef<GridCell[]>([]);
   const dragRef = useRef<DragState | null>(null);
+  const [hoverTip, setHoverTip] = useState<AreaHoverTip | null>(null);
 
   const image = usePlanImage(plan.imageUrl);
   const imageWidth = plan.imageWidth ?? image?.naturalWidth ?? 0;
@@ -229,7 +236,10 @@ export function VenueMapStage({
   const selectionCells = previewCells.length > 0 ? previewCells : pendingSelection;
 
   return (
-    <div ref={containerRef} className="h-full min-h-0 w-full overflow-hidden bg-[var(--color-bg)]">
+    <div
+      ref={containerRef}
+      className="relative h-full min-h-0 w-full overflow-hidden bg-[var(--color-bg)]"
+    >
       {size.width > 0 && size.height > 0 ? (
         <Stage
           width={size.width}
@@ -246,7 +256,10 @@ export function VenueMapStage({
           onTouchMove={handlePointerMove}
           onMouseUp={handlePointerUp}
           onTouchEnd={handlePointerUp}
-          onMouseLeave={handlePointerUp}
+          onMouseLeave={() => {
+            handlePointerUp();
+            setHoverTip(null);
+          }}
         >
           <Layer>
             <BackgroundLayer image={image} width={imageWidth} height={imageHeight} />
@@ -265,6 +278,7 @@ export function VenueMapStage({
                 selectedAreaId={selectedAreaId}
                 scale={viewport.scale}
                 onSelectArea={onSelectArea}
+                onHoverTipChange={setHoverTip}
               />
             ) : null}
             {calibration && selectionCells.length > 0 ? (
@@ -286,6 +300,18 @@ export function VenueMapStage({
             ) : null}
           </Layer>
         </Stage>
+      ) : null}
+      {hoverTip ? (
+        <div
+          className="pointer-events-none absolute z-10 max-w-[16rem] rounded-lg bg-[var(--color-fg)] px-2.5 py-1.5 text-xs font-semibold text-white shadow-[var(--shadow-lift)]"
+          style={{
+            left: hoverTip.clientX + AREA_HOVER_TIP_OFFSET_PX,
+            top: hoverTip.clientY + AREA_HOVER_TIP_OFFSET_PX,
+          }}
+        >
+          <p className="truncate">{hoverTip.name}</p>
+          <p className="font-medium text-white/80">{hoverTip.squareMeters} m²</p>
+        </div>
       ) : null}
     </div>
   );

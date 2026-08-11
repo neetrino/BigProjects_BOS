@@ -43,8 +43,8 @@ export function CycleKanban({ cycles, onOpen, onStatusChange }: CycleKanbanProps
   const getStage = useCallback((cycle: EventCycle) => cycle.status, []);
 
   const renderCard = useCallback(
-    (cycle: EventCycle, options: { isDragging: boolean }) => (
-      <CycleCard cycle={cycle} isDragging={options.isDragging} />
+    (cycle: EventCycle, options: { isDragging: boolean; enterIndex: number }) => (
+      <CycleCard cycle={cycle} isDragging={options.isDragging} enterIndex={options.enterIndex} />
     ),
     [],
   );

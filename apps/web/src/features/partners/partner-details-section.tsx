@@ -20,6 +20,7 @@ type PartnerDetailsSectionProps = {
   draft: PartnerDetailsDraft;
   contacts: OrganizationContact[];
   staffOptions: StaffOption[];
+  readOnly?: boolean;
   onChange: (updater: (prev: PartnerDetailsDraft) => PartnerDetailsDraft) => void;
 };
 
@@ -27,18 +28,20 @@ export function PartnerDetailsSection({
   draft,
   contacts,
   staffOptions,
+  readOnly = false,
   onChange,
 }: PartnerDetailsSectionProps) {
   const t = useTranslations('partners');
 
   return (
-    <section className="flex flex-col gap-3">
+    <section id="partner-details" className="flex flex-col gap-3">
       <h3 className="text-sm font-semibold text-[var(--color-fg)]">{t('sheet.details')}</h3>
       <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
         <Field label={t('fields.contact')} htmlFor="partner-contact">
           <SelectInput
             id="partner-contact"
             value={draft.primaryContactId}
+            disabled={readOnly}
             onChange={(event) =>
               onChange((prev) => ({ ...prev, primaryContactId: event.target.value }))
             }
@@ -55,6 +58,7 @@ export function PartnerDetailsSection({
           <SelectInput
             id="partner-staff"
             value={draft.assignedStaffId}
+            disabled={readOnly}
             onChange={(event) =>
               onChange((prev) => ({ ...prev, assignedStaffId: event.target.value }))
             }
@@ -71,6 +75,7 @@ export function PartnerDetailsSection({
           <TextInput
             id="partner-type"
             value={draft.partnerType}
+            disabled={readOnly}
             onChange={(event) => onChange((prev) => ({ ...prev, partnerType: event.target.value }))}
           />
         </Field>
@@ -80,6 +85,7 @@ export function PartnerDetailsSection({
           id="partner-description"
           rows={3}
           value={draft.description}
+          disabled={readOnly}
           onChange={(event) => onChange((prev) => ({ ...prev, description: event.target.value }))}
         />
       </Field>

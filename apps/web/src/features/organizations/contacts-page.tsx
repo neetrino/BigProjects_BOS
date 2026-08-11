@@ -1,57 +1,38 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { Plus } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { ApiError } from '@/lib/api/client';
-import { listOrganizations } from '@/lib/api/organizations';
-import type { OrganizationListItem, OrganizationType } from '@/lib/api/types';
+import { listContacts } from '@/lib/api/organizations';
+import type { ContactListItem } from '@/lib/api/types';
 import type { BoardViewMode } from '@/components/kanban';
-import { OrganizationBoard } from '@/features/organizations/organization-board';
 import { OrganizationDetailSheet } from '@/features/organizations/organization-detail-sheet';
-import { OrganizationFormSheet } from '@/features/organizations/organization-form-sheet';
-import { OrganizationList } from '@/features/organizations/organization-list';
-import { Button } from '@/components/ui/button';
+import { ContactsBoard } from '@/features/organizations/contacts-board';
+import { ContactsList } from '@/features/organizations/contacts-list';
 import { EmptyState, ErrorState, LoadingState } from '@/components/ui/page-state';
 import { SearchInput } from '@/components/ui/field';
-import { UnderlineTabs } from '@/components/ui/underline-tabs';
 import { ViewModeSwitcher } from '@/components/ui/view-mode-switcher';
 import { useClientCachedState } from '@/hooks/use-client-cached-state';
 import { CLIENT_CACHE_KEYS } from '@/lib/client-cache';
 
 const SEARCH_DEBOUNCE_MS = 300;
-const ORGANIZATION_TYPES: OrganizationType[] = ['BUILDER', 'BANK', 'PARTNER', 'OTHER'];
-type TypeTab = OrganizationType | '';
 
 type LoadState =
   | { status: 'loading' }
   | { status: 'error'; message: string }
-  | { status: 'ready'; items: OrganizationListItem[] };
+  | { status: 'ready'; items: ContactListItem[] };
 
-export function OrganizationsPage() {
+export function ContactsPage() {
   const t = useTranslations('organizations');
   const tCommon = useTranslations('common');
   const [view, setView] = useState<BoardViewMode>('kanban');
   const [searchInput, setSearchInput] = useState('');
   const [search, setSearch] = useState('');
-  const [typeFilter, setTypeFilter] = useState<TypeTab>('');
-  const [loadState, setLoadState] = useClientCachedState<LoadState>(
-    CLIENT_CACHE_KEYS.organizations,
-    {
-      status: 'loading',
-    },
-  );
-  const [createOpen, setCreateOpen] = useState(false);
-  const [selectedId, setSelectedId] = useState<string | null>(null);
+  const [loadState, setLoadState] = useClientCachedState<LoadState>(CLIENT_CACHE_KEYS.contacts, {
+    status: 'loading',
+  });
+  const [selectedOrganizationId, setSelectedOrganizationId] = useState<string | null>(null);
   const [reloadToken, setReloadToken] = useState(0);
-
-  const typeTabs = [
-    { value: '' as const, label: t('tabs.all') },
-    ...ORGANIZATION_TYPES.map((item) => ({
-      value: item,
-      label: t(`tabs.${item}`),
-    })),
-  ];
 
   useEffect(() => {
     const timer = window.setTimeout(() => setSearch(searchInput.trim()), SEARCH_DEBOUNCE_MS);
@@ -61,10 +42,7 @@ export function OrganizationsPage() {
   useEffect(() => {
     let cancelled = false;
 
-    void listOrganizations({
-      search: search || undefined,
-      type: typeFilter || undefined,
-    })
+    void listContacts({ search: search || undefined })
       .then((items) => {
         if (!cancelled) {
           setLoadState({ status: 'ready', items });
@@ -82,36 +60,24 @@ export function OrganizationsPage() {
     return () => {
       cancelled = true;
     };
-  }, [search, typeFilter, reloadToken, setLoadState, tCommon]);
-
-  function reload() {
-    setReloadToken((value) => value + 1);
-  }
+  }, [search, reloadToken, setLoadState, tCommon]);
 
   const items = loadState.status === 'ready' ? loadState.items : [];
 
   return (
     <div className="flex min-h-0 flex-1 flex-col gap-4">
       <header className="shrink-0">
-        <h1 className="page-heading">{t('title')}</h1>
-        <p className="page-subtitle">{t('subtitle')}</p>
+        <h1 className="page-heading">{t('contactsPage.title')}</h1>
+        <p className="page-subtitle">{t('contactsPage.subtitle')}</p>
       </header>
-
-      <UnderlineTabs
-        className="shrink-0"
-        value={typeFilter}
-        options={typeTabs}
-        onChange={setTypeFilter}
-        ariaLabel={t('typeFilter')}
-      />
 
       <div className="toolbar-shell shrink-0">
         <SearchInput
           className="toolbar-search"
-          placeholder={t('searchPlaceholder')}
+          placeholder={t('contactsPage.searchPlaceholder')}
           value={searchInput}
           onChange={(event) => setSearchInput(event.target.value)}
-          aria-label={t('searchPlaceholder')}
+          aria-label={t('contactsPage.searchPlaceholder')}
         />
         <ViewModeSwitcher
           className="ml-auto shrink-0"
@@ -121,37 +87,27 @@ export function OrganizationsPage() {
           kanbanLabel={t('toolbar.kanban')}
           listLabel={t('toolbar.list')}
         />
-        <Button variant="primary" onClick={() => setCreateOpen(true)} className="shrink-0">
-          <Plus className="size-4" aria-hidden />
-          {t('create')}
-        </Button>
       </div>
 
       {loadState.status === 'loading' ? <LoadingState message={tCommon('loading')} /> : null}
       {loadState.status === 'error' ? <ErrorState message={loadState.message} /> : null}
       {loadState.status === 'ready' && items.length === 0 ? (
-        <EmptyState message={t('empty')} />
+        <EmptyState message={t('contactsPage.empty')} />
       ) : null}
 
       {loadState.status === 'ready' && items.length > 0 && view === 'kanban' ? (
-        <OrganizationBoard key={typeFilter || 'all'} organizations={items} onOpen={setSelectedId} />
+        <ContactsBoard contacts={items} onOpenOrganization={setSelectedOrganizationId} />
       ) : null}
 
       {loadState.status === 'ready' && items.length > 0 && view === 'list' ? (
-        <OrganizationList organizations={items} onOpen={setSelectedId} />
+        <ContactsList contacts={items} onOpenOrganization={setSelectedOrganizationId} />
       ) : null}
 
-      <OrganizationFormSheet
-        open={createOpen}
-        onClose={() => setCreateOpen(false)}
-        onCreated={reload}
-      />
-
       <OrganizationDetailSheet
-        open={selectedId !== null}
-        organizationId={selectedId}
-        onClose={() => setSelectedId(null)}
-        onUpdated={reload}
+        open={selectedOrganizationId !== null}
+        organizationId={selectedOrganizationId}
+        onClose={() => setSelectedOrganizationId(null)}
+        onUpdated={() => setReloadToken((value) => value + 1)}
       />
     </div>
   );

@@ -11,6 +11,7 @@ export function setClientCache<T>(key: string, value: T): void {
 export const CLIENT_CACHE_KEYS = {
   cycles: 'cycles:list',
   organizations: 'organizations:list',
+  contacts: 'contacts:list',
   staffUsers: 'staff:users',
   partners: (cycleId: string, search: string, staffId: string, type: string) =>
     `partners:${cycleId}|${search}|${staffId}|${type}`,

@@ -36,3 +36,9 @@ export async function updateDeal(id: string, input: UpdateDealInput): Promise<De
     body: JSON.stringify(input),
   });
 }
+
+export async function deleteDeal(id: string): Promise<void> {
+  await apiFetch<void>(`${DEALS_BASE}/${id}`, {
+    method: 'DELETE',
+  });
+}

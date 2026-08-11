@@ -12,18 +12,20 @@ type StaffAccountCardProps = {
   account: UserAccount;
   isCurrentUser: boolean;
   onToggleStatus: (account: UserAccount) => void;
+  enterIndex?: number;
 };
 
 export function StaffAccountCard({
   account,
   isCurrentUser,
   onToggleStatus,
+  enterIndex,
 }: StaffAccountCardProps) {
   const t = useTranslations('settings.staff');
 
   return (
     <div className="h-full w-full [&>article]:flex [&>article]:h-full [&>article]:flex-col">
-      <KanbanCardShell>
+      <KanbanCardShell enterIndex={enterIndex}>
         <div className="flex items-start justify-between gap-3">
           <div className="flex min-w-0 flex-1 items-center gap-2.5">
             <span

@@ -17,12 +17,13 @@ export function StaffAccountsBoard({
 }: StaffAccountsBoardProps) {
   return (
     <ul className="grid grid-cols-1 items-stretch gap-3 sm:grid-cols-2 xl:grid-cols-3">
-      {users.map((account) => (
+      {users.map((account, index) => (
         <li key={account.id} className="min-h-0">
           <StaffAccountCard
             account={account}
             isCurrentUser={account.id === currentUserId}
             onToggleStatus={onToggleStatus}
+            enterIndex={index}
           />
         </li>
       ))}

@@ -33,10 +33,13 @@
     "venueMap": "Venue Map",
     "cycles": "Event Cycles",
     "organizations": "Organizations",
+    "organizationsContacts": "Contacts",
     "settings": "Settings",
     "settingsStaff": "Staff",
     "collapseSidebar": "Collapse sidebar",
     "expandSidebar": "Expand sidebar",
+    "collapseSubnav": "Hide subcategories",
+    "expandSubnav": "Show subcategories",
     "soon": "soon"
   },
   "login": {
@@ -112,8 +115,34 @@
     "searchPlaceholder": "Search by name",
     "typeFilter": "Type",
     "allTypes": "All types",
+    "tabs": {
+      "all": "All",
+      "BUILDER": "Builders",
+      "BANK": "Banks",
+      "PARTNER": "Partners",
+      "OTHER": "Other"
+    },
     "empty": "No organizations found.",
     "notFound": "Organization not found.",
+    "picker": {
+      "searchPlaceholder": "Search organizations",
+      "noResults": "No organizations found",
+      "create": "Create organization",
+      "createNamed": "Create \"{name}\"",
+      "clear": "Clear selection"
+    },
+    "contactsPage": {
+      "title": "Contacts",
+      "subtitle": "People linked to companies across cycles.",
+      "searchPlaceholder": "Search by name, company, phone, or email",
+      "empty": "No contacts found.",
+      "columns": {
+        "name": "Name",
+        "organization": "Company",
+        "position": "Position",
+        "primary": "Primary"
+      }
+    },
     "toolbar": {
       "kanban": "Board",
       "list": "List"
@@ -261,9 +290,15 @@
       "stage": "Stage",
       "areas": "Areas"
     },
+    "actions": {
+      "menu": "Deal actions",
+      "addAccount": "Add account",
+      "deleteTitle": "Delete deal",
+      "deleteDescription": "Delete this deal? Assigned areas will be released.",
+      "deleted": "Deal deleted."
+    },
     "fields": {
       "organization": "Organization",
-      "organizationSelect": "Select organization",
       "contact": "Primary contact",
       "staff": "Assigned staff",
       "expectedSqm": "Expected m²",
@@ -271,8 +306,6 @@
       "description": "Description"
     },
     "createForm": {
-      "orgSearchPlaceholder": "Search organizations",
-      "pickOrganization": "Choose an organization",
       "noContact": "No contact",
       "unassigned": "Unassigned",
       "organizationRequired": "Organization is required."
@@ -324,7 +357,9 @@
       "select": "Select",
       "pan": "Pan",
       "calibrate": "Calibrate",
-      "fit": "Fit"
+      "fit": "Fit",
+      "fullscreen": "Fullscreen",
+      "exitFullscreen": "Exit fullscreen"
     },
     "createPlan": {
       "title": "Create venue plan",
@@ -476,17 +511,21 @@
       "stage": "Stage",
       "areas": "Areas"
     },
+    "actions": {
+      "menu": "Partner actions",
+      "addAccount": "Add account",
+      "deleteTitle": "Delete partner",
+      "deleteDescription": "Delete this partner? Assigned areas will be released.",
+      "deleted": "Partner deleted."
+    },
     "fields": {
       "organization": "Organization",
-      "organizationSelect": "Select organization",
       "contact": "Primary contact",
       "staff": "Assigned staff",
       "partnerType": "Partner type",
       "description": "Description"
     },
     "createForm": {
-      "orgSearchPlaceholder": "Search organizations",
-      "pickOrganization": "Choose an organization",
       "noContact": "No contact",
       "unassigned": "Unassigned",
       "partnerTypePlaceholder": "e.g. Bank, Media",

@@ -1,10 +1,12 @@
 'use client';
 
+import { Pencil, Trash2, UserPlus } from 'lucide-react';
 import { useEffect, useMemo, useState } from 'react';
 import { useTranslations } from 'next-intl';
 import { ApiError } from '@/lib/api/client';
-import { getPartner, updatePartner } from '@/lib/api/partners';
+import { deletePartner, getPartner, updatePartner } from '@/lib/api/partners';
 import { getOrganization } from '@/lib/api/organizations';
+import { listProvisioningRequests } from '@/lib/api/toonexpo';
 import type {
   OrganizationContact,
   PartnerListItem,
@@ -12,6 +14,8 @@ import type {
   UpdatePartnerInput,
 } from '@/lib/api/types';
 import { Button } from '@/components/ui/button';
+import { Dialog } from '@/components/ui/dialog';
+import { IconMenu, IconMenuCheck } from '@/components/ui/icon-menu';
 import { ErrorState, LoadingState } from '@/components/ui/page-state';
 import { Sheet } from '@/components/ui/sheet';
 import { StatusBadge } from '@/components/ui/status-badge';
@@ -19,7 +23,7 @@ import { showToast } from '@/components/ui/toast';
 import { EntityAttachmentsSection } from '@/features/content/entity-attachments-section';
 import { EntityNotesSection } from '@/features/content/entity-notes-section';
 import { PARTNER_OWNER, stageTone } from '@/features/partners/constants';
-import { ToonExpoAccountSection } from '@/features/toonexpo/toonexpo-account-section';
+import { ProvisioningRequestDialog } from '@/features/toonexpo/provisioning-request-dialog';
 import { EntityAreasSection } from '@/features/venue-map/entity-areas-section';
 import {
   PartnerDetailsSection,
@@ -38,6 +42,7 @@ type PartnerSheetProps = {
   staffOptions: StaffOption[];
   onClose: () => void;
   onUpdated: (partner: PartnerListItem) => void;
+  onDeleted: (partnerId: string) => void;
 };
 
 type LoadState =
@@ -48,6 +53,7 @@ type LoadState =
       partner: PartnerListItem;
       contacts: OrganizationContact[];
       toonexpoCompanyId: string | null;
+      hasExpoAccount: boolean;
     };
 
 function toDraft(partner: PartnerListItem): PartnerDetailsDraft {
@@ -91,12 +97,26 @@ function buildDetailsPatch(
   return payload;
 }
 
+async function resolveHasExpoAccount(
+  organizationId: string,
+  eventCycleId: string,
+  toonexpoCompanyId: string | null,
+): Promise<boolean> {
+  if (toonexpoCompanyId) {
+    return true;
+  }
+  const rows = await listProvisioningRequests({ organizationId, cycleId: eventCycleId });
+  const latest = rows[0];
+  return latest != null && (latest.status === 'SUCCESS' || latest.status === 'LINKED_EXISTING');
+}
+
 export function PartnerSheet({
   partnerId,
   open,
   staffOptions,
   onClose,
   onUpdated,
+  onDeleted,
 }: PartnerSheetProps) {
   const [activeId, setActiveId] = useState<string | null>(partnerId);
 
@@ -116,6 +136,7 @@ export function PartnerSheet({
       staffOptions={staffOptions}
       onClose={onClose}
       onUpdated={onUpdated}
+      onDeleted={onDeleted}
     />
   );
 }
@@ -126,6 +147,7 @@ type PartnerSheetInnerProps = {
   staffOptions: StaffOption[];
   onClose: () => void;
   onUpdated: (partner: PartnerListItem) => void;
+  onDeleted: (partnerId: string) => void;
 };
 
 function PartnerSheetInner({
@@ -134,14 +156,19 @@ function PartnerSheetInner({
   staffOptions,
   onClose,
   onUpdated,
+  onDeleted,
 }: PartnerSheetInnerProps) {
   const t = useTranslations('partners');
   const tCommon = useTranslations('common');
   const [loadState, setLoadState] = useState<LoadState>({ status: 'loading' });
   const [draft, setDraft] = useState<PartnerDetailsDraft | null>(null);
+  const [editing, setEditing] = useState(false);
   const [saveError, setSaveError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
   const [stageBusy, setStageBusy] = useState(false);
+  const [deleteOpen, setDeleteOpen] = useState(false);
+  const [deleteBusy, setDeleteBusy] = useState(false);
+  const [accountDialogOpen, setAccountDialogOpen] = useState(false);
 
   useEffect(() => {
     let cancelled = false;
@@ -149,14 +176,21 @@ function PartnerSheetInner({
     void getPartner(partnerId)
       .then(async (partner) => {
         const detail = await getOrganization(partner.organizationId);
+        const hasExpoAccount = await resolveHasExpoAccount(
+          partner.organizationId,
+          partner.eventCycleId,
+          detail.toonexpoCompanyId,
+        );
         if (!cancelled) {
           setLoadState({
             status: 'ready',
             partner,
             contacts: detail.contacts,
             toonexpoCompanyId: detail.toonexpoCompanyId,
+            hasExpoAccount,
           });
           setDraft(toDraft(partner));
+          setEditing(false);
         }
       })
       .catch((err: unknown) => {
@@ -193,6 +227,7 @@ function PartnerSheetInner({
             partner,
             contacts: prev.contacts,
             toonexpoCompanyId: prev.toonexpoCompanyId,
+            hasExpoAccount: prev.hasExpoAccount,
           }
         : prev,
     );
@@ -207,6 +242,14 @@ function PartnerSheetInner({
       setDraft(baseline);
     }
     setSaveError(null);
+    setEditing(false);
+  }
+
+  function handleEdit() {
+    setEditing(true);
+    window.requestAnimationFrame(() => {
+      document.getElementById('partner-contact')?.focus();
+    });
   }
 
   async function handleSave() {
@@ -215,6 +258,7 @@ function PartnerSheetInner({
     }
     const payload = buildDetailsPatch(draft, baseline);
     if (Object.keys(payload).length === 0) {
+      setEditing(false);
       return;
     }
 
@@ -223,6 +267,7 @@ function PartnerSheetInner({
     try {
       const updated = await updatePartner(partnerId, payload);
       setPartner(updated, true);
+      setEditing(false);
     } catch (err) {
       setSaveError(err instanceof ApiError ? err.message : tCommon('unexpectedError'));
     } finally {
@@ -257,11 +302,17 @@ function PartnerSheetInner({
     try {
       const partner = await getPartner(partnerId);
       const detail = await getOrganization(partner.organizationId);
+      const hasExpoAccount = await resolveHasExpoAccount(
+        partner.organizationId,
+        partner.eventCycleId,
+        detail.toonexpoCompanyId,
+      );
       setLoadState({
         status: 'ready',
         partner,
         contacts: detail.contacts,
         toonexpoCompanyId: detail.toonexpoCompanyId,
+        hasExpoAccount,
       });
       if (!isDirty) {
         setDraft(toDraft(partner));
@@ -272,79 +323,156 @@ function PartnerSheetInner({
     }
   }
 
+  async function handleDelete() {
+    setDeleteBusy(true);
+    try {
+      await deletePartner(partnerId);
+      setDeleteOpen(false);
+      onClose();
+      onDeleted(partnerId);
+      showToast(t('actions.deleted'), 'success');
+    } catch (err) {
+      showToast(err instanceof ApiError ? err.message : tCommon('unexpectedError'), 'error');
+    } finally {
+      setDeleteBusy(false);
+    }
+  }
+
   const sheetTitle =
     loadState.status === 'ready' ? loadState.partner.organization.name : t('detailTitle');
-  const stageBadge =
+
+  const headerActions =
     loadState.status === 'ready' ? (
-      <StatusBadge
-        label={t(`stages.${loadState.partner.stage}`)}
-        tone={stageTone(loadState.partner.stage)}
-      />
+      <div className="flex items-center gap-2">
+        <StatusBadge
+          label={t(`stages.${loadState.partner.stage}`)}
+          tone={stageTone(loadState.partner.stage)}
+        />
+        <IconMenu
+          label={t('actions.menu')}
+          items={[
+            {
+              id: 'edit',
+              label: tCommon('edit'),
+              icon: <Pencil className="size-4" aria-hidden />,
+              onSelect: handleEdit,
+              disabled: editing,
+            },
+            {
+              id: 'delete',
+              label: tCommon('delete'),
+              icon: <Trash2 className="size-4" aria-hidden />,
+              tone: 'danger',
+              onSelect: () => setDeleteOpen(true),
+            },
+            {
+              id: 'add-account',
+              label: t('actions.addAccount'),
+              icon: <UserPlus className="size-4" aria-hidden />,
+              onSelect: () => setAccountDialogOpen(true),
+              disabled: loadState.hasExpoAccount,
+              trailing: loadState.hasExpoAccount ? <IconMenuCheck /> : undefined,
+            },
+          ]}
+        />
+      </div>
     ) : null;
 
   return (
-    <Sheet
-      open={open}
-      title={sheetTitle}
-      headerActions={stageBadge}
-      onClose={onClose}
-      footer={
-        isDirty ? (
-          <div className="flex flex-col gap-2">
-            {saveError ? <p className="text-sm text-[var(--color-danger)]">{saveError}</p> : null}
-            <div className="flex gap-2">
-              <Button
-                variant="secondary"
-                onClick={handleCancelDraft}
-                disabled={busy}
-                className="flex-1"
-              >
-                {tCommon('cancel')}
-              </Button>
-              <Button
-                variant="primary"
-                onClick={() => void handleSave()}
-                disabled={busy}
-                className="flex-1"
-              >
-                {busy ? tCommon('saving') : tCommon('save')}
-              </Button>
+    <>
+      <Sheet
+        open={open}
+        title={sheetTitle}
+        headerActions={headerActions}
+        onClose={onClose}
+        footer={
+          editing ? (
+            <div className="flex flex-col gap-2">
+              {saveError ? <p className="text-sm text-[var(--color-danger)]">{saveError}</p> : null}
+              <div className="flex gap-2">
+                <Button
+                  variant="secondary"
+                  onClick={handleCancelDraft}
+                  disabled={busy}
+                  className="flex-1"
+                >
+                  {tCommon('cancel')}
+                </Button>
+                <Button
+                  variant="primary"
+                  onClick={() => void handleSave()}
+                  disabled={busy || !isDirty}
+                  className="flex-1"
+                >
+                  {busy ? tCommon('saving') : tCommon('save')}
+                </Button>
+              </div>
             </div>
+          ) : undefined
+        }
+      >
+        {loadState.status === 'loading' ? <LoadingState message={tCommon('loading')} /> : null}
+        {loadState.status === 'error' ? <ErrorState message={loadState.message} /> : null}
+        {loadState.status === 'ready' && draft ? (
+          <div className="flex flex-col gap-6">
+            <PartnerDetailsSection
+              draft={draft}
+              contacts={loadState.contacts}
+              staffOptions={staffOptions}
+              readOnly={!editing}
+              onChange={updateDraft}
+            />
+            <PartnerStageSection
+              partner={loadState.partner}
+              busy={stageBusy}
+              onStageChange={handleStageChange}
+            />
+            <EntityAreasSection
+              cycleId={loadState.partner.eventCycleId}
+              areas={loadState.partner.areas ?? []}
+              target={{ kind: 'PARTNER', partnerId }}
+              onChanged={() => void reloadPartner()}
+            />
+            <EntityNotesSection ownerType={PARTNER_OWNER} ownerId={partnerId} />
+            <EntityAttachmentsSection ownerType={PARTNER_OWNER} ownerId={partnerId} />
           </div>
-        ) : undefined
-      }
-    >
-      {loadState.status === 'loading' ? <LoadingState message={tCommon('loading')} /> : null}
-      {loadState.status === 'error' ? <ErrorState message={loadState.message} /> : null}
-      {loadState.status === 'ready' && draft ? (
-        <div className="flex flex-col gap-6">
-          <PartnerDetailsSection
-            draft={draft}
-            contacts={loadState.contacts}
-            staffOptions={staffOptions}
-            onChange={updateDraft}
-          />
-          <PartnerStageSection
-            partner={loadState.partner}
-            busy={stageBusy}
-            onStageChange={handleStageChange}
-          />
-          <EntityAreasSection
-            cycleId={loadState.partner.eventCycleId}
-            areas={loadState.partner.areas ?? []}
-            target={{ kind: 'PARTNER', partnerId }}
-            onChanged={() => void reloadPartner()}
-          />
-          <ToonExpoAccountSection
-            organizationId={loadState.partner.organizationId}
-            eventCycleId={loadState.partner.eventCycleId}
-            companyType="PARTNER"
-            toonexpoCompanyId={loadState.toonexpoCompanyId}
-          />
-          <EntityNotesSection ownerType={PARTNER_OWNER} ownerId={partnerId} />
-          <EntityAttachmentsSection ownerType={PARTNER_OWNER} ownerId={partnerId} />
-        </div>
+        ) : null}
+      </Sheet>
+
+      <Dialog
+        open={deleteOpen}
+        title={t('actions.deleteTitle')}
+        description={t('actions.deleteDescription')}
+        confirmLabel={tCommon('delete')}
+        cancelLabel={tCommon('cancel')}
+        confirmVariant="danger"
+        busy={deleteBusy}
+        onCancel={() => setDeleteOpen(false)}
+        onConfirm={() => void handleDelete()}
+      />
+
+      {loadState.status === 'ready' ? (
+        <ProvisioningRequestDialog
+          open={accountDialogOpen}
+          organizationId={loadState.partner.organizationId}
+          eventCycleId={loadState.partner.eventCycleId}
+          companyType="PARTNER"
+          onClose={() => setAccountDialogOpen(false)}
+          onCreated={(request) => {
+            const linked = request.status === 'SUCCESS' || request.status === 'LINKED_EXISTING';
+            setLoadState((prev) =>
+              prev.status === 'ready'
+                ? {
+                    ...prev,
+                    toonexpoCompanyId: request.toonexpoCompanyId ?? prev.toonexpoCompanyId,
+                    hasExpoAccount: linked || prev.hasExpoAccount,
+                  }
+                : prev,
+            );
+            setAccountDialogOpen(false);
+          }}
+        />
       ) : null}
-    </Sheet>
+    </>
   );
 }

@@ -1,5 +1,16 @@
-import { Body, Controller, Get, Param, Patch, Post, Query } from '@nestjs/common';
-import { ApiCookieAuth, ApiTags } from '@nestjs/swagger';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  HttpCode,
+  HttpStatus,
+  Param,
+  Patch,
+  Post,
+  Query,
+} from '@nestjs/common';
+import { ApiCookieAuth, ApiNoContentResponse, ApiTags } from '@nestjs/swagger';
 import { CreatePartnerDto } from './dto/create-partner.dto';
 import { ListPartnersQueryDto } from './dto/list-partners-query.dto';
 import { PartnerDetailResponseDto, PartnerResponseDto } from './dto/partner-response.dto';
@@ -30,5 +41,12 @@ export class PartnersController {
   @Patch(':id')
   update(@Param('id') id: string, @Body() dto: UpdatePartnerDto): Promise<PartnerResponseDto> {
     return this.partnersService.update(id, dto);
+  }
+
+  @Delete(':id')
+  @HttpCode(HttpStatus.NO_CONTENT)
+  @ApiNoContentResponse()
+  remove(@Param('id') id: string): Promise<void> {
+    return this.partnersService.remove(id);
   }
 }

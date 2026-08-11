@@ -47,3 +47,9 @@ export async function updatePartner(
     body: JSON.stringify(input),
   });
 }
+
+export async function deletePartner(id: string): Promise<void> {
+  await apiFetch<void>(`${PARTNERS_BASE}/${id}`, {
+    method: 'DELETE',
+  });
+}

@@ -15,22 +15,42 @@ type OrganizationFormSheetProps = {
   open: boolean;
   onClose: () => void;
   onCreated: (organization: OrganizationListItem) => void;
+  initialName?: string;
 };
 
-export function OrganizationFormSheet({ open, onClose, onCreated }: OrganizationFormSheetProps) {
-  return <OrganizationFormSheetInner open={open} onClose={onClose} onCreated={onCreated} />;
+export function OrganizationFormSheet({
+  open,
+  onClose,
+  onCreated,
+  initialName = '',
+}: OrganizationFormSheetProps) {
+  return (
+    <OrganizationFormSheetInner
+      key={open ? `open:${initialName}` : 'closed'}
+      open={open}
+      onClose={onClose}
+      onCreated={onCreated}
+      initialName={initialName}
+    />
+  );
 }
 
 type OrganizationFormSheetInnerProps = {
   open: boolean;
   onClose: () => void;
   onCreated: (organization: OrganizationListItem) => void;
+  initialName: string;
 };
 
-function OrganizationFormSheetInner({ open, onClose, onCreated }: OrganizationFormSheetInnerProps) {
+function OrganizationFormSheetInner({
+  open,
+  onClose,
+  onCreated,
+  initialName,
+}: OrganizationFormSheetInnerProps) {
   const t = useTranslations('organizations');
   const tCommon = useTranslations('common');
-  const [name, setName] = useState('');
+  const [name, setName] = useState(initialName);
   const [type, setType] = useState<OrganizationType>('BUILDER');
   const [phone, setPhone] = useState('');
   const [email, setEmail] = useState('');

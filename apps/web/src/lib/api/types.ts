@@ -88,6 +88,18 @@ export type OrganizationContact = {
   createdAt: string;
 };
 
+export type ContactListItem = OrganizationContact & {
+  organization: {
+    id: string;
+    name: string;
+    type: OrganizationType;
+  };
+};
+
+export type ListContactsQuery = {
+  search?: string;
+};
+
 export type OrganizationDetail = OrganizationListItem & {
   contacts: OrganizationContact[];
 };

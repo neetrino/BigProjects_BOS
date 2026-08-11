@@ -179,6 +179,22 @@ export function PartnersPage() {
     [setPartnersLoad],
   );
 
+  const removePartner = useCallback(
+    (partnerId: string) => {
+      setPartnersLoad((prev) => {
+        if (prev.status !== 'ready') {
+          return prev;
+        }
+        return {
+          status: 'ready',
+          partners: prev.partners.filter((item) => item.id !== partnerId),
+        };
+      });
+      setSelectedPartnerId((current) => (current === partnerId ? null : current));
+    },
+    [setPartnersLoad],
+  );
+
   async function handleStageChange(partnerId: string, stage: PartnerStage) {
     const previous = partners.find((item) => item.id === partnerId);
     if (!previous) {
@@ -273,6 +289,7 @@ export function PartnersPage() {
         staffOptions={staffOptions}
         onClose={() => setSelectedPartnerId(null)}
         onUpdated={replacePartner}
+        onDeleted={removePartner}
       />
     </div>
   );

@@ -33,10 +33,13 @@
     "venueMap": "Քարտեզ",
     "cycles": "Ցիկլեր",
     "organizations": "Կազմակերպություններ",
+    "organizationsContacts": "Կոնտակտներ",
     "settings": "Կարգավորումներ",
     "settingsStaff": "Staff",
     "collapseSidebar": "Ծալել մենյուն",
     "expandSidebar": "Ծավալել մենյուն",
+    "collapseSubnav": "Թաքցնել ենթակատեգորիաները",
+    "expandSubnav": "Ցույց տալ ենթակատեգորիաները",
     "soon": "շուտով"
   },
   "login": {
@@ -112,8 +115,34 @@
     "searchPlaceholder": "Որոնել ըստ անվան",
     "typeFilter": "Տեսակ",
     "allTypes": "Բոլոր տեսակները",
+    "tabs": {
+      "all": "Բոլորը",
+      "BUILDER": "Կառուցապատողներ",
+      "BANK": "Բանկեր",
+      "PARTNER": "Գործընկերներ",
+      "OTHER": "Այլ"
+    },
     "empty": "Կազմակերպություններ չեն գտնվել։",
     "notFound": "Կազմակերպությունը չի գտնվել։",
+    "picker": {
+      "searchPlaceholder": "Որոնել կազմակերպություններ",
+      "noResults": "Կազմակերպություններ չեն գտնվել",
+      "create": "Ստեղծել կազմակերպություն",
+      "createNamed": "Ստեղծել «{name}»",
+      "clear": "Մաքրել ընտրությունը"
+    },
+    "contactsPage": {
+      "title": "Կոնտակտներ",
+      "subtitle": "Ընկերություններին կապված մարդիկ բոլոր ցիկլերում։",
+      "searchPlaceholder": "Որոնել ըստ անվան, ընկերության, հեռախոսի կամ էլ․ փոստի",
+      "empty": "Կոնտակտներ չեն գտնվել։",
+      "columns": {
+        "name": "Անուն",
+        "organization": "Ընկերություն",
+        "position": "Պաշտոն",
+        "primary": "Հիմնական"
+      }
+    },
     "toolbar": {
       "kanban": "Տախտակ",
       "list": "Ցանկ"
@@ -261,9 +290,15 @@
       "stage": "Փուլ",
       "areas": "Տարածքներ"
     },
+    "actions": {
+      "menu": "Գործարքի գործողություններ",
+      "addAccount": "Ավելացնել հաշիվ",
+      "deleteTitle": "Ջնջել գործարքը",
+      "deleteDescription": "Ջնջե՞լ այս գործարքը։ Նշանակված տարածքները կազատվեն։",
+      "deleted": "Գործարքը ջնջված է։"
+    },
     "fields": {
       "organization": "Կազմակերպություն",
-      "organizationSelect": "Ընտրել կազմակերպություն",
       "contact": "Հիմնական կոնտակտ",
       "staff": "Պատասխանատու",
       "expectedSqm": "Սպասվող մ²",
@@ -271,8 +306,6 @@
       "description": "Նկարագրություն"
     },
     "createForm": {
-      "orgSearchPlaceholder": "Որոնել կազմակերպություններ",
-      "pickOrganization": "Ընտրեք կազմակերպություն",
       "noContact": "Առանց կոնտակտի",
       "unassigned": "Չնշանակված",
       "organizationRequired": "Կազմակերպությունը պարտադիր է։"
@@ -324,7 +357,9 @@
       "select": "Ընտրել",
       "pan": "Տեղափոխել",
       "calibrate": "Չափագրում",
-      "fit": "Հարմարեցնել"
+      "fit": "Հարմարեցնել",
+      "fullscreen": "Ամբողջ էկրան",
+      "exitFullscreen": "Փոքրացնել"
     },
     "createPlan": {
       "title": "Ստեղծել տարածքի պլան",
@@ -476,17 +511,21 @@
       "stage": "Փուլ",
       "areas": "Տարածքներ"
     },
+    "actions": {
+      "menu": "Գործընկերոջ գործողություններ",
+      "addAccount": "Ավելացնել հաշիվ",
+      "deleteTitle": "Ջնջել գործընկերոջը",
+      "deleteDescription": "Ջնջե՞լ այս գործընկերոջը։ Նշանակված տարածքները կազատվեն։",
+      "deleted": "Գործընկերը ջնջված է։"
+    },
     "fields": {
       "organization": "Կազմակերպություն",
-      "organizationSelect": "Ընտրել կազմակերպություն",
       "contact": "Հիմնական կոնտակտ",
       "staff": "Պատասխանատու",
       "partnerType": "Գործընկերոջ տեսակ",
       "description": "Նկարագրություն"
     },
     "createForm": {
-      "orgSearchPlaceholder": "Որոնել կազմակերպություններ",
-      "pickOrganization": "Ընտրեք կազմակերպություն",
       "noContact": "Առանց կոնտակտի",
       "unassigned": "Չնշանակված",
       "partnerTypePlaceholder": "օր. Բանկ, Մեդիա",
