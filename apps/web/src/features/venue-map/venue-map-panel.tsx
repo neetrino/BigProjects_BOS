@@ -244,15 +244,25 @@ function AreaDetailForm({ area, cycleId, onChanged }: AreaDetailFormProps) {
             <p className="text-sm font-medium text-[var(--color-fg)]">
               {area.allocation.organizationName}
             </p>
-            <p className="text-xs text-[var(--color-muted)]">
-              {t(`allocationKind.${area.allocation.kind}`)}
-            </p>
-            {area.allocation.kind === 'BUILDER' && area.allocation.deal ? (
-              <div className="flex flex-col gap-1.5">
+            <div className="flex flex-wrap items-center gap-2">
+              <p className="text-xs text-[var(--color-muted)]">
+                {t(`allocationKind.${area.allocation.kind}`)}
+              </p>
+              {area.allocation.kind === 'BUILDER' && area.allocation.deal ? (
                 <StatusBadge
                   label={tBuilder(`stages.${area.allocation.deal.stage}`)}
                   tone={dealStageTone(area.allocation.deal.stage)}
                 />
+              ) : null}
+              {area.allocation.kind === 'PARTNER' && area.allocation.partner ? (
+                <StatusBadge
+                  label={tPartners(`stages.${area.allocation.partner.stage}`)}
+                  tone={partnerStageTone(area.allocation.partner.stage)}
+                />
+              ) : null}
+            </div>
+            {area.allocation.kind === 'BUILDER' && area.allocation.deal ? (
+              <div className="flex flex-col gap-1.5">
                 {area.allocation.deal.amount != null ? (
                   <p className="text-xs text-[var(--color-muted)]">
                     {t('panel.dealAmount', {
@@ -275,12 +285,6 @@ function AreaDetailForm({ area, cycleId, onChanged }: AreaDetailFormProps) {
                   </p>
                 ) : null}
               </div>
-            ) : null}
-            {area.allocation.kind === 'PARTNER' && area.allocation.partner ? (
-              <StatusBadge
-                label={tPartners(`stages.${area.allocation.partner.stage}`)}
-                tone={partnerStageTone(area.allocation.partner.stage)}
-              />
             ) : null}
             <Button variant="secondary" disabled={busy} onClick={() => setConfirmRelease(true)}>
               {t('panel.release')}
