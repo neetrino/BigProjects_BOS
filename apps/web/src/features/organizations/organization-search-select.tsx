@@ -42,10 +42,6 @@ export function OrganizationSearchSelect({
   const [highlightedIndex, setHighlightedIndex] = useState(0);
 
   useEffect(() => {
-    setSearch(value?.name ?? '');
-  }, [value]);
-
-  useEffect(() => {
     const timer = window.setTimeout(() => setQuery(search.trim()), SEARCH_DEBOUNCE_MS);
     return () => window.clearTimeout(timer);
   }, [search]);

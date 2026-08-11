@@ -38,7 +38,7 @@ export function UnderlineTabs<T extends string>({
   const [indicator, setIndicator] = useState<IndicatorRect>({ left: 0, width: 0 });
   const [ready, setReady] = useState(false);
 
-  function syncIndicator() {
+  useIsomorphicLayoutEffect(() => {
     const activeTab = tabRefs.current.get(value);
     if (!activeTab) {
       return;
@@ -49,16 +49,25 @@ export function UnderlineTabs<T extends string>({
       width: activeTab.offsetWidth + INDICATOR_SIDE_PAD_PX * 2,
     });
     setReady(true);
-  }
-
-  useIsomorphicLayoutEffect(() => {
-    syncIndicator();
   }, [value, options]);
 
   useEffect(() => {
     const list = listRef.current;
     if (!list) {
       return;
+    }
+
+    function syncIndicator() {
+      const activeTab = tabRefs.current.get(value);
+      if (!activeTab) {
+        return;
+      }
+
+      setIndicator({
+        left: activeTab.offsetLeft - INDICATOR_SIDE_PAD_PX,
+        width: activeTab.offsetWidth + INDICATOR_SIDE_PAD_PX * 2,
+      });
+      setReady(true);
     }
 
     const observer = new ResizeObserver(() => {

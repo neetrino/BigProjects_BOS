@@ -1,6 +1,6 @@
 'use client';
 
-import { FormEvent, useEffect, useState } from 'react';
+import { FormEvent, useState } from 'react';
 import { useTranslations } from 'next-intl';
 import { ApiError } from '@/lib/api/client';
 import { createOrganization } from '@/lib/api/organizations';
@@ -26,6 +26,7 @@ export function OrganizationFormSheet({
 }: OrganizationFormSheetProps) {
   return (
     <OrganizationFormSheetInner
+      key={open ? `open:${initialName}` : 'closed'}
       open={open}
       onClose={onClose}
       onCreated={onCreated}
@@ -57,20 +58,6 @@ function OrganizationFormSheetInner({
   const [registrationId, setRegistrationId] = useState('');
   const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
-
-  useEffect(() => {
-    if (!open) {
-      return;
-    }
-    setName(initialName);
-    setType('BUILDER');
-    setPhone('');
-    setEmail('');
-    setWebsite('');
-    setRegistrationId('');
-    setError(null);
-    setBusy(false);
-  }, [open, initialName]);
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();

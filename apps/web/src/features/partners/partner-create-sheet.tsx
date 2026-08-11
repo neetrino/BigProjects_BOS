@@ -75,8 +75,6 @@ function PartnerCreateSheetInner({
 
   useEffect(() => {
     if (!organization) {
-      setContacts([]);
-      setPrimaryContactId('');
       return;
     }
 

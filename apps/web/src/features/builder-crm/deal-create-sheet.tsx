@@ -76,8 +76,6 @@ function DealCreateSheetInner({
 
   useEffect(() => {
     if (!organization) {
-      setContacts([]);
-      setPrimaryContactId('');
       return;
     }
 
