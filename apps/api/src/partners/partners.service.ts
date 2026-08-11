@@ -1,6 +1,7 @@
 import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import {
   Contact,
+  ContentOwnerType,
   EventCycleStatus,
   Organization,
   PartnerParticipation,
@@ -185,6 +186,28 @@ export class PartnersService {
     });
 
     return this.toResponse(partner);
+  }
+
+  async remove(id: string): Promise<void> {
+    const existing = await this.prisma.partnerParticipation.findUnique({ where: { id } });
+    if (!existing) {
+      throw new NotFoundException(PARTNER_NOT_FOUND_MESSAGE);
+    }
+
+    await this.prisma.$transaction(async (tx) => {
+      await tx.spaceAllocation.updateMany({
+        where: { partnerParticipationId: id, active: true },
+        data: { active: false, releasedAt: new Date() },
+      });
+      await tx.spaceAllocation.deleteMany({ where: { partnerParticipationId: id } });
+      await tx.note.deleteMany({
+        where: { ownerType: ContentOwnerType.PARTNER_PARTICIPATION, ownerId: id },
+      });
+      await tx.attachment.deleteMany({
+        where: { ownerType: ContentOwnerType.PARTNER_PARTICIPATION, ownerId: id },
+      });
+      await tx.partnerParticipation.delete({ where: { id } });
+    });
   }
 
   async assertValidStageTransition(current: PartnerStage, next: PartnerStage): Promise<void> {

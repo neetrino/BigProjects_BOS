@@ -1,7 +1,12 @@
-import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import {
   BuilderDeal,
   Contact,
+  ContentOwnerType,
   DealStage,
   EventCycleStatus,
   Organization,
@@ -202,6 +207,28 @@ export class DealsService {
       : await this.spaceAllocationsQuery.getAreasSummary(ALLOCATION_KIND_BUILDER, id);
 
     return this.toResponse(deal, summary);
+  }
+
+  async remove(id: string): Promise<void> {
+    const existing = await this.prisma.builderDeal.findUnique({ where: { id } });
+    if (!existing) {
+      throw new NotFoundException(DEAL_NOT_FOUND_MESSAGE);
+    }
+
+    await this.prisma.$transaction(async (tx) => {
+      await tx.spaceAllocation.updateMany({
+        where: { builderDealId: id, active: true },
+        data: { active: false, releasedAt: new Date() },
+      });
+      await tx.spaceAllocation.deleteMany({ where: { builderDealId: id } });
+      await tx.note.deleteMany({
+        where: { ownerType: ContentOwnerType.BUILDER_DEAL, ownerId: id },
+      });
+      await tx.attachment.deleteMany({
+        where: { ownerType: ContentOwnerType.BUILDER_DEAL, ownerId: id },
+      });
+      await tx.builderDeal.delete({ where: { id } });
+    });
   }
 
   async assertValidStageTransition(

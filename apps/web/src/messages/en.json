@@ -290,6 +290,13 @@
       "stage": "Stage",
       "areas": "Areas"
     },
+    "actions": {
+      "menu": "Deal actions",
+      "addAccount": "Add account",
+      "deleteTitle": "Delete deal",
+      "deleteDescription": "Delete this deal? Assigned areas will be released.",
+      "deleted": "Deal deleted."
+    },
     "fields": {
       "organization": "Organization",
       "contact": "Primary contact",
@@ -503,6 +510,13 @@
       "details": "Details",
       "stage": "Stage",
       "areas": "Areas"
+    },
+    "actions": {
+      "menu": "Partner actions",
+      "addAccount": "Add account",
+      "deleteTitle": "Delete partner",
+      "deleteDescription": "Delete this partner? Assigned areas will be released.",
+      "deleted": "Partner deleted."
     },
     "fields": {
       "organization": "Organization",

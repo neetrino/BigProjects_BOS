@@ -182,6 +182,22 @@ export function BuilderSalesPage() {
     [setDealsLoad],
   );
 
+  const removeDeal = useCallback(
+    (dealId: string) => {
+      setDealsLoad((prev) => {
+        if (prev.status !== 'ready') {
+          return prev;
+        }
+        return {
+          status: 'ready',
+          deals: prev.deals.filter((item) => item.id !== dealId),
+        };
+      });
+      setSelectedDealId((current) => (current === dealId ? null : current));
+    },
+    [setDealsLoad],
+  );
+
   async function handleStageChange(dealId: string, stage: DealStage) {
     const previous = deals.find((item) => item.id === dealId);
     if (!previous) {
@@ -269,6 +285,7 @@ export function BuilderSalesPage() {
         staffOptions={staffOptions}
         onClose={() => setSelectedDealId(null)}
         onUpdated={replaceDeal}
+        onDeleted={removeDeal}
       />
     </div>
   );

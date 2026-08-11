@@ -21,6 +21,7 @@ type DealDetailsSectionProps = {
   draft: DealDetailsDraft;
   contacts: OrganizationContact[];
   staffOptions: StaffOption[];
+  readOnly?: boolean;
   onChange: (updater: (prev: DealDetailsDraft) => DealDetailsDraft) => void;
 };
 
@@ -28,18 +29,20 @@ export function DealDetailsSection({
   draft,
   contacts,
   staffOptions,
+  readOnly = false,
   onChange,
 }: DealDetailsSectionProps) {
   const t = useTranslations('builderSales');
 
   return (
-    <section className="flex flex-col gap-3">
+    <section id="deal-details" className="flex flex-col gap-3">
       <h3 className="text-sm font-semibold text-[var(--color-fg)]">{t('sheet.details')}</h3>
       <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
         <Field label={t('fields.contact')} htmlFor="deal-contact">
           <SelectInput
             id="deal-contact"
             value={draft.primaryContactId}
+            disabled={readOnly}
             onChange={(event) =>
               onChange((prev) => ({ ...prev, primaryContactId: event.target.value }))
             }
@@ -56,6 +59,7 @@ export function DealDetailsSection({
           <SelectInput
             id="deal-staff"
             value={draft.assignedStaffId}
+            disabled={readOnly}
             onChange={(event) =>
               onChange((prev) => ({ ...prev, assignedStaffId: event.target.value }))
             }
@@ -74,6 +78,7 @@ export function DealDetailsSection({
             inputMode="numeric"
             pattern="[0-9]*"
             value={draft.expectedSqm}
+            disabled={readOnly}
             onChange={(event) => onChange((prev) => ({ ...prev, expectedSqm: event.target.value }))}
           />
         </Field>
@@ -82,6 +87,7 @@ export function DealDetailsSection({
             id="deal-amount"
             inputMode="decimal"
             value={draft.agreedAmount}
+            disabled={readOnly}
             onChange={(event) =>
               onChange((prev) => ({ ...prev, agreedAmount: event.target.value }))
             }
@@ -93,6 +99,7 @@ export function DealDetailsSection({
           id="deal-description"
           rows={3}
           value={draft.description}
+          disabled={readOnly}
           onChange={(event) => onChange((prev) => ({ ...prev, description: event.target.value }))}
         />
       </Field>
