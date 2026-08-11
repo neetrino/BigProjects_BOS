@@ -33,10 +33,13 @@
     "venueMap": "Venue Map",
     "cycles": "Event Cycles",
     "organizations": "Organizations",
+    "organizationsContacts": "Contacts",
     "settings": "Settings",
     "settingsStaff": "Staff",
     "collapseSidebar": "Collapse sidebar",
     "expandSidebar": "Expand sidebar",
+    "collapseSubnav": "Hide subcategories",
+    "expandSubnav": "Show subcategories",
     "soon": "soon"
   },
   "login": {
@@ -121,6 +124,18 @@
     },
     "empty": "No organizations found.",
     "notFound": "Organization not found.",
+    "contactsPage": {
+      "title": "Contacts",
+      "subtitle": "People linked to companies across cycles.",
+      "searchPlaceholder": "Search by name, company, phone, or email",
+      "empty": "No contacts found.",
+      "columns": {
+        "name": "Name",
+        "organization": "Company",
+        "position": "Position",
+        "primary": "Primary"
+      }
+    },
     "toolbar": {
       "kanban": "Board",
       "list": "List"

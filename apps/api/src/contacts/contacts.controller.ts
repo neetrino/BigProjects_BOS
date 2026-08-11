@@ -1,5 +1,7 @@
-import { Body, Controller, Delete, HttpCode, HttpStatus, Param, Patch } from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpCode, HttpStatus, Param, Patch, Query } from '@nestjs/common';
 import { ApiCookieAuth, ApiNoContentResponse, ApiTags } from '@nestjs/swagger';
+import { ContactListItemResponseDto } from './dto/contact-list-item-response.dto';
+import { ListContactsQueryDto } from './dto/list-contacts-query.dto';
 import { OrganizationContactResponseDto } from './dto/organization-contact-response.dto';
 import { UpdateContactDto } from './dto/update-contact.dto';
 import { ContactsService } from './contacts.service';
@@ -9,6 +11,11 @@ import { ContactsService } from './contacts.service';
 @Controller('contacts')
 export class ContactsController {
   constructor(private readonly contactsService: ContactsService) {}
+
+  @Get()
+  list(@Query() query: ListContactsQueryDto): Promise<ContactListItemResponseDto[]> {
+    return this.contactsService.list(query);
+  }
 
   @Patch(':id')
   update(

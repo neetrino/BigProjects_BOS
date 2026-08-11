@@ -462,6 +462,15 @@ html[lang='hy'] .app-sidebar {
   box-sizing: border-box;
 }
 
+.app-sidebar a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.app-sidebar a:hover {
+  color: inherit;
+}
+
 .app-sidebar-nav-row:hover {
   background: rgb(255 255 255 / 8%);
 }

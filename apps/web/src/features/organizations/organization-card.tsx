@@ -1,9 +1,10 @@
 'use client';
 
-import { Globe, Mail, Phone, Users, type LucideIcon } from 'lucide-react';
+import { Globe, Mail, Phone, Users } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import type { OrganizationListItem } from '@/lib/api/types';
 import { KanbanCardShell } from '@/components/kanban';
+import { CardMetaRow } from '@/components/ui/card-meta-row';
 
 type OrganizationCardProps = {
   organization: OrganizationListItem;
@@ -16,37 +17,6 @@ function websiteHref(raw: string): string {
     return trimmed;
   }
   return `https://${trimmed}`;
-}
-
-type InfoRowProps = {
-  icon: LucideIcon;
-  children: string;
-  href?: string;
-};
-
-function InfoRow({ icon: Icon, children, href }: InfoRowProps) {
-  const content = (
-    <>
-      <Icon className="size-3.5 shrink-0 opacity-70" aria-hidden />
-      <span className="truncate">{children}</span>
-    </>
-  );
-
-  if (href) {
-    return (
-      <a
-        href={href}
-        target="_blank"
-        rel="noopener noreferrer"
-        className="flex items-center gap-1.5 text-xs text-[var(--color-accent)]"
-        onClick={(event) => event.stopPropagation()}
-      >
-        {content}
-      </a>
-    );
-  }
-
-  return <p className="flex items-center gap-1.5 text-xs text-[var(--color-muted)]">{content}</p>;
 }
 
 export function OrganizationCard({ organization, enterIndex }: OrganizationCardProps) {
@@ -66,14 +36,29 @@ export function OrganizationCard({ organization, enterIndex }: OrganizationCardP
             {t(`types.${organization.type}`)}
           </span>
         </div>
-        <div className="mt-2 flex flex-col gap-1.5">
-          <InfoRow icon={Users}>{t('card.contacts', { count: organization.contactCount })}</InfoRow>
-          {phone ? <InfoRow icon={Phone}>{phone}</InfoRow> : null}
-          {email ? <InfoRow icon={Mail}>{email}</InfoRow> : null}
+        <div className="mt-2.5 flex flex-col gap-2">
+          <CardMetaRow icon={Users} tone="brand">
+            {t('card.contacts', { count: organization.contactCount })}
+          </CardMetaRow>
+          {phone ? (
+            <CardMetaRow icon={Phone} tone="success">
+              {phone}
+            </CardMetaRow>
+          ) : null}
+          {email ? (
+            <CardMetaRow icon={Mail} tone="accent">
+              {email}
+            </CardMetaRow>
+          ) : null}
           {website ? (
-            <InfoRow icon={Globe} href={websiteHref(website)}>
+            <CardMetaRow
+              icon={Globe}
+              tone="brass"
+              href={websiteHref(website)}
+              onLinkClick={(event) => event.stopPropagation()}
+            >
               {website}
-            </InfoRow>
+            </CardMetaRow>
           ) : null}
         </div>
       </KanbanCardShell>

@@ -34,7 +34,7 @@ export function DealKanban({ deals, onOpen, onStageChange }: DealKanbanProps) {
   const getStage = useCallback((deal: DealListItem) => deal.stage, []);
 
   const renderCard = useCallback(
-    (deal: DealListItem, options: { isDragging: boolean }) => (
+    (deal: DealListItem, options: { isDragging: boolean; enterIndex: number }) => (
       <DealCard deal={deal} isDragging={options.isDragging} enterIndex={options.enterIndex} />
     ),
     [],

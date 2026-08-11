@@ -32,10 +32,13 @@
     "venueMap": "Карта площадки",
     "cycles": "Циклы событий",
     "organizations": "Организации",
+    "organizationsContacts": "Контакты",
     "settings": "Настройки",
     "settingsStaff": "Staff",
     "collapseSidebar": "Свернуть меню",
     "expandSidebar": "Развернуть меню",
+    "collapseSubnav": "Скрыть подкатегории",
+    "expandSubnav": "Показать подкатегории",
     "soon": "скоро"
   },
   "login": {
@@ -120,6 +123,18 @@
     },
     "empty": "Организации не найдены.",
     "notFound": "Организация не найдена.",
+    "contactsPage": {
+      "title": "Контакты",
+      "subtitle": "Люди, связанные с компаниями по всем циклам.",
+      "searchPlaceholder": "Поиск по имени, компании, телефону или email",
+      "empty": "Контакты не найдены.",
+      "columns": {
+        "name": "Имя",
+        "organization": "Компания",
+        "position": "Должность",
+        "primary": "Основной"
+      }
+    },
     "toolbar": {
       "kanban": "Доска",
       "list": "Список"

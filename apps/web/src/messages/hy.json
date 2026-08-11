@@ -33,10 +33,13 @@
     "venueMap": "Քարտեզ",
     "cycles": "Ցիկլեր",
     "organizations": "Կազմակերպություններ",
+    "organizationsContacts": "Կոնտակտներ",
     "settings": "Կարգավորումներ",
     "settingsStaff": "Staff",
     "collapseSidebar": "Ծալել մենյուն",
     "expandSidebar": "Ծավալել մենյուն",
+    "collapseSubnav": "Թաքցնել ենթակատեգորիաները",
+    "expandSubnav": "Ցույց տալ ենթակատեգորիաները",
     "soon": "շուտով"
   },
   "login": {
@@ -121,6 +124,18 @@
     },
     "empty": "Կազմակերպություններ չեն գտնվել։",
     "notFound": "Կազմակերպությունը չի գտնվել։",
+    "contactsPage": {
+      "title": "Կոնտակտներ",
+      "subtitle": "Ընկերություններին կապված մարդիկ բոլոր ցիկլերում։",
+      "searchPlaceholder": "Որոնել ըստ անվան, ընկերության, հեռախոսի կամ էլ․ փոստի",
+      "empty": "Կոնտակտներ չեն գտնվել։",
+      "columns": {
+        "name": "Անուն",
+        "organization": "Ընկերություն",
+        "position": "Պաշտոն",
+        "primary": "Հիմնական"
+      }
+    },
     "toolbar": {
       "kanban": "Տախտակ",
       "list": "Ցանկ"

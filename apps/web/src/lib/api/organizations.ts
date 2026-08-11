@@ -1,7 +1,9 @@
 import { apiFetch } from './client';
 import type {
+  ContactListItem,
   CreateContactInput,
   CreateOrganizationInput,
+  ListContactsQuery,
   ListOrganizationsQuery,
   OrganizationContact,
   OrganizationDetail,
@@ -26,6 +28,16 @@ export async function listOrganizations(
 
   const suffix = params.size > 0 ? `?${params.toString()}` : '';
   return apiFetch<OrganizationListItem[]>(`${ORGANIZATIONS_BASE}${suffix}`);
+}
+
+export async function listContacts(query: ListContactsQuery = {}): Promise<ContactListItem[]> {
+  const params = new URLSearchParams();
+  if (query.search) {
+    params.set('search', query.search);
+  }
+
+  const suffix = params.size > 0 ? `?${params.toString()}` : '';
+  return apiFetch<ContactListItem[]>(`${CONTACTS_BASE}${suffix}`);
 }
 
 export async function getOrganization(id: string): Promise<OrganizationDetail> {
