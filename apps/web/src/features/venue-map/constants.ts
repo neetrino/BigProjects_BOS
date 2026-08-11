@@ -2,6 +2,9 @@ export const MAX_PLAN_IMAGE_BYTES = 25 * 1024 * 1024;
 
 export const ACCEPTED_PLAN_IMAGE_TYPES = ['image/png', 'image/jpeg', 'image/webp'] as const;
 
+/** Match Event cycle SelectInput height (`py-2.5` field control). */
+export const TOOLBAR_CONTROL_CLASS = 'h-auto py-2.5';
+
 export { FREE_AREA_MAP_COLORS, SELECTED_AREA_MAP_COLORS } from '@/lib/stage-colors';
 
 export const SELECTION_FILL = 'rgba(26, 107, 114, 0.28)';

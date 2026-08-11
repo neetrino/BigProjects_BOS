@@ -22,6 +22,7 @@ import type { EditorInteractionMode } from './venue-map-stage';
 import { VenueMapPublicationSection } from '@/features/toonexpo/venue-map-publication-section';
 import { VenueMapPanel } from './venue-map-panel';
 import { VenueMapStageClient } from './venue-map-stage-client';
+import { TOOLBAR_CONTROL_CLASS } from './constants';
 
 type CyclesLoad =
   | { status: 'loading' }
@@ -166,12 +167,14 @@ export function VenueMapPage() {
             <>
               <Button
                 variant={interactionMode === 'select' ? 'primary' : 'secondary'}
+                className={TOOLBAR_CONTROL_CLASS}
                 onClick={() => setInteractionMode('select')}
               >
                 {t('toolbar.select')}
               </Button>
               <Button
                 variant={interactionMode === 'pan' ? 'primary' : 'secondary'}
+                className={TOOLBAR_CONTROL_CLASS}
                 onClick={() => setInteractionMode('pan')}
               >
                 {t('toolbar.pan')}
@@ -179,12 +182,17 @@ export function VenueMapPage() {
               {isAdmin ? (
                 <Button
                   variant={interactionMode === 'calibrate' ? 'primary' : 'secondary'}
+                  className={TOOLBAR_CONTROL_CLASS}
                   onClick={() => setInteractionMode('calibrate')}
                 >
                   {t('toolbar.calibrate')}
                 </Button>
               ) : null}
-              <Button variant="secondary" onClick={() => setFitRequestId((id) => id + 1)}>
+              <Button
+                variant="secondary"
+                className={TOOLBAR_CONTROL_CLASS}
+                onClick={() => setFitRequestId((id) => id + 1)}
+              >
                 {t('toolbar.fit')}
               </Button>
               {isAdmin && plan ? (

@@ -6,7 +6,7 @@ import { ApiError } from '@/lib/api/client';
 import { uploadVenuePlanImage } from '@/lib/api/venue-map';
 import { Button } from '@/components/ui/button';
 import { showToast } from '@/components/ui/toast';
-import { ACCEPTED_PLAN_IMAGE_TYPES, MAX_PLAN_IMAGE_BYTES } from './constants';
+import { ACCEPTED_PLAN_IMAGE_TYPES, MAX_PLAN_IMAGE_BYTES, TOOLBAR_CONTROL_CLASS } from './constants';
 
 type UploadPlanImageProps = {
   planId: string;
@@ -89,7 +89,12 @@ export function UploadPlanImage({ planId, onUploaded, compact = false }: UploadP
         className="hidden"
         onChange={(event) => void handleFile(event.target.files?.[0])}
       />
-      <Button variant="primary" disabled={busy} onClick={() => inputRef.current?.click()}>
+      <Button
+        variant="primary"
+        disabled={busy}
+        className={compact ? TOOLBAR_CONTROL_CLASS : undefined}
+        onClick={() => inputRef.current?.click()}
+      >
         {busy ? t('upload.uploading') : compact ? t('upload.replace') : t('upload.choose')}
       </Button>
       {busy ? <p className="text-xs text-[var(--color-muted)]">{tCommon('loading')}</p> : null}
