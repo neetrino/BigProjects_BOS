@@ -20,7 +20,7 @@ export async function createCycle(
   await sheet.getByLabel('Name', { exact: true }).fill(name);
   await sheet.getByLabel('Code', { exact: true }).fill(code);
   await sheet.getByRole('button', { name: 'Save' }).click();
-  await expect(page.getByRole('cell', { name: code })).toBeVisible();
+  await expect(page.getByText(code, { exact: true }).first()).toBeVisible();
 
   const cyclesResponse = await page.request.get('/api/v1/cycles');
   expect(cyclesResponse.ok()).toBeTruthy();
@@ -39,14 +39,15 @@ export async function createOrganization(
   type: 'BUILDER' | 'PARTNER' = 'BUILDER',
 ): Promise<CreatedOrganization> {
   await page.goto('/organizations');
-  await page.getByRole('button', { name: 'New organization' }).click();
+  await page.getByRole('button', { name: /New organization/i }).click();
   const sheet = page.getByRole('dialog', { name: 'Create organization' });
   await sheet.getByLabel('Name', { exact: true }).fill(name);
   if (type !== 'BUILDER') {
-    await sheet.getByLabel('Type', { exact: true }).selectOption(type);
+    await sheet.getByRole('button', { name: 'Type', exact: true }).click();
+    await page.getByRole('option', { name: type === 'PARTNER' ? 'Partner' : type }).click();
   }
   await sheet.getByRole('button', { name: 'Save' }).click();
-  await expect(page.getByRole('cell', { name: name })).toBeVisible();
+  await expect(page.getByText(name, { exact: true }).first()).toBeVisible();
   return { name };
 }
 
@@ -56,7 +57,7 @@ export async function addContactToOrganization(
   contactName: string,
 ): Promise<void> {
   await page.goto('/organizations');
-  await page.getByRole('row').filter({ hasText: organizationName }).click();
+  await page.getByText(organizationName, { exact: true }).first().click();
   const sheet = page.getByRole('dialog', { name: 'Organization' });
   await sheet.getByRole('button', { name: 'Add contact' }).click();
   await sheet.locator('#contact-name').fill(contactName);
@@ -65,7 +66,9 @@ export async function addContactToOrganization(
 }
 
 export async function selectCycleInToolbar(page: Page, cycleName: string): Promise<void> {
-  await page.getByLabel('Event cycle').click();
+  const switcher = page.getByRole('button', { name: 'Event cycle' });
+  await expect(switcher).toBeEnabled({ timeout: 15_000 });
+  await switcher.click();
   await page.getByRole('option', { name: new RegExp(`^${escapeRegExp(cycleName)}(?: \\(|$)`) }).click();
 }
 
