@@ -2,14 +2,7 @@
 
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { clsx } from 'clsx';
-import {
-  Hand,
-  Maximize2,
-  Minimize2,
-  MousePointer2,
-  Ruler,
-  Scan,
-} from 'lucide-react';
+import { Hand, Maximize2, Minimize2, MousePointer2, Ruler, Scan } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { ApiError } from '@/lib/api/client';
 import { getVenuePlan, type VenuePlan } from '@/lib/api/venue-map';

@@ -489,7 +489,9 @@ export function SelectInput({
                           className={clsx(
                             'flex w-full gap-3 px-3 py-2.5 text-left text-sm',
                             'transition-colors duration-150',
-                            menuMatchTriggerWidth ? 'min-w-0 items-start' : 'items-center whitespace-nowrap',
+                            menuMatchTriggerWidth
+                              ? 'min-w-0 items-start'
+                              : 'items-center whitespace-nowrap',
                             'disabled:cursor-not-allowed disabled:opacity-40',
                             !searchable && isFirst && 'rounded-t-[11px]',
                             isLast && !showPinDivider && 'rounded-b-[11px]',
