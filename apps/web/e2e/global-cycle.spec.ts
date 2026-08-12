@@ -16,9 +16,9 @@ test.describe('global event cycle switcher', () => {
     await expect(cycleSwitcher).toBeEnabled({ timeout: 15_000 });
 
     // Cycle selector lives in the sidebar, not in page toolbars.
-    await expect(page.locator('.toolbar-shell').getByRole('button', { name: 'Event cycle' })).toHaveCount(
-      0,
-    );
+    await expect(
+      page.locator('.toolbar-shell').getByRole('button', { name: 'Event cycle' }),
+    ).toHaveCount(0);
 
     await selectCycleInToolbar(page, cycleName);
     await expect(page).toHaveURL(new RegExp(`[?&]cycle=${created.id}`));
@@ -31,9 +31,9 @@ test.describe('global event cycle switcher', () => {
     await page.getByRole('link', { name: 'Venue Map' }).click();
     await expect(page).toHaveURL(new RegExp(`/venue-map\\?cycle=${created.id}`));
     await expect(cycleSwitcher).toContainText(cycleName);
-    await expect(page.locator('main header').getByRole('button', { name: 'Event cycle' })).toHaveCount(
-      0,
-    );
+    await expect(
+      page.locator('main header').getByRole('button', { name: 'Event cycle' }),
+    ).toHaveCount(0);
 
     await page.getByRole('link', { name: 'Organizations' }).click();
     await expect(page).toHaveURL(new RegExp(`/organizations\\?cycle=${created.id}`));

@@ -69,7 +69,9 @@ export async function selectCycleInToolbar(page: Page, cycleName: string): Promi
   const switcher = page.getByRole('button', { name: 'Event cycle' });
   await expect(switcher).toBeEnabled({ timeout: 15_000 });
   await switcher.click();
-  await page.getByRole('option', { name: new RegExp(`^${escapeRegExp(cycleName)}(?: \\(|$)`) }).click();
+  await page
+    .getByRole('option', { name: new RegExp(`^${escapeRegExp(cycleName)}(?: \\(|$)`) })
+    .click();
 }
 
 function escapeRegExp(value: string): string {
