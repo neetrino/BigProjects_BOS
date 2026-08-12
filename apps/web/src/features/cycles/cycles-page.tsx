@@ -8,6 +8,7 @@ import { listCycles, updateCycle } from '@/lib/api/cycles';
 import type { EventCycle, EventCycleStatus } from '@/lib/api/types';
 import type { BoardViewMode } from '@/components/kanban';
 import { useAuth } from '@/components/auth/auth-provider';
+import { useActiveCycle } from '@/components/active-cycle/active-cycle-provider';
 import { Button } from '@/components/ui/button';
 import { Dialog } from '@/components/ui/dialog';
 import { SearchInput, SelectInput } from '@/components/ui/field';
@@ -39,6 +40,7 @@ export function CyclesPage() {
   const tCommon = useTranslations('common');
   const { user } = useAuth();
   const isAdmin = user.role === 'ADMIN';
+  const { hydrateCycles } = useActiveCycle();
 
   const [loadState, setLoadState] = useClientCachedState<LoadState>(CLIENT_CACHE_KEYS.cycles, {
     status: 'loading',
@@ -81,18 +83,22 @@ export function CyclesPage() {
   }, [setLoadState, tCommon]);
 
   function replaceCycle(saved: EventCycle) {
-    setLoadState((prev) => {
-      if (prev.status !== 'ready') {
-        return prev;
-      }
-      const index = prev.cycles.findIndex((item) => item.id === saved.id);
-      if (index === -1) {
-        return { status: 'ready', cycles: [saved, ...prev.cycles] };
-      }
-      const cycles = [...prev.cycles];
-      cycles[index] = saved;
-      return { status: 'ready', cycles };
-    });
+    if (loadState.status !== 'ready') {
+      return;
+    }
+    const index = loadState.cycles.findIndex((item) => item.id === saved.id);
+    const cycles =
+      index === -1
+        ? [saved, ...loadState.cycles]
+        : loadState.cycles.map((item, itemIndex) => (itemIndex === index ? saved : item));
+    setLoadState({ status: 'ready', cycles });
+    hydrateCycles(cycles);
+  }
+
+  async function refreshCyclesFromServer() {
+    const cycles = await listCycles();
+    setLoadState({ status: 'ready', cycles });
+    hydrateCycles(cycles);
   }
 
   function openCreate() {
@@ -140,8 +146,8 @@ export function CyclesPage() {
 
     setConfirmBusy(true);
     try {
-      const updated = await updateCycle(confirm.cycle.id, { status: confirm.nextStatus });
-      replaceCycle(updated);
+      await updateCycle(confirm.cycle.id, { status: confirm.nextStatus });
+      await refreshCyclesFromServer();
       setConfirm(null);
     } catch (err) {
       showToast(err instanceof ApiError ? err.message : tCommon('unexpectedError'), 'error');

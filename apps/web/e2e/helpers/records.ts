@@ -65,7 +65,12 @@ export async function addContactToOrganization(
 }
 
 export async function selectCycleInToolbar(page: Page, cycleName: string): Promise<void> {
-  await page.getByLabel('Event cycle').selectOption({ label: cycleName });
+  await page.getByLabel('Event cycle').click();
+  await page.getByRole('option', { name: new RegExp(`^${escapeRegExp(cycleName)}(?: \\(|$)`) }).click();
+}
+
+function escapeRegExp(value: string): string {
+  return value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 }
 
 export async function closeSheet(page: Page, title: string): Promise<void> {

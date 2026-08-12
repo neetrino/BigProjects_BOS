@@ -477,7 +477,8 @@ html[lang='hy'] .app-sidebar {
 
 .app-sidebar.is-collapsed .app-sidebar-brand-copy,
 .app-sidebar.is-collapsed .app-sidebar-brand-rule,
-.app-sidebar.is-collapsed .app-sidebar-nav-label {
+.app-sidebar.is-collapsed .app-sidebar-nav-label,
+.app-sidebar.is-collapsed .app-sidebar-cycle {
   display: none;
 }
 

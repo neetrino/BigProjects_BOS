@@ -29,6 +29,7 @@ type ActiveCycleContextValue = {
   status: CyclesLoad['status'];
   errorMessage: string | null;
   reloadCycles: () => void;
+  hydrateCycles: (cycles: EventCycle[]) => void;
 };
 
 const ActiveCycleContext = createContext<ActiveCycleContextValue | null>(null);
@@ -72,6 +73,13 @@ export function ActiveCycleProvider({ children }: ActiveCycleProviderProps) {
     setReloadToken((token) => token + 1);
   }, []);
 
+  const hydrateCycles = useCallback(
+    (cycles: EventCycle[]) => {
+      setCyclesLoad({ status: 'ready', cycles });
+    },
+    [setCyclesLoad],
+  );
+
   const value = useMemo<ActiveCycleContextValue>(() => {
     if (cyclesLoad.status === 'ready') {
       return {
@@ -81,6 +89,7 @@ export function ActiveCycleProvider({ children }: ActiveCycleProviderProps) {
         status: 'ready',
         errorMessage: null,
         reloadCycles,
+        hydrateCycles,
       };
     }
     if (cyclesLoad.status === 'error') {
@@ -91,6 +100,7 @@ export function ActiveCycleProvider({ children }: ActiveCycleProviderProps) {
         status: 'error',
         errorMessage: cyclesLoad.message,
         reloadCycles,
+        hydrateCycles,
       };
     }
     return {
@@ -100,8 +110,9 @@ export function ActiveCycleProvider({ children }: ActiveCycleProviderProps) {
       status: 'loading',
       errorMessage: null,
       reloadCycles,
+      hydrateCycles,
     };
-  }, [cycleId, cyclesLoad, reloadCycles, setCycleId]);
+  }, [cycleId, cyclesLoad, hydrateCycles, reloadCycles, setCycleId]);
 
   return <ActiveCycleContext.Provider value={value}>{children}</ActiveCycleContext.Provider>;
 }
