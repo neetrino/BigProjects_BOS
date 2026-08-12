@@ -1,11 +1,12 @@
 'use client';
 
 import { clsx } from 'clsx';
-import { Check, ChevronDown } from 'lucide-react';
+import { Check, ChevronDown, Search } from 'lucide-react';
 import {
   useEffect,
   useId,
   useLayoutEffect,
+  useMemo,
   useRef,
   useState,
   type AnimationEvent,
@@ -57,19 +58,13 @@ function readOptions(select: HTMLSelectElement | null): SelectOption[] {
   }));
 }
 
-type SelectInputProps = SelectHTMLAttributes<HTMLSelectElement> & {
-  /** Shrink trigger to the selected label width (toolbar filters). */
-  fitContent?: boolean;
-  /** Light field (default) or frosted control on brand surfaces. */
-  variant?: 'default' | 'onBrand';
-  /** Keep the open menu the same width as the trigger (no overflow). */
-  menuMatchTriggerWidth?: boolean;
-  /** Move the currently selected option to the top of the open menu. */
-  pinSelectedToTop?: boolean;
-};
-
-const ON_BRAND_CONTROL_CLASS =
-  'w-full rounded-[var(--radius-control)] border border-white/20 bg-white/10 px-3.5 py-2.5 text-sm font-medium text-white outline-none transition-colors duration-200 hover:border-white/35 hover:bg-white/15 focus:border-white/50';
+function filterOptions(options: SelectOption[], query: string): SelectOption[] {
+  const normalized = query.trim().toLowerCase();
+  if (!normalized) {
+    return options;
+  }
+  return options.filter((option) => option.label.toLowerCase().includes(normalized));
+}
 
 function orderOptionsForMenu(
   options: SelectOption[],
@@ -87,6 +82,26 @@ function orderOptionsForMenu(
   return [...selected, ...rest];
 }
 
+type SelectInputProps = SelectHTMLAttributes<HTMLSelectElement> & {
+  /** Shrink trigger to the selected label width (toolbar filters). */
+  fitContent?: boolean;
+  /** Light field (default) or frosted control on brand surfaces. */
+  variant?: 'default' | 'onBrand';
+  /** Keep the open menu the same width as the trigger (no overflow). */
+  menuMatchTriggerWidth?: boolean;
+  /** Move the currently selected option to the top of the open menu. */
+  pinSelectedToTop?: boolean;
+  /** Show a search field at the top of the open menu. */
+  searchable?: boolean;
+  /** Placeholder for the menu search field. */
+  searchPlaceholder?: string;
+  /** Empty-state text when search has no matches. */
+  searchEmptyLabel?: string;
+};
+
+const ON_BRAND_CONTROL_CLASS =
+  'w-full rounded-[var(--radius-control)] border border-white/20 bg-white/10 px-3.5 py-2.5 text-sm font-medium text-white outline-none transition-colors duration-200 hover:border-white/35 hover:bg-white/15 focus:border-white/50';
+
 export function SelectInput({
   children,
   className,
@@ -101,22 +116,36 @@ export function SelectInput({
   variant = 'default',
   menuMatchTriggerWidth = false,
   pinSelectedToTop = false,
+  searchable = false,
+  searchPlaceholder = 'Search…',
+  searchEmptyLabel = 'No matches',
   'aria-label': ariaLabel,
 }: SelectInputProps) {
   const listboxId = useId();
+  const searchInputId = useId();
   const rootRef = useRef<HTMLDivElement>(null);
   const triggerRef = useRef<HTMLButtonElement>(null);
   const selectRef = useRef<HTMLSelectElement>(null);
-  const menuRef = useRef<HTMLUListElement>(null);
+  const menuRef = useRef<HTMLDivElement>(null);
+  const searchInputRef = useRef<HTMLInputElement>(null);
   const [phase, setPhase] = useState<MenuPhase>('closed');
   const [menuPosition, setMenuPosition] = useState<MenuPosition | null>(null);
   const [options, setOptions] = useState<SelectOption[]>([]);
+  const [searchQuery, setSearchQuery] = useState('');
 
   const isOpen = phase === 'open';
   const isExiting = phase === 'exiting';
   const menuVisible = phase !== 'closed';
   const selectedValue = value == null ? undefined : String(value);
-  const menuOptions = orderOptionsForMenu(options, selectedValue, pinSelectedToTop);
+  const menuOptions = useMemo(
+    () =>
+      orderOptionsForMenu(
+        filterOptions(options, searchable ? searchQuery : ''),
+        selectedValue,
+        pinSelectedToTop,
+      ),
+    [options, pinSelectedToTop, searchQuery, searchable, selectedValue],
+  );
   const selectedLabel = options.find((option) => option.value === selectedValue)?.label ?? '';
 
   function syncOptions(): void {
@@ -153,6 +182,7 @@ export function SelectInput({
 
   function openMenu(): void {
     syncOptions();
+    setSearchQuery('');
     updateMenuPosition();
     setPhase('open');
   }
@@ -162,10 +192,11 @@ export function SelectInput({
   }
 
   function finishExit(): void {
+    setSearchQuery('');
     setPhase('closed');
   }
 
-  function handleMenuAnimationEnd(event: AnimationEvent<HTMLUListElement>): void {
+  function handleMenuAnimationEnd(event: AnimationEvent<HTMLDivElement>): void {
     if (event.target !== event.currentTarget) {
       return;
     }
@@ -186,6 +217,16 @@ export function SelectInput({
     syncOptions();
     updateMenuPosition();
   }, [isOpen]);
+
+  useEffect(() => {
+    if (!isOpen || !searchable) {
+      return;
+    }
+    const timer = window.setTimeout(() => {
+      searchInputRef.current?.focus();
+    }, 0);
+    return () => window.clearTimeout(timer);
+  }, [isOpen, searchable]);
 
   useEffect(() => {
     if (!isExiting) {
@@ -257,6 +298,8 @@ export function SelectInput({
         zIndex: 1000,
         left: menuPosition.left,
         boxSizing: 'border-box',
+        display: 'flex',
+        flexDirection: 'column',
         transformOrigin: menuPosition.openUpward ? 'bottom center' : 'top center',
         maxHeight: menuPosition.maxHeight,
         ...(menuMatchTriggerWidth
@@ -275,6 +318,14 @@ export function SelectInput({
           : { top: menuPosition.top }),
       }
     : undefined;
+
+  const menuShellClass = clsx(
+    'overflow-hidden will-change-transform',
+    variant === 'onBrand'
+      ? 'app-select-menu-on-brand'
+      : 'rounded-[12px] border border-[var(--color-border)] bg-[var(--color-surface-elevated)] text-[var(--color-fg)] shadow-md',
+    isExiting ? 'pointer-events-none dropdown-panel-out' : 'dropdown-panel-in',
+  );
 
   return (
     <div
@@ -341,77 +392,119 @@ export function SelectInput({
 
       {menuVisible && menuPosition && typeof document !== 'undefined'
         ? createPortal(
-            <ul
+            <div
               ref={menuRef}
-              id={listboxId}
-              role="listbox"
-              aria-label={ariaLabel}
               data-portal
               style={menuStyle}
               onAnimationEnd={handleMenuAnimationEnd}
-              className={clsx(
-                'overflow-y-auto overflow-x-hidden will-change-transform',
-                variant === 'onBrand'
-                  ? 'app-select-menu-on-brand'
-                  : 'rounded-[12px] border border-[var(--color-border)] bg-[var(--color-surface-elevated)] text-[var(--color-fg)] shadow-md',
-                isExiting ? 'pointer-events-none dropdown-panel-out' : 'dropdown-panel-in',
-              )}
+              className={menuShellClass}
             >
-              {menuOptions.length === 0 ? (
-                <li className="px-3 py-2.5 text-sm text-[var(--color-muted)]">—</li>
-              ) : (
-                menuOptions.map((option, index) => {
-                  const isSelected = option.value === selectedValue;
-                  const isFirst = index === 0;
-                  const isLast = index === menuOptions.length - 1;
-                  const showPinDivider =
-                    pinSelectedToTop && isSelected && isFirst && menuOptions.length > 1;
-
-                  return (
-                    <li key={`${option.value}::${option.label}`} role="none">
-                      <button
-                        type="button"
-                        role="option"
-                        aria-selected={isSelected}
-                        disabled={option.disabled}
-                        onClick={() => {
-                          if (!option.disabled) {
-                            handleSelect(option.value);
+              {searchable ? (
+                <div className="app-select-menu-search shrink-0 border-b border-[var(--color-border)] p-2">
+                  <div className="relative">
+                    <Search
+                      className="pointer-events-none absolute left-2.5 top-1/2 size-3.5 -translate-y-1/2 text-[var(--color-muted)]"
+                      aria-hidden
+                    />
+                    <input
+                      ref={searchInputRef}
+                      id={searchInputId}
+                      type="search"
+                      value={searchQuery}
+                      placeholder={searchPlaceholder}
+                      aria-label={searchPlaceholder}
+                      autoComplete="off"
+                      onChange={(event) => setSearchQuery(event.target.value)}
+                      onKeyDown={(event) => {
+                        if (event.key === 'Escape') {
+                          event.preventDefault();
+                          event.stopPropagation();
+                          if (searchQuery) {
+                            setSearchQuery('');
+                            return;
                           }
-                        }}
-                        className={clsx(
-                          'flex w-full items-center justify-between gap-3 px-3 py-2.5 text-left text-sm',
-                          'transition-colors duration-150',
-                          menuMatchTriggerWidth ? 'min-w-0' : 'whitespace-nowrap',
-                          'disabled:cursor-not-allowed disabled:opacity-40',
-                          isFirst && 'rounded-t-[11px]',
-                          isLast && !showPinDivider && 'rounded-b-[11px]',
-                          isSelected
-                            ? 'bg-[var(--color-accent-soft)] font-semibold text-[var(--color-brand)]'
-                            : 'font-medium text-[var(--color-fg)] hover:bg-[var(--color-bg)]',
-                        )}
-                      >
-                        <span className={clsx(menuMatchTriggerWidth && 'min-w-0 truncate')}>
-                          {option.label}
-                        </span>
-                        {isSelected ? (
-                          <Check
-                            className="size-3.5 shrink-0 text-[var(--color-brand)]"
-                            aria-hidden
-                          />
+                          closeMenu();
+                          triggerRef.current?.focus();
+                        }
+                      }}
+                      className={clsx(
+                        'w-full rounded-[10px] border border-[var(--color-border)] bg-[var(--color-bg)]',
+                        'py-2 pl-8 pr-2.5 text-sm font-medium text-[var(--color-fg)] outline-none',
+                        'placeholder:text-[var(--color-muted)]/65',
+                        'focus:border-[var(--color-brand)]',
+                        '[&::-webkit-search-cancel-button]:appearance-none',
+                        '[&::-webkit-search-decoration]:appearance-none',
+                      )}
+                    />
+                  </div>
+                </div>
+              ) : null}
+
+              <ul
+                id={listboxId}
+                role="listbox"
+                aria-label={ariaLabel}
+                className="min-h-0 flex-1 overflow-y-auto overflow-x-hidden"
+              >
+                {menuOptions.length === 0 ? (
+                  <li className="px-3 py-2.5 text-sm text-[var(--color-muted)]">
+                    {searchable && searchQuery.trim() ? searchEmptyLabel : '—'}
+                  </li>
+                ) : (
+                  menuOptions.map((option, index) => {
+                    const isSelected = option.value === selectedValue;
+                    const isFirst = index === 0;
+                    const isLast = index === menuOptions.length - 1;
+                    const showPinDivider =
+                      pinSelectedToTop &&
+                      !searchQuery.trim() &&
+                      isSelected &&
+                      isFirst &&
+                      menuOptions.length > 1;
+
+                    return (
+                      <li key={`${option.value}::${option.label}`} role="none">
+                        <button
+                          type="button"
+                          role="option"
+                          aria-selected={isSelected}
+                          disabled={option.disabled}
+                          onClick={() => {
+                            if (!option.disabled) {
+                              handleSelect(option.value);
+                            }
+                          }}
+                          className={clsx(
+                            'flex w-full items-center justify-between gap-3 px-3 py-2.5 text-left text-sm',
+                            'transition-colors duration-150',
+                            menuMatchTriggerWidth ? 'min-w-0' : 'whitespace-nowrap',
+                            'disabled:cursor-not-allowed disabled:opacity-40',
+                            !searchable && isFirst && 'rounded-t-[11px]',
+                            isLast && !showPinDivider && 'rounded-b-[11px]',
+                            isSelected
+                              ? 'bg-[var(--color-accent-soft)] font-semibold text-[var(--color-brand)]'
+                              : 'font-medium text-[var(--color-fg)] hover:bg-[var(--color-bg)]',
+                          )}
+                        >
+                          <span className={clsx(menuMatchTriggerWidth && 'min-w-0 truncate')}>
+                            {option.label}
+                          </span>
+                          {isSelected ? (
+                            <Check
+                              className="size-3.5 shrink-0 text-[var(--color-brand)]"
+                              aria-hidden
+                            />
+                          ) : null}
+                        </button>
+                        {showPinDivider ? (
+                          <div aria-hidden className="mx-2 my-1 h-px bg-[var(--color-border)]" />
                         ) : null}
-                      </button>
-                      {showPinDivider ? (
-                        <div
-                          aria-hidden
-                          className="mx-2 my-1 h-px bg-[var(--color-border)]"
-                        />
-                      ) : null}
-                    </li>
-                  );
-                })
-              )}
-            </ul>,
+                      </li>
+                    );
+                  })
+                )}
+              </ul>
+            </div>,
             getAppPortalRoot(),
           )
         : null}

@@ -45,7 +45,9 @@
     "eventCycleActive": "active",
     "eventCycleEmpty": "No cycles",
     "eventCycleLoading": "Loading…",
-    "eventCycleError": "Unavailable"
+    "eventCycleError": "Unavailable",
+    "eventCycleSearch": "Search cycles",
+    "eventCycleSearchEmpty": "No matching cycles"
   },
   "login": {
     "eyebrow": "BigProjects BOS",

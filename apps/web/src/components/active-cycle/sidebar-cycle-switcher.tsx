@@ -45,6 +45,9 @@ export function SidebarCycleSwitcher({ collapsed }: SidebarCycleSwitcherProps) {
             variant="onBrand"
             menuMatchTriggerWidth
             pinSelectedToTop
+            searchable
+            searchPlaceholder={t('eventCycleSearch')}
+            searchEmptyLabel={t('eventCycleSearchEmpty')}
             className="app-sidebar-cycle-select w-full"
           >
             {status === 'loading' ? <option value="">{t('eventCycleLoading')}</option> : null}

@@ -44,7 +44,9 @@
     "eventCycleActive": "активен",
     "eventCycleEmpty": "Нет циклов",
     "eventCycleLoading": "Загрузка…",
-    "eventCycleError": "Недоступно"
+    "eventCycleError": "Недоступно",
+    "eventCycleSearch": "Поиск циклов",
+    "eventCycleSearchEmpty": "Ничего не найдено"
   },
   "login": {
     "eyebrow": "BigProjects BOS",

@@ -45,7 +45,9 @@
     "eventCycleActive": "ակտիվ",
     "eventCycleEmpty": "Ցիկլեր չկան",
     "eventCycleLoading": "Բեռնվում է…",
-    "eventCycleError": "Անհասանելի"
+    "eventCycleError": "Անհասանելի",
+    "eventCycleSearch": "Որոնել ցիկլեր",
+    "eventCycleSearchEmpty": "Համընկնում չկա"
   },
   "login": {
     "eyebrow": "BigProjects BOS",
