@@ -448,6 +448,47 @@ html[lang='hy'] .app-sidebar {
   line-height: 1.25;
 }
 
+.app-sidebar-cycle-label {
+  font-size: calc(0.6875rem + 0.5px);
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgb(255 255 255 / 62%);
+}
+
+.app-sidebar-cycle-badge {
+  flex-shrink: 0;
+  border-radius: 9999px;
+  background: rgb(255 255 255 / 14%);
+  padding: 0.15rem 0.5rem;
+  font-size: 0.625rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgb(255 255 255 / 88%);
+}
+
+.app-sidebar-cycle-control {
+  position: relative;
+  display: block;
+}
+
+.app-sidebar-cycle-icon {
+  pointer-events: none;
+  position: absolute;
+  top: 50%;
+  left: 0.85rem;
+  z-index: 2;
+  display: flex;
+  color: rgb(255 255 255 / 70%);
+  transform: translateY(-50%);
+}
+
+.app-sidebar-cycle-select > button {
+  padding-left: 2.45rem;
+  box-shadow: inset 0 1px 0 rgb(255 255 255 / 10%);
+}
+
 .app-sidebar-nav-label {
   min-width: 0;
   flex: 1 1 auto;

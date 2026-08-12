@@ -60,7 +60,12 @@ function readOptions(select: HTMLSelectElement | null): SelectOption[] {
 type SelectInputProps = SelectHTMLAttributes<HTMLSelectElement> & {
   /** Shrink trigger to the selected label width (toolbar filters). */
   fitContent?: boolean;
+  /** Light field (default) or frosted control on brand surfaces. */
+  variant?: 'default' | 'onBrand';
 };
+
+const ON_BRAND_CONTROL_CLASS =
+  'w-full rounded-[var(--radius-control)] border border-white/20 bg-white/10 px-3.5 py-2.5 text-sm font-medium text-white outline-none transition-colors duration-200 hover:border-white/35 hover:bg-white/15 focus:border-white/50';
 
 export function SelectInput({
   children,
@@ -73,6 +78,7 @@ export function SelectInput({
   name,
   required,
   fitContent = false,
+  variant = 'default',
   'aria-label': ariaLabel,
 }: SelectInputProps) {
   const listboxId = useId();
@@ -283,7 +289,7 @@ export function SelectInput({
           openMenu();
         }}
         className={clsx(
-          FIELD_CONTROL_CLASS,
+          variant === 'onBrand' ? ON_BRAND_CONTROL_CLASS : FIELD_CONTROL_CLASS,
           'relative z-[1] flex items-center justify-between gap-2 text-left',
           fitContent ? 'w-auto' : 'min-w-0',
           'disabled:cursor-not-allowed disabled:opacity-50',
@@ -294,7 +300,8 @@ export function SelectInput({
         </span>
         <ChevronDown
           className={clsx(
-            'size-4 shrink-0 text-[var(--color-muted)] transition-transform duration-200',
+            'size-4 shrink-0 transition-transform duration-200',
+            variant === 'onBrand' ? 'text-white/65' : 'text-[var(--color-muted)]',
             isOpen && 'rotate-180',
           )}
           aria-hidden
