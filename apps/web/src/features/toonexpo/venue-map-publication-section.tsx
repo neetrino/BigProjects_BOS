@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useMemo, useState } from 'react';
+import { CloudUpload } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { ApiError } from '@/lib/api/client';
 import {
@@ -173,6 +174,7 @@ export function VenueMapPublicationSection({
           </div>
         </div>
         <Button variant="primary" onClick={() => setConfirmOpen(true)}>
+          <CloudUpload className="size-4" aria-hidden />
           {t('publication.publishButton')}
         </Button>
       </div>
