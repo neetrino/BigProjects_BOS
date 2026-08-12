@@ -1,6 +1,7 @@
 'use client';
 
 import { useRef, useState } from 'react';
+import { ImageUp, Upload } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { ApiError } from '@/lib/api/client';
 import { uploadVenuePlanImage } from '@/lib/api/venue-map';
@@ -99,6 +100,11 @@ export function UploadPlanImage({ planId, onUploaded, compact = false }: UploadP
         className={compact ? TOOLBAR_CONTROL_CLASS : undefined}
         onClick={() => inputRef.current?.click()}
       >
+        {compact ? (
+          <ImageUp className="size-4" aria-hidden />
+        ) : (
+          <Upload className="size-4" aria-hidden />
+        )}
         {busy ? t('upload.uploading') : compact ? t('upload.replace') : t('upload.choose')}
       </Button>
       {busy ? <p className="text-xs text-[var(--color-muted)]">{tCommon('loading')}</p> : null}

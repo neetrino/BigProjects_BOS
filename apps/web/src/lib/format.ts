@@ -1,6 +1,11 @@
 const DATE_ONLY_LENGTH = 10;
+const PAD_WIDTH = 2;
 const BYTES_PER_KB = 1024;
 const BYTES_PER_MB = BYTES_PER_KB * 1024;
+
+function pad2(value: number): string {
+  return String(value).padStart(PAD_WIDTH, '0');
+}
 
 /** Formats an ISO date string for display; returns empty string when null. */
 export function formatDate(value: string | null | undefined): string {
@@ -9,6 +14,20 @@ export function formatDate(value: string | null | undefined): string {
   }
 
   return value.slice(0, DATE_ONLY_LENGTH);
+}
+
+/** Formats an ISO datetime as `YYYY-MM-DD HH:mm` in local time; empty when null. */
+export function formatDateTime(value: string | null | undefined): string {
+  if (!value) {
+    return '';
+  }
+
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) {
+    return value.slice(0, DATE_ONLY_LENGTH);
+  }
+
+  return `${date.getFullYear()}-${pad2(date.getMonth() + 1)}-${pad2(date.getDate())} ${pad2(date.getHours())}:${pad2(date.getMinutes())}`;
 }
 
 /** Formats a byte size for attachment lists. */

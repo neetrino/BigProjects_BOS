@@ -4,10 +4,10 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 import { Plus } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { ApiError } from '@/lib/api/client';
-import { listCycles } from '@/lib/api/cycles';
 import { listDeals, updateDeal } from '@/lib/api/deals';
 import { listUsers } from '@/lib/api/users';
-import type { DealListItem, DealStage, EventCycle, UserAccount } from '@/lib/api/types';
+import type { DealListItem, DealStage, UserAccount } from '@/lib/api/types';
+import { useActiveCycle } from '@/components/active-cycle/active-cycle-provider';
 import { useAuth } from '@/components/auth/auth-provider';
 import { Button } from '@/components/ui/button';
 import { EmptyState, ErrorState, LoadingState } from '@/components/ui/page-state';
@@ -15,18 +15,12 @@ import { showToast } from '@/components/ui/toast';
 import { BuilderSalesToolbar } from '@/features/builder-crm/builder-sales-toolbar';
 import type { BoardViewMode } from '@/features/builder-crm/constants';
 import { useClientCachedState } from '@/hooks/use-client-cached-state';
-import { useCycleQueryParam } from '@/hooks/use-cycle-query-param';
 import { CLIENT_CACHE_KEYS } from '@/lib/client-cache';
 import { SEARCH_DEBOUNCE_MS } from '@/lib/constants';
 import { DealCreateSheet } from '@/features/builder-crm/deal-create-sheet';
 import { DealKanban } from '@/features/builder-crm/deal-kanban';
 import { DealList } from '@/features/builder-crm/deal-list';
 import { DealSheet } from '@/features/builder-crm/deal-sheet';
-
-type CyclesLoad =
-  | { status: 'loading' }
-  | { status: 'error'; message: string }
-  | { status: 'ready'; cycles: EventCycle[] };
 
 type DealsLoad =
   | { status: 'idle' }
@@ -53,12 +47,8 @@ export function BuilderSalesPage() {
   const tCommon = useTranslations('common');
   const { user } = useAuth();
   const isAdmin = user.role === 'ADMIN';
+  const { cycleId, cycles, status: cyclesStatus, errorMessage: cyclesError } = useActiveCycle();
 
-  const [cyclesLoad, setCyclesLoad] = useClientCachedState<CyclesLoad>(CLIENT_CACHE_KEYS.cycles, {
-    status: 'loading',
-  });
-  const cycles = cyclesLoad.status === 'ready' ? cyclesLoad.cycles : null;
-  const { cycleId, setCycleId } = useCycleQueryParam(cycles);
   const [view, setView] = useState<BoardViewMode>('kanban');
   const [searchInput, setSearchInput] = useState('');
   const [search, setSearch] = useState('');
@@ -78,28 +68,6 @@ export function BuilderSalesPage() {
     const timer = window.setTimeout(() => setSearch(searchInput.trim()), SEARCH_DEBOUNCE_MS);
     return () => window.clearTimeout(timer);
   }, [searchInput]);
-
-  useEffect(() => {
-    let cancelled = false;
-    void listCycles()
-      .then((loaded) => {
-        if (cancelled) {
-          return;
-        }
-        setCyclesLoad({ status: 'ready', cycles: loaded });
-      })
-      .catch((err: unknown) => {
-        if (!cancelled) {
-          setCyclesLoad({
-            status: 'error',
-            message: err instanceof ApiError ? err.message : tCommon('unexpectedError'),
-          });
-        }
-      });
-    return () => {
-      cancelled = true;
-    };
-  }, [setCyclesLoad, tCommon]);
 
   useEffect(() => {
     if (!isAdmin) {
@@ -214,14 +182,9 @@ export function BuilderSalesPage() {
     }
   }
 
-  const cycleList = cyclesLoad.status === 'ready' ? cyclesLoad.cycles : [];
-
   return (
     <div className="flex min-h-0 flex-1 flex-col gap-4">
       <BuilderSalesToolbar
-        cycles={cycleList}
-        cycleId={cycleId}
-        onCycleChange={setCycleId}
         view={view}
         onViewChange={setView}
         searchInput={searchInput}
@@ -232,14 +195,14 @@ export function BuilderSalesPage() {
         onCreate={() => setCreateOpen(true)}
       />
 
-      {cyclesLoad.status === 'loading' ? <LoadingState message={tCommon('loading')} /> : null}
-      {cyclesLoad.status === 'error' ? <ErrorState message={cyclesLoad.message} /> : null}
+      {cyclesStatus === 'loading' ? <LoadingState message={tCommon('loading')} /> : null}
+      {cyclesStatus === 'error' && cyclesError ? <ErrorState message={cyclesError} /> : null}
 
-      {cyclesLoad.status === 'ready' && cycleList.length === 0 ? (
+      {cyclesStatus === 'ready' && cycles.length === 0 ? (
         <EmptyState message={t('emptyNoCycles')} />
       ) : null}
 
-      {cyclesLoad.status === 'ready' && cycleId ? (
+      {cyclesStatus === 'ready' && cycleId ? (
         <>
           {dealsLoad.status === 'loading' ? <LoadingState message={tCommon('loading')} /> : null}
           {dealsLoad.status === 'error' ? <ErrorState message={dealsLoad.message} /> : null}

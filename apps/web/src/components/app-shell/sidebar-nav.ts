@@ -28,6 +28,7 @@ export type NavChildItem = {
   labelKey: NavChildLabelKey;
   icon: LucideIcon;
   adminOnly?: boolean;
+  preserveCycle?: boolean;
 };
 
 export type NavItem = {
@@ -44,17 +45,19 @@ export const NAV_ITEMS: NavItem[] = [
   { key: 'builderSales', href: '/builder-sales', icon: Store, preserveCycle: true },
   { key: 'partners', href: '/partners', icon: Handshake, preserveCycle: true },
   { key: 'venueMap', href: '/venue-map', icon: Map, preserveCycle: true },
-  { key: 'cycles', href: '/cycles', icon: CalendarDays },
+  { key: 'cycles', href: '/cycles', icon: CalendarDays, preserveCycle: true },
   {
     key: 'organizations',
     href: '/organizations',
     icon: Building2,
+    preserveCycle: true,
     children: [
       {
         key: 'organizationsContacts',
         href: '/organizations/contacts',
         labelKey: 'organizationsContacts',
         icon: ContactRound,
+        preserveCycle: true,
       },
     ],
   },
@@ -62,6 +65,7 @@ export const NAV_ITEMS: NavItem[] = [
     key: 'settings',
     href: '/settings',
     icon: Settings,
+    preserveCycle: true,
     children: [
       {
         key: 'settingsStaff',
@@ -69,6 +73,7 @@ export const NAV_ITEMS: NavItem[] = [
         labelKey: 'settingsStaff',
         icon: Users,
         adminOnly: true,
+        preserveCycle: true,
       },
     ],
   },
@@ -149,7 +154,7 @@ export function resolveActiveNavId(pathname: string, isAdmin: boolean): string |
 
 export function buildNavHref(
   item: Pick<NavItem, 'href' | 'preserveCycle'>,
-  cycleId: string | null,
+  cycleId: string | null | undefined,
 ): string {
   if (!item.href) {
     return '#';

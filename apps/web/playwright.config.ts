@@ -20,7 +20,7 @@ loadEnv({ path: path.join(repoRoot, '.env') });
 const apiDir = path.join(repoRoot, 'apps/api');
 
 const WEB_PORT = 3000;
-const API_PORT = 4000;
+const API_PORT = Number(process.env.API_PORT ?? 4000);
 const WEB_BASE_URL = `http://localhost:${WEB_PORT}`;
 const API_HEALTH_URL = `http://localhost:${API_PORT}/api/v1/health`;
 

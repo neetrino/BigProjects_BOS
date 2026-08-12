@@ -13,10 +13,18 @@ export function adminCredentials(): { email: string; password: string } {
   return { email, password };
 }
 
-/** Switch UI to English so role/label selectors stay stable across locales. */
+/** Force English so role/label selectors stay stable across DEFAULT_LOCALE. */
 export async function switchToEnglish(page: Page): Promise<void> {
-  const english = page.getByRole('button', { name: 'English' });
-  if (await english.isVisible()) {
+  await page.context().addCookies([
+    {
+      name: 'locale',
+      value: 'en',
+      url: 'http://localhost:3000',
+    },
+  ]);
+
+  const english = page.getByRole('button', { name: 'ENG' });
+  if (await english.isVisible().catch(() => false)) {
     await english.click();
     await expect(page.getByRole('navigation', { name: 'Main navigation' }))
       .toBeVisible({
@@ -25,13 +33,26 @@ export async function switchToEnglish(page: Page): Promise<void> {
       .catch(async () => {
         await expect(page.getByLabel('Email')).toBeVisible({ timeout: 15_000 });
       });
+    return;
+  }
+
+  // Login has no language switcher — cookie + reload is enough.
+  if (page.url().includes('/login')) {
+    await page.reload();
   }
 }
 
 export async function loginAsAdmin(page: Page): Promise<void> {
   const { email, password } = adminCredentials();
+  await page.context().addCookies([
+    {
+      name: 'locale',
+      value: 'en',
+      url: 'http://localhost:3000',
+    },
+  ]);
   await page.goto('/login');
-  await switchToEnglish(page);
+  await expect(page.getByLabel('Email')).toBeVisible({ timeout: 15_000 });
   await page.getByLabel('Email').fill(email);
   await page.getByLabel('Password').fill(password);
   await page.getByRole('button', { name: 'Sign in' }).click();

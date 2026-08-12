@@ -2,6 +2,7 @@
 
 import { clsx } from 'clsx';
 import { X } from 'lucide-react';
+import { useTranslations } from 'next-intl';
 import { useEffect, useState, type ReactNode } from 'react';
 import { createPortal } from 'react-dom';
 import { getAppPortalRoot } from '@/lib/portal-root';
@@ -64,6 +65,7 @@ export function Sheet({
   headerActions,
   widthClassName = 'w-full sm:w-[min(100%,34rem)]',
 }: SheetProps) {
+  const t = useTranslations('common');
   const [mounted, setMounted] = useState(open);
   const [entered, setEntered] = useState(false);
 
@@ -110,7 +112,7 @@ export function Sheet({
     <div data-portal className="absolute inset-0 z-[130] flex justify-end">
       <button
         type="button"
-        aria-label="Dismiss overlay"
+        aria-label={t('dismissOverlay')}
         className={clsx(
           'absolute inset-0 border-0 bg-[#0e0f14]/55 outline-none transition-opacity',
           'duration-[var(--side-sheet-backdrop-ms)] ease-[var(--ease-out-premium)]',
@@ -132,7 +134,7 @@ export function Sheet({
         <button
           type="button"
           onClick={onClose}
-          aria-label="Close"
+          aria-label={t('close')}
           className={clsx(
             'absolute top-6 right-full z-0 hidden h-10 w-10 items-center justify-center sm:inline-flex',
             'rounded-l-full bg-[var(--color-brand)] text-white',
@@ -169,7 +171,7 @@ export function Sheet({
               <button
                 type="button"
                 onClick={onClose}
-                aria-label="Close"
+                aria-label={t('close')}
                 className={clsx(
                   'inline-flex size-10 items-center justify-center rounded-full sm:hidden',
                   'bg-[var(--color-brand)] text-white',

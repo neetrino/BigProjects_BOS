@@ -11,6 +11,11 @@
     "unexpectedError": "Что-то пошло не так. Попробуйте ещё раз.",
     "scrollLeft": "Прокрутить влево",
     "scrollRight": "Прокрутить вправо",
+    "kanbanEmptyColumn": "Перетащите карточки сюда",
+    "close": "Закрыть",
+    "dismissOverlay": "Закрыть оверлей",
+    "search": "Поиск…",
+    "noMatches": "Ничего не найдено",
     "datePicker": {
       "title": "Выбор даты",
       "placeholder": "ДД.ММ.ГГГГ",
@@ -23,6 +28,10 @@
   "languageSwitcher": {
     "label": "Язык"
   },
+  "meta": {
+    "title": "BigProjects BOS",
+    "description": "Внутренний операционный инструмент BigProjects BOS"
+  },
   "nav": {
     "label": "Основная навигация",
     "product": "Внутренний",
@@ -34,12 +43,19 @@
     "organizations": "Организации",
     "organizationsContacts": "Контакты",
     "settings": "Настройки",
-    "settingsStaff": "Staff",
+    "settingsStaff": "Сотрудники",
     "collapseSidebar": "Свернуть меню",
     "expandSidebar": "Развернуть меню",
     "collapseSubnav": "Скрыть подкатегории",
     "expandSubnav": "Показать подкатегории",
-    "soon": "скоро"
+    "soon": "скоро",
+    "eventCycle": "Цикл события",
+    "eventCycleActive": "активен",
+    "eventCycleEmpty": "Нет циклов",
+    "eventCycleLoading": "Загрузка…",
+    "eventCycleError": "Недоступно",
+    "eventCycleSearch": "Поиск циклов",
+    "eventCycleSearchEmpty": "Ничего не найдено"
   },
   "login": {
     "eyebrow": "BigProjects BOS",
@@ -133,7 +149,7 @@
     "contactsPage": {
       "title": "Контакты",
       "subtitle": "Люди, связанные с компаниями по всем циклам.",
-      "searchPlaceholder": "Поиск по имени, компании, телефону или email",
+      "searchPlaceholder": "Поиск по имени, компании, телефону или эл. почте",
       "empty": "Контакты не найдены.",
       "columns": {
         "name": "Имя",
@@ -203,7 +219,7 @@
     "staff": {
       "title": "Учётные записи",
       "subtitle": "Создание и отключение внутренних пользователей.",
-      "searchPlaceholder": "Поиск по имени или email",
+      "searchPlaceholder": "Поиск по имени или эл. почте",
       "roleFilter": "Роль",
       "allRoles": "Все роли",
       "create": "Новый пользователь",
@@ -448,7 +464,7 @@
     "notes": {
       "title": "Заметки",
       "placeholder": "Добавить заметку…",
-      "add": "Добавить",
+      "add": "Добавить заметку",
       "empty": "Заметок пока нет.",
       "deleteTitle": "Удалить заметку",
       "deleteDescription": "Вы уверены, что хотите удалить эту заметку? Это действие нельзя отменить."
@@ -585,7 +601,11 @@
       "confirmDescription": "Публичные данные по режимам отображения зон будут отправлены в ToonExpo.",
       "publishedAt": "Опубликовано {date}",
       "historyTitle": "История публикаций",
+      "historyOpen": "Открыть историю публикаций",
       "historyEmpty": "Публикаций пока нет.",
+      "historyModalTitle": "История публикаций",
+      "historyCount": "{count, plural, one {# запись} few {# записи} many {# записей} other {# записи}}",
+      "historyViewAll": "Показать все ({count})",
       "version": "v{version}",
       "planStatus": {
         "UNPUBLISHED": "Не опубликовано",

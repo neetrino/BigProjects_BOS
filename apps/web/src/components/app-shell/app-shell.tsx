@@ -2,7 +2,8 @@
 
 import { clsx } from 'clsx';
 import { usePathname } from 'next/navigation';
-import type { ReactNode } from 'react';
+import { Suspense, type ReactNode } from 'react';
+import { ActiveCycleProvider } from '@/components/active-cycle/active-cycle-provider';
 import { AppSidebar } from '@/components/app-shell/sidebar';
 import { ToastHost } from '@/components/ui/toast';
 import { APP_PORTAL_ROOT_ID } from '@/lib/portal-root';
@@ -21,27 +22,31 @@ export function AppShell({ children }: AppShellProps) {
     pathname.startsWith('/organizations');
 
   return (
-    <div className="desktop-fluid-frame desktop-fluid-frame-start">
-      <div className="desktop-fluid-stage">
-        <div className="flex h-fluid-screen overflow-hidden">
-          <AppSidebar pathname={pathname} />
-          <main
-            className={clsx(
-              'min-h-0 min-w-0 flex-1 px-8 py-7',
-              isFullHeightPage ? 'flex flex-col overflow-hidden' : 'overflow-auto',
-            )}
-          >
-            <div
-              key={pathname}
-              className={clsx('page-enter', isFullHeightPage && 'flex min-h-0 flex-1 flex-col')}
-            >
-              {children}
+    <Suspense fallback={null}>
+      <ActiveCycleProvider>
+        <div className="desktop-fluid-frame desktop-fluid-frame-start">
+          <div className="desktop-fluid-stage">
+            <div className="flex h-fluid-screen overflow-hidden">
+              <AppSidebar pathname={pathname} />
+              <main
+                className={clsx(
+                  'min-h-0 min-w-0 flex-1 px-8 py-7',
+                  isFullHeightPage ? 'flex flex-col overflow-hidden' : 'overflow-auto',
+                )}
+              >
+                <div
+                  key={pathname}
+                  className={clsx('page-enter', isFullHeightPage && 'flex min-h-0 flex-1 flex-col')}
+                >
+                  {children}
+                </div>
+              </main>
             </div>
-          </main>
+            <ToastHost />
+            <div id={APP_PORTAL_ROOT_ID} />
+          </div>
         </div>
-        <ToastHost />
-        <div id={APP_PORTAL_ROOT_ID} />
-      </div>
-    </div>
+      </ActiveCycleProvider>
+    </Suspense>
   );
 }

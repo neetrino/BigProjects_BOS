@@ -1,6 +1,7 @@
 'use client';
 
 import { clsx } from 'clsx';
+import { useTranslations } from 'next-intl';
 import { useEffect, useState, type AnimationEvent, type ReactNode } from 'react';
 import { createPortal } from 'react-dom';
 import { getAppPortalRoot } from '@/lib/portal-root';
@@ -32,6 +33,7 @@ export function ModalFrame({
   labelledBy,
   role = 'dialog',
 }: ModalFrameProps) {
+  const t = useTranslations('common');
   const [visible, setVisible] = useState(open);
   const [exiting, setExiting] = useState(false);
 
@@ -108,7 +110,7 @@ export function ModalFrame({
       <button
         type="button"
         tabIndex={-1}
-        aria-label="Dismiss overlay"
+        aria-label={t('dismissOverlay')}
         className={clsx(
           'absolute inset-0 cursor-default border-0 bg-[#0e0f14]/55 outline-none',
           exiting ? 'animate-modal-backdrop-out' : 'animate-modal-backdrop-in',
