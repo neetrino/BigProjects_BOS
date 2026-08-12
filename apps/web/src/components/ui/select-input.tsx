@@ -62,10 +62,30 @@ type SelectInputProps = SelectHTMLAttributes<HTMLSelectElement> & {
   fitContent?: boolean;
   /** Light field (default) or frosted control on brand surfaces. */
   variant?: 'default' | 'onBrand';
+  /** Keep the open menu the same width as the trigger (no overflow). */
+  menuMatchTriggerWidth?: boolean;
+  /** Move the currently selected option to the top of the open menu. */
+  pinSelectedToTop?: boolean;
 };
 
 const ON_BRAND_CONTROL_CLASS =
   'w-full rounded-[var(--radius-control)] border border-white/20 bg-white/10 px-3.5 py-2.5 text-sm font-medium text-white outline-none transition-colors duration-200 hover:border-white/35 hover:bg-white/15 focus:border-white/50';
+
+function orderOptionsForMenu(
+  options: SelectOption[],
+  selectedValue: string | undefined,
+  pinSelectedToTop: boolean,
+): SelectOption[] {
+  if (!pinSelectedToTop || !selectedValue) {
+    return options;
+  }
+  const selected = options.filter((option) => option.value === selectedValue);
+  if (selected.length === 0) {
+    return options;
+  }
+  const rest = options.filter((option) => option.value !== selectedValue);
+  return [...selected, ...rest];
+}
 
 export function SelectInput({
   children,
@@ -79,6 +99,8 @@ export function SelectInput({
   required,
   fitContent = false,
   variant = 'default',
+  menuMatchTriggerWidth = false,
+  pinSelectedToTop = false,
   'aria-label': ariaLabel,
 }: SelectInputProps) {
   const listboxId = useId();
@@ -94,6 +116,7 @@ export function SelectInput({
   const isExiting = phase === 'exiting';
   const menuVisible = phase !== 'closed';
   const selectedValue = value == null ? undefined : String(value);
+  const menuOptions = orderOptionsForMenu(options, selectedValue, pinSelectedToTop);
   const selectedLabel = options.find((option) => option.value === selectedValue)?.label ?? '';
 
   function syncOptions(): void {
@@ -233,12 +256,20 @@ export function SelectInput({
         position: 'absolute',
         zIndex: 1000,
         left: menuPosition.left,
-        minWidth: Math.max(menuPosition.width, viewportLengthToStage(160)),
-        width: 'max-content',
-        maxWidth: `min(24rem, calc(100% - ${viewportLengthToStage(24)}px))`,
-        maxHeight: menuPosition.maxHeight,
         boxSizing: 'border-box',
         transformOrigin: menuPosition.openUpward ? 'bottom center' : 'top center',
+        maxHeight: menuPosition.maxHeight,
+        ...(menuMatchTriggerWidth
+          ? {
+              width: menuPosition.width,
+              minWidth: menuPosition.width,
+              maxWidth: menuPosition.width,
+            }
+          : {
+              minWidth: Math.max(menuPosition.width, viewportLengthToStage(160)),
+              width: 'max-content',
+              maxWidth: `min(24rem, calc(100% - ${viewportLengthToStage(24)}px))`,
+            }),
         ...(menuPosition.openUpward
           ? { bottom: getStageLayoutHeight() - menuPosition.top }
           : { top: menuPosition.top }),
@@ -319,19 +350,22 @@ export function SelectInput({
               style={menuStyle}
               onAnimationEnd={handleMenuAnimationEnd}
               className={clsx(
-                'overflow-y-auto overflow-x-hidden rounded-[12px] border border-[var(--color-border)]',
-                'bg-[var(--color-surface-elevated)] text-[var(--color-fg)] shadow-md',
-                'will-change-transform',
+                'overflow-y-auto overflow-x-hidden will-change-transform',
+                variant === 'onBrand'
+                  ? 'app-select-menu-on-brand'
+                  : 'rounded-[12px] border border-[var(--color-border)] bg-[var(--color-surface-elevated)] text-[var(--color-fg)] shadow-md',
                 isExiting ? 'pointer-events-none dropdown-panel-out' : 'dropdown-panel-in',
               )}
             >
-              {options.length === 0 ? (
+              {menuOptions.length === 0 ? (
                 <li className="px-3 py-2.5 text-sm text-[var(--color-muted)]">—</li>
               ) : (
-                options.map((option, index) => {
+                menuOptions.map((option, index) => {
                   const isSelected = option.value === selectedValue;
                   const isFirst = index === 0;
-                  const isLast = index === options.length - 1;
+                  const isLast = index === menuOptions.length - 1;
+                  const showPinDivider =
+                    pinSelectedToTop && isSelected && isFirst && menuOptions.length > 1;
 
                   return (
                     <li key={`${option.value}::${option.label}`} role="none">
@@ -347,16 +381,19 @@ export function SelectInput({
                         }}
                         className={clsx(
                           'flex w-full items-center justify-between gap-3 px-3 py-2.5 text-left text-sm',
-                          'whitespace-nowrap transition-colors duration-150',
+                          'transition-colors duration-150',
+                          menuMatchTriggerWidth ? 'min-w-0' : 'whitespace-nowrap',
                           'disabled:cursor-not-allowed disabled:opacity-40',
                           isFirst && 'rounded-t-[11px]',
-                          isLast && 'rounded-b-[11px]',
+                          isLast && !showPinDivider && 'rounded-b-[11px]',
                           isSelected
                             ? 'bg-[var(--color-accent-soft)] font-semibold text-[var(--color-brand)]'
                             : 'font-medium text-[var(--color-fg)] hover:bg-[var(--color-bg)]',
                         )}
                       >
-                        <span>{option.label}</span>
+                        <span className={clsx(menuMatchTriggerWidth && 'min-w-0 truncate')}>
+                          {option.label}
+                        </span>
                         {isSelected ? (
                           <Check
                             className="size-3.5 shrink-0 text-[var(--color-brand)]"
@@ -364,6 +401,12 @@ export function SelectInput({
                           />
                         ) : null}
                       </button>
+                      {showPinDivider ? (
+                        <div
+                          aria-hidden
+                          className="mx-2 my-1 h-px bg-[var(--color-border)]"
+                        />
+                      ) : null}
                     </li>
                   );
                 })

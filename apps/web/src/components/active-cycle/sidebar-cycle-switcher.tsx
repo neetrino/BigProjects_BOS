@@ -43,6 +43,8 @@ export function SidebarCycleSwitcher({ collapsed }: SidebarCycleSwitcherProps) {
             onChange={(event) => setCycleId(event.target.value)}
             aria-label={t('eventCycle')}
             variant="onBrand"
+            menuMatchTriggerWidth
+            pinSelectedToTop
             className="app-sidebar-cycle-select w-full"
           >
             {status === 'loading' ? <option value="">{t('eventCycleLoading')}</option> : null}
