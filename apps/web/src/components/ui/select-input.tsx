@@ -381,7 +381,15 @@ export function SelectInput({
           'disabled:cursor-not-allowed disabled:opacity-50',
         )}
       >
-        <span className={clsx(fitContent ? 'whitespace-nowrap' : 'min-w-0 truncate')}>
+        <span
+          className={clsx(
+            fitContent
+              ? 'whitespace-nowrap'
+              : menuMatchTriggerWidth
+                ? 'min-w-0 whitespace-normal break-words text-left leading-snug'
+                : 'min-w-0 truncate',
+          )}
+        >
           {selectedLabel || '\u00A0'}
         </span>
         <ChevronDown
@@ -479,9 +487,9 @@ export function SelectInput({
                             }
                           }}
                           className={clsx(
-                            'flex w-full items-center justify-between gap-3 px-3 py-2.5 text-left text-sm',
+                            'flex w-full gap-3 px-3 py-2.5 text-left text-sm',
                             'transition-colors duration-150',
-                            menuMatchTriggerWidth ? 'min-w-0' : 'whitespace-nowrap',
+                            menuMatchTriggerWidth ? 'min-w-0 items-start' : 'items-center whitespace-nowrap',
                             'disabled:cursor-not-allowed disabled:opacity-40',
                             !searchable && isFirst && 'rounded-t-[11px]',
                             isLast && !showPinDivider && 'rounded-b-[11px]',
@@ -490,12 +498,18 @@ export function SelectInput({
                               : 'font-medium text-[var(--color-fg)] hover:bg-[var(--color-bg)]',
                           )}
                         >
-                          <span className={clsx(menuMatchTriggerWidth && 'min-w-0 truncate')}>
+                          <span
+                            className={clsx(
+                              menuMatchTriggerWidth
+                                ? 'min-w-0 flex-1 whitespace-normal break-words leading-snug'
+                                : undefined,
+                            )}
+                          >
                             {option.label}
                           </span>
                           {isSelected ? (
                             <Check
-                              className="size-3.5 shrink-0 text-[var(--color-brand)]"
+                              className="mt-0.5 size-3.5 shrink-0 text-[var(--color-brand)]"
                               aria-hidden
                             />
                           ) : null}
