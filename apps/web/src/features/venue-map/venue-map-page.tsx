@@ -47,6 +47,15 @@ export function VenueMapPage() {
   const [pendingSelection, setPendingSelection] = useState<GridCell[]>([]);
   const [fitRequestId, setFitRequestId] = useState(0);
   const [mapFullscreen, setMapFullscreen] = useState(false);
+  const [editorCycleId, setEditorCycleId] = useState(cycleId);
+
+  if (cycleId !== editorCycleId) {
+    setEditorCycleId(cycleId);
+    setSelectedAreaId(null);
+    setPendingSelection([]);
+    setCalibrationPoints([]);
+    setInteractionMode('select');
+  }
 
   useEffect(() => {
     if (!mapFullscreen) {
@@ -70,13 +79,6 @@ export function VenueMapPage() {
     }, 80);
     return () => window.clearTimeout(timerId);
   }, [mapFullscreen]);
-
-  useEffect(() => {
-    setSelectedAreaId(null);
-    setPendingSelection([]);
-    setCalibrationPoints([]);
-    setInteractionMode('select');
-  }, [cycleId]);
 
   const refreshPlan = useCallback(() => {
     setReloadToken((token) => token + 1);
