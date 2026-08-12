@@ -174,7 +174,7 @@ export function AppSidebar({ pathname }: AppSidebarProps) {
               return (
                 <Link
                   key={child.key}
-                  href={child.href}
+                  href={buildNavHref(child, cycleId)}
                   data-sidebar-nav={child.key}
                   className={clsx(NAV_CHILD_ROW_CLASS, rowToneClass(isActive))}
                 >
