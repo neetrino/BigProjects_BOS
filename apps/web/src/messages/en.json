@@ -12,6 +12,10 @@
     "scrollLeft": "Scroll left",
     "scrollRight": "Scroll right",
     "kanbanEmptyColumn": "Drop cards here",
+    "close": "Close",
+    "dismissOverlay": "Dismiss overlay",
+    "search": "Search…",
+    "noMatches": "No matches",
     "datePicker": {
       "title": "Choose date",
       "placeholder": "DD.MM.YYYY",
@@ -23,6 +27,10 @@
   },
   "languageSwitcher": {
     "label": "Language"
+  },
+  "meta": {
+    "title": "BigProjects BOS",
+    "description": "BigProjects BOS internal operating tool"
   },
   "nav": {
     "label": "Main navigation",

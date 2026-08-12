@@ -2,6 +2,7 @@
 
 import { clsx } from 'clsx';
 import { Check, ChevronDown, Search } from 'lucide-react';
+import { useTranslations } from 'next-intl';
 import {
   useEffect,
   useId,
@@ -117,10 +118,13 @@ export function SelectInput({
   menuMatchTriggerWidth = false,
   pinSelectedToTop = false,
   searchable = false,
-  searchPlaceholder = 'Search…',
-  searchEmptyLabel = 'No matches',
+  searchPlaceholder,
+  searchEmptyLabel,
   'aria-label': ariaLabel,
 }: SelectInputProps) {
+  const t = useTranslations('common');
+  const resolvedSearchPlaceholder = searchPlaceholder ?? t('search');
+  const resolvedSearchEmptyLabel = searchEmptyLabel ?? t('noMatches');
   const listboxId = useId();
   const searchInputId = useId();
   const rootRef = useRef<HTMLDivElement>(null);
@@ -411,8 +415,8 @@ export function SelectInput({
                       id={searchInputId}
                       type="search"
                       value={searchQuery}
-                      placeholder={searchPlaceholder}
-                      aria-label={searchPlaceholder}
+                      placeholder={resolvedSearchPlaceholder}
+                      aria-label={resolvedSearchPlaceholder}
                       autoComplete="off"
                       onChange={(event) => setSearchQuery(event.target.value)}
                       onKeyDown={(event) => {
@@ -444,11 +448,11 @@ export function SelectInput({
                 id={listboxId}
                 role="listbox"
                 aria-label={ariaLabel}
-                className="min-h-0 flex-1 overflow-y-auto overflow-x-hidden"
+                className="soft-scrollbar min-h-0 flex-1 overflow-y-auto overflow-x-hidden"
               >
                 {menuOptions.length === 0 ? (
                   <li className="px-3 py-2.5 text-sm text-[var(--color-muted)]">
-                    {searchable && searchQuery.trim() ? searchEmptyLabel : '—'}
+                    {searchable && searchQuery.trim() ? resolvedSearchEmptyLabel : '—'}
                   </li>
                 ) : (
                   menuOptions.map((option, index) => {

@@ -503,24 +503,6 @@ html[lang='hy'] .app-sidebar {
   background: rgb(255 255 255 / 92%);
 }
 
-.app-select-menu-on-brand ul {
-  scrollbar-width: thin;
-  scrollbar-color: rgb(40 57 148 / 28%) transparent;
-}
-
-.app-select-menu-on-brand ul::-webkit-scrollbar {
-  width: 8px;
-}
-
-.app-select-menu-on-brand ul::-webkit-scrollbar-thumb {
-  border-radius: 9999px;
-  background: rgb(40 57 148 / 28%);
-}
-
-.app-select-menu-on-brand ul::-webkit-scrollbar-track {
-  background: transparent;
-}
-
 .app-sidebar-nav-label {
   min-width: 0;
   flex: 1 1 auto;

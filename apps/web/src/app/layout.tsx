@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import { Noto_Sans, Noto_Sans_Armenian, Noto_Serif } from 'next/font/google';
 import { NextIntlClientProvider } from 'next-intl';
-import { getLocale, getMessages } from 'next-intl/server';
+import { getLocale, getMessages, getTranslations } from 'next-intl/server';
 import './globals.css';
 
 const notoSans = Noto_Sans({
@@ -22,14 +22,17 @@ const notoSerif = Noto_Serif({
   display: 'swap',
 });
 
-export const metadata: Metadata = {
-  title: 'BigProjects BOS',
-  description: 'BigProjects BOS internal operating tool',
-  icons: {
-    icon: [{ url: '/icon.webp', type: 'image/webp' }],
-    apple: [{ url: '/apple-icon.webp', type: 'image/webp' }],
-  },
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const t = await getTranslations('meta');
+  return {
+    title: t('title'),
+    description: t('description'),
+    icons: {
+      icon: [{ url: '/icon.webp', type: 'image/webp' }],
+      apple: [{ url: '/apple-icon.webp', type: 'image/webp' }],
+    },
+  };
+}
 
 export default async function RootLayout({
   children,

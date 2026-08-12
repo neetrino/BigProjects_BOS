@@ -12,6 +12,10 @@
     "scrollLeft": "Ոլորել ձախ",
     "scrollRight": "Ոլորել աջ",
     "kanbanEmptyColumn": "Քարտերը գցեք այստեղ",
+    "close": "Փակել",
+    "dismissOverlay": "Փակել շերտը",
+    "search": "Որոնել…",
+    "noMatches": "Համընկնում չկա",
     "datePicker": {
       "title": "Ընտրել ամսաթիվ",
       "placeholder": "DD.MM.YYYY",
@@ -24,6 +28,10 @@
   "languageSwitcher": {
     "label": "Լեզու"
   },
+  "meta": {
+    "title": "BigProjects BOS",
+    "description": "BigProjects BOS ներքին գործառնական համակարգ"
+  },
   "nav": {
     "label": "Հիմնական նավիգացիա",
     "product": "Ներքին",
@@ -35,7 +43,7 @@
     "organizations": "Կազմակերպություններ",
     "organizationsContacts": "Կոնտակտներ",
     "settings": "Կարգավորումներ",
-    "settingsStaff": "Staff",
+    "settingsStaff": "Աշխատակիցներ",
     "collapseSidebar": "Ծալել մենյուն",
     "expandSidebar": "Ծավալել մենյուն",
     "collapseSubnav": "Թաքցնել ենթակատեգորիաները",
@@ -155,7 +163,7 @@
       "list": "Ցանկ"
     },
     "card": {
-      "contacts": "{count} կոնտակտ"
+      "contacts": "{count, plural, one {# կոնտակտ} other {# կոնտակտ}}"
     },
     "columns": {
       "name": "Անվանում",
@@ -211,7 +219,7 @@
     "staff": {
       "title": "Աշխատակիցների հաշիվներ",
       "subtitle": "Ստեղծեք և անջատեք ներքին օգտատերերին։",
-      "searchPlaceholder": "Որոնել անունով կամ email-ով",
+      "searchPlaceholder": "Որոնել անունով կամ էլ․ փոստով",
       "roleFilter": "Դեր",
       "allRoles": "Բոլոր դերերը",
       "create": "Նոր օգտատեր",
@@ -456,7 +464,7 @@
     "notes": {
       "title": "Նշումներ",
       "placeholder": "Ավելացնել նշում…",
-      "add": "Ավելացնել",
+      "add": "Ավելացնել նշում",
       "empty": "Նշումներ դեռ չկան։",
       "deleteTitle": "Ջնջել նշումը",
       "deleteDescription": "Վստա՞հ եք, որ ուզում եք ջնջել այս նշումը։ Այս գործողությունը հնարավոր չէ չեղարկել։"
@@ -596,7 +604,7 @@
       "historyOpen": "Բացել հրապարակումների պատմությունը",
       "historyEmpty": "Դեռ հրապարակումներ չկան։",
       "historyModalTitle": "Հրապարակումների պատմություն",
-      "historyCount": "{count} գրառում",
+      "historyCount": "{count, plural, one {# գրառում} other {# գրառում}}",
       "historyViewAll": "Տեսնել բոլորը ({count})",
       "version": "v{version}",
       "planStatus": {
