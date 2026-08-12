@@ -2,7 +2,14 @@
 
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { clsx } from 'clsx';
-import { Maximize2, Minimize2 } from 'lucide-react';
+import {
+  Hand,
+  Maximize2,
+  Minimize2,
+  MousePointer2,
+  Ruler,
+  Scan,
+} from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { ApiError } from '@/lib/api/client';
 import { getVenuePlan, type VenuePlan } from '@/lib/api/venue-map';
@@ -150,6 +157,7 @@ export function VenueMapPage() {
               className={TOOLBAR_CONTROL_CLASS}
               onClick={() => setInteractionMode('select')}
             >
+              <MousePointer2 className="size-4" aria-hidden />
               {t('toolbar.select')}
             </Button>
             <Button
@@ -157,6 +165,7 @@ export function VenueMapPage() {
               className={TOOLBAR_CONTROL_CLASS}
               onClick={() => setInteractionMode('pan')}
             >
+              <Hand className="size-4" aria-hidden />
               {t('toolbar.pan')}
             </Button>
             {isAdmin ? (
@@ -165,6 +174,7 @@ export function VenueMapPage() {
                 className={TOOLBAR_CONTROL_CLASS}
                 onClick={() => setInteractionMode('calibrate')}
               >
+                <Ruler className="size-4" aria-hidden />
                 {t('toolbar.calibrate')}
               </Button>
             ) : null}
@@ -173,6 +183,7 @@ export function VenueMapPage() {
               className={TOOLBAR_CONTROL_CLASS}
               onClick={() => setFitRequestId((id) => id + 1)}
             >
+              <Scan className="size-4" aria-hidden />
               {t('toolbar.fit')}
             </Button>
             {isAdmin && plan ? (
