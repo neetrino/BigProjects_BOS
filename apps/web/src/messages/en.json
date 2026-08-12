@@ -586,7 +586,11 @@
       "confirmDescription": "Public data per area display modes will be sent to ToonExpo.",
       "publishedAt": "Published {date}",
       "historyTitle": "Publication history",
+      "historyOpen": "Open publication history",
       "historyEmpty": "No publications yet.",
+      "historyModalTitle": "Publication history",
+      "historyCount": "{count} entries",
+      "historyViewAll": "View all ({count})",
       "version": "v{version}",
       "planStatus": {
         "UNPUBLISHED": "Unpublished",

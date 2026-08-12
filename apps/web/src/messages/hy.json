@@ -586,7 +586,11 @@
       "confirmDescription": "Տարածքների ցուցադրման ռեժիմների հրապարակային տվյալները կուղարկվեն ToonExpo։",
       "publishedAt": "Հրապարակված {date}",
       "historyTitle": "Հրապարակումների պատմություն",
+      "historyOpen": "Բացել հրապարակումների պատմությունը",
       "historyEmpty": "Դեռ հրապարակումներ չկան։",
+      "historyModalTitle": "Հրապարակումների պատմություն",
+      "historyCount": "{count} գրառում",
+      "historyViewAll": "Տեսնել բոլորը ({count})",
       "version": "v{version}",
       "planStatus": {
         "UNPUBLISHED": "Չհրապարակված",

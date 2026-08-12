@@ -14,7 +14,11 @@ import { Dialog } from '@/components/ui/dialog';
 import { ErrorState, LoadingState } from '@/components/ui/page-state';
 import { StatusBadge, type StatusTone } from '@/components/ui/status-badge';
 import { showToast } from '@/components/ui/toast';
-import { formatDate } from '@/lib/format';
+import {
+  PublicationHistoryModal,
+  PublicationHistoryRow,
+} from '@/features/toonexpo/publication-history-modal';
+import { formatDateTime } from '@/lib/format';
 
 type PlanPublishStatus = 'UNPUBLISHED' | 'PUBLISHED';
 
@@ -29,24 +33,12 @@ type LoadState =
   | { status: 'error'; message: string }
   | { status: 'ready'; publications: VenueMapPublication[] };
 
+const HISTORY_PREVIEW_LIMIT = 3;
+
 const PUBLISHED_LIKE: ReadonlySet<VenueMapPublicationStatus> = new Set([
   'PUBLISHED',
   'ALREADY_PUBLISHED',
 ]);
-
-function publicationStatusTone(status: VenueMapPublicationStatus): StatusTone {
-  switch (status) {
-    case 'PUBLISHED':
-    case 'ALREADY_PUBLISHED':
-      return 'won';
-    case 'REJECTED':
-    case 'FAILED':
-      return 'disabled';
-    case 'PENDING':
-    default:
-      return 'draft';
-  }
-}
 
 function planStatusTone(status: PlanPublishStatus): StatusTone {
   return status === 'PUBLISHED' ? 'won' : 'neutral';
@@ -90,6 +82,7 @@ export function VenueMapPublicationSection({
   const tCommon = useTranslations('common');
   const [loadState, setLoadState] = useState<LoadState>({ status: 'loading' });
   const [confirmOpen, setConfirmOpen] = useState(false);
+  const [historyOpen, setHistoryOpen] = useState(false);
   const [publishBusy, setPublishBusy] = useState(false);
 
   useEffect(() => {
@@ -157,6 +150,11 @@ export function VenueMapPublicationSection({
     publishStatus === 'PUBLISHED' ? 'PUBLISHED' : 'UNPUBLISHED'
   ) as PlanPublishStatus;
 
+  const publications = loadState.status === 'ready' ? loadState.publications : [];
+  const previewPublications = publications.slice(0, HISTORY_PREVIEW_LIMIT);
+  const hasHistory = publications.length > 0;
+  const hasMoreHistory = publications.length > HISTORY_PREVIEW_LIMIT;
+
   return (
     <section className="panel p-4">
       <div className="flex flex-wrap items-center justify-between gap-2">
@@ -169,7 +167,7 @@ export function VenueMapPublicationSection({
             />
             {publishedAt ? (
               <span className="text-xs text-[var(--color-muted)]">
-                {t('publication.publishedAt', { date: formatDate(publishedAt) })}
+                {t('publication.publishedAt', { date: formatDateTime(publishedAt) })}
               </span>
             ) : null}
           </div>
@@ -192,35 +190,56 @@ export function VenueMapPublicationSection({
 
       {loadState.status === 'ready' ? (
         <div className="mt-3 flex flex-col gap-2">
-          <h3 className="text-xs font-medium uppercase tracking-wide text-[var(--color-muted)]">
-            {t('publication.historyTitle')}
-          </h3>
-          {loadState.publications.length === 0 ? (
+          {hasHistory ? (
+            <button
+              type="button"
+              aria-label={t('publication.historyOpen')}
+              onClick={() => setHistoryOpen(true)}
+              className="group flex w-full items-center justify-between gap-2 rounded-md px-1 py-0.5 text-left outline-none transition-colors hover:bg-[var(--color-bg)] focus-visible:ring-2 focus-visible:ring-[var(--color-accent)]"
+            >
+              <span className="text-xs font-medium uppercase tracking-wide text-[var(--color-muted)] transition-colors group-hover:text-[var(--color-fg)]">
+                {t('publication.historyTitle')}
+              </span>
+              {hasMoreHistory ? (
+                <span className="text-xs font-medium text-[var(--color-accent)]">
+                  {t('publication.historyViewAll', { count: publications.length })}
+                </span>
+              ) : (
+                <span
+                  aria-hidden="true"
+                  className="text-xs text-[var(--color-muted)] transition-colors group-hover:text-[var(--color-accent)]"
+                >
+                  →
+                </span>
+              )}
+            </button>
+          ) : (
+            <h3 className="text-xs font-medium uppercase tracking-wide text-[var(--color-muted)]">
+              {t('publication.historyTitle')}
+            </h3>
+          )}
+          {!hasHistory ? (
             <p className="text-sm text-[var(--color-muted)]">{t('publication.historyEmpty')}</p>
           ) : (
             <ul className="flex flex-col gap-1.5">
-              {loadState.publications.map((row) => (
-                <li
+              {previewPublications.map((row) => (
+                <PublicationHistoryRow
                   key={row.id}
-                  className="flex flex-wrap items-center gap-2 rounded bg-[var(--color-bg)] px-2 py-1.5 text-xs"
-                >
-                  <span className="font-medium text-[var(--color-fg)]">
-                    {t('publication.version', { version: row.snapshotVersion })}
-                  </span>
-                  <StatusBadge
-                    label={t(`publication.status.${row.status}`)}
-                    tone={publicationStatusTone(row.status)}
-                  />
-                  <span className="text-[var(--color-muted)]">{formatDate(row.createdAt)}</span>
-                  {row.errorMessage ? (
-                    <span className="w-full text-[var(--color-danger)]">{row.errorMessage}</span>
-                  ) : null}
-                </li>
+                  row={row}
+                  versionLabel={t('publication.version', { version: row.snapshotVersion })}
+                  statusLabel={t(`publication.status.${row.status}`)}
+                />
               ))}
             </ul>
           )}
         </div>
       ) : null}
+
+      <PublicationHistoryModal
+        open={historyOpen}
+        publications={publications}
+        onClose={() => setHistoryOpen(false)}
+      />
 
       <Dialog
         open={confirmOpen}

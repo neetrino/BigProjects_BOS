@@ -585,7 +585,11 @@
       "confirmDescription": "Публичные данные по режимам отображения зон будут отправлены в ToonExpo.",
       "publishedAt": "Опубликовано {date}",
       "historyTitle": "История публикаций",
+      "historyOpen": "Открыть историю публикаций",
       "historyEmpty": "Публикаций пока нет.",
+      "historyModalTitle": "История публикаций",
+      "historyCount": "{count} записей",
+      "historyViewAll": "Показать все ({count})",
       "version": "v{version}",
       "planStatus": {
         "UNPUBLISHED": "Не опубликовано",
