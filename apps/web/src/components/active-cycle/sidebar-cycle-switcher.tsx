@@ -3,7 +3,6 @@
 import { CalendarDays } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { useActiveCycle } from '@/components/active-cycle/active-cycle-provider';
-import { formatCycleOptionLabel } from '@/components/active-cycle/format-cycle-option-label';
 import { SelectInput } from '@/components/ui/field';
 
 type SidebarCycleSwitcherProps = {
@@ -57,7 +56,7 @@ export function SidebarCycleSwitcher({ collapsed }: SidebarCycleSwitcherProps) {
             ) : null}
             {cycles.map((cycle) => (
               <option key={cycle.id} value={cycle.id}>
-                {formatCycleOptionLabel(cycle, t('eventCycleActive'))}
+                {cycle.name}
               </option>
             ))}
           </SelectInput>
