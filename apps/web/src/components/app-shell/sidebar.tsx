@@ -4,9 +4,10 @@ import { clsx } from 'clsx';
 import { ChevronDown, ChevronLeft } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { useSearchParams } from 'next/navigation';
 import { useTranslations } from 'next-intl';
 import { useState } from 'react';
+import { useActiveCycle } from '@/components/active-cycle/active-cycle-provider';
+import { SidebarCycleSwitcher } from '@/components/active-cycle/sidebar-cycle-switcher';
 import { useAuth } from '@/components/auth/auth-provider';
 import {
   buildNavHref,
@@ -33,8 +34,7 @@ export function AppSidebar({ pathname }: AppSidebarProps) {
   const t = useTranslations('nav');
   const { user } = useAuth();
   const isAdmin = user.role === 'ADMIN';
-  const searchParams = useSearchParams();
-  const cycleId = searchParams.get('cycle');
+  const { cycleId } = useActiveCycle();
   const [collapsed, setCollapsed] = useState(false);
   const [openGroups, setOpenGroups] = useState<Record<string, boolean>>({});
 
@@ -223,6 +223,8 @@ export function AppSidebar({ pathname }: AppSidebarProps) {
         aria-label={t('label')}
         className="flex min-h-0 flex-1 flex-col overflow-y-auto px-3 pb-3"
       >
+        <SidebarCycleSwitcher collapsed={collapsed} />
+
         <div ref={navRef} className="relative flex min-h-0 w-full flex-1 flex-col gap-1">
           <span
             aria-hidden

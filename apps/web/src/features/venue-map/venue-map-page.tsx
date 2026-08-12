@@ -5,15 +5,12 @@ import { clsx } from 'clsx';
 import { Maximize2, Minimize2 } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { ApiError } from '@/lib/api/client';
-import { listCycles } from '@/lib/api/cycles';
 import { getVenuePlan, type VenuePlan } from '@/lib/api/venue-map';
-import type { EventCycle } from '@/lib/api/types';
+import { useActiveCycle } from '@/components/active-cycle/active-cycle-provider';
 import { useAuth } from '@/components/auth/auth-provider';
 import { Button } from '@/components/ui/button';
 import { EmptyState, ErrorState, LoadingState } from '@/components/ui/page-state';
-import { SelectInput } from '@/components/ui/field';
 import { useClientCachedState } from '@/hooks/use-client-cached-state';
-import { useCycleQueryParam } from '@/hooks/use-cycle-query-param';
 import { CLIENT_CACHE_KEYS } from '@/lib/client-cache';
 import { CalibrationControls } from './calibration-controls';
 import { CreateAreaDialog } from './create-area-dialog';
@@ -26,11 +23,6 @@ import { VenueMapPanel } from './venue-map-panel';
 import { VenueMapStageClient } from './venue-map-stage-client';
 import { TOOLBAR_CONTROL_CLASS } from './constants';
 
-type CyclesLoad =
-  | { status: 'loading' }
-  | { status: 'error'; message: string }
-  | { status: 'ready'; cycles: EventCycle[] };
-
 type PlanLoad =
   | { status: 'idle' }
   | { status: 'loading' }
@@ -42,12 +34,8 @@ export function VenueMapPage() {
   const tCommon = useTranslations('common');
   const { user } = useAuth();
   const isAdmin = user.role === 'ADMIN';
+  const { cycleId, cycles, status: cyclesStatus, errorMessage: cyclesError } = useActiveCycle();
 
-  const [cyclesLoad, setCyclesLoad] = useClientCachedState<CyclesLoad>(CLIENT_CACHE_KEYS.cycles, {
-    status: 'loading',
-  });
-  const cyclesReady = cyclesLoad.status === 'ready' ? cyclesLoad.cycles : null;
-  const { cycleId, setCycleId } = useCycleQueryParam(cyclesReady);
   const planCacheKey = cycleId ? CLIENT_CACHE_KEYS.venuePlan(cycleId) : 'venue-plan:idle';
   const [planLoad, setPlanLoad] = useClientCachedState<PlanLoad>(planCacheKey, {
     status: cycleId ? 'loading' : 'idle',
@@ -84,34 +72,11 @@ export function VenueMapPage() {
   }, [mapFullscreen]);
 
   useEffect(() => {
-    let cancelled = false;
-    void listCycles()
-      .then((cycles) => {
-        if (cancelled) {
-          return;
-        }
-        setCyclesLoad({ status: 'ready', cycles });
-      })
-      .catch((err: unknown) => {
-        if (!cancelled) {
-          setCyclesLoad({
-            status: 'error',
-            message: err instanceof ApiError ? err.message : tCommon('unexpectedError'),
-          });
-        }
-      });
-    return () => {
-      cancelled = true;
-    };
-  }, [setCyclesLoad, tCommon]);
-
-  function handleCycleChange(nextId: string) {
-    setCycleId(nextId);
     setSelectedAreaId(null);
     setPendingSelection([]);
     setCalibrationPoints([]);
     setInteractionMode('select');
-  }
+  }, [cycleId]);
 
   const refreshPlan = useCallback(() => {
     setReloadToken((token) => token + 1);
@@ -155,13 +120,13 @@ export function VenueMapPage() {
   const hasImage = Boolean(plan?.imageUrl && plan.imageWidth && plan.imageHeight);
   const isCalibrated = Boolean(plan?.pixelsPerMeter && plan.pixelsPerMeter > 0);
 
-  if (cyclesLoad.status === 'loading') {
+  if (cyclesStatus === 'loading') {
     return <LoadingState message={tCommon('loading')} />;
   }
-  if (cyclesLoad.status === 'error') {
-    return <ErrorState message={cyclesLoad.message} />;
+  if (cyclesStatus === 'error' && cyclesError) {
+    return <ErrorState message={cyclesError} />;
   }
-  if (cyclesLoad.cycles.length === 0) {
+  if (cycles.length === 0) {
     return <EmptyState message={t('emptyNoCycles')} />;
   }
 
@@ -176,75 +141,57 @@ export function VenueMapPage() {
         <div className="min-w-0">
           <h1 className="page-heading">{t('title')}</h1>
         </div>
-        <div className="ml-auto flex flex-wrap items-end justify-end gap-2">
-          <label className="flex flex-col gap-1 text-xs text-[var(--color-muted)]">
-            {t('toolbar.cycle')}
-            <SelectInput
-              value={cycleId}
-              onChange={(event) => handleCycleChange(event.target.value)}
-              className="min-w-[12rem]"
-              fitContent
+        {hasImage ? (
+          <div className="ml-auto flex flex-wrap items-end justify-end gap-2">
+            <Button
+              variant={interactionMode === 'select' ? 'primary' : 'secondary'}
+              className={TOOLBAR_CONTROL_CLASS}
+              onClick={() => setInteractionMode('select')}
             >
-              {cyclesLoad.cycles.map((cycle) => (
-                <option key={cycle.id} value={cycle.id}>
-                  {cycle.name}
-                  {cycle.status === 'ACTIVE' ? ` (${t('toolbar.active')})` : ''}
-                </option>
-              ))}
-            </SelectInput>
-          </label>
-          {hasImage ? (
-            <>
+              {t('toolbar.select')}
+            </Button>
+            <Button
+              variant={interactionMode === 'pan' ? 'primary' : 'secondary'}
+              className={TOOLBAR_CONTROL_CLASS}
+              onClick={() => setInteractionMode('pan')}
+            >
+              {t('toolbar.pan')}
+            </Button>
+            {isAdmin ? (
               <Button
-                variant={interactionMode === 'select' ? 'primary' : 'secondary'}
+                variant={interactionMode === 'calibrate' ? 'primary' : 'secondary'}
                 className={TOOLBAR_CONTROL_CLASS}
-                onClick={() => setInteractionMode('select')}
+                onClick={() => setInteractionMode('calibrate')}
               >
-                {t('toolbar.select')}
+                {t('toolbar.calibrate')}
               </Button>
-              <Button
-                variant={interactionMode === 'pan' ? 'primary' : 'secondary'}
-                className={TOOLBAR_CONTROL_CLASS}
-                onClick={() => setInteractionMode('pan')}
-              >
-                {t('toolbar.pan')}
-              </Button>
-              {isAdmin ? (
-                <Button
-                  variant={interactionMode === 'calibrate' ? 'primary' : 'secondary'}
-                  className={TOOLBAR_CONTROL_CLASS}
-                  onClick={() => setInteractionMode('calibrate')}
-                >
-                  {t('toolbar.calibrate')}
-                </Button>
-              ) : null}
-              <Button
-                variant="secondary"
-                className={TOOLBAR_CONTROL_CLASS}
-                onClick={() => setFitRequestId((id) => id + 1)}
-              >
-                {t('toolbar.fit')}
-              </Button>
-              {isAdmin && plan ? (
-                <UploadPlanImage planId={plan.id} onUploaded={refreshPlan} compact />
-              ) : null}
-              <Button
-                variant={mapFullscreen ? 'primary' : 'secondary'}
-                className={TOOLBAR_CONTROL_CLASS}
-                onClick={() => setMapFullscreen((open) => !open)}
-                aria-pressed={mapFullscreen}
-                title={mapFullscreen ? t('toolbar.exitFullscreen') : t('toolbar.fullscreen')}
-              >
-                {mapFullscreen ? (
-                  <Minimize2 className="size-4" aria-hidden />
-                ) : (
-                  <Maximize2 className="size-4" aria-hidden />
-                )}
-                {mapFullscreen ? t('toolbar.exitFullscreen') : t('toolbar.fullscreen')}
-              </Button>
-            </>
-          ) : null}
-        </div>
+            ) : null}
+            <Button
+              variant="secondary"
+              className={TOOLBAR_CONTROL_CLASS}
+              onClick={() => setFitRequestId((id) => id + 1)}
+            >
+              {t('toolbar.fit')}
+            </Button>
+            {isAdmin && plan ? (
+              <UploadPlanImage planId={plan.id} onUploaded={refreshPlan} compact />
+            ) : null}
+            <Button
+              variant={mapFullscreen ? 'primary' : 'secondary'}
+              className={TOOLBAR_CONTROL_CLASS}
+              onClick={() => setMapFullscreen((open) => !open)}
+              aria-pressed={mapFullscreen}
+              title={mapFullscreen ? t('toolbar.exitFullscreen') : t('toolbar.fullscreen')}
+            >
+              {mapFullscreen ? (
+                <Minimize2 className="size-4" aria-hidden />
+              ) : (
+                <Maximize2 className="size-4" aria-hidden />
+              )}
+              {mapFullscreen ? t('toolbar.exitFullscreen') : t('toolbar.fullscreen')}
+            </Button>
+          </div>
+        ) : null}
       </header>
 
       {!cycleId ? <EmptyState message={t('selectCycle')} /> : null}

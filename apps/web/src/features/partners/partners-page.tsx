@@ -1,20 +1,19 @@
 'use client';
 
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Plus } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { ApiError } from '@/lib/api/client';
-import { listCycles } from '@/lib/api/cycles';
 import { listPartners, updatePartner } from '@/lib/api/partners';
 import { listUsers } from '@/lib/api/users';
 import type { PartnerListItem, PartnerStage, UserAccount } from '@/lib/api/types';
 import type { BoardViewMode } from '@/components/kanban';
+import { useActiveCycle } from '@/components/active-cycle/active-cycle-provider';
 import { useAuth } from '@/components/auth/auth-provider';
 import { Button } from '@/components/ui/button';
 import { EmptyState, ErrorState, LoadingState } from '@/components/ui/page-state';
 import { showToast } from '@/components/ui/toast';
 import { useClientCachedState } from '@/hooks/use-client-cached-state';
-import { useCycleQueryParam } from '@/hooks/use-cycle-query-param';
 import { CLIENT_CACHE_KEYS } from '@/lib/client-cache';
 import { SEARCH_DEBOUNCE_MS } from '@/lib/constants';
 import { PartnerCreateSheet } from '@/features/partners/partner-create-sheet';
@@ -24,7 +23,6 @@ import { PartnerSheet } from '@/features/partners/partner-sheet';
 import {
   mergePartnerTypes,
   staffFromPartners,
-  type CyclesLoad,
   type PartnersLoad,
   type StaffOption,
 } from '@/features/partners/partners-helpers';
@@ -35,12 +33,8 @@ export function PartnersPage() {
   const tCommon = useTranslations('common');
   const { user } = useAuth();
   const isAdmin = user.role === 'ADMIN';
+  const { cycleId, cycles, status: cyclesStatus, errorMessage: cyclesError } = useActiveCycle();
 
-  const [cyclesLoad, setCyclesLoad] = useClientCachedState<CyclesLoad>(CLIENT_CACHE_KEYS.cycles, {
-    status: 'loading',
-  });
-  const cyclesReady = cyclesLoad.status === 'ready' ? cyclesLoad.cycles : null;
-  const { cycleId, setCycleId } = useCycleQueryParam(cyclesReady);
   const [view, setView] = useState<BoardViewMode>('kanban');
   const [searchInput, setSearchInput] = useState('');
   const [search, setSearch] = useState('');
@@ -57,6 +51,7 @@ export function PartnersPage() {
   const [createOpen, setCreateOpen] = useState(false);
   const [selectedPartnerId, setSelectedPartnerId] = useState<string | null>(null);
   const [reloadToken, setReloadToken] = useState(0);
+  const previousCycleIdRef = useRef(cycleId);
 
   useEffect(() => {
     const timer = window.setTimeout(() => setSearch(searchInput.trim()), SEARCH_DEBOUNCE_MS);
@@ -64,26 +59,13 @@ export function PartnersPage() {
   }, [searchInput]);
 
   useEffect(() => {
-    let cancelled = false;
-    void listCycles()
-      .then((cycles) => {
-        if (cancelled) {
-          return;
-        }
-        setCyclesLoad({ status: 'ready', cycles });
-      })
-      .catch((err: unknown) => {
-        if (!cancelled) {
-          setCyclesLoad({
-            status: 'error',
-            message: err instanceof ApiError ? err.message : tCommon('unexpectedError'),
-          });
-        }
-      });
-    return () => {
-      cancelled = true;
-    };
-  }, [setCyclesLoad, tCommon]);
+    if (previousCycleIdRef.current === cycleId) {
+      return;
+    }
+    previousCycleIdRef.current = cycleId;
+    setKnownPartnerTypes([]);
+    setPartnerType('');
+  }, [cycleId]);
 
   useEffect(() => {
     if (!isAdmin) {
@@ -122,7 +104,7 @@ export function PartnersPage() {
       .then((partners) => {
         if (!cancelled) {
           setPartnersLoad({ status: 'ready', partners });
-          setKnownPartnerTypes((prev) => mergePartnerTypes(prev, partners));
+          setKnownPartnerTypes((known) => mergePartnerTypes(known, partners));
         }
       })
       .catch((err: unknown) => {
@@ -144,6 +126,8 @@ export function PartnersPage() {
     [partnersLoad],
   );
 
+  const partnerTypeOptions = useMemo(() => knownPartnerTypes, [knownPartnerTypes]);
+
   const staffOptions = useMemo<StaffOption[]>(() => {
     if (isAdmin && adminUsers.length > 0) {
       return adminUsers
@@ -152,14 +136,6 @@ export function PartnersPage() {
     }
     return staffFromPartners(partners);
   }, [adminUsers, isAdmin, partners]);
-
-  const partnerTypeOptions = useMemo(() => {
-    const set = new Set(knownPartnerTypes);
-    if (partnerType) {
-      set.add(partnerType);
-    }
-    return [...set].sort((a, b) => a.localeCompare(b));
-  }, [knownPartnerTypes, partnerType]);
 
   const replacePartner = useCallback(
     (saved: PartnerListItem) => {
@@ -175,6 +151,7 @@ export function PartnersPage() {
         next[index] = saved;
         return { status: 'ready', partners: next };
       });
+      setKnownPartnerTypes((known) => mergePartnerTypes(known, [saved]));
     },
     [setPartnersLoad],
   );
@@ -211,18 +188,9 @@ export function PartnersPage() {
     }
   }
 
-  const cycles = cyclesLoad.status === 'ready' ? cyclesLoad.cycles : [];
-
   return (
     <div className="flex min-h-0 flex-1 flex-col gap-4">
       <PartnersToolbar
-        cycles={cycles}
-        cycleId={cycleId}
-        onCycleChange={(nextCycleId) => {
-          setKnownPartnerTypes([]);
-          setPartnerType('');
-          setCycleId(nextCycleId);
-        }}
         view={view}
         onViewChange={setView}
         searchInput={searchInput}
@@ -236,14 +204,14 @@ export function PartnersPage() {
         onCreate={() => setCreateOpen(true)}
       />
 
-      {cyclesLoad.status === 'loading' ? <LoadingState message={tCommon('loading')} /> : null}
-      {cyclesLoad.status === 'error' ? <ErrorState message={cyclesLoad.message} /> : null}
+      {cyclesStatus === 'loading' ? <LoadingState message={tCommon('loading')} /> : null}
+      {cyclesStatus === 'error' && cyclesError ? <ErrorState message={cyclesError} /> : null}
 
-      {cyclesLoad.status === 'ready' && cycles.length === 0 ? (
+      {cyclesStatus === 'ready' && cycles.length === 0 ? (
         <EmptyState message={t('emptyNoCycles')} />
       ) : null}
 
-      {cyclesLoad.status === 'ready' && cycleId ? (
+      {cyclesStatus === 'ready' && cycleId ? (
         <>
           {partnersLoad.status === 'loading' ? <LoadingState message={tCommon('loading')} /> : null}
           {partnersLoad.status === 'error' ? <ErrorState message={partnersLoad.message} /> : null}

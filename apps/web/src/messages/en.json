@@ -40,7 +40,12 @@
     "expandSidebar": "Expand sidebar",
     "collapseSubnav": "Hide subcategories",
     "expandSubnav": "Show subcategories",
-    "soon": "soon"
+    "soon": "soon",
+    "eventCycle": "Event cycle",
+    "eventCycleActive": "active",
+    "eventCycleEmpty": "No cycles",
+    "eventCycleLoading": "Loading…",
+    "eventCycleError": "Unavailable"
   },
   "login": {
     "eyebrow": "BigProjects BOS",

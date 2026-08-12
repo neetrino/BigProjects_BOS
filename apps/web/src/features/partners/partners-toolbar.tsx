@@ -2,7 +2,6 @@
 
 import { Plus } from 'lucide-react';
 import { useTranslations } from 'next-intl';
-import type { EventCycle } from '@/lib/api/types';
 import type { BoardViewMode } from '@/components/kanban';
 import { Button } from '@/components/ui/button';
 import { SearchInput, SelectInput } from '@/components/ui/field';
@@ -14,9 +13,6 @@ type StaffOption = {
 };
 
 type PartnersToolbarProps = {
-  cycles: EventCycle[];
-  cycleId: string;
-  onCycleChange: (cycleId: string) => void;
   view: BoardViewMode;
   onViewChange: (view: BoardViewMode) => void;
   searchInput: string;
@@ -31,9 +27,6 @@ type PartnersToolbarProps = {
 };
 
 export function PartnersToolbar({
-  cycles,
-  cycleId,
-  onCycleChange,
   view,
   onViewChange,
   searchInput,
@@ -63,21 +56,6 @@ export function PartnersToolbar({
           onChange={(event) => onSearchChange(event.target.value)}
           aria-label={t('toolbar.searchPlaceholder')}
         />
-
-        <SelectInput
-          fitContent
-          value={cycleId}
-          onChange={(event) => onCycleChange(event.target.value)}
-          aria-label={t('toolbar.cycle')}
-        >
-          {cycles.length === 0 ? <option value="">{t('toolbar.noCycles')}</option> : null}
-          {cycles.map((cycle) => (
-            <option key={cycle.id} value={cycle.id}>
-              {cycle.name}
-              {cycle.status === 'ACTIVE' ? ` (${t('toolbar.active')})` : ''}
-            </option>
-          ))}
-        </SelectInput>
 
         <SelectInput
           fitContent

@@ -149,7 +149,7 @@ export function resolveActiveNavId(pathname: string, isAdmin: boolean): string |
 
 export function buildNavHref(
   item: Pick<NavItem, 'href' | 'preserveCycle'>,
-  cycleId: string | null,
+  cycleId: string | null | undefined,
 ): string {
   if (!item.href) {
     return '#';

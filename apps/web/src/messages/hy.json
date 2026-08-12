@@ -40,7 +40,12 @@
     "expandSidebar": "Ծավալել մենյուն",
     "collapseSubnav": "Թաքցնել ենթակատեգորիաները",
     "expandSubnav": "Ցույց տալ ենթակատեգորիաները",
-    "soon": "շուտով"
+    "soon": "շուտով",
+    "eventCycle": "Միջոցառման ցիկլ",
+    "eventCycleActive": "ակտիվ",
+    "eventCycleEmpty": "Ցիկլեր չկան",
+    "eventCycleLoading": "Բեռնվում է…",
+    "eventCycleError": "Անհասանելի"
   },
   "login": {
     "eyebrow": "BigProjects BOS",
