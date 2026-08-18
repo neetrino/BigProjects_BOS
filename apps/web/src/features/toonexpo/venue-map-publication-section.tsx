@@ -16,9 +16,9 @@ import { ErrorState, LoadingState } from '@/components/ui/page-state';
 import { StatusBadge, type StatusTone } from '@/components/ui/status-badge';
 import { showToast } from '@/components/ui/toast';
 import {
-  PublicationHistoryModal,
   PublicationHistoryRow,
-} from '@/features/toonexpo/publication-history-modal';
+  PublicationHistorySheet,
+} from '@/features/toonexpo/publication-history-sheet';
 import { formatDateTime } from '@/lib/format';
 
 type PlanPublishStatus = 'UNPUBLISHED' | 'PUBLISHED';
@@ -63,12 +63,7 @@ function toastForPublication(
         kind: 'error',
       };
     case 'FAILED':
-      return {
-        message: errorMessage
-          ? t('publication.toastFailedWithError', { error: errorMessage })
-          : t('publication.toastFailed'),
-        kind: 'error',
-      };
+      return { message: t('publication.toastFailed'), kind: 'error' };
     default:
       return { message: t('publication.toastPending'), kind: 'success' };
   }
@@ -237,7 +232,7 @@ export function VenueMapPublicationSection({
         </div>
       ) : null}
 
-      <PublicationHistoryModal
+      <PublicationHistorySheet
         open={historyOpen}
         publications={publications}
         onClose={() => setHistoryOpen(false)}
