@@ -20,3 +20,9 @@ export async function updateCycle(id: string, input: UpdateCycleInput): Promise<
     body: JSON.stringify(input),
   });
 }
+
+export async function deleteCycle(id: string): Promise<void> {
+  await apiFetch<void>(`${CYCLES_BASE}/${id}`, {
+    method: 'DELETE',
+  });
+}

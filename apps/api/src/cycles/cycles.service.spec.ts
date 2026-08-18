@@ -23,6 +23,7 @@ describe('CyclesService', () => {
       create: jest.Mock;
       findUnique: jest.Mock;
       update: jest.Mock;
+      delete: jest.Mock;
     };
   };
 
@@ -35,6 +36,7 @@ describe('CyclesService', () => {
         create: jest.fn(),
         findUnique: jest.fn(),
         update: jest.fn(),
+        delete: jest.fn(),
       },
     };
 
@@ -79,6 +81,37 @@ describe('CyclesService', () => {
       await expect(service.update(existingCycle.id, { code: 'TE2026-2' })).rejects.toThrow(
         ConflictException,
       );
+    });
+  });
+
+  describe('remove', () => {
+    it('throws when the target cycle does not exist', async () => {
+      prisma.eventCycle.findUnique.mockResolvedValue(null);
+
+      await expect(service.remove('missing')).rejects.toThrow(NotFoundException);
+    });
+
+    it('rejects a cycle that still has related records', async () => {
+      prisma.eventCycle.findUnique.mockResolvedValue({
+        ...existingCycle,
+        venuePlan: null,
+        _count: { builderDeals: 1, partnerParticipations: 0, toonExpoProvisioningRequests: 0 },
+      });
+
+      await expect(service.remove(existingCycle.id)).rejects.toThrow(ConflictException);
+      expect(prisma.eventCycle.delete).not.toHaveBeenCalled();
+    });
+
+    it('deletes an unused cycle', async () => {
+      prisma.eventCycle.findUnique.mockResolvedValue({
+        ...existingCycle,
+        venuePlan: null,
+        _count: { builderDeals: 0, partnerParticipations: 0, toonExpoProvisioningRequests: 0 },
+      });
+      prisma.eventCycle.delete.mockResolvedValue(existingCycle);
+
+      await expect(service.remove(existingCycle.id)).resolves.toBeUndefined();
+      expect(prisma.eventCycle.delete).toHaveBeenCalledWith({ where: { id: existingCycle.id } });
     });
   });
 

@@ -20,4 +20,9 @@ describe('CyclesController role metadata', () => {
     const roles = reflector.get<UserRole[]>(ROLES_KEY, CyclesController.prototype.update);
     expect(roles).toEqual([UserRole.ADMIN]);
   });
+
+  it('requires ADMIN for DELETE remove', () => {
+    const roles = reflector.get<UserRole[]>(ROLES_KEY, CyclesController.prototype.remove);
+    expect(roles).toEqual([UserRole.ADMIN]);
+  });
 });

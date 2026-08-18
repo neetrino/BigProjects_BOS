@@ -117,7 +117,10 @@
       "activateTitle": "Activate cycle",
       "activateDescription": "Activate “{name}”? Other active cycles may be closed by the API rules.",
       "closeTitle": "Close cycle",
-      "closeDescription": "Close “{name}”? This cannot be undone from the UI."
+      "closeDescription": "Close “{name}”? This cannot be undone from the UI.",
+      "deleteTitle": "Delete cycle",
+      "deleteDescription": "Delete “{name}”? This is only possible if the cycle has no deals, partners, venue map, or Expo requests.",
+      "deleted": "Cycle deleted."
     }
   },
   "organizations": {
