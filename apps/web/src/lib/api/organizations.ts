@@ -63,6 +63,12 @@ export async function updateOrganization(
   });
 }
 
+export async function deleteOrganization(id: string): Promise<void> {
+  await apiFetch<void>(`${ORGANIZATIONS_BASE}/${id}`, {
+    method: 'DELETE',
+  });
+}
+
 export async function createContact(
   organizationId: string,
   input: CreateContactInput,

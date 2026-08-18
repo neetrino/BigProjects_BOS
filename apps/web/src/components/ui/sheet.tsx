@@ -157,30 +157,30 @@ export function Sheet({
             'shadow-[var(--shadow-sheet)]',
           )}
         >
-          <header className="flex shrink-0 items-center justify-between gap-4 px-7 pb-4 pt-6">
-            <div className="min-w-0 flex-1">
-              <h2 className="truncate text-[calc(1.5rem+0.5px)] font-bold leading-tight tracking-tight text-[var(--color-fg)]">
+          <header className="shrink-0 px-7 pb-4 pt-6">
+            <div className="flex items-center justify-between gap-4">
+              <h2 className="min-w-0 truncate text-[calc(1.5rem+0.5px)] font-bold leading-tight tracking-tight text-[var(--color-fg)]">
                 {title}
               </h2>
-              {subtitle ? (
-                <p className="mt-1 text-sm text-[var(--color-muted)]">{subtitle}</p>
-              ) : null}
+              <div className="flex shrink-0 items-center gap-2">
+                {headerActions}
+                <button
+                  type="button"
+                  onClick={onClose}
+                  aria-label={t('close')}
+                  className={clsx(
+                    'inline-flex size-10 items-center justify-center rounded-full sm:hidden',
+                    'bg-[var(--color-brand)] text-white',
+                    'shadow-[0_4px_16px_rgb(40_57_148/0.35)]',
+                  )}
+                >
+                  <X className="size-4 stroke-[2.5]" aria-hidden />
+                </button>
+              </div>
             </div>
-            <div className="flex shrink-0 items-center gap-2">
-              {headerActions}
-              <button
-                type="button"
-                onClick={onClose}
-                aria-label={t('close')}
-                className={clsx(
-                  'inline-flex size-10 items-center justify-center rounded-full sm:hidden',
-                  'bg-[var(--color-brand)] text-white',
-                  'shadow-[0_4px_16px_rgb(40_57_148/0.35)]',
-                )}
-              >
-                <X className="size-4 stroke-[2.5]" aria-hidden />
-              </button>
-            </div>
+            {subtitle ? (
+              <p className="mt-1 text-sm text-[var(--color-muted)]">{subtitle}</p>
+            ) : null}
           </header>
 
           <div className="min-h-0 flex-1 overflow-y-auto px-7 pb-6 pt-2">{children}</div>

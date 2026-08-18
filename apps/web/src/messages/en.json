@@ -142,6 +142,9 @@
     },
     "empty": "No organizations found.",
     "notFound": "Organization not found.",
+    "deleteTitle": "Delete organization",
+    "deleteDescription": "Delete “{name}”? This is only possible if the organization has no deals, partners, or Expo requests.",
+    "deleted": "Organization deleted.",
     "picker": {
       "searchPlaceholder": "Search organizations",
       "noResults": "No organizations found",

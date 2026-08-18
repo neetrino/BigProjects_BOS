@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
 import { Organization, Prisma } from '@prisma/client';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateOrganizationDto } from './dto/create-organization.dto';
@@ -8,6 +8,8 @@ import { OrganizationListItemResponseDto } from './dto/organization-list-item-re
 import { UpdateOrganizationDto } from './dto/update-organization.dto';
 
 const ORGANIZATION_NOT_FOUND_MESSAGE = 'Organization not found.';
+const ORGANIZATION_IN_USE_MESSAGE =
+  'This organization cannot be deleted because it has deals, partners, or Expo requests.';
 
 type OrganizationWithContactCount = Organization & {
   _count: { contacts: number };
@@ -95,6 +97,32 @@ export class OrganizationsService {
     });
 
     return this.toListItemResponse(organization);
+  }
+
+  async remove(id: string): Promise<void> {
+    const existing = await this.prisma.organization.findUnique({
+      where: { id },
+      include: {
+        _count: {
+          select: {
+            builderDeals: true,
+            partnerParticipations: true,
+            toonExpoProvisioningRequests: true,
+          },
+        },
+      },
+    });
+    if (!existing) {
+      throw new NotFoundException(ORGANIZATION_NOT_FOUND_MESSAGE);
+    }
+    if (
+      existing._count.builderDeals > 0 ||
+      existing._count.partnerParticipations > 0 ||
+      existing._count.toonExpoProvisioningRequests > 0
+    ) {
+      throw new ConflictException(ORGANIZATION_IN_USE_MESSAGE);
+    }
+    await this.prisma.organization.delete({ where: { id } });
   }
 
   private buildListWhere(query: ListOrganizationsQueryDto): Prisma.OrganizationWhereInput {
