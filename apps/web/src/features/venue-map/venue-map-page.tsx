@@ -174,7 +174,6 @@ export function VenueMapPage() {
           {!mapFullscreen && isAdmin ? (
             <VenueMapPublicationSection
               planId={plan.id}
-              publishStatus={plan.publishStatus}
               onPublished={refreshPlan}
             />
           ) : null}
