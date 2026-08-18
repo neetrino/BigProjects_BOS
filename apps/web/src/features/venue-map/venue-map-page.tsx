@@ -119,6 +119,18 @@ export function VenueMapPage() {
   );
   const hasImage = Boolean(plan?.imageUrl && plan.imageWidth && plan.imageHeight);
   const isCalibrated = Boolean(plan?.pixelsPerMeter && plan.pixelsPerMeter > 0);
+  const toolbar = plan && hasImage ? (
+    <VenueMapToolbar
+      planId={plan.id}
+      isAdmin={isAdmin}
+      interactionMode={interactionMode}
+      mapFullscreen={mapFullscreen}
+      onInteractionModeChange={setInteractionMode}
+      onFit={() => setFitRequestId((id) => id + 1)}
+      onToggleFullscreen={() => setMapFullscreen((open) => !open)}
+      onImageUploaded={refreshPlan}
+    />
+  ) : null;
 
   if (cyclesStatus === 'loading') {
     return <LoadingState message={tCommon('loading')} />;
@@ -137,13 +149,21 @@ export function VenueMapPage() {
         mapFullscreen && 'fixed inset-0 z-[60] bg-[var(--color-bg)] p-4',
       )}
     >
-      <header className="mb-1">
-        <h1 className="page-heading">{t('title')}</h1>
-        {hasImage && !mapFullscreen ? (
-          <p className="mt-1 text-xs text-[var(--color-muted)]">
-            {isCalibrated ? t('selectHint') : t('uncalibratedHint')}
-          </p>
-        ) : null}
+      <header
+        className={clsx(
+          'mb-1',
+          mapFullscreen && hasImage && 'flex flex-wrap items-center justify-between gap-3',
+        )}
+      >
+        <div className="min-w-0">
+          <h1 className="page-heading">{t('title')}</h1>
+          {hasImage && !mapFullscreen ? (
+            <p className="mt-1 text-xs text-[var(--color-muted)]">
+              {isCalibrated ? t('selectHint') : t('uncalibratedHint')}
+            </p>
+          ) : null}
+        </div>
+        {mapFullscreen ? toolbar : null}
       </header>
 
       {!cycleId ? <EmptyState message={t('selectCycle')} /> : null}
@@ -185,16 +205,7 @@ export function VenueMapPage() {
               onSaved={refreshPlan}
             />
           ) : null}
-          <VenueMapToolbar
-            planId={plan.id}
-            isAdmin={isAdmin}
-            interactionMode={interactionMode}
-            mapFullscreen={mapFullscreen}
-            onInteractionModeChange={setInteractionMode}
-            onFit={() => setFitRequestId((id) => id + 1)}
-            onToggleFullscreen={() => setMapFullscreen((open) => !open)}
-            onImageUploaded={refreshPlan}
-          />
+          {!mapFullscreen ? toolbar : null}
           <div className="panel flex min-h-0 flex-1 overflow-hidden">
             <div className="min-h-0 min-w-0 flex-1">
               <VenueMapStageClient
