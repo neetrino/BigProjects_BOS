@@ -178,9 +178,7 @@ export function Sheet({
                 </button>
               </div>
             </div>
-            {subtitle ? (
-              <p className="mt-1 text-sm text-[var(--color-muted)]">{subtitle}</p>
-            ) : null}
+            {subtitle ? <p className="mt-1 text-sm text-[var(--color-muted)]">{subtitle}</p> : null}
           </header>
 
           <div className="min-h-0 flex-1 overflow-y-auto px-7 pb-6 pt-2">{children}</div>

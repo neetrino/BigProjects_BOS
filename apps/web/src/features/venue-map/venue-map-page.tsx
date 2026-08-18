@@ -119,18 +119,19 @@ export function VenueMapPage() {
   );
   const hasImage = Boolean(plan?.imageUrl && plan.imageWidth && plan.imageHeight);
   const isCalibrated = Boolean(plan?.pixelsPerMeter && plan.pixelsPerMeter > 0);
-  const toolbar = plan && hasImage ? (
-    <VenueMapToolbar
-      planId={plan.id}
-      isAdmin={isAdmin}
-      interactionMode={interactionMode}
-      mapFullscreen={mapFullscreen}
-      onInteractionModeChange={setInteractionMode}
-      onFit={() => setFitRequestId((id) => id + 1)}
-      onToggleFullscreen={() => setMapFullscreen((open) => !open)}
-      onImageUploaded={refreshPlan}
-    />
-  ) : null;
+  const toolbar =
+    plan && hasImage ? (
+      <VenueMapToolbar
+        planId={plan.id}
+        isAdmin={isAdmin}
+        interactionMode={interactionMode}
+        mapFullscreen={mapFullscreen}
+        onInteractionModeChange={setInteractionMode}
+        onFit={() => setFitRequestId((id) => id + 1)}
+        onToggleFullscreen={() => setMapFullscreen((open) => !open)}
+        onImageUploaded={refreshPlan}
+      />
+    ) : null;
 
   if (cyclesStatus === 'loading') {
     return <LoadingState message={tCommon('loading')} />;
@@ -192,10 +193,7 @@ export function VenueMapPage() {
       {cycleId && plan && hasImage ? (
         <>
           {!mapFullscreen && isAdmin ? (
-            <VenueMapPublicationSection
-              planId={plan.id}
-              onPublished={refreshPlan}
-            />
+            <VenueMapPublicationSection planId={plan.id} onPublished={refreshPlan} />
           ) : null}
           {isAdmin && interactionMode === 'calibrate' ? (
             <CalibrationControls
