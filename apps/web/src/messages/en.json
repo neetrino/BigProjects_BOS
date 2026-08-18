@@ -117,7 +117,10 @@
       "activateTitle": "Activate cycle",
       "activateDescription": "Activate “{name}”? Other active cycles may be closed by the API rules.",
       "closeTitle": "Close cycle",
-      "closeDescription": "Close “{name}”? This cannot be undone from the UI."
+      "closeDescription": "Close “{name}”? This cannot be undone from the UI.",
+      "deleteTitle": "Delete cycle",
+      "deleteDescription": "Delete “{name}”? This is only possible if the cycle has no deals, partners, venue map, or Expo requests.",
+      "deleted": "Cycle deleted."
     }
   },
   "organizations": {
@@ -139,6 +142,9 @@
     },
     "empty": "No organizations found.",
     "notFound": "Organization not found.",
+    "deleteTitle": "Delete organization",
+    "deleteDescription": "Delete “{name}”? This is only possible if the organization has no deals, partners, or Expo requests.",
+    "deleted": "Organization deleted.",
     "picker": {
       "searchPlaceholder": "Search organizations",
       "noResults": "No organizations found",
@@ -600,10 +606,12 @@
       "confirmTitle": "Publish venue map",
       "confirmDescription": "Public data per area display modes will be sent to ToonExpo.",
       "publishedAt": "Published {date}",
-      "historyTitle": "Publication history",
+      "historyTitle": "Version history",
+      "historySubtitle": "All saved versions",
+      "historyRefresh": "Refresh",
       "historyOpen": "Open publication history",
       "historyEmpty": "No publications yet.",
-      "historyModalTitle": "Publication history",
+      "historyModalTitle": "Version history",
       "historyCount": "{count} entries",
       "historyViewAll": "View all ({count})",
       "version": "v{version}",

@@ -117,7 +117,10 @@
       "activateTitle": "Активировать цикл",
       "activateDescription": "Активировать «{name}»? Другие активные циклы могут быть закрыты по правилам API.",
       "closeTitle": "Закрыть цикл",
-      "closeDescription": "Закрыть «{name}»? Это действие нельзя отменить в интерфейсе."
+      "closeDescription": "Закрыть «{name}»? Это действие нельзя отменить в интерфейсе.",
+      "deleteTitle": "Удалить цикл",
+      "deleteDescription": "Удалить «{name}»? Это возможно только если у цикла нет сделок, партнёров, карты площадки или запросов Expo.",
+      "deleted": "Цикл удалён."
     }
   },
   "organizations": {
@@ -139,6 +142,9 @@
     },
     "empty": "Организации не найдены.",
     "notFound": "Организация не найдена.",
+    "deleteTitle": "Удалить организацию",
+    "deleteDescription": "Удалить «{name}»? Это возможно только если у организации нет сделок, партнёров или запросов Expo.",
+    "deleted": "Организация удалена.",
     "picker": {
       "searchPlaceholder": "Поиск организаций",
       "noResults": "Организации не найдены",
@@ -600,10 +606,12 @@
       "confirmTitle": "Публикация карты площадки",
       "confirmDescription": "Публичные данные по режимам отображения зон будут отправлены в ToonExpo.",
       "publishedAt": "Опубликовано {date}",
-      "historyTitle": "История публикаций",
+      "historyTitle": "История версий",
+      "historySubtitle": "Все сохранённые версии",
+      "historyRefresh": "Обновить",
       "historyOpen": "Открыть историю публикаций",
       "historyEmpty": "Публикаций пока нет.",
-      "historyModalTitle": "История публикаций",
+      "historyModalTitle": "История версий",
       "historyCount": "{count, plural, one {# запись} few {# записи} many {# записей} other {# записи}}",
       "historyViewAll": "Показать все ({count})",
       "version": "v{version}",

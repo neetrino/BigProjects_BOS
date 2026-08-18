@@ -13,6 +13,8 @@ import { UpdateCycleDto } from './dto/update-cycle.dto';
 const PRISMA_UNIQUE_CONSTRAINT_ERROR_CODE = 'P2002';
 const DUPLICATE_CODE_MESSAGE = 'An event cycle with this code already exists.';
 const CYCLE_NOT_FOUND_MESSAGE = 'Event cycle not found.';
+const CYCLE_IN_USE_MESSAGE =
+  'This cycle cannot be deleted because it has deals, partners, a venue map, or Expo requests.';
 const INVALID_STATUS_TRANSITION_MESSAGE =
   'Invalid status transition. Allowed transitions: DRAFT to ACTIVE, ACTIVE to CLOSED.';
 
@@ -78,6 +80,34 @@ export class CyclesService {
       }
       throw error;
     }
+  }
+
+  async remove(id: string): Promise<void> {
+    const existing = await this.prisma.eventCycle.findUnique({
+      where: { id },
+      include: {
+        venuePlan: { select: { id: true } },
+        _count: {
+          select: {
+            builderDeals: true,
+            partnerParticipations: true,
+            toonExpoProvisioningRequests: true,
+          },
+        },
+      },
+    });
+    if (!existing) {
+      throw new NotFoundException(CYCLE_NOT_FOUND_MESSAGE);
+    }
+    if (
+      existing.venuePlan ||
+      existing._count.builderDeals > 0 ||
+      existing._count.partnerParticipations > 0 ||
+      existing._count.toonExpoProvisioningRequests > 0
+    ) {
+      throw new ConflictException(CYCLE_IN_USE_MESSAGE);
+    }
+    await this.prisma.eventCycle.delete({ where: { id } });
   }
 
   assertValidStatusTransition(current: EventCycleStatus, next: EventCycleStatus): void {

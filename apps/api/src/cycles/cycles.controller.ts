@@ -1,5 +1,15 @@
-import { Body, Controller, Get, Param, Patch, Post } from '@nestjs/common';
-import { ApiCookieAuth, ApiTags } from '@nestjs/swagger';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  HttpCode,
+  HttpStatus,
+  Param,
+  Patch,
+  Post,
+} from '@nestjs/common';
+import { ApiCookieAuth, ApiNoContentResponse, ApiTags } from '@nestjs/swagger';
 import { UserRole } from '@prisma/client';
 import { Roles } from '../common/decorators/roles.decorator';
 import { CreateCycleDto } from './dto/create-cycle.dto';
@@ -28,5 +38,13 @@ export class CyclesController {
   @Patch(':id')
   update(@Param('id') id: string, @Body() dto: UpdateCycleDto): Promise<CycleResponseDto> {
     return this.cyclesService.update(id, dto);
+  }
+
+  @Roles(UserRole.ADMIN)
+  @Delete(':id')
+  @HttpCode(HttpStatus.NO_CONTENT)
+  @ApiNoContentResponse()
+  remove(@Param('id') id: string): Promise<void> {
+    return this.cyclesService.remove(id);
   }
 }

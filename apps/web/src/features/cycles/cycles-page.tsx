@@ -95,6 +95,15 @@ export function CyclesPage() {
     hydrateCycles(cycles);
   }
 
+  function removeCycle(cycleId: string) {
+    if (loadState.status !== 'ready') {
+      return;
+    }
+    const cycles = loadState.cycles.filter((item) => item.id !== cycleId);
+    setLoadState({ status: 'ready', cycles });
+    hydrateCycles(cycles);
+  }
+
   async function refreshCyclesFromServer() {
     const cycles = await listCycles();
     setLoadState({ status: 'ready', cycles });
@@ -262,6 +271,7 @@ export function CyclesPage() {
           cycle={editing}
           onClose={() => setSheetOpen(false)}
           onSaved={replaceCycle}
+          onDeleted={removeCycle}
         />
       ) : null}
 

@@ -2,13 +2,11 @@
 
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { clsx } from 'clsx';
-import { Hand, Maximize2, Minimize2, MousePointer2, Ruler, Scan } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { ApiError } from '@/lib/api/client';
 import { getVenuePlan, type VenuePlan } from '@/lib/api/venue-map';
 import { useActiveCycle } from '@/components/active-cycle/active-cycle-provider';
 import { useAuth } from '@/components/auth/auth-provider';
-import { Button } from '@/components/ui/button';
 import { EmptyState, ErrorState, LoadingState } from '@/components/ui/page-state';
 import { useClientCachedState } from '@/hooks/use-client-cached-state';
 import { CLIENT_CACHE_KEYS } from '@/lib/client-cache';
@@ -21,7 +19,7 @@ import type { EditorInteractionMode } from './venue-map-stage';
 import { VenueMapPublicationSection } from '@/features/toonexpo/venue-map-publication-section';
 import { VenueMapPanel } from './venue-map-panel';
 import { VenueMapStageClient } from './venue-map-stage-client';
-import { TOOLBAR_CONTROL_CLASS } from './constants';
+import { VenueMapToolbar } from './venue-map-toolbar';
 
 type PlanLoad =
   | { status: 'idle' }
@@ -121,6 +119,19 @@ export function VenueMapPage() {
   );
   const hasImage = Boolean(plan?.imageUrl && plan.imageWidth && plan.imageHeight);
   const isCalibrated = Boolean(plan?.pixelsPerMeter && plan.pixelsPerMeter > 0);
+  const toolbar =
+    plan && hasImage ? (
+      <VenueMapToolbar
+        planId={plan.id}
+        isAdmin={isAdmin}
+        interactionMode={interactionMode}
+        mapFullscreen={mapFullscreen}
+        onInteractionModeChange={setInteractionMode}
+        onFit={() => setFitRequestId((id) => id + 1)}
+        onToggleFullscreen={() => setMapFullscreen((open) => !open)}
+        onImageUploaded={refreshPlan}
+      />
+    ) : null;
 
   if (cyclesStatus === 'loading') {
     return <LoadingState message={tCommon('loading')} />;
@@ -139,65 +150,21 @@ export function VenueMapPage() {
         mapFullscreen && 'fixed inset-0 z-[60] bg-[var(--color-bg)] p-4',
       )}
     >
-      <header className="mb-1 flex flex-wrap items-center justify-between gap-3">
+      <header
+        className={clsx(
+          'mb-1',
+          mapFullscreen && hasImage && 'flex flex-wrap items-center justify-between gap-3',
+        )}
+      >
         <div className="min-w-0">
           <h1 className="page-heading">{t('title')}</h1>
+          {hasImage && !mapFullscreen ? (
+            <p className="mt-1 text-xs text-[var(--color-muted)]">
+              {isCalibrated ? t('selectHint') : t('uncalibratedHint')}
+            </p>
+          ) : null}
         </div>
-        {hasImage ? (
-          <div className="ml-auto flex flex-wrap items-end justify-end gap-2">
-            <Button
-              variant={interactionMode === 'select' ? 'primary' : 'secondary'}
-              className={TOOLBAR_CONTROL_CLASS}
-              onClick={() => setInteractionMode('select')}
-            >
-              <MousePointer2 className="size-4" aria-hidden />
-              {t('toolbar.select')}
-            </Button>
-            <Button
-              variant={interactionMode === 'pan' ? 'primary' : 'secondary'}
-              className={TOOLBAR_CONTROL_CLASS}
-              onClick={() => setInteractionMode('pan')}
-            >
-              <Hand className="size-4" aria-hidden />
-              {t('toolbar.pan')}
-            </Button>
-            {isAdmin ? (
-              <Button
-                variant={interactionMode === 'calibrate' ? 'primary' : 'secondary'}
-                className={TOOLBAR_CONTROL_CLASS}
-                onClick={() => setInteractionMode('calibrate')}
-              >
-                <Ruler className="size-4" aria-hidden />
-                {t('toolbar.calibrate')}
-              </Button>
-            ) : null}
-            <Button
-              variant="secondary"
-              className={TOOLBAR_CONTROL_CLASS}
-              onClick={() => setFitRequestId((id) => id + 1)}
-            >
-              <Scan className="size-4" aria-hidden />
-              {t('toolbar.fit')}
-            </Button>
-            {isAdmin && plan ? (
-              <UploadPlanImage planId={plan.id} onUploaded={refreshPlan} compact />
-            ) : null}
-            <Button
-              variant={mapFullscreen ? 'primary' : 'secondary'}
-              className={TOOLBAR_CONTROL_CLASS}
-              onClick={() => setMapFullscreen((open) => !open)}
-              aria-pressed={mapFullscreen}
-              title={mapFullscreen ? t('toolbar.exitFullscreen') : t('toolbar.fullscreen')}
-            >
-              {mapFullscreen ? (
-                <Minimize2 className="size-4" aria-hidden />
-              ) : (
-                <Maximize2 className="size-4" aria-hidden />
-              )}
-              {mapFullscreen ? t('toolbar.exitFullscreen') : t('toolbar.fullscreen')}
-            </Button>
-          </div>
-        ) : null}
+        {mapFullscreen ? toolbar : null}
       </header>
 
       {!cycleId ? <EmptyState message={t('selectCycle')} /> : null}
@@ -226,11 +193,7 @@ export function VenueMapPage() {
       {cycleId && plan && hasImage ? (
         <>
           {!mapFullscreen && isAdmin ? (
-            <VenueMapPublicationSection
-              planId={plan.id}
-              publishStatus={plan.publishStatus}
-              onPublished={refreshPlan}
-            />
+            <VenueMapPublicationSection planId={plan.id} onPublished={refreshPlan} />
           ) : null}
           {isAdmin && interactionMode === 'calibrate' ? (
             <CalibrationControls
@@ -240,13 +203,7 @@ export function VenueMapPage() {
               onSaved={refreshPlan}
             />
           ) : null}
-          {!mapFullscreen ? (
-            !isCalibrated ? (
-              <p className="text-sm text-[var(--color-muted)]">{t('uncalibratedHint')}</p>
-            ) : (
-              <p className="text-xs text-[var(--color-muted)]">{t('selectHint')}</p>
-            )
-          ) : null}
+          {!mapFullscreen ? toolbar : null}
           <div className="panel flex min-h-0 flex-1 overflow-hidden">
             <div className="min-h-0 min-w-0 flex-1">
               <VenueMapStageClient

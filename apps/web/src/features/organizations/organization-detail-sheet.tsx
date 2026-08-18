@@ -1,15 +1,18 @@
 'use client';
 
 import { useEffect, useMemo, useState } from 'react';
+import { Trash2 } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { ApiError } from '@/lib/api/client';
-import { getOrganization, updateOrganization } from '@/lib/api/organizations';
+import { deleteOrganization, getOrganization, updateOrganization } from '@/lib/api/organizations';
 import type { OrganizationContact, OrganizationDetail, OrganizationType } from '@/lib/api/types';
 import { ContactsSection } from '@/features/organizations/contacts-section';
 import { Button } from '@/components/ui/button';
+import { Dialog } from '@/components/ui/dialog';
 import { Field, SelectInput, TextInput } from '@/components/ui/field';
 import { ErrorState, LoadingState } from '@/components/ui/page-state';
 import { Sheet } from '@/components/ui/sheet';
+import { showToast } from '@/components/ui/toast';
 
 const ORGANIZATION_TYPES: OrganizationType[] = ['BUILDER', 'BANK', 'PARTNER', 'OTHER'];
 
@@ -18,6 +21,7 @@ type OrganizationDetailSheetProps = {
   open: boolean;
   onClose: () => void;
   onUpdated: () => void;
+  onDeleted: () => void;
 };
 
 type DetailDraft = {
@@ -50,6 +54,7 @@ export function OrganizationDetailSheet({
   open,
   onClose,
   onUpdated,
+  onDeleted,
 }: OrganizationDetailSheetProps) {
   const [activeId, setActiveId] = useState<string | null>(organizationId);
 
@@ -68,6 +73,7 @@ export function OrganizationDetailSheet({
       organizationId={activeId}
       onClose={onClose}
       onUpdated={onUpdated}
+      onDeleted={onDeleted}
     />
   );
 }
@@ -77,6 +83,7 @@ type OrganizationDetailSheetInnerProps = {
   organizationId: string;
   onClose: () => void;
   onUpdated: () => void;
+  onDeleted: () => void;
 };
 
 function OrganizationDetailSheetInner({
@@ -84,12 +91,15 @@ function OrganizationDetailSheetInner({
   organizationId,
   onClose,
   onUpdated,
+  onDeleted,
 }: OrganizationDetailSheetInnerProps) {
   const t = useTranslations('organizations');
   const tCommon = useTranslations('common');
   const [loadState, setLoadState] = useState<DetailLoadState>({ status: 'loading' });
   const [saveError, setSaveError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
+  const [deleteOpen, setDeleteOpen] = useState(false);
+  const [deleteBusy, setDeleteBusy] = useState(false);
 
   useEffect(() => {
     let cancelled = false;
@@ -192,114 +202,165 @@ function OrganizationDetailSheetInner({
     }
   }
 
+  async function handleDelete() {
+    if (loadState.status !== 'ready') {
+      return;
+    }
+    setDeleteBusy(true);
+    try {
+      await deleteOrganization(loadState.detail.id);
+      setDeleteOpen(false);
+      onClose();
+      onDeleted();
+      showToast(t('deleted'), 'success');
+    } catch (err) {
+      showToast(err instanceof ApiError ? err.message : tCommon('unexpectedError'), 'error');
+    } finally {
+      setDeleteBusy(false);
+    }
+  }
+
   const sheetTitle = loadState.status === 'ready' ? loadState.detail.name : t('detailTitle');
   const sheetSubtitle =
     loadState.status === 'ready' ? t(`types.${loadState.detail.type}`) : undefined;
 
   return (
-    <Sheet
-      open={open}
-      title={sheetTitle}
-      subtitle={sheetSubtitle}
-      onClose={onClose}
-      widthClassName="w-full sm:w-[min(100%,24rem)]"
-      footer={
-        isDirty ? (
-          <div className="flex flex-col gap-2">
-            {saveError ? <p className="text-sm text-[var(--color-danger)]">{saveError}</p> : null}
-            <div className="flex gap-2">
-              <Button
-                variant="secondary"
-                onClick={handleCancelDraft}
-                disabled={busy}
-                className="flex-1"
-              >
-                {tCommon('cancel')}
-              </Button>
-              <Button
-                variant="primary"
-                onClick={() => void handleSave()}
-                disabled={busy}
-                className="flex-1"
-              >
-                {busy ? tCommon('saving') : tCommon('save')}
-              </Button>
+    <>
+      <Sheet
+        open={open}
+        title={sheetTitle}
+        subtitle={sheetSubtitle}
+        onClose={onClose}
+        widthClassName="w-full sm:w-[min(100%,30rem)]"
+        headerActions={
+          loadState.status === 'ready' ? (
+            <button
+              type="button"
+              aria-label={tCommon('delete')}
+              title={tCommon('delete')}
+              disabled={busy || deleteBusy}
+              onClick={() => setDeleteOpen(true)}
+              className="inline-flex size-9 items-center justify-center rounded-full text-[var(--color-muted)] transition-colors hover:bg-[var(--color-danger)]/10 hover:text-[var(--color-danger)] disabled:cursor-not-allowed disabled:opacity-50"
+            >
+              <Trash2 className="size-4" aria-hidden />
+            </button>
+          ) : undefined
+        }
+        footer={
+          isDirty ? (
+            <div className="flex flex-col gap-2">
+              {saveError ? <p className="text-sm text-[var(--color-danger)]">{saveError}</p> : null}
+              <div className="flex gap-2">
+                <Button
+                  variant="secondary"
+                  onClick={handleCancelDraft}
+                  disabled={busy}
+                  className="flex-1"
+                >
+                  {tCommon('cancel')}
+                </Button>
+                <Button
+                  variant="primary"
+                  onClick={() => void handleSave()}
+                  disabled={busy}
+                  className="flex-1"
+                >
+                  {busy ? tCommon('saving') : tCommon('save')}
+                </Button>
+              </div>
             </div>
-          </div>
-        ) : undefined
-      }
-    >
-      {loadState.status === 'loading' ? <LoadingState message={tCommon('loading')} /> : null}
-      {loadState.status === 'error' ? <ErrorState message={loadState.message} /> : null}
-      {loadState.status === 'ready' ? (
-        <div className="flex flex-col gap-6">
-          <section className="flex flex-col gap-3">
-            <h3 className="text-sm font-semibold text-[var(--color-fg)]">{t('detailsSection')}</h3>
-            <Field label={t('fields.name')} htmlFor="detail-name">
-              <TextInput
-                id="detail-name"
-                value={loadState.draft.name}
-                onChange={(event) => setDraft((prev) => ({ ...prev, name: event.target.value }))}
-              />
-            </Field>
-            <Field label={t('fields.type')} htmlFor="detail-type">
-              <SelectInput
-                id="detail-type"
-                value={loadState.draft.type}
-                onChange={(event) =>
-                  setDraft((prev) => ({
-                    ...prev,
-                    type: event.target.value as OrganizationType,
-                  }))
-                }
-              >
-                {ORGANIZATION_TYPES.map((item) => (
-                  <option key={item} value={item}>
-                    {t(`types.${item}`)}
-                  </option>
-                ))}
-              </SelectInput>
-            </Field>
-            <Field label={t('fields.phone')} htmlFor="detail-phone">
-              <TextInput
-                id="detail-phone"
-                value={loadState.draft.phone}
-                onChange={(event) => setDraft((prev) => ({ ...prev, phone: event.target.value }))}
-              />
-            </Field>
-            <Field label={t('fields.email')} htmlFor="detail-email">
-              <TextInput
-                id="detail-email"
-                type="email"
-                value={loadState.draft.email}
-                onChange={(event) => setDraft((prev) => ({ ...prev, email: event.target.value }))}
-              />
-            </Field>
-            <Field label={t('fields.website')} htmlFor="detail-website">
-              <TextInput
-                id="detail-website"
-                value={loadState.draft.website}
-                onChange={(event) => setDraft((prev) => ({ ...prev, website: event.target.value }))}
-              />
-            </Field>
-            <Field label={t('fields.registrationId')} htmlFor="detail-reg">
-              <TextInput
-                id="detail-reg"
-                value={loadState.draft.registrationId}
-                onChange={(event) =>
-                  setDraft((prev) => ({ ...prev, registrationId: event.target.value }))
-                }
-              />
-            </Field>
-          </section>
+          ) : undefined
+        }
+      >
+        {loadState.status === 'loading' ? <LoadingState message={tCommon('loading')} /> : null}
+        {loadState.status === 'error' ? <ErrorState message={loadState.message} /> : null}
+        {loadState.status === 'ready' ? (
+          <div className="flex flex-col gap-6">
+            <section className="flex flex-col gap-3">
+              <h3 className="text-sm font-semibold text-[var(--color-fg)]">
+                {t('detailsSection')}
+              </h3>
+              <Field label={t('fields.name')} htmlFor="detail-name">
+                <TextInput
+                  id="detail-name"
+                  value={loadState.draft.name}
+                  onChange={(event) => setDraft((prev) => ({ ...prev, name: event.target.value }))}
+                />
+              </Field>
+              <Field label={t('fields.type')} htmlFor="detail-type">
+                <SelectInput
+                  id="detail-type"
+                  value={loadState.draft.type}
+                  onChange={(event) =>
+                    setDraft((prev) => ({
+                      ...prev,
+                      type: event.target.value as OrganizationType,
+                    }))
+                  }
+                >
+                  {ORGANIZATION_TYPES.map((item) => (
+                    <option key={item} value={item}>
+                      {t(`types.${item}`)}
+                    </option>
+                  ))}
+                </SelectInput>
+              </Field>
+              <Field label={t('fields.phone')} htmlFor="detail-phone">
+                <TextInput
+                  id="detail-phone"
+                  value={loadState.draft.phone}
+                  onChange={(event) => setDraft((prev) => ({ ...prev, phone: event.target.value }))}
+                />
+              </Field>
+              <Field label={t('fields.email')} htmlFor="detail-email">
+                <TextInput
+                  id="detail-email"
+                  type="email"
+                  value={loadState.draft.email}
+                  onChange={(event) => setDraft((prev) => ({ ...prev, email: event.target.value }))}
+                />
+              </Field>
+              <Field label={t('fields.website')} htmlFor="detail-website">
+                <TextInput
+                  id="detail-website"
+                  value={loadState.draft.website}
+                  onChange={(event) =>
+                    setDraft((prev) => ({ ...prev, website: event.target.value }))
+                  }
+                />
+              </Field>
+              <Field label={t('fields.registrationId')} htmlFor="detail-reg">
+                <TextInput
+                  id="detail-reg"
+                  value={loadState.draft.registrationId}
+                  onChange={(event) =>
+                    setDraft((prev) => ({ ...prev, registrationId: event.target.value }))
+                  }
+                />
+              </Field>
+            </section>
 
-          <ContactsSection
-            organizationId={loadState.detail.id}
-            contacts={loadState.detail.contacts}
-            onChange={handleContactsChange}
-          />
-        </div>
-      ) : null}
-    </Sheet>
+            <ContactsSection
+              organizationId={loadState.detail.id}
+              contacts={loadState.detail.contacts}
+              onChange={handleContactsChange}
+            />
+          </div>
+        ) : null}
+      </Sheet>
+      <Dialog
+        open={deleteOpen}
+        title={t('deleteTitle')}
+        description={t('deleteDescription', {
+          name: loadState.status === 'ready' ? loadState.detail.name : '',
+        })}
+        confirmLabel={tCommon('delete')}
+        cancelLabel={tCommon('cancel')}
+        confirmVariant="danger"
+        busy={deleteBusy}
+        onCancel={() => setDeleteOpen(false)}
+        onConfirm={() => void handleDelete()}
+      />
+    </>
   );
 }

@@ -108,6 +108,7 @@ export function ContactsPage() {
         organizationId={selectedOrganizationId}
         onClose={() => setSelectedOrganizationId(null)}
         onUpdated={() => setReloadToken((value) => value + 1)}
+        onDeleted={() => setReloadToken((value) => value + 1)}
       />
     </div>
   );

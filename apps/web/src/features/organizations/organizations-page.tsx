@@ -152,6 +152,7 @@ export function OrganizationsPage() {
         organizationId={selectedId}
         onClose={() => setSelectedId(null)}
         onUpdated={reload}
+        onDeleted={reload}
       />
     </div>
   );

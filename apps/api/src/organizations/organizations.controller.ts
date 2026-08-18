@@ -1,5 +1,16 @@
-import { Body, Controller, Get, Param, Patch, Post, Query } from '@nestjs/common';
-import { ApiCookieAuth, ApiTags } from '@nestjs/swagger';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  HttpCode,
+  HttpStatus,
+  Param,
+  Patch,
+  Post,
+  Query,
+} from '@nestjs/common';
+import { ApiCookieAuth, ApiNoContentResponse, ApiTags } from '@nestjs/swagger';
 import { OrganizationContactResponseDto } from '../contacts/dto/organization-contact-response.dto';
 import { ContactsService } from '../contacts/contacts.service';
 import { CreateContactDto } from '../contacts/dto/create-contact.dto';
@@ -40,6 +51,13 @@ export class OrganizationsController {
     @Body() dto: UpdateOrganizationDto,
   ): Promise<OrganizationListItemResponseDto> {
     return this.organizationsService.update(id, dto);
+  }
+
+  @Delete(':id')
+  @HttpCode(HttpStatus.NO_CONTENT)
+  @ApiNoContentResponse()
+  remove(@Param('id') id: string): Promise<void> {
+    return this.organizationsService.remove(id);
   }
 
   @Post(':id/contacts')
