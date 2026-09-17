@@ -67,6 +67,8 @@ const isDev = process.env.NODE_ENV === 'development';
 
 const nextConfig: NextConfig = {
   reactStrictMode: true,
+  output: 'standalone',
+  outputFileTracingRoot: resolve(__dirname, '../..'),
   allowedDevOrigins: resolveAllowedDevOrigins(),
   async rewrites() {
     return [
