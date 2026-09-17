@@ -1,6 +1,7 @@
 .git
 .gitignore
 .github
+.cursor
 node_modules
 **/node_modules
 .next
@@ -10,7 +11,9 @@ dist
 coverage
 playwright-report
 test-results
+blob-report
 *.log
 .env
 .env.*
 !.env.example
+
