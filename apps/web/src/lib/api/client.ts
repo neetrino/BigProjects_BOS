@@ -89,7 +89,7 @@ export async function apiFetch<T>(path: string, options: ApiFetchOptions = {}): 
   if (response.status === 401 && redirectOn401 && typeof window !== 'undefined') {
     const sessionAlive = await confirmSessionAlive();
     if (!sessionAlive) {
-      window.location.assign(LOGIN_PATH);
+      window.location.assign(new URL(LOGIN_PATH, window.location.origin).href);
     }
     throw new ApiError(401, 'Unauthorized');
   }
