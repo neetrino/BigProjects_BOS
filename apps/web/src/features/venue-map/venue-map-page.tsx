@@ -16,7 +16,12 @@ import { CreatePlanForm } from './create-plan-form';
 import type { GridCell, ImagePoint } from './domain/grid-transform';
 import type { EditorInteractionMode } from './venue-map-stage';
 import { VenueMapPublicationSection } from '@/features/toonexpo/venue-map-publication-section';
-import { persistMapBooth, persistMapBoothLayout, persistMapBoothMove } from './persist-map-booth';
+import {
+  persistMapBooth,
+  persistMapBoothLayout,
+  persistMapBoothMove,
+  persistMissingMapBooths,
+} from './persist-map-booth';
 import { showToast } from '@/components/ui/toast';
 import { ToonExpoVenueMapFrame } from './toonexpo-venue-map-frame';
 import type { MapBoothPick } from './toonexpo-venue-map-bridge';
@@ -129,6 +134,40 @@ export function VenueMapPage() {
   const mapSelectionId = selectedAreaId ?? selectedBooth?.id ?? null;
 
   const persistingBoothIdRef = useRef<string | null>(null);
+  const importedPlanIdRef = useRef<string | null>(null);
+
+  useEffect(() => {
+    if (!plan || plan.pixelsPerMeter === null || mapBooths.length === 0) {
+      return;
+    }
+    if (importedPlanIdRef.current === plan.id) {
+      return;
+    }
+    importedPlanIdRef.current = plan.id;
+    let cancelled = false;
+    void persistMissingMapBooths(plan.id, mapBooths, plan.areas)
+      .then((result) => {
+        if (cancelled) {
+          return;
+        }
+        if (result.created > 0) {
+          showToast(t('toolbar.boothsImported', { count: result.created }), 'success');
+          refreshPlan();
+        }
+        if (result.failed > 0) {
+          showToast(t('toolbar.boothsImportFailed', { count: result.failed }), 'error');
+        }
+      })
+      .catch((err: unknown) => {
+        importedPlanIdRef.current = null;
+        if (!cancelled) {
+          showToast(err instanceof ApiError ? err.message : tCommon('unexpectedError'), 'error');
+        }
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [mapBooths, plan, refreshPlan, t, tCommon]);
 
   const handleSelectArea = useCallback((areaId: string | null) => {
     setSelectedAreaId(areaId);

@@ -382,6 +382,8 @@
       "saveLayout": "Save layout",
       "saveLayoutSaved": "Saved {count} booth positions.",
       "saveLayoutEmpty": "Move a booth first, then save.",
+      "boothsImported": "Added {count} floor-plan booths to this plan.",
+      "boothsImportFailed": "Could not add {count} booths because their cells overlap an existing area.",
       "fullscreen": "Fullscreen",
       "exitFullscreen": "Exit fullscreen"
     },

@@ -46,6 +46,58 @@ export async function persistMapBoothMove(
   return persistMapBooth(planId, booth, areas);
 }
 
+function cellKey(cell: { x: number; y: number }): string {
+  return `${cell.x}:${cell.y}`;
+}
+
+function boothAlreadyStored(booth: MapBoothPick, areas: readonly VenueSpaceArea[]): boolean {
+  return areas.some((area) => area.code === booth.code);
+}
+
+/**
+ * Creates a space area for every floor-plan booth that is not already on the plan.
+ * Existing areas, including manual ones, are left unchanged.
+ */
+export async function persistMissingMapBooths(
+  planId: string,
+  booths: readonly MapBoothPick[],
+  areas: readonly VenueSpaceArea[],
+): Promise<{ created: number; failed: number }> {
+  const occupied = new Set<string>();
+  for (const area of areas) {
+    for (const cell of area.cells) {
+      occupied.add(cellKey(cell));
+    }
+  }
+
+  let created = 0;
+  let failed = 0;
+  for (const booth of booths) {
+    if (booth.cells.length === 0 || boothAlreadyStored(booth, areas)) {
+      continue;
+    }
+    const overlaps = booth.cells.some((cell) => occupied.has(cellKey(cell)));
+    if (overlaps) {
+      failed += 1;
+      continue;
+    }
+    try {
+      await createSpaceArea(planId, {
+        name: booth.name,
+        code: booth.code,
+        cells: booth.cells,
+      });
+      created += 1;
+      for (const cell of booth.cells) {
+        occupied.add(cellKey(cell));
+      }
+    } catch {
+      failed += 1;
+    }
+  }
+  return { created, failed };
+}
+
 /** Saves every booth that still has a pending layout change. */
 export async function persistMapBoothLayout(
   planId: string,
