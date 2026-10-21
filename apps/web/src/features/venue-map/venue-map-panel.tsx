@@ -1,8 +1,6 @@
 'use client';
 
 import { useState } from 'react';
-import { clsx } from 'clsx';
-import { MapPin } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { ApiError } from '@/lib/api/client';
 import {
@@ -20,34 +18,61 @@ import { Field, SelectInput, TextInput } from '@/components/ui/field';
 import { StatusBadge } from '@/components/ui/status-badge';
 import { showToast } from '@/components/ui/toast';
 import { AssignAreaDialog } from './assign-area-dialog';
+import { BoothList } from './booth-list';
+import { MapBoothDetail } from './map-booth-detail';
+import type { MapBoothPick } from './toonexpo-venue-map-bridge';
 
 type VenueMapPanelProps = {
   area: VenueSpaceArea | null;
+  booth: MapBoothPick | null;
   cycleId: string;
   areas: readonly VenueSpaceArea[];
+  mapBooths: readonly MapBoothPick[];
   selectedAreaId: string | null;
+  selectedBoothId: string | null;
   onSelectArea: (areaId: string | null) => void;
+  onSelectBooth: (booth: MapBoothPick | null) => void;
+  onSavePosition: () => void;
+  savePositionBusy: boolean;
   onChanged: () => void;
 };
 
 export function VenueMapPanel({
   area,
+  booth,
   cycleId,
   areas,
+  mapBooths,
   selectedAreaId,
+  selectedBoothId,
   onSelectArea,
+  onSelectBooth,
+  onSavePosition,
+  savePositionBusy,
   onChanged,
 }: VenueMapPanelProps) {
   const t = useTranslations('venueMap');
+  const tCommon = useTranslations('common');
+  const selectedBooth = area ? null : booth;
+  const list = (
+    <BoothList
+      areas={areas}
+      mapBooths={mapBooths}
+      selectedAreaId={selectedAreaId}
+      selectedBoothId={selectedBoothId}
+      onSelectArea={onSelectArea}
+      onSelectBooth={onSelectBooth}
+    />
+  );
 
-  if (!area) {
+  if (!area && !selectedBooth) {
     return (
       <aside className="flex min-h-0 w-80 shrink-0 flex-col gap-3 border-l border-[var(--color-border)] bg-[var(--color-bg-warm)]/40 p-4">
         <h2 className="shrink-0 font-[family-name:var(--font-display)] text-lg font-medium tracking-tight text-[var(--color-fg)]">
           {t('panel.title')}
         </h2>
         <p className="shrink-0 text-sm text-[var(--color-muted)]">{t('panel.selectHint')}</p>
-        <AreaList areas={areas} selectedAreaId={selectedAreaId} onSelectArea={onSelectArea} />
+        {list}
       </aside>
     );
   }
@@ -61,64 +86,19 @@ export function VenueMapPanel({
         </Button>
       </div>
       <div className="soft-scrollbar min-h-0 flex-1 overflow-y-auto">
-        <AreaDetailForm key={area.id} area={area} cycleId={cycleId} onChanged={onChanged} />
-        <div className="mt-3 border-t border-[var(--color-border)] pt-3">
-          <AreaList areas={areas} selectedAreaId={selectedAreaId} onSelectArea={onSelectArea} />
+        {area ? (
+          <AreaDetailForm key={area.id} area={area} cycleId={cycleId} onChanged={onChanged} />
+        ) : selectedBooth ? (
+          <MapBoothDetail booth={selectedBooth} />
+        ) : null}
+        <div className="mt-3">
+          <Button variant="primary" disabled={savePositionBusy} onClick={onSavePosition}>
+            {savePositionBusy ? tCommon('saving') : t('panel.savePosition')}
+          </Button>
         </div>
+        <div className="mt-3 border-t border-[var(--color-border)] pt-3">{list}</div>
       </div>
     </aside>
-  );
-}
-
-type AreaListProps = {
-  areas: readonly VenueSpaceArea[];
-  selectedAreaId: string | null;
-  onSelectArea: (areaId: string) => void;
-};
-
-function AreaList({ areas, selectedAreaId, onSelectArea }: AreaListProps) {
-  const t = useTranslations('venueMap');
-  if (areas.length === 0) {
-    return <p className="text-sm text-[var(--color-muted)]">{t('panel.noAreas')}</p>;
-  }
-  return (
-    <ul className="soft-scrollbar flex min-h-0 flex-1 flex-col gap-2 overflow-y-auto pr-0.5">
-      {areas.map((item) => {
-        const isSelected = item.id === selectedAreaId;
-
-        return (
-          <li key={item.id} className="shrink-0">
-            <button
-              type="button"
-              onClick={() => onSelectArea(item.id)}
-              className={clsx(
-                'flex w-full items-center gap-2.5 rounded-[var(--radius-control)] border px-2.5 py-2 text-left transition-colors duration-150',
-                isSelected
-                  ? 'border-[var(--color-brand)] bg-white shadow-[var(--shadow-soft)]'
-                  : 'border-[var(--color-border)] bg-white/80 hover:border-[var(--color-border-strong)] hover:bg-white',
-              )}
-            >
-              <span className="inline-flex size-8 shrink-0 items-center justify-center rounded-lg bg-[var(--color-accent-soft)] text-[var(--color-brand)]">
-                <MapPin className="size-4" aria-hidden strokeWidth={2.25} />
-              </span>
-              <span className="min-w-0 flex-1">
-                <span
-                  className={clsx(
-                    'block truncate text-sm',
-                    isSelected
-                      ? 'font-semibold text-[var(--color-fg)]'
-                      : 'font-medium text-[var(--color-fg)]',
-                  )}
-                >
-                  {item.name}
-                </span>
-                <span className="text-xs text-[var(--color-muted)]">{item.squareMeters} m²</span>
-              </span>
-            </button>
-          </li>
-        );
-      })}
-    </ul>
   );
 }
 

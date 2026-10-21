@@ -1,12 +1,13 @@
 'use client';
 
+import { useState } from 'react';
 import { Group, Line, Rect, Text } from 'react-konva';
 import type { VenueSpaceArea } from '@/lib/api/venue-map';
 import {
   LABEL_BASE_FONT_SIZE,
   LABEL_MAX_SCREEN_SIZE,
   LABEL_MIN_SCREEN_SIZE,
-  areaMapColors,
+  boothVisual,
 } from '../constants';
 import { cellsBoundingRect } from '../domain/cell-selection';
 import type { CalibrationGeometry } from '../domain/grid-transform';
@@ -34,7 +35,7 @@ type AreaRect = {
   width: number;
   height: number;
   selected: boolean;
-  colors: { fill: string; stroke: string };
+  occupied: boolean;
 };
 
 /** Keep label ~constant size on screen regardless of map zoom. */
@@ -55,9 +56,11 @@ export function AreasLayer({
   onSelectArea,
   onHoverTipChange,
 }: AreasLayerProps) {
+  const [hoveredAreaId, setHoveredAreaId] = useState<string | null>(null);
   const fontSize = labelFontSize(scale);
+  const sqmFontSize = fontSize * 0.76;
   const pad = 4 / (scale > 0 ? scale : 1);
-  const colorIndexById = new Map(areas.map((area, index) => [area.id, index]));
+  const strokeWidth = (selected: boolean) => (selected ? 2 / scale : 1 / scale);
 
   const rects: AreaRect[] = [];
   for (const area of areas) {
@@ -71,86 +74,105 @@ export function AreasLayer({
     if (!rect) {
       continue;
     }
-    const selected = area.id === selectedAreaId;
-    const colorIndex = colorIndexById.get(area.id) ?? 0;
     rects.push({
       area,
       x: rect.x,
       y: rect.y,
       width: rect.width,
       height: rect.height,
-      selected,
-      colors: areaMapColors(colorIndex, selected),
+      selected: area.id === selectedAreaId,
+      occupied: area.allocation !== null,
     });
   }
 
   return (
     <Group>
-      {rects.map((item) => (
-        <Rect
-          key={`fill-${item.area.id}`}
-          x={item.x}
-          y={item.y}
-          width={item.width}
-          height={item.height}
-          fill={item.colors.fill}
-          stroke={item.colors.stroke}
-          strokeWidth={item.selected ? 2.5 / scale : 1.5 / scale}
-          onClick={() => onSelectArea(item.area.id)}
-          onTap={() => onSelectArea(item.area.id)}
-          onMouseEnter={(event) => {
-            const stage = event.target.getStage();
-            const pointer = stage?.getPointerPosition();
-            if (stage) {
-              stage.container().style.cursor = 'pointer';
-            }
-            if (pointer) {
-              onHoverTipChange({
-                name: item.area.name,
-                squareMeters: item.area.squareMeters,
-                clientX: pointer.x,
-                clientY: pointer.y,
-              });
-            }
-          }}
-          onMouseMove={(event) => {
-            const pointer = event.target.getStage()?.getPointerPosition();
-            if (!pointer) {
-              return;
-            }
-            onHoverTipChange({
-              name: item.area.name,
-              squareMeters: item.area.squareMeters,
-              clientX: pointer.x,
-              clientY: pointer.y,
-            });
-          }}
-          onMouseLeave={(event) => {
-            const stage = event.target.getStage();
-            if (stage) {
-              stage.container().style.cursor = 'default';
-            }
-            onHoverTipChange(null);
-          }}
-        />
-      ))}
-
-      {rects.map((item) => (
-        <Text
-          key={`label-${item.area.id}`}
-          x={item.x + pad}
-          y={item.y + pad}
-          width={Math.max(item.width - pad * 2, 1)}
-          text={item.area.name}
-          fontSize={fontSize}
-          fontFamily="Arial, sans-serif"
-          fontStyle="bold"
-          fill="#0f1a2a"
-          listening={false}
-          wrap="none"
-          ellipsis
-        />
-      ))}
+      {rects.map((item) => {
+        const colors = boothVisual(item.occupied, item.selected, item.area.id === hoveredAreaId);
+        const showSqm = item.height > fontSize * 3.2;
+        return (
+          <Group key={item.area.id}>
+            <Rect
+              x={item.x}
+              y={item.y}
+              width={item.width}
+              height={item.height}
+              fill={colors.fill}
+              stroke={colors.stroke}
+              strokeWidth={strokeWidth(item.selected)}
+              onClick={() => onSelectArea(item.area.id)}
+              onTap={() => onSelectArea(item.area.id)}
+              onMouseEnter={(event) => {
+                const stage = event.target.getStage();
+                const pointer = stage?.getPointerPosition();
+                setHoveredAreaId(item.area.id);
+                if (stage) {
+                  stage.container().style.cursor = 'pointer';
+                }
+                if (pointer) {
+                  onHoverTipChange({
+                    name: item.area.name,
+                    squareMeters: item.area.squareMeters,
+                    clientX: pointer.x,
+                    clientY: pointer.y,
+                  });
+                }
+              }}
+              onMouseMove={(event) => {
+                const pointer = event.target.getStage()?.getPointerPosition();
+                if (!pointer) {
+                  return;
+                }
+                onHoverTipChange({
+                  name: item.area.name,
+                  squareMeters: item.area.squareMeters,
+                  clientX: pointer.x,
+                  clientY: pointer.y,
+                });
+              }}
+              onMouseLeave={(event) => {
+                const stage = event.target.getStage();
+                setHoveredAreaId(null);
+                if (stage) {
+                  stage.container().style.cursor = 'default';
+                }
+                onHoverTipChange(null);
+              }}
+            />
+            <Text
+              x={item.x + pad}
+              y={item.y + pad}
+              width={Math.max(item.width - pad * 2, 1)}
+              height={Math.max(item.height - pad * 2, 1)}
+              text={item.area.name}
+              fontSize={fontSize}
+              fontFamily="Montserrat, Arial, sans-serif"
+              fontStyle="bold"
+              fill={colors.label}
+              align="center"
+              verticalAlign={showSqm ? 'top' : 'middle'}
+              listening={false}
+              wrap="none"
+              ellipsis
+            />
+            {showSqm ? (
+              <Text
+                x={item.x + pad}
+                y={item.y + pad + fontSize * 1.15}
+                width={Math.max(item.width - pad * 2, 1)}
+                text={`${item.area.squareMeters} m²`}
+                fontSize={sqmFontSize}
+                fontFamily="Montserrat, Arial, sans-serif"
+                fill={colors.sqm}
+                align="center"
+                listening={false}
+                wrap="none"
+                ellipsis
+              />
+            ) : null}
+          </Group>
+        );
+      })}
     </Group>
   );
 }

@@ -1,34 +1,36 @@
 'use client';
 
-import { Hand, Maximize2, Minimize2, MousePointer2, Ruler, Scan } from 'lucide-react';
+import { Hand, Maximize2, Minimize2, MousePointer2, Ruler, Save, Scan } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { Button } from '@/components/ui/button';
 import { TOOLBAR_CONTROL_CLASS } from './constants';
-import { UploadPlanImage } from './upload-plan-image';
 import type { EditorInteractionMode } from './venue-map-stage';
 
 type VenueMapToolbarProps = {
-  planId: string;
   isAdmin: boolean;
   interactionMode: EditorInteractionMode;
   mapFullscreen: boolean;
   onInteractionModeChange: (mode: EditorInteractionMode) => void;
   onFit: () => void;
+  onSaveLayout: () => void;
+  saveLayoutBusy: boolean;
+  layoutDirty: boolean;
   onToggleFullscreen: () => void;
-  onImageUploaded: () => void;
 };
 
 export function VenueMapToolbar({
-  planId,
   isAdmin,
   interactionMode,
   mapFullscreen,
   onInteractionModeChange,
   onFit,
+  onSaveLayout,
+  saveLayoutBusy,
+  layoutDirty,
   onToggleFullscreen,
-  onImageUploaded,
 }: VenueMapToolbarProps) {
   const t = useTranslations('venueMap');
+  const tCommon = useTranslations('common');
 
   return (
     <div className="flex flex-wrap items-center justify-end gap-2">
@@ -62,7 +64,15 @@ export function VenueMapToolbar({
         <Scan className="size-4" aria-hidden />
         {t('toolbar.fit')}
       </Button>
-      {isAdmin ? <UploadPlanImage planId={planId} onUploaded={onImageUploaded} compact /> : null}
+      <Button
+        variant={layoutDirty ? 'primary' : 'secondary'}
+        className={TOOLBAR_CONTROL_CLASS}
+        disabled={saveLayoutBusy || !layoutDirty}
+        onClick={onSaveLayout}
+      >
+        <Save className="size-4" aria-hidden />
+        {saveLayoutBusy ? tCommon('saving') : t('toolbar.saveLayout')}
+      </Button>
       <Button
         variant={mapFullscreen ? 'primary' : 'secondary'}
         className={TOOLBAR_CONTROL_CLASS}

@@ -44,7 +44,7 @@ describe('SpaceAreasService', () => {
       create: jest.Mock;
       findUniqueOrThrow: jest.Mock;
     };
-    spaceAreaCell: { findFirst: jest.Mock; createMany: jest.Mock };
+    spaceAreaCell: { findFirst: jest.Mock; createMany: jest.Mock; deleteMany: jest.Mock };
     spaceAllocation: { deleteMany: jest.Mock };
     $transaction: jest.Mock;
   };
@@ -61,7 +61,7 @@ describe('SpaceAreasService', () => {
         create: jest.fn(),
         findUniqueOrThrow: jest.fn(),
       },
-      spaceAreaCell: { findFirst: jest.fn(), createMany: jest.fn() },
+      spaceAreaCell: { findFirst: jest.fn(), createMany: jest.fn(), deleteMany: jest.fn() },
       spaceAllocation: { deleteMany: jest.fn() },
       $transaction: jest.fn(),
     };
@@ -166,6 +166,33 @@ describe('SpaceAreasService', () => {
       prisma.spaceArea.findUnique.mockResolvedValue(null);
 
       await expect(service.update(areaId, { name: 'New name' })).rejects.toThrow(NotFoundException);
+    });
+
+    it('replaces cells and squareMeters when a new rectangle is provided', async () => {
+      const movedCells = [
+        { x: 4, y: 4 },
+        { x: 5, y: 4 },
+        { x: 4, y: 5 },
+        { x: 5, y: 5 },
+      ];
+      prisma.spaceArea.findUnique.mockResolvedValue({ ...createdArea, venuePlanId: planId });
+      prisma.spaceAreaCell.findFirst.mockResolvedValue(null);
+      prisma.$transaction.mockImplementation(async (fn: (tx: typeof prisma) => Promise<unknown>) =>
+        fn(prisma),
+      );
+      prisma.spaceArea.update.mockResolvedValue({
+        ...createdArea,
+        venuePlanId: planId,
+        squareMeters: movedCells.length,
+        cells: movedCells,
+      });
+
+      const result = await service.update(areaId, { cells: movedCells });
+
+      expect(prisma.spaceAreaCell.deleteMany).toHaveBeenCalledWith({
+        where: { spaceAreaId: areaId },
+      });
+      expect(result.squareMeters).toBe(4);
     });
   });
 

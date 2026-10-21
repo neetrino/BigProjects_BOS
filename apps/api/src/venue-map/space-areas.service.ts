@@ -103,6 +103,36 @@ export class SpaceAreasService {
       ...(dto.customPublicLabel !== undefined && { customPublicLabel: dto.customPublicLabel }),
     };
 
+    const nextCells = dto.cells;
+    if (nextCells) {
+      assertCellsFormFilledRectangle(nextCells);
+      await this.assertCellsDoNotOverlap(existing.venuePlanId, nextCells, id);
+      try {
+        const area = await this.prisma.$transaction(async (tx) => {
+          await tx.spaceAreaCell.deleteMany({ where: { spaceAreaId: id } });
+          await tx.spaceAreaCell.createMany({
+            data: nextCells.map((cell) => ({
+              spaceAreaId: id,
+              venuePlanId: existing.venuePlanId,
+              x: cell.x,
+              y: cell.y,
+            })),
+          });
+          return tx.spaceArea.update({
+            where: { id },
+            data: { ...data, squareMeters: nextCells.length },
+            include: AREA_INCLUDE,
+          });
+        });
+        return mapSpaceAreaToResponse(area);
+      } catch (error: unknown) {
+        if (this.isUniqueConstraintViolation(error)) {
+          throw new ConflictException(CELLS_OVERLAP_MESSAGE);
+        }
+        throw error;
+      }
+    }
+
     const area = await this.prisma.spaceArea.update({
       where: { id },
       data,
@@ -136,10 +166,12 @@ export class SpaceAreasService {
   private async assertCellsDoNotOverlap(
     venuePlanId: string,
     cells: { x: number; y: number }[],
+    excludeAreaId?: string,
   ): Promise<void> {
     const overlapping = await this.prisma.spaceAreaCell.findFirst({
       where: {
         venuePlanId,
+        ...(excludeAreaId ? { spaceAreaId: { not: excludeAreaId } } : {}),
         OR: cells.map((cell) => ({ x: cell.x, y: cell.y })),
       },
     });

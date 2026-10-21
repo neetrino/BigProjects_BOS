@@ -7,10 +7,60 @@ export const TOOLBAR_CONTROL_CLASS = 'h-auto py-2.5';
 
 export { FREE_AREA_MAP_COLORS, SELECTED_AREA_MAP_COLORS } from '@/lib/stage-colors';
 
-export const SELECTION_FILL = 'rgba(26, 107, 114, 0.28)';
-export const SELECTION_STROKE = '#1a6b72';
+export const BOOTH_NAVY = '#192643';
+export const BOOTH_SEA = '#027691';
+export const BOOTH_OCCUPIED_FILL = '#c4c8cd';
+export const BOOTH_OPEN_FILL = '#d7dadd';
+export const BOOTH_HOVER_FILL = '#9cc0ca';
+export const BOOTH_SELECTED_FILL = '#027691';
+export const BOOTH_SQM_MUTED = '#8b95a8';
+export const BOOTH_SQM_ON_SELECTED = '#7fd0e3';
+export const BOOTH_LABEL_ON_SELECTED = '#ffffff';
+
+export const SELECTION_FILL = 'rgba(2, 118, 145, 0.28)';
+export const SELECTION_STROKE = '#027691';
 export const CALIBRATION_POINT_FILL = '#9a7b4f';
 export const CALIBRATION_LINE_STROKE = '#9a7b4f';
+
+export type BoothVisual = {
+  fill: string;
+  stroke: string;
+  label: string;
+  sqm: string;
+};
+
+export function boothVisual(occupied: boolean, selected: boolean, hovered: boolean): BoothVisual {
+  if (selected) {
+    return {
+      fill: BOOTH_SELECTED_FILL,
+      stroke: BOOTH_NAVY,
+      label: BOOTH_LABEL_ON_SELECTED,
+      sqm: BOOTH_SQM_ON_SELECTED,
+    };
+  }
+  if (hovered) {
+    return {
+      fill: BOOTH_HOVER_FILL,
+      stroke: BOOTH_NAVY,
+      label: BOOTH_NAVY,
+      sqm: BOOTH_SEA,
+    };
+  }
+  if (occupied) {
+    return {
+      fill: BOOTH_OCCUPIED_FILL,
+      stroke: BOOTH_NAVY,
+      label: BOOTH_NAVY,
+      sqm: BOOTH_SEA,
+    };
+  }
+  return {
+    fill: BOOTH_OPEN_FILL,
+    stroke: BOOTH_NAVY,
+    label: BOOTH_SQM_MUTED,
+    sqm: BOOTH_SQM_MUTED,
+  };
+}
 
 export const LABEL_BASE_FONT_SIZE = 12;
 export const LABEL_MIN_SCREEN_SIZE = 9;
