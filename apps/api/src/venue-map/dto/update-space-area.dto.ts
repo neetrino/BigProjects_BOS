@@ -1,6 +1,8 @@
 import { ApiPropertyOptional } from '@nestjs/swagger';
 import { PublicDisplayMode } from '@prisma/client';
-import { IsEnum, IsOptional, IsString, MinLength } from 'class-validator';
+import { Type } from 'class-transformer';
+import { ArrayNotEmpty, IsEnum, IsOptional, IsString, MinLength, ValidateNested } from 'class-validator';
+import { SpaceAreaCellDto } from './space-area-cell.dto';
 
 const MIN_NAME_LENGTH = 1;
 
@@ -25,4 +27,11 @@ export class UpdateSpaceAreaDto {
   @IsOptional()
   @IsString()
   customPublicLabel?: string;
+
+  @ApiPropertyOptional({ type: [SpaceAreaCellDto], description: 'Replace the area rectangle.' })
+  @IsOptional()
+  @ArrayNotEmpty()
+  @ValidateNested({ each: true })
+  @Type(() => SpaceAreaCellDto)
+  cells?: SpaceAreaCellDto[];
 }

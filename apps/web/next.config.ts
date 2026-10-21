@@ -79,17 +79,26 @@ const nextConfig: NextConfig = {
     ];
   },
   async headers() {
+    const commonHeaders = [
+      { key: 'X-Content-Type-Options', value: 'nosniff' },
+      { key: 'Referrer-Policy', value: 'strict-origin-when-cross-origin' },
+      {
+        key: 'Permissions-Policy',
+        value: 'camera=(), microphone=(), geolocation=()',
+      },
+    ];
+
     return [
       {
-        source: '/(.*)',
+        // Same-origin iframe on Venue Map. Keep clickjacking DENY everywhere else.
+        source: '/toonexpo-venue-map.html',
+        headers: [...commonHeaders, { key: 'X-Frame-Options', value: 'SAMEORIGIN' }],
+      },
+      {
+        source: '/((?!toonexpo-venue-map\\.html).*)',
         headers: [
-          { key: 'X-Content-Type-Options', value: 'nosniff' },
+          ...commonHeaders,
           { key: 'X-Frame-Options', value: 'DENY' },
-          { key: 'Referrer-Policy', value: 'strict-origin-when-cross-origin' },
-          {
-            key: 'Permissions-Policy',
-            value: 'camera=(), microphone=(), geolocation=()',
-          },
           ...(isDev
             ? []
             : [

@@ -21,7 +21,7 @@ export function drawGridLines(
   range: VisibleGridRange,
 ): void {
   context.beginPath();
-  context.strokeStyle = 'rgba(148, 163, 184, 0.4)';
+  context.strokeStyle = 'rgba(25, 38, 67, 0.12)';
   context.lineWidth = 1;
   for (let column = range.minColumn; column <= range.maxColumn + 1; column += 1) {
     const top = cellRectPx(range.minRow, column, calibration);

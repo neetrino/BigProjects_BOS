@@ -87,6 +87,7 @@ export type UpdateSpaceAreaInput = {
   code?: string | null;
   publicDisplayMode?: PublicDisplayMode;
   customPublicLabel?: string | null;
+  cells?: VenueCell[];
 };
 
 export type CreateAllocationInput =
