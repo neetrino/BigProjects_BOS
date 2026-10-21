@@ -17,3 +17,4 @@ allowBuilds:
 overrides:
   sharp: '>=0.35.0'
   'postcss@<8.5.10': '>=8.5.10'
+  proxy-addr: '>=2.0.8'
