@@ -54,7 +54,7 @@ export function ToonExpoVenueMapFrame({
 
   useEffect(() => {
     function onMessage(event: MessageEvent) {
-      if (!isVenueMapMessage(event, frameRef.current?.contentWindow ?? null)) {
+      if (!isVenueMapMessage(event)) {
         return;
       }
       if (!isBosMapEnvelope(event.data)) {

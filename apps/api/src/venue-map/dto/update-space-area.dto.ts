@@ -1,7 +1,14 @@
 import { ApiPropertyOptional } from '@nestjs/swagger';
 import { PublicDisplayMode } from '@prisma/client';
 import { Type } from 'class-transformer';
-import { ArrayNotEmpty, IsEnum, IsOptional, IsString, MinLength, ValidateNested } from 'class-validator';
+import {
+  ArrayNotEmpty,
+  IsEnum,
+  IsOptional,
+  IsString,
+  MinLength,
+  ValidateNested,
+} from 'class-validator';
 import { SpaceAreaCellDto } from './space-area-cell.dto';
 
 const MIN_NAME_LENGTH = 1;

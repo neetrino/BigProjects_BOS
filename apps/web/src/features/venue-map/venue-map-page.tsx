@@ -147,7 +147,9 @@ export function VenueMapPage() {
       }
       setSelectedBooth(booth);
       setFocusRequestId((id) => id + 1);
-      const existing = plan?.areas.find((area) => area.id === booth.areaId || area.code === booth.code);
+      const existing = plan?.areas.find(
+        (area) => area.id === booth.areaId || area.code === booth.code,
+      );
       if (existing) {
         setSelectedAreaId(existing.id);
         return;
@@ -184,7 +186,9 @@ export function VenueMapPage() {
     (booth: MapBoothPick) => {
       setSelectedBooth(booth);
       setMapBooths((prev) => prev.map((item) => (item.id === booth.id ? booth : item)));
-      const existing = plan?.areas.find((area) => area.id === booth.areaId || area.code === booth.code);
+      const existing = plan?.areas.find(
+        (area) => area.id === booth.areaId || area.code === booth.code,
+      );
       if (existing) {
         setSelectedAreaId(existing.id);
       }

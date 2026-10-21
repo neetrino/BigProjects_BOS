@@ -31,11 +31,19 @@ export function BoothList({
   const normalized = query.trim().toLowerCase();
 
   const visibleBooths = useMemo(
-    () => sortSparseLast(mapBooths.filter((item) => matchesBooth(item, normalized)), lacksBoothIdentity),
+    () =>
+      sortSparseLast(
+        mapBooths.filter((item) => matchesBooth(item, normalized)),
+        lacksBoothIdentity,
+      ),
     [mapBooths, normalized],
   );
   const visibleAreas = useMemo(
-    () => sortSparseLast(areas.filter((item) => matchesArea(item, normalized)), lacksAreaIdentity),
+    () =>
+      sortSparseLast(
+        areas.filter((item) => matchesArea(item, normalized)),
+        lacksAreaIdentity,
+      ),
     [areas, normalized],
   );
   const selectedBooth = useMemo(
@@ -77,7 +85,10 @@ export function BoothList({
       {items === 0 ? (
         <p className="text-sm text-[var(--color-muted)]">{t('panel.searchEmpty')}</p>
       ) : mapBooths.length > 0 ? (
-        <ul ref={listRef} className="soft-scrollbar flex min-h-0 flex-1 flex-col gap-2 overflow-y-auto pr-0.5">
+        <ul
+          ref={listRef}
+          className="soft-scrollbar flex min-h-0 flex-1 flex-col gap-2 overflow-y-auto pr-0.5"
+        >
           {visibleBooths.map((item) => {
             const isSelected = isBoothSelected(item, selectedBooth, selectedAreaId);
 
@@ -100,7 +111,10 @@ export function BoothList({
           })}
         </ul>
       ) : (
-        <ul ref={listRef} className="soft-scrollbar flex min-h-0 flex-1 flex-col gap-2 overflow-y-auto pr-0.5">
+        <ul
+          ref={listRef}
+          className="soft-scrollbar flex min-h-0 flex-1 flex-col gap-2 overflow-y-auto pr-0.5"
+        >
           {visibleAreas.map((item) => {
             const isSelected = isAreaSelected(item, selectedArea, selectedAreaId);
             return (
@@ -111,7 +125,11 @@ export function BoothList({
                   onClick={() => onSelectArea(item.id)}
                   className={listButtonClass(isSelected)}
                 >
-                  <BoothRow name={item.name} meta={`${item.squareMeters} m²`} selected={isSelected} />
+                  <BoothRow
+                    name={item.name}
+                    meta={`${item.squareMeters} m²`}
+                    selected={isSelected}
+                  />
                 </button>
               </li>
             );
@@ -175,7 +193,12 @@ function matchesBooth(item: MapBoothPick, query: string): boolean {
   if (!query) {
     return true;
   }
-  return [item.name, item.code, item.zone, item.squareMeters != null ? String(item.squareMeters) : '']
+  return [
+    item.name,
+    item.code,
+    item.zone,
+    item.squareMeters != null ? String(item.squareMeters) : '',
+  ]
     .join(' ')
     .toLowerCase()
     .includes(query);
@@ -185,7 +208,10 @@ function matchesArea(item: VenueSpaceArea, query: string): boolean {
   if (!query) {
     return true;
   }
-  return [item.name, item.code ?? '', String(item.squareMeters)].join(' ').toLowerCase().includes(query);
+  return [item.name, item.code ?? '', String(item.squareMeters)]
+    .join(' ')
+    .toLowerCase()
+    .includes(query);
 }
 
 function listButtonClass(selected: boolean): string {

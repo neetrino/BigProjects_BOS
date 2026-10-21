@@ -189,7 +189,9 @@ describe('SpaceAreasService', () => {
 
       const result = await service.update(areaId, { cells: movedCells });
 
-      expect(prisma.spaceAreaCell.deleteMany).toHaveBeenCalledWith({ where: { spaceAreaId: areaId } });
+      expect(prisma.spaceAreaCell.deleteMany).toHaveBeenCalledWith({
+        where: { spaceAreaId: areaId },
+      });
       expect(result.squareMeters).toBe(4);
     });
   });

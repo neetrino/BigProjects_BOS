@@ -1,7 +1,7 @@
 import type { VenueSpaceArea } from '@/lib/api/venue-map';
 import type { GridCell } from './domain/grid-transform';
 
-export const TOONEXPO_VENUE_MAP_SRC = '/toonexpo-venue-map.html?v=10';
+export const TOONEXPO_VENUE_MAP_SRC = '/toonexpo-venue-map.html?v=11';
 
 export const BOS_MAP_MESSAGE = {
   ready: 'bos-ready',
@@ -44,10 +44,12 @@ type BosMapEnvelope = {
 };
 
 export function isBosMapEnvelope(data: unknown): data is BosMapEnvelope {
-  return typeof data === 'object' && data !== null && 'type' in data && typeof data.type === 'string';
+  return (
+    typeof data === 'object' && data !== null && 'type' in data && typeof data.type === 'string'
+  );
 }
 
-export function isVenueMapMessage(event: MessageEvent, _frameWindow: Window | null): boolean {
+export function isVenueMapMessage(event: MessageEvent): boolean {
   if (!isBosMapEnvelope(event.data)) {
     return false;
   }
@@ -82,17 +84,23 @@ function parseCell(cell: unknown): { x: number; y: number } | null {
 }
 
 function parseBooth(value: unknown, fallbackAreaId: string | null): MapBoothPick | null {
-  if (typeof value !== 'object' || value === null || !('id' in value) || typeof value.id !== 'string') {
+  if (
+    typeof value !== 'object' ||
+    value === null ||
+    !('id' in value) ||
+    typeof value.id !== 'string'
+  ) {
     return null;
   }
   const name = 'name' in value && typeof value.name === 'string' ? value.name : value.id;
   const zone = 'zone' in value && typeof value.zone === 'string' ? value.zone : '';
   const code = 'code' in value && typeof value.code === 'string' ? value.code : value.id;
   const squareMeters =
-    'sqm' in value && typeof value.sqm === 'number' && Number.isFinite(value.sqm) ? value.sqm : null;
+    'sqm' in value && typeof value.sqm === 'number' && Number.isFinite(value.sqm)
+      ? value.sqm
+      : null;
   const areaId =
-    fallbackAreaId ??
-    ('areaId' in value && typeof value.areaId === 'string' ? value.areaId : null);
+    fallbackAreaId ?? ('areaId' in value && typeof value.areaId === 'string' ? value.areaId : null);
   const cells: { x: number; y: number }[] = [];
   if ('cells' in value && Array.isArray(value.cells)) {
     for (const cell of value.cells) {
