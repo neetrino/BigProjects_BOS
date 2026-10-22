@@ -150,8 +150,10 @@ export function VenueMapPage() {
         if (cancelled) {
           return;
         }
-        if (result.created > 0) {
-          showToast(t('toolbar.boothsImported', { count: result.created }), 'success');
+        if (result.created > 0 || result.updated > 0) {
+          if (result.created > 0) {
+            showToast(t('toolbar.boothsImported', { count: result.created }), 'success');
+          }
           refreshPlan();
         }
         if (result.failed > 0) {

@@ -50,8 +50,15 @@ function cellKey(cell: { x: number; y: number }): string {
   return `${cell.x}:${cell.y}`;
 }
 
-function boothAlreadyStored(booth: MapBoothPick, areas: readonly VenueSpaceArea[]): boolean {
-  return areas.some((area) => area.code === booth.code);
+function sameCells(
+  left: readonly { x: number; y: number }[],
+  right: readonly { x: number; y: number }[],
+): boolean {
+  if (left.length !== right.length) {
+    return false;
+  }
+  const keys = new Set(left.map((cell) => cellKey(cell)));
+  return right.every((cell) => keys.has(cellKey(cell)));
 }
 
 /**
@@ -62,7 +69,7 @@ export async function persistMissingMapBooths(
   planId: string,
   booths: readonly MapBoothPick[],
   areas: readonly VenueSpaceArea[],
-): Promise<{ created: number; failed: number }> {
+): Promise<{ created: number; updated: number; failed: number }> {
   const occupied = new Set<string>();
   for (const area of areas) {
     for (const cell of area.cells) {
@@ -71,9 +78,40 @@ export async function persistMissingMapBooths(
   }
 
   let created = 0;
+  let updated = 0;
   let failed = 0;
   for (const booth of booths) {
-    if (booth.cells.length === 0 || boothAlreadyStored(booth, areas)) {
+    if (booth.cells.length === 0) {
+      continue;
+    }
+    const existing = areas.find((area) => area.code === booth.code);
+    if (existing) {
+      if (sameCells(existing.cells, booth.cells)) {
+        continue;
+      }
+      for (const cell of existing.cells) {
+        occupied.delete(cellKey(cell));
+      }
+      const overlaps = booth.cells.some((cell) => occupied.has(cellKey(cell)));
+      if (overlaps) {
+        for (const cell of existing.cells) {
+          occupied.add(cellKey(cell));
+        }
+        failed += 1;
+        continue;
+      }
+      try {
+        await updateSpaceArea(existing.id, { cells: booth.cells });
+        updated += 1;
+        for (const cell of booth.cells) {
+          occupied.add(cellKey(cell));
+        }
+      } catch {
+        for (const cell of existing.cells) {
+          occupied.add(cellKey(cell));
+        }
+        failed += 1;
+      }
       continue;
     }
     const overlaps = booth.cells.some((cell) => occupied.has(cellKey(cell)));
@@ -95,7 +133,7 @@ export async function persistMissingMapBooths(
       failed += 1;
     }
   }
-  return { created, failed };
+  return { created, updated, failed };
 }
 
 /** Saves every booth that still has a pending layout change. */

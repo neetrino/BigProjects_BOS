@@ -776,6 +776,17 @@
           [null, 25, 'Special zone', '', [[1242, 1333, 1300, 1391]]],
         ];
         const S = 0.1; // pt → m
+        // Same edges as rectCells: one cell is 1 m × 1 m, so the booth and its m² are that grid.
+        function snapMeterPart(p) {
+          const x0 = Math.floor(Math.min(p[0], p[2]));
+          const z0 = Math.floor(Math.min(p[1], p[3]));
+          const x1 = Math.floor(Math.max(p[0], p[2]) - 0.01) + 1;
+          const z1 = Math.floor(Math.max(p[1], p[3]) - 0.01) + 1;
+          return [x0, z0, Math.max(x0 + 1, x1), Math.max(z0 + 1, z1)];
+        }
+        function partSquareMeters(p) {
+          return (p[2] - p[0]) * (p[3] - p[1]);
+        }
         const B = RAW.map((r, i) => {
           const parts = r[4].map((p) => p.map((v) => v * S));
           let main = parts[0];
@@ -795,6 +806,13 @@
             label: r[0] || 'Open booth',
             big,
           };
+        });
+        B.forEach((b) => {
+          b.parts = b.parts.map(snapMeterPart);
+          b.main = b.parts[0];
+          b.sqm = b.parts.reduce((sum, p) => sum + partSquareMeters(p), 0);
+          b.big = b.kind === 'big' || b.sqm >= 100;
+          b.h = b.big && b.sqm >= 200 ? 1.9 : b.sqm >= 100 ? 1.5 : 1.2;
         });
         // give each booth a short reference, numbered per zone
         let nM = 0,
