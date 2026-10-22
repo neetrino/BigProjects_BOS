@@ -1,7 +1,7 @@
 import type { VenueSpaceArea } from '@/lib/api/venue-map';
 import type { GridCell } from './domain/grid-transform';
 
-export const TOONEXPO_VENUE_MAP_SRC = '/toonexpo-venue-map.html?v=11';
+export const TOONEXPO_VENUE_MAP_SRC = '/toonexpo-venue-map.html?v=15';
 
 export const BOS_MAP_MESSAGE = {
   ready: 'bos-ready',
