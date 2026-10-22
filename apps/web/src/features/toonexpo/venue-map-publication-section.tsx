@@ -49,7 +49,12 @@ function toastForPublication(
         kind: 'error',
       };
     case 'FAILED':
-      return { message: t('publication.toastFailed'), kind: 'error' };
+      return {
+        message: errorMessage
+          ? t('publication.toastFailedWithError', { error: errorMessage })
+          : t('publication.toastFailed'),
+        kind: 'error',
+      };
     default:
       return { message: t('publication.toastPending'), kind: 'success' };
   }

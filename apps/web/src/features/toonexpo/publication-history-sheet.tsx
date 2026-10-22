@@ -81,7 +81,7 @@ export function PublicationHistoryRow({ row, compact = false }: PublicationHisto
           {formatDateTime(row.publishedAt ?? row.createdAt)}
         </span>
       </div>
-      {row.status !== 'FAILED' && row.errorMessage ? (
+      {row.errorMessage ? (
         <p className="border-t border-[var(--color-border)] px-3.5 py-1.5 text-[11px] text-[var(--color-danger)]">
           {row.errorMessage}
         </p>
